@@ -1,0 +1,86 @@
+import * as React from "react"
+import {StyleClass, ClassName, findGuiParent} from "./init"
+import "../../css/gui.css"
+
+// TODO: Split into different components -> MultipleSelect, Select
+
+/**
+ * SELECT
+ * Props
+ *  -> name: String | The name of the inputs.
+ *  -> title: String | The title of the first element if select is not multiple.
+ *  -> options: Array | Selectable options as an array of objects such as:
+ *                      [{"id": id, "text": text}, {"id": id, "text": text }]
+ *  -> className: String | Classes for the element.
+ *      .multiline allows options to span over multiple lines
+ *      .multiple makes it a multiple select
+ *  -> attributes: object | Additional attributes.
+*/
+class Select extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.className = this.props.className || ""
+        this.isMultiple = this.className.indexOf(StyleClass.Multiple) >= 0
+    }
+
+    componentDidMount() {
+        ReactDOM.findDOMNode(this).addEventListener("focused", this.onFocus)
+    }
+
+    componentWillUnmount() {
+        ReactDOM.findDOMNode(this).removeEventListener("focused", this.onFocus)
+    }
+
+    getOptions() {
+        const type = this.isMultiple ? "checkbox" : "radio"
+        const title = this.props.title || ""
+        const hasTitleElement = title.length > 0
+
+        let options =
+            (this.props.options || []).map((currentOption, index) => {
+                const id = currentOption.id || currentOption.text
+                return (
+                    <label key={id}>
+                        <input type={type} name={this.props.name} data-id={id}
+                            onChange={this.onOptionChange} />
+                        <p>{currentOption.text}</p>
+                    </label>
+                )
+            })
+
+        if(!this.isMultiple && hasTitleElement) {
+            options.unshift(
+                <label key="na">
+                    <input type={type} name={this.props.name} defaultChecked
+                        onChange={this.onOptionChange} />
+                    <p>{title}</p>
+                </label>
+            )
+        }
+        return options
+    }
+
+    render() {
+        return(
+            <div className={[ClassName.Select, this.className].join(" ")}
+                {...this.props.attributes}>
+                <div tabIndex="-1">
+                    {this.getOptions()}
+                </div>
+            </div>
+        )
+    }
+
+    onFocus(e) {
+        e.stopPropagation()
+        const selected = e.target.querySelector("input:checked").parentNode
+        selected.parentNode.scrollTop = selected.offsetTop - selected.offsetHeight
+    }
+
+    onOptionChange(e) {
+        findGuiParent(e.target).className.remove(StyleClass.Focused)
+    }
+}
+
+export default Select
