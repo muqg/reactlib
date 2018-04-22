@@ -1,0 +1,50 @@
+.l_gui_checkbox,
+.l_gui_checkbox:after {
+    transition: .25s;
+}
+
+.l_gui_checkbox {
+    background: #bbb;
+    border: 1px solid #444;
+    border-radius: 3px;
+    cursor: pointer;
+    display: inline-block;
+    height: 19px;
+    position: relative;
+    transition-property: background, opacity;
+    width: 40px;
+}
+
+    .l_gui_checkbox:not(.disabled).checked {
+        background: #2d9e21;
+    }
+
+    .l_gui_checkbox.disabled {
+        opacity: .3;
+    }
+
+    .l_gui_checkbox:after {
+        background: #fff;
+        border-radius: 3px;
+        content: '';
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        transition: .2s;
+        transition-property: left, width;
+        width: 40%;
+    }
+
+        .l_gui_checkbox:active:not(.disabled):after {
+            width: 55%;
+        }
+
+        .l_gui_checkbox.checked:not(.disabled):after {
+            left: 60%;
+        }
+
+            .l_gui_checkbox.checked:not(.disabled):active:after {
+                left: 45%;
+                width: 55%;
+            }

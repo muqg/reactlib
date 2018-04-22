@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ClassName} from "./init"
-import "../../css/gui.css"
+import "../../css/ui/progress_bar.css"
 
 /**
  * @param {any} props

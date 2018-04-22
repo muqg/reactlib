@@ -1,0 +1,97 @@
+.l_gui_select {
+    display: inline-block;
+    height: 25px;
+    position: relative;
+    vertical-align: middle;
+    width: 250px;
+}
+
+    .l_gui_select.multiple {
+        height: auto;
+    }
+
+    .l_gui_select.focused > div p,
+    .l_gui_select input:checked ~ p,
+    .l_gui_select label,
+    .l_gui_select.multiple p {
+        display: block;
+    }
+
+    .l_gui_select p,
+    .l_gui_select input {
+        display: none;
+    }
+
+    .l_gui_select > div {
+        background: #fff;
+        border: 1px solid #dedede;
+        color: #444;
+        height: 100%;
+        outline: none;
+        overflow: hidden;
+        position: absolute;
+        width: 100%;
+        z-index: 2;
+    }
+
+        .l_gui_select.focused > div,
+        .l_gui_select.multiple > div {
+            height: auto;
+            max-height: 165px; /* Determines dropped height */
+            overflow-y: auto;
+        }
+
+        .l_gui_select.focused > div {
+            z-index: 3;
+        }
+
+        .l_gui_select.multiple > div {
+            position: relative;
+        }
+
+        .l_gui_select > div:after {
+            /* This allows for the usage of an arrow indicator.
+            content: url(select-arrow-down.png);
+            */
+            position: absolute;
+            top: 50%;
+            right: 3px;
+            margin-top: -8px;
+        }
+
+            .l_gui_select.focused > div:after,
+            .l_gui_select.multiple > div:after {
+                display: none;
+            }
+
+        .l_gui_select.focused > div p:hover,
+        .l_gui_select.focused > div input:checked ~ p:hover {
+            background: #efefef;
+        }
+
+            .l_gui_select.focused > div input:checked ~ p,
+            .l_gui_select.multiple > div input:checked ~ p {
+                background: #f7f7f7;
+                border-bottom-color: #ddd;
+                color:#dbaa6b;
+            }
+
+    .l_gui_select p {
+        border-bottom: 1px solid transparent;
+        cursor: pointer;
+        line-height: 25px; /* Should be equal to .l_gui_select height */
+        margin: 0;
+        padding: 0 3px;
+        transition: background .3s ease;
+        white-space: nowrap;
+    }
+
+        .l_gui_select.multiline p {
+            white-space: normal;
+        }
+
+    .l_gui_select input.disabled ~ p,
+    .l_gui_select input.disabled ~ p:hover {
+        border: none;
+        color: #aaa;
+    }

@@ -1,0 +1,33 @@
+.l_gui_close {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+    .l_gui_close > span,
+    .l_gui_close > span:before,
+    .l_gui_close > span:after {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 30px;
+        height: 2px;
+        background: #444;
+        border-radius: 1px;
+    }
+
+    .l_gui_close > span {
+        background: transparent;
+    }
+
+        .l_gui_close > span:before {
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        .l_gui_close > span:after {
+            -webkit-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }

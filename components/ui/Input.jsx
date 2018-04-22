@@ -1,6 +1,6 @@
 import * as React from "react"
 import {ClassName} from "./init"
-import "../../css/gui.css"
+import "../../css/ui/input.css"
 
 /**
  * @param {any} props

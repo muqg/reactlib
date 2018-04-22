@@ -1,6 +1,6 @@
 import * as React from "react"
 import {StyleClass, ClassName} from "./init"
-import "../../css/gui.css"
+import "../../css/ui/checkbox.css"
 
 /**
  * @param {object} props
@@ -11,11 +11,11 @@ import "../../css/gui.css"
  */
 class Checkbox extends React.Component {
     toggleActive(e) {
-        if(!e.target.className.contains(StyleClass.Disabled)) {
-            const isChecked = e.target.className.contains(StyleClass.Checked)
+        if(e.target.className.indexOf(StyleClass.Disabled) < 0) {
+            const isChecked = e.target.className.indexOf(StyleClass.Checked) >= 0
                 && e.target.checked === true
 
-            e.target.className[!isChecked ? "add" : "remove"](StyleClass.Checked)
+            e.target.classList[!isChecked ? "add" : "remove"](StyleClass.Checked)
             e.target.checked = !isChecked
 
             e.target.dispatchEvent(new Event("change"))

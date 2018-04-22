@@ -1,6 +1,6 @@
 import * as React from "react"
 import {StyleClass, ClassName, findGuiParent} from "./init"
-import "../../css/gui.css"
+import "../../css/ui/select.css"
 
 // TODO: Split into different components -> MultipleSelect, Select
 
@@ -79,7 +79,7 @@ class Select extends React.Component {
     }
 
     onOptionChange(e) {
-        findGuiParent(e.target).className.remove(StyleClass.Focused)
+        findGuiParent(e.target).classList.remove(StyleClass.Focused)
     }
 }
 

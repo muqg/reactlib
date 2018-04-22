@@ -1,0 +1,11 @@
+.l_gui_input {
+    border: none;
+    border-bottom: 2px solid #bbb;
+    outline: none;
+    padding: 2px;
+    transition: border .25s;
+}
+
+    .l_gui_input.focused {
+        border-bottom-color: #444;
+    }

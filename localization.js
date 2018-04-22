@@ -8,7 +8,7 @@ else
     console.warn("JSON locale element not found and cannot initialize localization.")
 
 function localize(key, ...args) {
-    const split = key.split("/")
+    const split = key.split(".")
     let result = getElement(key, locale)
 
     if(result === null)
