@@ -81,14 +81,12 @@
         cursor: pointer;
         line-height: 25px; /* Should be equal to .l_gui_select height */
         margin: 0;
+        overflow: hidden;
         padding: 0 3px;
+        text-overflow: ellipsis;
         transition: background .3s ease;
         white-space: nowrap;
     }
-
-        .l_gui_select.multiline p {
-            white-space: normal;
-        }
 
     .l_gui_select input.disabled ~ p,
     .l_gui_select input.disabled ~ p:hover {

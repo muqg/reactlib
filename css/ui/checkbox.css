@@ -12,7 +12,7 @@
     height: 19px;
     position: relative;
     transition-property: background, opacity;
-    width: 40px;
+    width: 45px;
 }
 
     .l_gui_checkbox:not(.disabled).checked {
@@ -33,18 +33,17 @@
         top: 0;
         transition: .2s;
         transition-property: left, width;
-        width: 40%;
+        width: 17px;
     }
 
         .l_gui_checkbox:active:not(.disabled):after {
-            width: 55%;
+            width: 22px;
         }
 
         .l_gui_checkbox.checked:not(.disabled):after {
-            left: 60%;
+            left: calc(100% - 17px); /* Subtract marker's width while NOT checked */
         }
 
             .l_gui_checkbox.checked:not(.disabled):active:after {
-                left: 45%;
-                width: 55%;
+                left: calc(100% - 22px); /* Subtract marker's width while checked */
             }

@@ -12,7 +12,6 @@ import "../../css/ui/select.css"
  *  -> options: Array | Selectable options as an array of objects such as:
  *                      [{"id": id, "text": text}, {"id": id, "text": text }]
  *  -> className: String | Classes for the element.
- *      .multiline allows options to span over multiple lines
  *      .multiple makes it a multiple select
  *  -> attributes: object | Additional attributes.
 */
@@ -37,6 +36,10 @@ class Select extends React.Component {
         const title = this.props.title || ""
         const hasTitleElement = title.length > 0
 
+        const customStyle = {
+            lineHeight: this.props.height,
+        }
+
         let options =
             (this.props.options || []).map((currentOption, index) => {
                 const id = currentOption.id || currentOption.text
@@ -44,7 +47,7 @@ class Select extends React.Component {
                     <label key={id}>
                         <input type={type} name={this.props.name} data-id={id}
                             onChange={this.onOptionChange} />
-                        <p>{currentOption.text}</p>
+                        <p style={customStyle}>{currentOption.text}</p>
                     </label>
                 )
             })
@@ -54,7 +57,7 @@ class Select extends React.Component {
                 <label key="na">
                     <input type={type} name={this.props.name} defaultChecked
                         onChange={this.onOptionChange} />
-                    <p>{title}</p>
+                    <p style={customStyle}>{title}</p>
                 </label>
             )
         }
@@ -62,9 +65,16 @@ class Select extends React.Component {
     }
 
     render() {
+        const customStyle = {
+            height: this.props.height,
+            width: this.props.width,
+        }
+
         return(
             <div className={[ClassName.Select, this.className].join(" ")}
-                {...this.props.attributes}>
+                style={customStyle}
+                {...this.props.attributes}
+            >
                 <div tabIndex="-1">
                     {this.getOptions()}
                 </div>

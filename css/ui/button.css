@@ -16,7 +16,7 @@
 	}
 
     .l_gui_button:active {
-        transform: translate(2px, 2px);
+        transform: translate(1px, 1px);
     }
 
     .l_gui_button:disabled {
