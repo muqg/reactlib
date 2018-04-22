@@ -15,9 +15,11 @@
     border-top: 2px solid transparent; /* Border's width is equal to tab's border-width */
     border-left: 2px solid #aaa; /* Border's width is equal to tab's border-width */
     box-shadow: none;
+    box-sizing: border-box;
     display: inline-block;
     position: relative;
     transition: border .25s, box-shadow .25s;
+    width: 100px;
 }
 
     .l_tab_button:last-child {
@@ -45,10 +47,10 @@
         display: inline-block;
         font-weight: bold;
         overflow: hidden;
-        padding: 6px;
+        padding: 12px 6px;
         text-overflow: ellipsis;
         white-space: nowrap;
-        width: 100px;
+        width: 100%;
     }
 
 .l_tab_wrapper {
