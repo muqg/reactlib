@@ -1,0 +1,42 @@
+.l_tabs_container {
+    display: block;
+}
+
+    .l_tabs_container > div {
+        width: 100%;
+    }
+
+.l_tab_button {
+    border: 0;
+    box-sizing: border-box;
+    display: inline-block;
+    font-weight: bold;
+    overflow: hidden;
+    padding: 6px 12px;
+    position: relative;
+    text-overflow: ellipsis;
+    transition: border .25s;
+    width: 100px;
+}
+
+    .l_tab_button.active {
+        /* Border's width is equal to tab's border-width */
+        border: 2px solid #aaa;
+        border-bottom: 0;
+    }
+
+    .l_tab_button.active:after {
+        background: #fff;
+        /* Height is equal to tab's border-width */
+        height: 2px;
+        position: absolute;
+        width: 100%;
+    }
+
+.l_tab {
+    border: solid;
+    border-image: linear-gradient(to bottom, #aaa, #00000000, #00000000, #aaa) 1;
+    border-width: 2px;
+    box-sizing: border-box;
+    padding: 12px;
+}
