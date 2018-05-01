@@ -2,7 +2,7 @@ import * as React from "react"
 import {StyleClass, ClassName, findGuiParent} from "./init"
 import "../../css/ui/select.css"
 
-// TODO: Split into different components -> MultipleSelect, Select
+// TODO: React | Split into different components -> MultipleSelect, Select
 
 /**
  * SELECT
