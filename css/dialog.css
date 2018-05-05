@@ -1,0 +1,11 @@
+/* TODO: React | Complete styling. */
+
+/* This accounts for dialog's content (.l_dialog_content) */
+.l_dialog_container > div:first-child {
+    padding: 0;
+}
+
+/* This accounts for dialog's buttons (.l_dialog_buttons) */
+.l_dialog_container > div:last-child {
+    text-align: center;
+}
