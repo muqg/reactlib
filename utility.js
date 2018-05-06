@@ -36,6 +36,7 @@ export function findParentWithClass(element, classname) {
 }
 
 export function getElement(key, obj) {
+    const split = key.split(".")
     const type = typeof obj
     if(type !== "object")
         throw (`Second argument must be of type object, ${type} given.`)
@@ -45,7 +46,6 @@ export function getElement(key, obj) {
         if(typeof result === "object")
             result = result[k] || null
     }
-
     return result
 }
 
@@ -71,4 +71,40 @@ export function limitString(str = "", maxLen = 12, addDots = true) {
     if(str.length > maxLen)
         return str.substring(0, maxLen) + (addDots ? "..." : "")
     return str
+}
+
+/**
+ * Parses attribute values off a form element.
+ * @param {object} element The element to be parsed. Only element.value is parsed
+ * by default unless additional values are provided.
+ * @param {Array} additionalValues Names of additional element values to be added
+ * to the parsed data. If at least one additional value is supplied then the
+ * resulting parsed data will be converted to object instead of a single value.
+ */
+export function parseFormElement(element, additionalValues = []) {
+    const value = element.type === "checkbox" || element.type === "radio" ?
+        element.checked : element.value
+    const name = element.name
+
+    if(!name)
+        throw("Name attribute is required for serializable (changeable) form nodes.")
+
+    let result;
+    if(additionalValues.length) {
+        result = {
+            [name]: {
+                value: value
+            }
+        }
+
+        for(let val of additionalValues)
+            result[name][val] = element[val]
+    }
+    else {
+        result = {
+            [name]: value
+        }
+    }
+
+    return result
 }
