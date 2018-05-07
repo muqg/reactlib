@@ -1,6 +1,6 @@
-import Animation from "./Animation"
+import Page from "./Page"
 
 
 module.exports = {
-    Animation,
+    Page
 }

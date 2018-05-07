@@ -1,3 +1,4 @@
+// TODO: React | Test animations.
 /*
 * NOTE:
 * Only use Animation when javascript is required to animate
@@ -20,8 +21,8 @@ const ALLOWED_PROPS = [
 ]
 
 const ANIMATION_TYPES = {
-    "fadeIn": { opacity: 1, visibility: visible },
-    "fadeOut": { opacity: 0, visibility: visible }
+    "fadeIn": { opacity: 1, visibility: "visible" },
+    "fadeOut": { opacity: 0, visibility: "visible" }
 }
 
 class Animation extends React.Component {

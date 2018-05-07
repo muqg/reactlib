@@ -2,7 +2,9 @@ import {getElement, formatString} from "./utility"
 
 
 const stateElement = document.querySelector("#initial_state")
+
 export const initialState = stateElement ? JSON.parse(stateElement.innerHTML) : {}
+export const locale = document.getElementsByTagName("html")[0].getAttribute("lang") || undefined
 
 export function $const(key) {
     let result = getElement(key, initialState.const)
@@ -18,4 +20,8 @@ export function localize(key, ...args) {
     else if(args && typeof result === "string")
         result = formatString(result, ...args)
     return result
+}
+
+export function getURI(path = '') {
+    return '/' + locale + path;
 }
