@@ -6,8 +6,8 @@ const stateElement = document.querySelector("#initial_state")
 export const INITIAL_STATE = stateElement ? JSON.parse(stateElement.innerHTML) : {}
 export const CURRENT_LOCALE = document.getElementsByTagName("html")[0].getAttribute("lang") || undefined
 
-export function $const(key) {
-    let result = getElement(key, INITIAL_STATE.const)
+export function config(key) {
+    let result = getElement(key, INITIAL_STATE.config)
     if(result === null)
         result = key
     return result
