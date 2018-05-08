@@ -3,18 +3,18 @@ import {getElement, formatString} from "./utility"
 
 const stateElement = document.querySelector("#initial_state")
 
-export const initialState = stateElement ? JSON.parse(stateElement.innerHTML) : {}
-export const locale = document.getElementsByTagName("html")[0].getAttribute("lang") || undefined
+export const INITIAL_STATE = stateElement ? JSON.parse(stateElement.innerHTML) : {}
+export const CURRENT_LOCALE = document.getElementsByTagName("html")[0].getAttribute("lang") || undefined
 
 export function $const(key) {
-    let result = getElement(key, initialState.const)
+    let result = getElement(key, INITIAL_STATE.const)
     if(result === null)
         result = key
     return result
 }
 
 export function localize(key, ...args) {
-    let result = getElement(key, initialState.locale)
+    let result = getElement(key, INITIAL_STATE.locale)
     if(result === null)
         result = key
     else if(args && typeof result === "string")
@@ -23,5 +23,5 @@ export function localize(key, ...args) {
 }
 
 export function getURI(path = '') {
-    return '/' + locale + path;
+    return '/' + CURRENT_LOCALE + path;
 }
