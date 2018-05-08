@@ -1,3 +1,4 @@
+import * as ReactDOM from "react-dom"
 import {getElement, formatString} from "./utility"
 
 
@@ -24,4 +25,11 @@ export function localize(key, ...args) {
 
 export function getURI(path = '') {
     return '/' + CURRENT_LOCALE + path;
+}
+
+export function render(element) {
+    ReactDOM.render(
+        element,
+        document.getElementById("#app")
+    )
 }
