@@ -81,7 +81,7 @@ export function limitString(str = "", maxLen = 12, addDots = true) {
  * to the parsed data. If at least one additional value is supplied then the
  * resulting parsed data will be converted to object instead of a single value.
  */
-export function parseFormElement(element, additionalValues = []) {
+export function parseFormElement(element, includeData = false) {
     const value = element.type === "checkbox" || element.type === "radio" ?
         element.checked : element.value
     const name = element.name
@@ -90,15 +90,13 @@ export function parseFormElement(element, additionalValues = []) {
         throw("Name attribute is required for serializable (changeable) form nodes.")
 
     let result;
-    if(additionalValues.length) {
+    if(includeData) {
         result = {
             [name]: {
-                value: value
+                value: value,
+                ...element.dataset
             }
         }
-
-        for(let val of additionalValues)
-            result[name][val] = element[val]
     }
     else {
         result = {
