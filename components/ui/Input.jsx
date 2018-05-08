@@ -8,11 +8,12 @@ import "../../css/ui/input.css"
  *  -> classList: string | Additional classes as a string.
  *  -> attributes: object | Additional attributes.
  */
-function Input({type = "", classList = "", attributes}) {
+function Input({type, classList, attributes, onChange}) {
     return (
         <input
             className={[ClassName.Input, classList].join(" ")}
             type={type || "text"}
+            onChange={onChange}
             {...attributes}
         />
     )

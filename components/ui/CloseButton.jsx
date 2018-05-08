@@ -7,10 +7,11 @@ import "../../css/ui/close_button.css"
  * -> className: string | Additional classes as a string.
  * -> attributes: object | Additional attributes.
  */
-function CloseButton({className, attributes}) {
+function CloseButton({className, attributes, onClick}) {
     return (
         <button
             className={[ClassName.Close, className].join(" ")}
+            onClick={onClick}
             type="button"
             {...attributes}
         >
