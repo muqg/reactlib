@@ -3,9 +3,9 @@ import {ClassName} from "./init"
 import "../../css/ui/close_button.css"
 
 /**
- * @param {object} props
- * -> className: string | Additional classes as a string.
- * -> attributes: object | Additional attributes.
+ * - attributes - Key/value pairs of additional attributes.
+ * - className - Additional classes for the component.
+ * - onClick - An optional Callback() to handle click event.
  */
 function CloseButton({className, attributes, onClick}) {
     return (

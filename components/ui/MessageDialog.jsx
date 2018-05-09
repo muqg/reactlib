@@ -2,9 +2,14 @@ import * as React from "react"
 import Dialog from "./Dialog"
 // TODO: React | test component.
 
+
 /**
- * @param {object} props Any valid props for Dialog in addition to:
- * - text --> The message's text.
+ * - text - The dialog's text message.
+ * -----
+ * From Dialog:
+ * - onClose --> A valid callback() to close the dialog.
+ * - show --> Whether dialog is shown.
+ * - title --> The dialog's title.
  */
 const MessageDialog = (props) => (
     <Dialog {...props}>

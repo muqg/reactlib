@@ -3,11 +3,10 @@ import {ClassName} from "./init"
 import "../../css/ui/button.css"
 
 /**
- * @param {object} props
- *  -> text: string | Button's text.
- *  -> className: string | Additional classes as a string.
- *  -> attributes: object | Additional attributes.
- *  -> onClick: function | The callback function for when the button is clicked.
+ * - attributes - Key/value pairs of additional attributes.
+ * - className - Additional classes for the component.
+ * - onClick - An optional Callback() to handle click event.
+ * - text - Button's text.
  */
 function Button({text, onClick, className, attributes}) {
     return (

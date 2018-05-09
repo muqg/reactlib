@@ -2,13 +2,17 @@ import * as React from "react"
 import Dialog from "./Dialog"
 // TODO: React | test component.
 
+/**
+ * - onAccept - A callback() for when dialog is accepted.
+ * - onReject - A callback() for when dialog is rejected.
+ * -----
+ * From Dialog:
+ * - onClose --> A valid callback() to close the dialog.
+ * - show --> Whether dialog is shown.
+ * - title --> The dialog's title.
+ */
 class ConfirmationDialog extends React.Component {
-    /**
-     *
-     * @param {object} props Any valid props for Dialog in addition to:
-     * - onAccept --> A callback for when dialog is accepted.
-     * - onReject --> A callback for when dialog is rejected.
-     */
+
     constructor(props) {
         super(props)
 

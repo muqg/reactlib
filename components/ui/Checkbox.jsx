@@ -3,11 +3,11 @@ import {StyleClass, ClassName} from "./init"
 import "../../css/ui/checkbox.css"
 
 /**
- * @param {object} props
- *  -> className: String | Classes for the element.
- *      .disabled disables the checkbox.
- *      .checked marks the checkbox as checked.
- *  -> attributes: object | Additional attributes.
+ * - attributes - Key/value pairs of additional attributes.
+ * - className - Additional classes for the component.
+ *      - .disabled - Disables the checkbox.
+ *      - .checked - Marks the checkbox as checked.
+ * - onClick - An optional Callback() to handle click event.
  */
 class Checkbox extends React.Component {
     toggleActive(e) {
@@ -20,6 +20,9 @@ class Checkbox extends React.Component {
 
             e.target.dispatchEvent(new Event("change"))
         }
+
+        if(typeof this.props.onClick === "function")
+            this.props.onClick()
     }
 
     render() {

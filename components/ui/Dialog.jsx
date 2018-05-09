@@ -1,14 +1,12 @@
 import * as React from "react"
 // TODO: React | test component.
 
+/**
+ * - onClose --> A valid callback() to close the dialog.
+ * - show --> Whether dialog is shown.
+ * - title --> The dialog's title.
+ */
 class Dialog extends React.Component {
-    /**
-     * A base Dialog component.
-     * @param {object} props
-     * - show --> Whether dialog is shown.
-     * - onClose --> Callback to close the dialog.
-     * - title --> The dialog's title.
-     */
     constructor(props) {
         super(props)
 

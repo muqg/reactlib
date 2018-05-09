@@ -3,15 +3,15 @@ import {ClassName} from "./init"
 import "../../css/ui/input.css"
 
 /**
- * @param {any} props
- *  -> type: string | The type of the input.
- *  -> classList: string | Additional classes as a string.
- *  -> attributes: object | Additional attributes.
+ * - attributes - Key/value pairs of additional attributes.
+ * - className - Additional classes for the component.
+ * - onChange - An optional Callback() to handle input change.
+ * - type - Input's type.
  */
-function Input({type, classList, attributes, onChange}) {
+function Input({type, className, attributes, onChange}) {
     return (
         <input
-            className={[ClassName.Input, classList].join(" ")}
+            className={[ClassName.Input, className].join(" ")}
             type={type || "text"}
             onChange={onChange}
             {...attributes}
