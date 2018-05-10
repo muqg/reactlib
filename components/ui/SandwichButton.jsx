@@ -16,23 +16,24 @@ class SandwichButton extends React.Component {
     }
 
     handleClick() {
+        const active = !this.state.active
         this.setState({
-            active: !this.state.active
+            active
         })
 
         if(typeof this.props.onClick === "function")
-            this.props.onClick(this.state.active)
+            this.props.onClick(active)
     }
 
     render() {
-        const classes = "l_sandwich_container" +
+        const classes = "l_sandwich" +
             (this.state.active ? " active" : "")
 
         return (
-            <div className="l_sandwich" {...this.props.attributes}>
+            <div className="l_sandwich_container" {...this.props.attributes}>
                 <button
                     className={classes}
-                    onClick={this.handleClick}
+                    onClick={this.handleClick.bind(this)}
                 >
                     <span></span>
                 </button>
