@@ -30,6 +30,6 @@ export function getURI(path = '') {
 export function render(element) {
     ReactDOM.render(
         element,
-        document.getElementById("#app")
+        document.getElementById("app")
     )
 }
