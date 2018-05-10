@@ -4,7 +4,7 @@ import "../../css/ui/sandwich_button.css"
 /**
  * - attributes - Key/value pairs of additional attributes.
  * - className - Additional classes for the component.
- * - onClick - An optional Callback() to handle click event.
+ * - onClick - An optional Callback(isActive) to handle click event.
  */
 class SandwichButton extends React.Component {
     constructor(props) {
@@ -21,11 +21,11 @@ class SandwichButton extends React.Component {
         })
 
         if(typeof this.props.onClick === "function")
-            this.props.onClick()
+            this.props.onClick(this.state.active)
     }
 
     render() {
-        const classes = ClassName.SandwichButton +
+        const classes = "l_sandwich_container" +
             (this.state.active ? " active" : "")
 
         return (
