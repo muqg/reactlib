@@ -1,5 +1,5 @@
 import * as ReactDOM from "react-dom"
-import {getElement, formatString} from "./utility"
+import { getElement, formatString } from "./utility"
 
 
 const stateElement = document.querySelector("#initial_state")
