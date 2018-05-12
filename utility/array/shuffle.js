@@ -1,5 +1,5 @@
 /**
- * Fisher-Yates shuffle.
+ * Shuffles an array using the Fisher-Yattes algorithm.
  * @param {any} array The array to shuffle.
  */
 const shuffle = (array) => {
