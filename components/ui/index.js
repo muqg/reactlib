@@ -1,24 +1,10 @@
-import Button from "./Button"
-import Checkbox from "./Checkbox"
-import CloseButton from "./CloseButton"
-import ConfirmationDialog from "./ConfirmationDialog"
-import Dialog from "./Dialog"
-import Input from "./Input"
-import MessageDialog from "./MessageDialog"
-import ProgressBar from "./ProgressBar"
-import SandwichButton from "./SandwichButton"
-import Select from "./Select"
-
-
-module.exports = {
-  Button,
-  Checkbox,
-  CloseButton,
-  ConfirmationDialog,
-  Dialog,
-  Input,
-  MessageDialog,
-  ProgressBar,
-  SandwichButton,
-  Select,
-}
+export { default as Button } from "./Button"
+export { default as Checkbox } from "./Checkbox"
+export { default as CloseButton } from "./CloseButton"
+export { default as ConfirmationDialog } from "./ConfirmationDialog"
+export { default as Dialog } from "./Dialog"
+export { default as Input } from "./Input"
+export { default as MessageDialog } from "./MessageDialog"
+export { default as ProgressBar } from "./ProgressBar"
+export { default as SandwichButton } from "./SandwichButton"
+export { default as Select } from "./Select"

@@ -1,6 +1,1 @@
-import Page from "./Page"
-
-
-module.exports = {
-    Page
-}
+export { default as Page } from "./Page"

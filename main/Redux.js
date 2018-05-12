@@ -1,5 +1,5 @@
-import { combineReducers, createStore} from "react-redux"
-import { INITIAL_STATE } from "./main"
+import { combineReducers, createStore} from "redux"
+import { INITIAL_STATE } from "./const"
 
 class Redux {
     constructor() {
@@ -26,7 +26,5 @@ class Redux {
     }
 }
 
-const instance = new Redux()
 
-
-export default instance
+export default new Redux()

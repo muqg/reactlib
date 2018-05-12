@@ -1,8 +1,2 @@
-import Container from "./Container"
-import Tab from "./Tab"
-
-
-module.exports = {
-    Container,
-    Tab,
-}
+export { default as Container } from "./Container"
+export { default as Tab } from "./Tab"

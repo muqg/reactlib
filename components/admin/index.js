@@ -1,8 +1,2 @@
-import Sidebar from "./Sidebar"
-import SidebarButton from "./SidebarButton"
-
-
-module.exports = {
-  Sidebar,
-  SidebarButton
-}
+export { default as Sidebar } from "./Sidebar"
+export { default as SidebarButton } from "./SidebarButton"

@@ -1,10 +1,10 @@
 import * as React from "react"
-import { limitString } from "../../utility"
+import { limit } from "../../utility/string"
 
 const BUTTON_TEXT_LENGTH = 16
 
 const SidebarButton = ({text, href = "#", attributes}) =>  {
-    const limited = limitString(text, BUTTON_TEXT_LENGTH)
+    const limited = limit(text, BUTTON_TEXT_LENGTH)
     const title = limited !== text ?  text : null
 
     return (
