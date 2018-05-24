@@ -1,10 +1,10 @@
 /**
  * Formats a string by replacing valid placeholders with provided values.
- * @param {string} str The string subject to replace in.
- * @param {any} args A variable number of arguments which are used to replace
+ * @param str The string subject to replace in.
+ * @param args A variable number of arguments which are used to replace
  * numeric placeholders or a key/value pair to replace named placeholders.
  */
-const format = (str, ...args) => {
+const format = (str: string, ...args) => {
     const type = typeof str
     if(type !== "string")
         throw (`First argument must be of type string, ${type} given.`)

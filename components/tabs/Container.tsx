@@ -1,23 +1,30 @@
-import * as React from "react"
-import "../../css/tabs.css"
+import * as React from "react";
+import "../../css/tabs.css";
 
+interface IProps {
+    attributes?: {}
+    children?: any
+    className?: string
+}
+
+interface IState {
+    tabIndex: number
+}
 
 class Container extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            tabIndex: 0
-        }
+    props: IProps = {}
+    state: IState = {
+        tabIndex: 0
     }
 
     render() {
         const elements = {
-            buttons: [],
-            tabs: []
+            buttons: [] as JSX.Element[],
+            tabs: [] as JSX.Element[]
         }
 
         React.Children.forEach(this.props.children, (child, i) => {
+            child = child as JSX.Element
             elements.buttons.push(this.getButton(child, i))
             elements.tabs.push(this.getTab(child, i))
         })
@@ -25,7 +32,7 @@ class Container extends React.Component {
         return (
             <div
                 className={["l_tabs_container", this.props.className].join(" ")}
-                {...this.attributes}
+                {...this.props.attributes}
             >
                 <div className="l_tab_buttons_container">
                     {elements.buttons}
@@ -35,7 +42,7 @@ class Container extends React.Component {
         )
     }
 
-    getButton(tab, i) {
+    getButton(tab: JSX.Element, i: number) {
         const text = tab.props.buttonText
         if(!text)
             throw("Tab's buttonText attribute is required and must evaluate to true.")
@@ -57,7 +64,7 @@ class Container extends React.Component {
         )
     }
 
-    getTab(tab, i) {
+    getTab(tab: JSX.Element, i: number) {
         const cls = "l_tab_wrapper" + (this.state.tabIndex === i ? " active" : "")
         return (
             <div className={cls} key={i}>

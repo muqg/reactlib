@@ -1,9 +1,9 @@
 /**
  * Returns a nested array or object element, using dot notation key access.
- * @param {string} key The key to the element, using dot notation.
- * @param {object} obj The subject array or object.
+ * @param key The key to the element, using dot notation.
+ * @param obj The subject array or object.
  */
-const getElement = (key, obj) => {
+const getElement = (key: string, obj: object) : any => {
     const split = key.split(".")
     const type = typeof obj
     if(type !== "object")

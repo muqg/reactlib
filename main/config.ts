@@ -1,11 +1,11 @@
-import { INITIAL_STATE } from "./const"
-import { getElement } from "../utility/array"
+import { getElement } from "../utility/array";
+import { INITIAL_STATE } from "./const";
 
 /**
  * Returns a config value from initial state.
- * @param {string} key Key to the config value, using dot notation.
+ * @param key Key to the config value, using dot notation.
  */
-const config = (key) => {
+const config = (key: string): any => {
     let result = getElement(key, INITIAL_STATE.config)
     if(result === null)
         result = key

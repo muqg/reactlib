@@ -9,4 +9,4 @@ export const INITIAL_STATE = (() => {
 /**
  * Current page's locale value.
  */
-export const CURRENT_LOCALE = document.getElementsByTagName("html")[0].getAttribute("lang") || undefined
+export const CURRENT_LOCALE = document.getElementsByTagName("html")[0].getAttribute("lang") || ''

@@ -58,7 +58,7 @@ function Serialization(WrappedComponent) {
 
 
     const name = WrappedComponent.displayName || WrappedComponent.name || "Component"
-    withSerialization.displayName = `withSerialization(name)`
+    withSerialization.displayName = `withSerialization(${name})`
     return withSerialization
 }
 

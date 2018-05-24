@@ -1,12 +1,12 @@
 /**
  * Parses attribute values off a form element.
- * @param {object} element The element to be parsed. Only element.value is parsed
+ * @param element The element to be parsed. Only element.value is parsed
  * by default unless additional values are provided.
- * @param {Array} additionalValues Names of additional element values to be added
+ * @param additionalValues Names of additional element values to be added
  * to the parsed data. If at least one additional value is supplied then the
  * resulting parsed data will be converted to object instead of a single value.
  */
-const parseFormElement = (element, includeData = false) => {
+const parseFormElement = (element: HTMLFormElement, includeData = false) : any => {
     const value = element.type === "checkbox" || element.type === "radio" ?
         element.checked : element.value
     const name = element.name

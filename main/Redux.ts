@@ -1,14 +1,12 @@
-import { combineReducers, createStore} from "redux"
-import { INITIAL_STATE } from "./const"
+import { combineReducers, createStore } from "redux";
+import { INITIAL_STATE } from "./const";
 
 /**
  * Redux universal store builder class.
  */
 class Redux {
-    constructor() {
-        this.reducers = {}
-        this.state = {...INITIAL_STATE}
-    }
+    reducers: object = {}
+    state: object = {...INITIAL_STATE}
 
     /**
      * Adds object state elements to store.

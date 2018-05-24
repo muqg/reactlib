@@ -1,6 +1,6 @@
-import * as React from "react"
-import {StyleClass, ClassName} from "./init"
-import "../../css/ui/checkbox.css"
+import * as React from "react";
+import "../../css/ui/checkbox.css";
+import { ClassName, StyleClass } from "./init";
 
 /**
  * - attributes - Key/value pairs of additional attributes.

@@ -1,18 +1,23 @@
-import * as React from "react"
-import "../../css/admin/sidebar.css"
+import * as React from "react";
+import "../../css/admin/sidebar.css";
+import SidebarButton from "./SidebarButton";
+
+interface IProps {
+    children?: any
+    buttons: Array<any>
+}
 
 class Sidebar extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            isActive: false
-        }
+    props: IProps = {
+        buttons: []
+    }
+    state = {
+        isActive: false
     }
 
     render() {
         const activeClass = this.state.isActive ? " active" : ""
-        const buttonElements = (this.props.buttons || []).map((btn, i) => {
+        const buttonElements = this.props.buttons.map((btn, i) => {
                 return <SidebarButton {...btn} key={i} />
         })
 
