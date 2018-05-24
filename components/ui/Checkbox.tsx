@@ -1,6 +1,11 @@
 import * as React from "react";
 import "../../css/ui/checkbox.css";
+import ICommonProps from "./ICommonProps";
 import { ClassName, StyleClass } from "./init";
+
+interface IProps extends ICommonProps {
+    onClick: () => void
+}
 
 /**
  * - attributes - Key/value pairs of additional attributes.
@@ -10,26 +15,31 @@ import { ClassName, StyleClass } from "./init";
  * - onClick - An optional Callback() to handle click event.
  */
 class Checkbox extends React.Component {
-    toggleActive(e) {
-        if(e.target.className.indexOf(StyleClass.Disabled) < 0) {
-            const isChecked = e.target.className.indexOf(StyleClass.Checked) >= 0
-                && e.target.checked === true
+    constructor(public props: IProps) {
+        super(props)
+    }
 
-            e.target.classList[!isChecked ? "add" : "remove"](StyleClass.Checked)
-            e.target.checked = !isChecked
+    toggleActive(event: React.MouseEvent<any>) {
+        const target = event.target as HTMLInputElement
+        if(target.className.indexOf(StyleClass.Disabled) < 0) {
+            const isChecked = target.className.indexOf(StyleClass.Checked) >= 0
+                && target.checked === true
 
-            e.target.dispatchEvent(new Event("change"))
+            target.classList[!isChecked ? "add" : "remove"](StyleClass.Checked)
+            target.checked = !isChecked
+
+            target.dispatchEvent(new Event("change"))
         }
 
-        if(typeof this.props.onClick === "function")
-            this.props.onClick()
+        this.props.onClick()
     }
 
     render() {
-        const className = this.props.className || ""
+        const className = this.props.className
         return (
             <span
                 className={[ClassName.Checkbox, className].join(" ")}
+                // @ts-ignore Until fixed.
                 checked={className.indexOf(StyleClass.Checked) >= 0 ? true : false}
                 onClick={(e) => this.toggleActive(e)}
                 {...this.props.attributes}

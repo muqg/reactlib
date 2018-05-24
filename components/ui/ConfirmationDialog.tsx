@@ -1,6 +1,15 @@
-import * as React from "react"
-import Dialog from "./Dialog"
+import * as React from "react";
+import Dialog from "./Dialog";
 // TODO: React | test component.
+
+interface IProps {
+    children?: any
+    onAccept?: () => void
+    onReject?: () => void
+    onClose: (e?: React.MouseEvent<any>) => void
+    show?: boolean
+    title?: string
+}
 
 /**
  * - onAccept - A callback() for when dialog is accepted.
@@ -12,8 +21,10 @@ import Dialog from "./Dialog"
  * - title --> The dialog's title.
  */
 class ConfirmationDialog extends React.Component {
+    public onAccept: () => void
+    public onReject: () => void
 
-    constructor(props) {
+    constructor(public props: IProps) {
         super(props)
 
         this.onAccept = this.props.onAccept || (() => {})

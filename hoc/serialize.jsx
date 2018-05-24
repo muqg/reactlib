@@ -1,5 +1,5 @@
 import * as React from "react"
-import { parseFormElement } from "../utility"
+import { parseFormElement } from "../utility/dom"
 
 /**
  * - handleChange - A callback(data, elementData) for when a form element changes.

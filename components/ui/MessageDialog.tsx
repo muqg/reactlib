@@ -3,6 +3,13 @@ import Dialog from "./Dialog"
 // TODO: React | test component.
 
 
+interface IProps {
+    onClose: (e: React.MouseEvent<any>) => void
+    show?: boolean
+    text: string
+    title?: string
+}
+
 /**
  * - text - The dialog's text message.
  * -----
@@ -11,7 +18,7 @@ import Dialog from "./Dialog"
  * - show --> Whether dialog is shown.
  * - title --> The dialog's title.
  */
-const MessageDialog = (props) => (
+const MessageDialog = (props: IProps) => (
     <Dialog {...props}>
         <div className="l_dialog_content">
             <p>{props.text}</p>

@@ -1,5 +1,12 @@
-import * as React from "react"
+import * as React from "react";
 // TODO: React | test component.
+
+interface IProps {
+    children?: any
+    onClose: (e?: React.MouseEvent<any>) => void
+    show?: boolean
+    title?: string
+}
 
 /**
  * - onClose --> A valid callback() to close the dialog.
@@ -7,11 +14,10 @@ import * as React from "react"
  * - title --> The dialog's title.
  */
 class Dialog extends React.Component {
-    constructor(props) {
-        super(props)
+    public close: (e: React.MouseEvent<any>) => void
 
-        if(typeof this.props.onClose !== "function")
-            throw("Dialog onClose property is required and must be a valid callback.")
+    constructor(public props: IProps) {
+        super(props)
         this.close = this.props.onClose
     }
 
