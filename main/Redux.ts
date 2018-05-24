@@ -10,23 +10,17 @@ class Redux {
 
     /**
      * Adds object state elements to store.
-     * @param {object} stateItems The state items to be added.
+     * @param stateItems The state items to be added.
      */
-    addToState(stateItems) {
-        const type = typeof stateItems
-        if(type !== "object")
-            throw("Expeceted object, " + type + " given")
+    addToState(stateItems: object) {
         this.state = {...this.state, ...stateItems}
     }
 
     /**
      * Adds reducers to store.
-     * @param {object} reducers The reducers to be added.
+     * @param reducers The reducers to be added.
      */
-    addReducers(reducers) {
-        const type = typeof reducers
-        if(type !== "object")
-            throw("Expeceted object, " + type + " given")
+    addReducers(reducers: object) {
         this.reducers = {...this.reducers, ...reducers}
     }
 
