@@ -1,4 +1,4 @@
-// TODO: implement fetch here.
+// TODO: React | implement.
 
 function request() {
     console.error("Function is not yet implemented (NYI).")

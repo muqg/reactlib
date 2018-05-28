@@ -1,4 +1,4 @@
-import { getElement } from "../utility/array";
+import { dig } from "../utility/collection";
 import { INITIAL_STATE } from "./const";
 
 /**
@@ -6,7 +6,7 @@ import { INITIAL_STATE } from "./const";
  * @param key Key to the config value, using dot notation.
  */
 const config = (key: string): any => {
-    let result = getElement(key, INITIAL_STATE.config)
+    let result = dig(key, INITIAL_STATE.config)
     if(result === null)
         result = key
     return result

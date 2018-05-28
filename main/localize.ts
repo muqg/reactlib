@@ -1,4 +1,4 @@
-import { getElement } from "../utility/array";
+import { dig } from "../utility/collection";
 import { format } from "../utility/string";
 import { INITIAL_STATE } from "./const";
 
@@ -8,8 +8,8 @@ import { INITIAL_STATE } from "./const";
  * @param args A variable number of arguments which are used to replace
  * numeric placeholders or a key/value pair to replace named placeholders.
  */
-const localize = (key: string, ...args) => {
-    let result = getElement(key, INITIAL_STATE.locale)
+const localize = (key: string, ...args: any[]) => {
+    let result = dig(key, INITIAL_STATE.locale)
     if(result === null)
         result = key
     else if(args && typeof result === "string")

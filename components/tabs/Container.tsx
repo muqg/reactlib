@@ -55,7 +55,7 @@ class Container extends React.Component {
             >
                 <button
                     data-index={i}
-                    onClick={(e) => this.tabButtonClicked(e.target)}
+                    onClick={(e) => this.tabButtonClicked(e.target as HTMLElement)}
                     title={text}
                 >
                     {text}
@@ -73,9 +73,9 @@ class Container extends React.Component {
         )
     }
 
-    tabButtonClicked(clicked) {
+    tabButtonClicked(clicked: HTMLElement) {
         this.setState({
-            tabIndex: parseInt(clicked.dataset.index)
+            tabIndex: parseInt(clicked.dataset.index as string)
         })
     }
 }

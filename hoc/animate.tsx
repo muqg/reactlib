@@ -7,6 +7,7 @@
 import * as React from "react";
 
 interface IStyleProps {
+    [key: string]: any
     bottom?: string
     height?: string
     left?: string
@@ -18,16 +19,16 @@ interface IStyleProps {
     width?: string
 }
 
-type AnimationType = "" | "fadeIn" | "fadeOut"
-
-const ANIMATION_TYPES = {
-    fadeIn: { opacity: 1, visibility: "visible" },
-    fadeOut: { opacity: 0, visibility: "visible" }
-}
-
-interface IProps {
+interface Props {
     style: IStyleProps
     noSpecial?: boolean
+}
+
+type AnimationType = "" | "fadeIn" | "fadeOut"
+
+const ANIMATION_TYPES: { [key: string]: any} = {
+    fadeIn: { opacity: 1, visibility: "visible" },
+    fadeOut: { opacity: 0, visibility: "visible" }
 }
 
 /**
@@ -36,12 +37,13 @@ interface IProps {
  * @param initialStyle Key/value pairs for initial element styling.
  * @param noSpecial No special animations enabled. This does not create a ref.
  */
-function Animation(WrappedComponent, initialStyle: IStyleProps = {}, noSpecial = false) {
+function Animation(WrappedComponent: any, initialStyle: IStyleProps = {}, noSpecial = false) {
 
     class withAnimation extends React.Component {
-        props: IProps = {
+        props: Props = {
             style: {...initialStyle},
-            noSpecial: noSpecial
+            noSpecial: noSpecial,
+            ...this.props
         }
         state: IStyleProps = {
             ...(this.props.style)
@@ -52,7 +54,7 @@ function Animation(WrappedComponent, initialStyle: IStyleProps = {}, noSpecial =
         noSpecial: boolean
 
 
-        constructor(props) {
+        constructor(props: Props) {
             super(props)
 
             this.noSpecial = this.props.noSpecial as boolean
@@ -84,10 +86,9 @@ function Animation(WrappedComponent, initialStyle: IStyleProps = {}, noSpecial =
                     this.animateSpecial(this.animationElement.current, props)
             }
 
-            const style = {}
-            for(let key in props) {
+            const style: { [key: string]: any} = {}
+            for(let key in props)
                 style[key] = props[key]
-            }
 
             this.setState(style)
         }

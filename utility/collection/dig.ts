@@ -1,15 +1,17 @@
+import { Collection } from "../types";
+
 /**
  * Returns a nested array or object element, using dot notation key access.
  * @param key The key to the element, using dot notation.
- * @param obj The subject array or object.
+ * @param col The subject array or object.
  */
-const getElement = (key: string, obj: object) : any => {
+function dig(key: string, col: Collection) : any {
     const split = key.split(".")
-    const type = typeof obj
+    const type = typeof col
     if(type !== "object")
         throw (`Second argument must be of type object, ${type} given.`)
 
-    let result = obj
+    let result: any = col
     for(let k of split) {
         if(typeof result === "object")
             result = result[k] || null
@@ -17,5 +19,4 @@ const getElement = (key: string, obj: object) : any => {
     return result
 }
 
-
-export default getElement
+export default dig
