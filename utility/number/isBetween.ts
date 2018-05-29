@@ -1,5 +1,3 @@
-import swapValues from "./swapValues";
-
 /**
  * Tells whether a number is in between (in range) of two other.
  * @param val The number to be checked.
@@ -8,7 +6,7 @@ import swapValues from "./swapValues";
  */
 function isBetween(val: number, a: number, b: number) {
     if(a > b)
-        var {a, b} = swapValues(a, b)
+        [b, a] = [a, b]
     return val > a && val < b
 }
 

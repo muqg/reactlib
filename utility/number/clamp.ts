@@ -1,5 +1,3 @@
-import swapValues from "./swapValues";
-
 /**
  * Clamps a numeric value.
  * @param val The value to be clamped.
@@ -8,7 +6,7 @@ import swapValues from "./swapValues";
  */
 const clamp = (val: number, min: number, max: number) => {
     if(min > max)
-        var {a: min, b: max} = swapValues(min, max)
+	[max, min] = [min, max]
     return Math.min(Math.max(val, min), max)
 }
 

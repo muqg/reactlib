@@ -1,5 +1,3 @@
-import { swapValues } from "../number";
-
 /**
  * Generates a random integer number in range (inclusive). From 0 to specified
  * upper number limit.
@@ -14,7 +12,7 @@ function random(max: number) : number
 function random(min: number, max: number) : number
 function random(min: number, max: number = 0) {
     if(min > max)
-        var {a: min, b: max} = swapValues(min, max)
+	[max, min] = [min, max]
     return Math.floor(Math.random() * (max - min + 1 ) + min)
 }
 

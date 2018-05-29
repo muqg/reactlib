@@ -6,7 +6,7 @@ import { clamp } from "../number";
  * @param green Green color value.
  * @param blue Blue color value.
  */
-function hexColor(red = 0, green = 0, blue = 0) {
+function hexColor(red: number, green: number, blue: number) {
     red = clamp(red, 0, 255)
     green = clamp(green, 0, 255)
     blue = clamp(blue, 0, 255)
