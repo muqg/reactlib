@@ -1,3 +1,4 @@
+export { default as classNames } from "./classNames"
 export { default as Editor } from "./Editor"
 export { default as hexColor } from "./hexColor"
 export { default as parseFormElement } from "./parseFormElement"
