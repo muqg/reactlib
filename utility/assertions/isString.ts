@@ -2,8 +2,10 @@
  * Checks whether a value is a string.
  * @param value The value to be checked.
  */
-function isString(value: any): value is string {
-    return typeof value === "string"
+function isString(value: any): value is string
+
+function isString(value) {
+    return value.constructor === String
 }
 
 
