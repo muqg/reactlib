@@ -1,5 +1,4 @@
 import * as assert from ".";
-import { upperFirst } from "../string";
 
 /**
  * Returns the provided value if it is a valid Array or the default one instead.
@@ -45,16 +44,36 @@ function def(value: any, defaultObject: object): object
 function def(value: any, defaultString: string): string
 
 function def(value: any, defaultValue: any) {
-    if(assert.isNull(value) || assert.isUndefined(value))
-        return defaultValue
+    if(!assert.isNull(value) && !assert.isUndefined(value)) {
+        let isDefaultType = false
 
-    let assertion = "is" + value.constructor.name
-    if(!(assertion in assert))
-        assertion = "is" + upperFirst(typeof value)
+        let assertion = value.constructor.name
+        if(!(("is" + assertion) in assert))
+            assertion = typeof value
 
-    // @ts-ignore
-    if(assertion[assertion](value))
-        return value
+        switch(assertion.toLowerCase()) {
+            case "array":
+                isDefaultType = assert.isArray(value)
+                break
+            case "boolean":
+                isDefaultType = assert.isBoolean(value)
+                break
+            case "function":
+                isDefaultType = assert.isFunction(value)
+                break
+            case "number":
+                isDefaultType = assert.isNumber(value)
+                return
+            case "object":
+                isDefaultType = assert.isObject(value)
+                break
+            case "string":
+                isDefaultType = assert.isString(value)
+                break
+        }
+        if(isDefaultType)
+            return value
+    }
     return defaultValue
 }
 
