@@ -3,6 +3,19 @@ import { INITIAL_STATE } from "./const";
 import def from "../utility/assertions/def";
 
 /**
+ * Returns a string configuration value or throws an error if the found value is
+ * not of this type or is missing.
+ * @param key Key to the config string, using dot notation
+ */
+function config(key: string) : string
+/**
+ * Returns a string configuration value or throws an error if the found value is
+ * not of this type or is missing.
+ * @param key Key to the config string, using dot notation
+ * @param defaultString Default value to use if string is not found at this key.
+ */
+function config(key: string, defaultString: string) : string
+/**
  * Returns an array configuration value or throws an error if the found value is
  * not of this type or is missing.
  * @param key Key to the config array, using dot notation
@@ -30,15 +43,8 @@ function config(key: string, defaultNumber: number) : number
  * @param defaultObject Default value to use if object is not found at this key.
  */
 function config(key: string, defaultBoolean: object) : object
-/**
- * Returns a string configuration value or throws an error if the found value is
- * not of this type or is missing.
- * @param key Key to the config string, using dot notation
- * @param defaultString Default value to use if string is not found at this key.
- */
-function config(key: string, defaultString: string) : string
 
-function config(key, defaultValue) {
+function config(key: any, defaultValue: any = "") {
     let result = dig(key, INITIAL_STATE.config)
     result = def(result, defaultValue)
 

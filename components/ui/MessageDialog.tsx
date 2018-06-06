@@ -19,7 +19,7 @@ interface IProps {
  * - title --> The dialog's title.
  */
 const MessageDialog = (props: IProps) => (
-    <Dialog {...props}>
+    <Dialog {...props} >
         <div className="l_dialog_content">
             <p>{props.text}</p>
         </div>

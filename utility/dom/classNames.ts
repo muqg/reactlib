@@ -24,6 +24,7 @@ function classNames(...classArgs: (string | number | object)[]): string {
             for (let cls in arg) {
                 // Always prefers the TRUE value, i.e. class is applied
                 // if at least one of the duplicate values is TRUE.
+                //@ts-ignore
                 classes[cls] = arg[cls] || classes[cls]
             }
         }

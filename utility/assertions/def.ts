@@ -24,7 +24,7 @@ function def<T extends () => any>(value: any, defaultFunction: T): T
  * @param value The value to be tested.
  * @param defaultValue The default value.
  */
-function def<T extends (...values) => any>(value: any, defaultFunction: T): T
+function def<T extends (...values: any[]) => any>(value: any, defaultFunction: T): T
 /**
  * Returns the provided value if it is a valid number or the default one instead.
  * @param value The value to be tested.
@@ -44,7 +44,7 @@ function def(value: any, defaultObject: object): object
  */
 function def(value: any, defaultString: string): string
 
-function def(value, defaultValue) {
+function def(value: any, defaultValue: any) {
     if(assert.isNull(value) || assert.isUndefined(value))
         return defaultValue
 
@@ -52,6 +52,7 @@ function def(value, defaultValue) {
     if(!(assertion in assert))
         assertion = "is" + upperFirst(typeof value)
 
+    // @ts-ignore
     if(assertion[assertion](value))
         return value
     return defaultValue

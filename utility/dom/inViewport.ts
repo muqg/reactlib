@@ -12,7 +12,7 @@ function inViewport(element: Element): boolean
  */
 function inViewport(element: Element, offset: number): boolean
 
-function inViewport(element, offset = 0) {
+function inViewport(element: Element, offset = 0) {
     const rect = element.getBoundingClientRect()
     const viewport = {
         top: rect.top - window.innerHeight - offset,

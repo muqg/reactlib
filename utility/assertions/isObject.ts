@@ -18,7 +18,7 @@ function isObject<T extends object>(value: any): value is T
  */
 function isObject<T extends object>(value: any, constructor: new () => T): value is T
 
-function isObject(value, constructor?) {
+function isObject(value:any, constructor?: new () => {}) {
     if(constructor)
         return value instanceof constructor
     else

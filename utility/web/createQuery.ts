@@ -4,6 +4,7 @@
  */
 function createQuery(params: object) : string {
     return Object.keys(params).map(
+        //@ts-ignore
         key => encodeURIComponent(key) + "=" + encodeURIComponent(params[key])
     ).join("&")
 }

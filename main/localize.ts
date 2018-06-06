@@ -11,14 +11,6 @@ import { INITIAL_STATE } from "./const";
  */
 function localize(key: string) : string
 /**
- * Returns a localized string value from initial state's locale or the provided
- * key if a string is not found.
- * @param key Localization key, using dot notation.
- * @param args A variable number of arguments which are used to replace
- * numeric placeholders or a key/value pair to replace named placeholders.
- */
-function localize(key: string, ...args: any[]): string
-/**
  * Returns a localized boolean value from initial state's locale or the default
  * value if a number is not found.
  * @param key Localization key, using dot notation.
@@ -46,8 +38,16 @@ function localize(key: string, defaultObject: object): object
  * @param defaultArray Default value to be used if a localized item is not found.
  */
 function localize(key: string, defaultArray: Array<any>): Array<any>
+/**
+ * Returns a localized string value from initial state's locale or the provided
+ * key if a string is not found.
+ * @param key Localization key, using dot notation.
+ * @param args A variable number of arguments which are used to replace
+ * numeric placeholders or a key/value pair to replace named placeholders.
+ */
+function localize(key: string, ...args: any[]): string
 
-function localize(key, defaultValue = key, ...args) {
+function localize(key: any, defaultValue = key, ...args: any[]) {
     // Accounts for the first case where localization is looking for a string.
     if(isString(defaultValue) && key !== defaultValue) {
         args.unshift(defaultValue)
