@@ -30,7 +30,11 @@ class Redux {
     getStore() {
         if(!this.reducers)
             throw("Cannot create a store when there are no reducers.")
-        return createStore(combineReducers(this.reducers), this.state)
+        const store = createStore(combineReducers(this.reducers), this.state)
+
+        // Reset Redux factory before returning the store.
+        this.reducers = this.state = {}
+        return store
     }
 }
 
