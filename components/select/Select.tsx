@@ -1,12 +1,13 @@
 import * as React from "react";
-import { StyleClass } from "../../utility/enums";
-import { OutsideAlerter, classNames } from "../../utility/dom";
-import { SelectOption } from ".";
 import { isUndefined } from "../../utility/assertions";
+import { classNames, OutsideAlerter } from "../../utility/dom";
+import { StyleClass } from "../../utility/enums";
 
 interface Props {
+    name: string
+    multiple?: boolean
     className?: string
-    children?: SelectOption[]
+    children?: any
     onChange?: (e: React.ChangeEvent<HTMLDivElement>) => void
 }
 
@@ -38,6 +39,7 @@ class Select extends React.Component {
         OutsideAlerter.removeContainer(this.container.current as HTMLElement)
     }
 
+
     toggleActive(isActive?: boolean) {
         this.setState({
             isActive: isUndefined(isActive) ? !this.state.isActive : isActive
@@ -45,10 +47,24 @@ class Select extends React.Component {
     }
 
     render() {
+        const optionType = this.props.multiple ? "checkbox" : "radio"
+        const childOptions = React.Children.map(this.props.children, (child) => {
+            if(React.isValidElement(child)) {
+                const props: any = {
+                    name: this.props.name,
+                    type: optionType
+                }
+                return React.cloneElement(child, props)
+            }
+        })
+
         const classes = classNames(
             "l_select",
-            this.props.className,
-            { [StyleClass.Active]: this.state.isActive }
+            (this.props.className || ""),
+            {
+                [StyleClass.Active]: this.state.isActive,
+                "multiple": this.props.multiple
+            }
         )
 
         return(
@@ -59,7 +75,7 @@ class Select extends React.Component {
                 onClick={() => this.toggleActive()}
             >
                 <div>
-                    {this.props.children}
+                    {childOptions}
                 </div>
             </div>
         )

@@ -1,9 +1,8 @@
-import { isNumber } from "../assertions";
 
 class OutsideAlerter {
     private currentId = 0
     private containers: {
-        [key: number]: {
+        [key: string]: {
             element: HTMLElement,
             callback: () => void
         }
@@ -32,10 +31,8 @@ class OutsideAlerter {
      * @param callback The alerting callback.
      */
     addContainer(container: HTMLElement, callback: () => void) {
-        let id: number | string | undefined = container.dataset.outsideAlerterId
-
-        if(!isNumber(id))
-            id = this.currentId++
+        let id = container.dataset.outsideAlerterId || this.currentId++
+        container.dataset.outsideAlerterId = id.toString()
 
         this.containers[id] = {
             element: container,
@@ -50,7 +47,7 @@ class OutsideAlerter {
      */
     removeContainer(container: HTMLElement): boolean {
         const id = container.dataset.outsideAlerterId
-        if(isNumber(id)) {
+        if(id) {
             delete this.containers[id]
             return true
         }
