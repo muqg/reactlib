@@ -25,19 +25,19 @@ function localize(key: string, defaultNumber: number): number
  */
 function localize(key: string, defaultBoolean: boolean): boolean
 /**
- * Returns a localized object element from initial state's locale or the default
- * value if an object is not found.
- * @param defaultObject Default value to be used if a localized item is not found.
- * @param key Localization key, using dot notation.
- */
-function localize(key: string, defaultObject: object): object
-/**
  * Returns a localized array element from initial state's locale or the default
  * value if an array is not found.
  * @param key Localization key, using dot notation.
  * @param defaultArray Default value to be used if a localized item is not found.
  */
 function localize(key: string, defaultArray: Array<any>): Array<any>
+/**
+ * Returns a localized object element from initial state's locale or the default
+ * value if an object is not found.
+ * @param defaultObject Default value to be used if a localized item is not found.
+ * @param key Localization key, using dot notation.
+ */
+function localize(key: string, defaultObject: object): object
 /**
  * Returns a localized string value from initial state's locale or the provided
  * key if a string is not found.
