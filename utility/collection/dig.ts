@@ -16,5 +16,4 @@ function dig(key: string, col: Collection): object | any[] | string | boolean | 
     return result
 }
 
-
 export default dig

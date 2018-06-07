@@ -1,6 +1,6 @@
 import * as React from "react"
+import { parseFormElement } from "../utility/dom"
 import { def } from "../utility/assertions";
-import parseFormElement from "../utility/dom/parseFormElement";
 
 export interface SerializationProps {
     /**

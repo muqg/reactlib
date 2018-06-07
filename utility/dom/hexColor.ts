@@ -1,4 +1,4 @@
-import clamp from "../number/clamp";
+import { clamp } from "../number";
 
 /**
  * Converts an RGB color to its hexadecimal representation.

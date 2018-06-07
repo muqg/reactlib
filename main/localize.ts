@@ -1,6 +1,7 @@
-import { isString, def } from "../utility/assertions";
-import dig from "../utility/collection/dig";
-import format from "../utility/string/format";
+import { isString } from "../utility/assertions";
+import def from "../utility/assertions/def";
+import { dig } from "../utility/collection";
+import { format } from "../utility/string";
 import { INITIAL_STATE } from "./const";
 
 /**

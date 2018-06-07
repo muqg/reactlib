@@ -1,6 +1,6 @@
-import { def } from "../utility/assertions";
+import { dig } from "../utility/collection";
 import { INITIAL_STATE } from "./const";
-import dig from "../utility/collection/dig";
+import def from "../utility/assertions/def";
 
 /**
  * Returns a string configuration value or throws an error if the found value is

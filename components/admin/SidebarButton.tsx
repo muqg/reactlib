@@ -1,5 +1,5 @@
 import * as React from "react"
-import truncate from "../../utility/string/truncate";
+import { truncate } from "../../utility/string"
 
 interface Props {
     text: string
