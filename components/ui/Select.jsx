@@ -17,6 +17,7 @@ import "../../css/ui/select.css"
 */
 class Select extends React.Component {
     constructor(props) {
+        console.warn("components/ui/Select is deprecated. Use components/select instead.")
         super(props)
 
         this.className = this.props.className || ""

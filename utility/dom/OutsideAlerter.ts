@@ -1,13 +1,10 @@
-
-interface Container extends HTMLElement {
-    __outsideContainerId: number
-}
+import { isNumber } from "../assertions";
 
 class OutsideAlerter {
     private currentId = 0
     private containers: {
         [key: number]: {
-            element: Container,
+            element: HTMLElement,
             callback: () => void
         }
     }
@@ -19,11 +16,11 @@ class OutsideAlerter {
     }
 
     private handleClick(event: React.MouseEvent<any>) {
-        const target = event.target
+        const target = event.target as HTMLElement
         for(let id in this.containers) {
             const currentContainer = this.containers[id]
 
-            if(!currentContainer.element.contains(target as HTMLElement))
+            if(!currentContainer.element.contains(target))
                 currentContainer.callback()
         }
     }
@@ -34,8 +31,12 @@ class OutsideAlerter {
      * @param container The container element.
      * @param callback The alerting callback.
      */
-    addContainer(container: Container, callback: () => void) {
-        const id = container.__outsideContainerId || this.currentId++
+    addContainer(container: HTMLElement, callback: () => void) {
+        let id: number | string | undefined = container.dataset.outsideAlerterId
+
+        if(!isNumber(id))
+            id = this.currentId++
+
         this.containers[id] = {
             element: container,
             callback
@@ -47,9 +48,9 @@ class OutsideAlerter {
      * @param container The container to be removed.
      * @returns True if element was removed, false otherwise.
      */
-    removeContainer(container: Container): boolean {
-        const id = container.__outsideContainerId
-        if(id) {
+    removeContainer(container: HTMLElement): boolean {
+        const id = container.dataset.outsideAlerterId
+        if(isNumber(id)) {
             delete this.containers[id]
             return true
         }
@@ -58,4 +59,8 @@ class OutsideAlerter {
 }
 
 
-export default new OutsideAlerter()
+/**
+ * Alerts (via callback) when a click occurs outside of a container element.
+ */
+const alerter = new OutsideAlerter()
+export default alerter
