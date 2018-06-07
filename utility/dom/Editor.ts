@@ -1,6 +1,5 @@
-import { clamp } from "../number";
-import { capitalize } from "../string";
-
+import capitalize from "../string/capitalize";
+import clamp from "../number/clamp";
 
 type AlignPosition = "left" | "right" | "center" | "full"
 type FontSize = 1 | 2 | 3 | 4 | 5 | 6 | 7

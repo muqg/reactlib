@@ -2,7 +2,7 @@
  * Shuffles an array using the Fisher-Yattes algorithm.
  * @param arr The array to shuffle.
  */
-const shuffle = (arr: any[]) => {
+function shuffle(arr: any[]) {
     // Copy into a new array in order to not affect the other one.
     const newArray = arr.slice()
 
