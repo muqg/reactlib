@@ -2,7 +2,6 @@ import * as React from "react";
 
 interface Props {
     children?: any
-    text?: string
     value?: string
 
     /**
@@ -37,10 +36,7 @@ class SelectOption extends React.Component {
                     checked={this.props.checked}
                 />
                 <div>
-                    <p>
-                        {this.props.text || this.props.value}
-                    </p>
-                    {this.props.children}
+                    {this.props.children || this.props.value}
                 </div>
             </label>
         )
