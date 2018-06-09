@@ -1,13 +1,13 @@
+import { StringDict } from "../interfaces";
 import { clamp } from "../number";
 import { capitalize } from "../string";
-import { StringDict } from "../interfaces";
 
 
 type AlignPosition = "left" | "right" | "center" | "full"
 type FontSize = 1 | 2 | 3 | 4 | 5 | 6 | 7
 type HeadingSize = 1 | 2 | 3 | 4 | 5 | 6
 
-interface ImageStyle extends StringDict<any> {
+export interface ImageStyle extends StringDict<any> {
     display?: string
     height?: string
     width?: string
@@ -190,8 +190,7 @@ class Editor {
      *
      * @param src Image source.
      * @param alt Image's alt text value.
-     * @param style Additional styling for the image element. Currently suported:
-     * display | height | width.
+     * @param style Additional styling for the image element. Currently suported.
      */
     insertImage(src: string, alt: string = "", style: ImageStyle = {}) {
         const img = document.createElement("img")
