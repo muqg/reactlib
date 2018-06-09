@@ -1,7 +1,7 @@
 import * as React from "react"
-import {ClassName} from "./init"
 import "../../css/ui/button.css"
 import ICommonProps from "./ICommonProps";
+import { classNames } from "../../utility/dom";
 
 interface IProps extends ICommonProps {
     onClick: (e: React.MouseEvent<any>) => void
@@ -17,7 +17,7 @@ interface IProps extends ICommonProps {
 function Button({text, onClick, className = "", attributes = {}}: IProps) {
     return (
         <button
-            className={[ClassName.Button, className].join(" ")}
+            className={classNames("l_gui_button", className)}
             type="button"
             onClick={onClick}
             {...attributes}

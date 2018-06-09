@@ -9,7 +9,7 @@ import { StringDict } from "../interfaces";
  * duplicate values will be discarded. Duplicate object values
  * that are truthy take precedence over falsey ones.
  */
-function classNames(...classArgs: (string | number | object)[]): string {
+function classNames(...classArgs: any[]): string {
     const classes: StringDict<boolean> = {}
 
     classArgs.forEach(arg => {

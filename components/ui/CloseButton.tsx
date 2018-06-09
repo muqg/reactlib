@@ -1,7 +1,7 @@
 import * as React from "react";
 import "../../css/ui/close_button.css";
+import { classNames } from "../../utility/dom";
 import ICommonProps from "./ICommonProps";
-import { ClassName } from "./init";
 
 interface IProps extends ICommonProps {
     onClick: (e: React.MouseEvent<any>) => void
@@ -15,7 +15,7 @@ interface IProps extends ICommonProps {
 function CloseButton({className = "", attributes = {}, onClick}: IProps) {
     return (
         <button
-            className={[ClassName.Close, className].join(" ")}
+            className={classNames(".l_gui_close", className)}
             onClick={onClick}
             type="button"
             {...attributes}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import "../../css/ui/input.css";
+import { classNames } from "../../utility/dom";
 import ICommonProps from "./ICommonProps";
-import { ClassName } from "./init";
 
 interface IProps extends ICommonProps {
     onChange?: (e: React.ChangeEvent<any>) => void
@@ -17,7 +17,7 @@ interface IProps extends ICommonProps {
 function Input({type = "text", className = "", attributes = {}, onChange}: IProps) {
     return (
         <input
-            className={[ClassName.Input, className].join(" ")}
+            className={classNames(".l_gui_input", className)}
             type={type}
             onChange={onChange}
             {...attributes}

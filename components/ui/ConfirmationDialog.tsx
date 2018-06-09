@@ -24,7 +24,7 @@ class ConfirmationDialog extends React.Component {
     public onAccept: () => void
     public onReject: () => void
 
-    constructor(public props: IProps) {
+    constructor(public readonly props: IProps) {
         super(props)
 
         this.onAccept = this.props.onAccept || (() => {})

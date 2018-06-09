@@ -70,7 +70,7 @@ function request(method: RequestMethod, url: string, body: StringDict<string> = 
     return window.fetch(url, requestInit)
         .then((response) => {
             if(!response.ok)
-                throw(response.statusText)
+                throw(`(${response.status}) ${response.statusText}`)
             response.text()
         })
 }

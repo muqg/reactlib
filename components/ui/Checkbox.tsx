@@ -1,7 +1,8 @@
 import * as React from "react";
 import "../../css/ui/checkbox.css";
 import ICommonProps from "./ICommonProps";
-import { ClassName, StyleClass } from "./init";
+import { StyleClass } from "../../utility/enums";
+import { classNames } from "../../utility/dom";
 
 interface IProps extends ICommonProps {
     onClick: () => void
@@ -15,17 +16,19 @@ interface IProps extends ICommonProps {
  * - onClick - An optional Callback() to handle click event.
  */
 class Checkbox extends React.Component {
-    constructor(public props: IProps) {
+    // TODO: React | Implement with hidden input instead of change event and
+    // this way drop usave of "checked" class.
+    constructor(public readonly props: IProps) {
         super(props)
     }
 
     toggleActive(event: React.MouseEvent<any>) {
         const target = event.target as HTMLInputElement
         if(target.className.indexOf(StyleClass.Disabled) < 0) {
-            const isChecked = target.className.indexOf(StyleClass.Checked) >= 0
+            const isChecked = target.className.indexOf("checked") >= 0
                 && target.checked === true
 
-            target.classList[!isChecked ? "add" : "remove"](StyleClass.Checked)
+            target.classList[!isChecked ? "add" : "remove"]("checked")
             target.checked = !isChecked
 
             target.dispatchEvent(new Event("change"))
@@ -38,9 +41,9 @@ class Checkbox extends React.Component {
         const className = this.props.className
         return (
             <span
-                className={[ClassName.Checkbox, className].join(" ")}
+                className={classNames("l_gui_checkbox", this.props.className)}
                 // @ts-ignore Until fixed.
-                checked={className.indexOf(StyleClass.Checked) >= 0 ? true : false}
+                checked={className.indexOf("checked") >= 0 ? true : false}
                 onClick={(e) => this.toggleActive(e)}
                 {...this.props.attributes}
             >

@@ -16,7 +16,7 @@ interface IProps {
 class Dialog extends React.Component {
     public close: (e: React.MouseEvent<any>) => void
 
-    constructor(public props: IProps) {
+    constructor(public readonly props: IProps) {
         super(props)
         this.close = this.props.onClose
     }

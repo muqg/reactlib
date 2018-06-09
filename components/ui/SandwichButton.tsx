@@ -1,6 +1,8 @@
 import * as React from "react";
 import "../../css/ui/sandwich_button.css";
 import ICommonProps from "./ICommonProps";
+import { StyleClass } from "../../utility/enums";
+import { classNames } from "../../utility/dom";
 
 interface IProps extends ICommonProps {
     onClick?: (isActive: boolean, e: React.MouseEvent<any>) => void
@@ -18,7 +20,7 @@ interface IState {
 class SandwichButton extends React.Component {
     public state: IState
 
-    constructor(public props: IProps) {
+    constructor(public readonly props: IProps) {
         super(props)
 
         this.state = {
@@ -37,13 +39,18 @@ class SandwichButton extends React.Component {
     }
 
     render() {
-        const classes = "l_sandwich" +
-            (this.state.active ? " active" : "")
+        const classes = classNames(
+            "l_sandwich",
+            this.props.className,
+            {
+                [StyleClass.Active]: this.state.active,
+            }
+        )
 
         return (
             <div className="l_sandwich_container" {...this.props.attributes}>
                 <button
-                    className={[classes, this.props.className].join(" ")}
+                    className={classes}
                     onClick={this.handleClick.bind(this)}
                 >
                     <span></span>
