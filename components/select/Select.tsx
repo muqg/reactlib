@@ -25,14 +25,14 @@ interface State {
 }
 
 class Select extends React.Component {
-    container: React.RefObject<HTMLDivElement>
+    containerRef: React.RefObject<HTMLDivElement>
     isMultiple: boolean
     state: State
 
     constructor(public props: Props) {
         super(props)
 
-        this.container = React.createRef()
+        this.containerRef = React.createRef()
         this.state = {
             isActive: false
         }
@@ -42,7 +42,7 @@ class Select extends React.Component {
     componentDidMount() {
         if(!this.isMultiple) {
             OutsideAlerter.addContainer(
-                this.container.current as HTMLElement,
+                this.containerRef.current as HTMLElement,
                 () => this.toggleActive(false)
             )
         }
@@ -50,17 +50,27 @@ class Select extends React.Component {
 
     componentWillUnmount() {
         if(!this.isMultiple) {
-            OutsideAlerter.removeContainer(this.container.current as HTMLElement)
+            OutsideAlerter.removeContainer(this.containerRef.current as HTMLElement)
         }
     }
 
 
     toggleActive(isActive?: boolean) {
-        if(!this.isMultiple) {
-            this.setState({
-                isActive: isUndefined(isActive) ? !this.state.isActive : isActive
-            })
-        }
+        if(this.isMultiple)
+            return
+
+        this.setState({
+            isActive: isUndefined(isActive) ? !this.state.isActive : isActive
+        },
+        () => {
+            // Scroll to currently seletected element if active.
+            if(this.state.isActive) {
+                const node = this.containerRef.current as HTMLElement
+                const selected = node.querySelector("input:checked") as HTMLElement
+                const selectedParent = selected.parentElement as HTMLElement
+                selectedParent.scrollTop = selected.offsetTop - selected.offsetHeight
+            }
+        })
     }
 
     render() {
@@ -76,7 +86,7 @@ class Select extends React.Component {
         return(
             <div
                 className={classes}
-                ref={this.container}
+                ref={this.containerRef}
                 onChange={this.props.onChange}
                 onClick={() => { this.toggleActive() } }
             >
