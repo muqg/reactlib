@@ -10,6 +10,7 @@ function lowerFirst(str: string) : string
  * @param separator A separator for the individual words.
  */
 function lowerFirst(str: string, separator: string) : string
+
 function lowerFirst(str: string, separator?: string) {
     let res: string
     if(separator)
@@ -23,5 +24,6 @@ function lcfirst(str: string) {
     return str.charAt(0).toLowerCase() + str.slice(1)
 }
 
-
-export default lowerFirst
+export {
+    lowerFirst
+}

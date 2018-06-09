@@ -6,7 +6,7 @@
  * to the parsed data. If at least one additional value is supplied then the
  * resulting parsed data will be converted to object instead of a single value.
  */
-function parseFormElement(element: HTMLFormElement, includeData = false): any {
+export function parseFormElement(element: HTMLFormElement, includeData = false): any {
     const value = element.type === "checkbox" || element.type === "radio" ?
         element.checked : element.value
     const name = element.name
@@ -31,6 +31,3 @@ function parseFormElement(element: HTMLFormElement, includeData = false): any {
 
     return result
 }
-
-
-export default parseFormElement

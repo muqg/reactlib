@@ -9,7 +9,7 @@ import { StringDict } from "../interfaces";
  * duplicate values will be discarded. Duplicate object values
  * that are truthy take precedence over falsey ones.
  */
-function classNames(...classArgs: any[]): string {
+export function classNames(...classArgs: any[]): string {
     const classes: StringDict<boolean> = {}
 
     classArgs.forEach(arg => {
@@ -29,6 +29,3 @@ function classNames(...classArgs: any[]): string {
 
     return Object.keys(classes).filter(k => classes[k]).join(" ")
 }
-
-
-export default classNames

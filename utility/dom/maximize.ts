@@ -22,4 +22,6 @@ function maximize(element: HTMLElement, height: boolean, width?: boolean) {
         element.style.width = width ? element.scrollWidth + "px" : ""
 }
 
-export default maximize
+export {
+    maximize
+}

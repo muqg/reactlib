@@ -1,4 +1,4 @@
-export { default as clamp } from "./clamp"
-export { default as isBetween } from "./isBetween"
-export { default as isEven } from "./isEven"
-export { default as isOdd } from "./isOdd"
+export { clamp } from "./clamp"
+export { isBetween } from "./isBetween"
+export { isEven } from "./isEven"
+export { isOdd } from "./isOdd"

@@ -10,6 +10,7 @@ function upperFirst(str: string) : string
  * @param separator A separator for the individual words.
  */
 function upperFirst(str: string, separator: string) : string
+
 function upperFirst(str: string, separator?: string) {
     let res: string
     if(separator)
@@ -23,5 +24,6 @@ function ucfirst(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-
-export default upperFirst
+export {
+    upperFirst
+}

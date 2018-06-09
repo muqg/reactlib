@@ -1,5 +1,4 @@
-import { isString } from "../utility/assertions";
-import def from "../utility/assertions/def";
+import { def, isString } from "../utility/assertions";
 import { dig } from "../utility/collection";
 import { format } from "../utility/string";
 import { INITIAL_STATE } from "./const";
@@ -64,5 +63,6 @@ function localize(key: any, defaultValue = key, ...args: any[]) {
     return result
 }
 
-
-export default localize
+export {
+    localize
+}

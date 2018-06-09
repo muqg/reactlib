@@ -77,5 +77,6 @@ function def(value: any, defaultValue: any) {
     return defaultValue
 }
 
-
-export default def
+export {
+    def
+}

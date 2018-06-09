@@ -4,11 +4,9 @@
  * @param min Minimum value.
  * @param max Maximum value.
  */
-const clamp = (val: number, min: number, max: number) => {
+export function clamp(val: number, min: number, max: number) {
     if(min > max)
 	[max, min] = [min, max]
     return Math.min(Math.max(val, min), max)
 }
 
-
-export default clamp

@@ -1,1 +1,1 @@
-export { default as shuffle } from "./shuffle"
+export { shuffle } from "./shuffle"

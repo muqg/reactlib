@@ -1,1 +1,1 @@
-export { default as dig } from "./dig"
+export { dig } from "./dig"

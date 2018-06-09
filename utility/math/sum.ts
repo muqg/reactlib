@@ -8,9 +8,11 @@ function sum(nums: number[]) : number
  * @param nums The numbers to be summated.
  */
 function sum(...nums: any[]) : number
+
 function sum(nums: number[]) {
     return nums.reduce((a, b) => a + b, 0)
 }
 
-
-export default sum
+export {
+    sum
+}

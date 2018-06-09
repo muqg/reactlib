@@ -1,7 +1,8 @@
-export { default as classNames } from "./classNames"
-export { default as Editor } from "./Editor"
-export { default as hexColor } from "./hexColor"
-export { default as inViewport } from "./inViewport"
-export { default as OutsideAlerter } from "./OutsideAlerter"
-export { default as parseFormElement } from "./parseFormElement"
-export { default as rgbColor } from "./rgbColor"
+export { classNames } from "./classNames";
+export { Editor, ImageStyle } from "./Editor";
+export { hexColor } from "./hexColor";
+export { inViewport } from "./inViewport";
+export { maximize } from "./maximize";
+export { OutsideAlerter } from "./OutsideAlerter";
+export { parseFormElement } from "./parseFormElement";
+export { rgbColor } from "./rgbColor";

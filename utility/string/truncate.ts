@@ -10,5 +10,6 @@ const truncate = (str: string, maxLen = 12, addDots = true) => {
     return str
 }
 
-
-export default truncate
+export {
+    truncate
+}

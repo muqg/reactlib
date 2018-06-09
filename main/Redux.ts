@@ -38,5 +38,7 @@ class Redux {
     }
 }
 
-
-export default new Redux()
+const redux = new Redux()
+export {
+    redux as Redux
+}

@@ -1,1 +1,1 @@
-export { default as serialize } from "./serialize"
+export { serialize, SerializationProps } from "./serialize"

@@ -1,5 +1,6 @@
 import * as React from "react";
 import "../../css/tabs.css";
+import { classNames } from "../../utility/dom";
 
 interface IProps {
     attributes?: {}
@@ -8,7 +9,7 @@ interface IProps {
 }
 
 const Tab = ({children, className, attributes}: IProps) => (
-    <div className={["l_tab", className].join(" ")} {...attributes}>
+    <div className={classNames("l_tab", className)} {...attributes}>
         {children}
     </div>
 )

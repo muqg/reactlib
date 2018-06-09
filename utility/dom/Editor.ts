@@ -272,4 +272,7 @@ class Editor {
 
 
 const editor = new Editor()
-export default editor
+export {
+    editor as Editor,
+
+}

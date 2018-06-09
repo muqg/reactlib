@@ -12,6 +12,7 @@ function capitalize(str: string) : string
  * @param separator A separator for the individual words.
  */
 function capitalize(str: string, separator?: string) : string
+
 function capitalize(str: string, separator?: string) {
     let res: string
     if(separator)
@@ -26,4 +27,6 @@ function cap(str: string) {
 }
 
 
-export default capitalize
+export {
+    capitalize
+}

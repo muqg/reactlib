@@ -4,7 +4,7 @@
  * @param args A variable number of arguments which are used to replace
  * numeric placeholders or a key/value pair to replace named placeholders.
  */
-const format = (str: string, ...args: any[]) => {
+export function format(str: string, ...args: any[]) {
     const type = typeof str
     if(type !== "string")
         throw (`First argument must be of type string, ${type} given.`)
@@ -21,6 +21,3 @@ const format = (str: string, ...args: any[]) => {
 
     return str
 }
-
-
-export default format

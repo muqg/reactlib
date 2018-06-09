@@ -21,7 +21,7 @@ const X_CSRF_TOKEN = (() => {
  * @param method HTTP request method.
  * @param url Requested URL.
  */
-function request(method: RequestMethod, url: string): Promise<string | void>
+function request(method: RequestMethod, url: string): Promise<string>
 /**
  * Sends a request to the specified URL, reading response stream as text. Promise
  * always results in string except when error is thrown.
@@ -29,7 +29,7 @@ function request(method: RequestMethod, url: string): Promise<string | void>
  * @param url Requested URL.
  * @param body Request body's data.
  */
-function request(method: RequestMethod, url: string, body: StringDict<string>): Promise<string | void>
+function request(method: RequestMethod, url: string, body: StringDict<string>): Promise<string>
 /**
  * Sends a request to the specified URL, reading response stream as text. Promise
  * always results in string except when error is thrown.
@@ -38,7 +38,7 @@ function request(method: RequestMethod, url: string, body: StringDict<string>): 
  * @param body Request body's data.
  * @param options Request options.
  */
-function request(method: RequestMethod, url: string, body: StringDict<string>, options: RequestOptions): Promise<string | void>
+function request(method: RequestMethod, url: string, body: StringDict<string>, options: RequestOptions): Promise<string>
 
 function request(method: RequestMethod, url: string, body: StringDict<string> = {}, options: RequestOptions = {}) {
     const headers = options.headers || {} as StringDict<string>
@@ -71,9 +71,10 @@ function request(method: RequestMethod, url: string, body: StringDict<string> = 
         .then((response) => {
             if(!response.ok)
                 throw(`(${response.status}) ${response.statusText}`)
-            response.text()
+            return response.text()
         })
 }
 
-
-export default request
+export {
+    request
+}

@@ -1,4 +1,4 @@
-import sum from "./sum";
+import { sum } from ".";
 
 /**
  * Returns the mean (average) of an array of numbers.
@@ -10,9 +10,11 @@ function average(nums: number[]) : number
  * @param nums The numbers to average.
  */
 function average(...nums: any[]) : number
+
 function average(nums: number[]) {
     return sum(nums) / 2
 }
 
-
-export default average
+export {
+    average
+}

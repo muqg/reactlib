@@ -104,5 +104,6 @@ function Serialization(WrappedComponent: any, initialData?: {}) {
     return withSerialization
 }
 
-
-export default Serialization
+export {
+    Serialization as serialize
+}

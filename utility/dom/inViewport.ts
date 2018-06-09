@@ -28,5 +28,6 @@ function inViewport(element: Element, offset = 0) {
     )
 }
 
-
-export default inViewport
+export {
+    inViewport
+}

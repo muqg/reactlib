@@ -25,5 +25,6 @@ function isObject(value:any, constructor?: new () => {}) {
         return typeof value === "object" && !isNull(value)
 }
 
-
-export default isObject
+export {
+    isObject
+}

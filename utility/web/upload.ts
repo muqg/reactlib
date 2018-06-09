@@ -1,8 +1,5 @@
 // TODO: React | implement.
 
-function upload() {
+export function upload() {
     console.error("Function is not yet implemented (NYI).")
 }
-
-
-export default upload

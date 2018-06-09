@@ -1,6 +1,6 @@
 import { dig } from "../utility/collection";
 import { INITIAL_STATE } from "./const";
-import def from "../utility/assertions/def";
+import { def } from "../utility/assertions";
 
 /**
  * Returns a string configuration value or throws an error if the found value is
@@ -55,5 +55,6 @@ function config(key: any, defaultValue: any = "") {
     return result
 }
 
-
-export default config
+export {
+    config
+}

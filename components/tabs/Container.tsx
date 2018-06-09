@@ -1,5 +1,6 @@
 import * as React from "react";
 import "../../css/tabs.css";
+import { classNames } from "../../utility/dom";
 
 interface IProps {
     attributes?: {}
@@ -29,9 +30,10 @@ class Container extends React.Component {
             elements.tabs.push(this.getTab(child, i))
         })
 
+        const classes = classNames("l_tabs_container", this.props.className)
         return (
             <div
-                className={["l_tabs_container", this.props.className].join(" ")}
+                className={classes}
                 {...this.props.attributes}
             >
                 <div className="l_tab_buttons_container">

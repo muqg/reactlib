@@ -4,11 +4,8 @@
  * @param a First number range.
  * @param b Second number range.
  */
-function isBetween(val: number, a: number, b: number) {
+export function isBetween(val: number, a: number, b: number) {
     if(a > b)
         [b, a] = [a, b]
     return val > a && val < b
 }
-
-
-export default isBetween

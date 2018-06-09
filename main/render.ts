@@ -5,12 +5,9 @@ import * as ReactDOM from "react-dom";
  * ReactDOM.
  * @param element Valid JSX element to be rendered.
  */
-const render = (element: JSX.Element) => {
+export function render(element: JSX.Element) {
     ReactDOM.render(
         element,
         document.getElementById("contentContainer") as HTMLElement
     )
 }
-
-
-export default render

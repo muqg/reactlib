@@ -59,4 +59,6 @@ class OutsideAlerter {
  * Alerts (via callback) when a click occurs outside of a container element.
  */
 const alerter = new OutsideAlerter()
-export default alerter
+export {
+    alerter as OutsideAlerter
+}

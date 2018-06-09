@@ -2,7 +2,7 @@
  * Parses a valid query string into object of parameters.
  * @param query The query string to be parsed.
  */
-function parseQuery(query: string) : object {
+export function parseQuery(query: string) : object {
     query = query.replace("?", "")
 
     // Replace '&' and '=' with "," and ":" respectively.
@@ -12,6 +12,3 @@ function parseQuery(query: string) : object {
         (key, value) => key === "" ? value : decodeURIComponent(value)
     )
 }
-
-
-export default parseQuery
