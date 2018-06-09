@@ -20,3 +20,18 @@ export interface Color {
      */
     blue: number
 }
+
+
+/**
+ * A simple dictionary with string keys and values of generic type.
+ */
+export interface StringDict<TValue> {
+    [key: string]: TValue
+}
+
+/**
+ * A simple dictionary with number keys and values of generic type.
+ */
+export interface NumberDict<TValue> {
+    [key: number]: TValue
+}

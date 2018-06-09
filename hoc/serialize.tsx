@@ -1,16 +1,27 @@
 import * as React from "react"
 import { parseFormElement } from "../utility/dom"
-import { def } from "../utility/assertions";
+import { def, isUndefined } from "../utility/assertions";
 
 export interface SerializationProps {
     /**
-     * Accepts a callback for when change occurs on a serialized element.
+     * Handles data serialization an input element changes and accepts a callback
+     * that may handle any specific change behaviour.
      */
     handleChange: (event: React.ChangeEvent<any>, callback?:(serializedData: {}, changeData: {}) => void) => void
     /**
-     * Accepts a callback for when serialized data should be submitted.
+     * Handles basic data submission and accepts a callback that handles specific
+     * behaviour.
+     * - The callback can optionally return True or False to indicate whether
+     * submission was successful or not.
+     * - The callback may be async.
      */
-    handleSubmit: (event: React.SyntheticEvent<any>, callback?: (serializedData: {}) => void) => void
+    handleSubmit: (event: React.SyntheticEvent<any>, callback?: (serializedData: {}) => boolean | undefined) => void
+    /**
+     * Allows to set the initial data's value from inside the wrapped component.
+     * This method can only be called once and before the change or submission
+     * methods are called.
+     */
+    setInitialDataBeforeChanged: (initialData: object) => void
     /**
      * Holds the serialized data. Should be used to initially set values of
      * elements. Callbacks should be used for any direct manipulation.
@@ -19,8 +30,7 @@ export interface SerializationProps {
 }
 
 /**
- * Enhances a component with serialization, passing SerializationProps with
- * handleChange and handleSubmit callbacks.
+ * Enhances a component with serialization. See SerializationProps for more info.
  * @param WrappedComponent The component to be wrapped.
  * @param initialData Initial serialized data.
  */
@@ -48,16 +58,22 @@ function Serialization(WrappedComponent: any, initialData?: {}) {
                 if(callback)
                     callback(this.state, elementData)
             })
-
             this.hasChanged = true
         }
 
-        handleSubmit(event: React.SyntheticEvent<any>, callback?: (serializedData: {}) => void) {
+        async handleSubmit(event: React.SyntheticEvent<any>, callback?: (serializedData: {}) => boolean | undefined) {
             event.preventDefault();
-            if(callback)
-                callback(this.state)
-            // Reset serialized elements to passed initial state data.
-            this.setState(this.initialState)
+
+            let success = true
+            if(callback) {
+                // Allow async callback.
+                const res = await callback(this.state)
+                success = !isUndefined(res) ? res : success
+            }
+
+            // Reset serialized elements to passed initial state data on success.
+            if(success)
+                this.setState(this.initialState)
 
             this.hasChanged = true
         }
@@ -76,7 +92,7 @@ function Serialization(WrappedComponent: any, initialData?: {}) {
                     serializedData={this.state}
                     handleChange={this.handleChange.bind(this)}
                     handleSubmit={this.handleSubmit.bind(this)}
-                    setInitialDataBeforeChange={this.setInitialDataBeforeChanged(this)}
+                    setInitialDataBeforeChange={this.setInitialDataBeforeChanged.bind(this)}
                 />
              )
         }
