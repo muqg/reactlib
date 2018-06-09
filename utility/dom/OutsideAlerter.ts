@@ -1,12 +1,11 @@
+import { StringDict } from "../interfaces";
 
 class OutsideAlerter {
     private currentId = 0
-    private containers: {
-        [key: string]: {
-            element: HTMLElement,
-            callback: () => void
-        }
-    }
+    private containers: StringDict<{
+        element: HTMLElement,
+        callback: () => void
+    }>
 
     constructor() {
         document.addEventListener("mouseup", this.handleClick.bind(this))

@@ -41,7 +41,7 @@ function request(method: RequestMethod, url: string, body: StringDict<string>): 
 function request(method: RequestMethod, url: string, body: StringDict<string>, options: RequestOptions): Promise<string | void>
 
 function request(method: RequestMethod, url: string, body: StringDict<string> = {}, options: RequestOptions = {}) {
-    const headers = options.headers || {} as Headers
+    const headers = options.headers || {} as StringDict<string>
     headers["X-CSRF-TOKEN"] = X_CSRF_TOKEN
     headers["X-Requested-With"] = "XMLHttpRequest"
 

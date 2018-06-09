@@ -1,8 +1,6 @@
 ﻿import { isString, isNumber, isObject, isArray } from "../assertions"
+import { StringDict } from "../interfaces";
 
-interface ClassNames {
-    [key: string]: boolean
-}
 
 /**
  * Builds a dom element class name string.
@@ -12,7 +10,7 @@ interface ClassNames {
  * that are truthy take precedence over falsey ones.
  */
 function classNames(...classArgs: (string | number | object)[]): string {
-    const classes: ClassNames = {}
+    const classes: StringDict<boolean> = {}
 
     classArgs.forEach(arg => {
         if (!arg) return

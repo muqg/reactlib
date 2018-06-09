@@ -1,13 +1,13 @@
 import { clamp } from "../number";
 import { capitalize } from "../string";
+import { StringDict } from "../interfaces";
 
 
 type AlignPosition = "left" | "right" | "center" | "full"
 type FontSize = 1 | 2 | 3 | 4 | 5 | 6 | 7
 type HeadingSize = 1 | 2 | 3 | 4 | 5 | 6
 
-interface ImageStyle {
-    [key: string]: any
+interface ImageStyle extends StringDict<any> {
     display?: string
     height?: string
     width?: string

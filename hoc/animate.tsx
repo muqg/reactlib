@@ -5,9 +5,9 @@
 */
 
 import * as React from "react";
+import { StringDict } from "../utility/interfaces";
 
-interface IStyleProps {
-    [key: string]: any
+interface IStyleProps extends StringDict<any>{
     bottom?: string
     height?: string
     left?: string
@@ -26,7 +26,7 @@ interface Props {
 
 type AnimationType = "" | "fadeIn" | "fadeOut"
 
-const ANIMATION_TYPES: { [key: string]: any} = {
+const ANIMATION_TYPES: StringDict<any> = {
     fadeIn: { opacity: 1, visibility: "visible" },
     fadeOut: { opacity: 0, visibility: "visible" }
 }
@@ -86,7 +86,7 @@ function Animation(WrappedComponent: any, initialStyle: IStyleProps = {}, noSpec
                     this.animateSpecial(this.animationElement.current, props)
             }
 
-            const style: { [key: string]: any} = {}
+            const style: StringDict<string> = {}
             for(let key in props)
                 style[key] = props[key]
 
