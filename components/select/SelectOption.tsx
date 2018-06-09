@@ -6,13 +6,20 @@ interface Props {
     value?: string
 
     /**
+     * Checked is passed internally by parent Select based on its provided value.
+     * Checked attribute may also be set on individual SelectOptions but will be
+     * overrriden in case of conflict with Select's value attribute.
+     */
+    checked?: boolean
+
+    /**
      * Name is passed internally by parent Select.
      */
     name?: string
     /**
      * Type is passed internally by parent Select.
      */
-    type?: string
+    type?: "checkbox" | "radio"
 }
 
 class SelectOption extends React.Component {
@@ -23,7 +30,12 @@ class SelectOption extends React.Component {
     render() {
         return (
             <label>
-                <input type={this.props.type} name={this.props.name} value={this.props.value} />
+                <input
+                    type={this.props.type}
+                    name={this.props.name}
+                    value={this.props.value}
+                    checked={this.props.checked}
+                />
                 <div>
                     <p>
                         {this.props.text || this.props.value}

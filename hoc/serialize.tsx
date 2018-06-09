@@ -38,8 +38,6 @@ function Serialization(WrappedComponent: any, initialData?: {}) {
         }
 
         handleChange(event: React.ChangeEvent<any>, callback?:(serializedData: {}, changeData: {}) => void) {
-            event.preventDefault();
-
             const elementData = parseFormElement(event.target)
             this.setState({
                 ...this.state,

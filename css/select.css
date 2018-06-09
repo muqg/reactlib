@@ -1,0 +1,80 @@
+.l_select {
+    display: inline-block;
+    height: 25px;
+    position: relative;
+    vertical-align: middle;
+    width: 250px;
+}
+
+    .l_select.multiple {
+        height: auto;
+    }
+
+    .l_select.active > div div,
+    .l_select input:checked ~ div,
+    .l_select label,
+    .l_select.multiple > div div {
+        display: block;
+    }
+
+    .l_select > div div,
+    .l_select input {
+        display: none;
+    }
+
+    .l_select > div {
+        background: #fff;
+        border: 1px solid #dedede;
+        color: #444;
+        height: 100%;
+        outline: none;
+        overflow: hidden;
+        position: absolute;
+        width: 100%;
+        z-index: 2;
+    }
+
+        .l_select.active > div,
+        .l_select.multiple > div {
+            height: auto;
+            max-height: 165px; /* Determines dropped height */
+            overflow-y: auto;
+        }
+
+        .l_select.active > div {
+            z-index: 3;
+        }
+
+        .l_select.multiple > div {
+            position: relative;
+        }
+
+        .l_select.active > div div:hover,
+        .l_select.active > div input:checked ~ div:hover {
+            background: #efefef;
+        }
+
+            .l_select.active > div input:checked ~ div,
+            .l_select.multiple > div input:checked ~ div {
+                background: #f7f7f7;
+                border-bottom-color: #ddd;
+                color:#dbaa6b;
+            }
+
+    .l_select > div div {
+        border-bottom: 1px solid transparent;
+        cursor: pointer;
+        line-height: 25px; /* Should be equal to .l_select height */
+        margin: 0;
+        overflow: hidden;
+        padding: 0 3px;
+        text-overflow: ellipsis;
+        transition: background .3s ease;
+        white-space: nowrap;
+    }
+
+    .l_select input.disabled ~ div,
+    .l_select input.disabled ~ div:hover {
+        border: none;
+        color: #aaa;
+    }

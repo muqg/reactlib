@@ -14,7 +14,7 @@ class OutsideAlerter {
         this.containers = {}
     }
 
-    private handleClick(event: React.MouseEvent<any>) {
+    private handleClick(event: MouseEvent) {
         const target = event.target as HTMLElement
         for(let id in this.containers) {
             const currentContainer = this.containers[id]
