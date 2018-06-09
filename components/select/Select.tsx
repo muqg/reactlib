@@ -66,9 +66,14 @@ class Select extends React.Component {
             // Scroll to currently seletected element if active.
             if(this.state.isActive) {
                 const node = this.containerRef.current as HTMLElement
-                const selected = node.querySelector("input:checked") as HTMLElement
-                const selectedParent = selected.parentElement as HTMLElement
-                selectedParent.scrollTop = selected.offsetTop - selected.offsetHeight
+                const selectedInput = node.querySelector<HTMLInputElement>("input:checked")
+
+                // Should null check in case that there is no initially checked element.
+                if(selectedInput) {
+                    const selectedLabel = selectedInput.parentElement as HTMLElement
+                    const optionsDivContainer = selectedLabel.parentElement as HTMLElement
+                    optionsDivContainer.scrollTop = selectedLabel.offsetTop - selectedLabel.offsetHeight
+                }
             }
         })
     }
