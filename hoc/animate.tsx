@@ -1,11 +1,9 @@
-/*
-* NOTE:
-* Only use Animation when javascript is required to animate
-* the element and cannot be done properly otherwise.
-*/
-
 import * as React from "react";
 import { StringDict } from "../utility/interfaces";
+
+export interface AnimationProps {
+    readonly animate: (props: IStyleProps, type?: AnimationType) => void
+}
 
 interface IStyleProps extends StringDict<any>{
     bottom?: string
@@ -21,7 +19,6 @@ interface IStyleProps extends StringDict<any>{
 
 interface Props {
     style: IStyleProps
-    noSpecial?: boolean
 }
 
 type AnimationType = "" | "fadeIn" | "fadeOut"
@@ -33,44 +30,47 @@ const ANIMATION_TYPES: StringDict<any> = {
 
 /**
  * Enchanced a component allowing it to use animate() function.
+ *
+ * __NOTE:__
+ * Only use Animation when javascript is required to animate
+ * the element and cannot be done properly otherwise.
  * @param WrappedComponent The component to be enchanced.
  * @param initialStyle Key/value pairs for initial element styling.
- * @param noSpecial No special animations enabled. This does not create a ref.
  */
-function Animation(WrappedComponent: any, initialStyle: IStyleProps = {}, noSpecial = false) {
+function Animation(WrappedComponent: any, initialStyle: IStyleProps = {}) {
 
     class withAnimation extends React.Component {
-        props: Props = {
-            style: {...initialStyle},
-            noSpecial: noSpecial,
-            ...this.props
-        }
         state: IStyleProps = {
             ...(this.props.style)
         }
 
         static displayName: string
-        animationElement?: React.RefObject<any>
-        noSpecial: boolean
+        readonly animationElement: React.RefObject<HTMLElement>
 
-
-        constructor(props: Props) {
+        constructor(public readonly props: Props) {
             super(props)
 
-            this.noSpecial = this.props.noSpecial as boolean
-            if(!this.noSpecial)
-                this.animationElement = React.createRef()
+            this.animationElement = React.createRef()
+        }
+
+        componentDidMount() {
+            this.animationElement.current.style.cssText = this.getStyleText(initialStyle)
         }
 
         render() {
              return (
                 <WrappedComponent
                     {...this.props}
-                    animate={(props: IStyleProps = {}, type: AnimationType = "") => { this.animate(props, type) }}
-                    style={this.state}
+                    animate={(props: IStyleProps, type: AnimationType = "") => { this.animate(props, type) }}
                     ref={this.animationElement}
                 />
              )
+        }
+
+        getStyleText(styleProps: StringDict<any>) {
+            return Object.keys(styleProps).map(key => {
+                return `${key}: ${styleProps[key]}`
+            }).join(";")
         }
 
         /**
@@ -80,17 +80,12 @@ function Animation(WrappedComponent: any, initialStyle: IStyleProps = {}, noSpec
          * @param type The name of the special animation type.
          */
         animate(props: IStyleProps = {}, type: AnimationType = "") {
-            if(!this.noSpecial) {
-                props = {...props, ...ANIMATION_TYPES[type]}
-                if(this.animationElement)
-                    this.animateSpecial(this.animationElement.current, props)
-            }
+            const animationElement = this.animationElement.current
 
-            const style: StringDict<string> = {}
-            for(let key in props)
-                style[key] = props[key]
+            props = {...props, ...ANIMATION_TYPES[type]}
+            this.animateSpecial(animationElement, props)
 
-            this.setState(style)
+            animationElement.style.cssText = this.getStyleText(props)
         }
 
         animateSpecial(container: HTMLElement, props: IStyleProps) {

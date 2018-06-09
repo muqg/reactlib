@@ -7,7 +7,7 @@ export interface SerializationProps {
      * Handles data serialization an input element changes and accepts a callback
      * that may handle any specific change behaviour.
      */
-    handleChange: (event: React.ChangeEvent<any>, callback?:(serializedData: {}, changeData: {}) => void) => void
+    readonly handleChange: (event: React.ChangeEvent<any>, callback?:(serializedData: {}, changeData: {}) => void) => void
     /**
      * Handles basic data submission and accepts a callback that handles specific
      * behaviour.
@@ -15,18 +15,18 @@ export interface SerializationProps {
      * submission was successful or not.
      * - The callback may be async.
      */
-    handleSubmit: (event: React.SyntheticEvent<any>, callback?: (serializedData: {}) => boolean | undefined) => void
+    readonly handleSubmit: (event: React.SyntheticEvent<any>, callback?: (serializedData: {}) => boolean | undefined) => void
     /**
      * Allows to set the initial data's value from inside the wrapped component.
      * This method can only be called once and before the change or submission
      * methods are called.
      */
-    setInitialDataBeforeChanged: (initialData: object) => void
+    readonly setInitialDataBeforeChanged: (initialData: object) => void
     /**
      * Holds the serialized data. Should be used to initially set values of
      * elements. Callbacks should be used for any direct manipulation.
      */
-    serializedData: {}
+    readonly serializedData: {}
 }
 
 /**
