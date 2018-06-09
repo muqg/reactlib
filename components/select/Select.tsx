@@ -1,9 +1,9 @@
 import * as React from "react";
+import "../../css/select.css";
 import { isUndefined } from "../../utility/assertions";
 import { classNames, OutsideAlerter } from "../../utility/dom";
 import { StyleClass } from "../../utility/enums";
 import SelectOption from "./SelectOption";
-import "../../css/select.css"
 
 interface Props {
     name: string
@@ -26,6 +26,7 @@ interface State {
 
 class Select extends React.Component {
     container: React.RefObject<HTMLDivElement>
+    isMultiple: boolean
     state: State
 
     constructor(public props: Props) {
@@ -35,24 +36,31 @@ class Select extends React.Component {
         this.state = {
             isActive: false
         }
+        this.isMultiple = this.props.multiple || false
     }
 
     componentDidMount() {
-        OutsideAlerter.addContainer(
-            this.container.current as HTMLElement,
-            () => this.toggleActive(false)
-        )
+        if(!this.isMultiple) {
+            OutsideAlerter.addContainer(
+                this.container.current as HTMLElement,
+                () => this.toggleActive(false)
+            )
+        }
     }
 
     componentWillUnmount() {
-        OutsideAlerter.removeContainer(this.container.current as HTMLElement)
+        if(!this.isMultiple) {
+            OutsideAlerter.removeContainer(this.container.current as HTMLElement)
+        }
     }
 
 
     toggleActive(isActive?: boolean) {
-        this.setState({
-            isActive: isUndefined(isActive) ? !this.state.isActive : isActive
-        })
+        if(!this.isMultiple) {
+            this.setState({
+                isActive: isUndefined(isActive) ? !this.state.isActive : isActive
+            })
+        }
     }
 
     render() {
@@ -61,7 +69,7 @@ class Select extends React.Component {
             (this.props.className || ""),
             {
                 [StyleClass.Active]: this.state.isActive,
-                "multiple": this.props.multiple
+                "multiple": this.isMultiple
             }
         )
 
@@ -80,7 +88,7 @@ class Select extends React.Component {
     }
 
     getOptions() {
-        const optionType = this.props.multiple ? "checkbox" : "radio"
+        const optionType = this.isMultiple ? "checkbox" : "radio"
         return React.Children.map(this.props.children, (child, i) => {
             if(React.isValidElement<SelectOption>(child)) {
                 const props: any = {
@@ -100,7 +108,7 @@ class Select extends React.Component {
             return false
 
         const optionValue = option.props.value || ""
-        if(this.props.multiple)
+        if(this.isMultiple)
             return selectValue.indexOf(optionValue) >= 0
         return selectValue === optionValue
     }
