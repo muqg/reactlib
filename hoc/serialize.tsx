@@ -28,6 +28,7 @@ function Serialization(WrappedComponent: any, initialData?: {}) {
 
     class withSerialization extends React.Component {
         static displayName: string
+        private hasChanged = false
         initialState: object
 
         constructor(public props: any) {
@@ -47,6 +48,8 @@ function Serialization(WrappedComponent: any, initialData?: {}) {
                 if(callback)
                     callback(this.state, elementData)
             })
+
+            this.hasChanged = true
         }
 
         handleSubmit(event: React.SyntheticEvent<any>, callback?: (serializedData: {}) => void) {
@@ -55,6 +58,15 @@ function Serialization(WrappedComponent: any, initialData?: {}) {
                 callback(this.state)
             // Reset serialized elements to passed initial state data.
             this.setState(this.initialState)
+
+            this.hasChanged = true
+        }
+
+        setInitialDataBeforeChanged(initialData: object) {
+            if(!this.hasChanged) {
+                this.initialState = def(initialData, {})
+                this.hasChanged = true
+            }
         }
 
         render() {
@@ -64,6 +76,7 @@ function Serialization(WrappedComponent: any, initialData?: {}) {
                     serializedData={this.state}
                     handleChange={this.handleChange.bind(this)}
                     handleSubmit={this.handleSubmit.bind(this)}
+                    setInitialDataBeforeChange={this.setInitialDataBeforeChanged(this)}
                 />
              )
         }
