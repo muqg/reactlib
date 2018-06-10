@@ -42,7 +42,7 @@ function state(key: string, defaultNumber: number) : number
  * @param key Key to the state item.
  * @param defaultObject The default object item.
  */
-function state(key: string, defaultBoolean: object) : object
+function state(key: string, defaultObject: object) : object
 
 function state(key: any, defaultValue: any = ""): any {
     let result = dig(key, INITIAL_STATE)
