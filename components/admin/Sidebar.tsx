@@ -1,23 +1,27 @@
 import * as React from "react";
+import { SidebarButton } from ".";
 import "../../css/admin/sidebar.css";
-import SidebarButton from "./SidebarButton";
 
 interface IProps {
-    children?: any
-    buttons: Array<any>
+    children?: any[]
+    buttons?: Array<SidebarButton>
 }
 
 class Sidebar extends React.Component {
-    props: IProps = {
-        buttons: []
-    }
     state = {
         isActive: false
     }
+    buttons: any[]
+
+    constructor(public props: IProps) {
+        super(props)
+        this.buttons = this.props.buttons || []
+    }
+
 
     render() {
         const activeClass = this.state.isActive ? " active" : ""
-        const buttonElements = this.props.buttons.map((btn, i) => {
+        const buttonElements = this.buttons.map((btn: any, i) => {
                 return <SidebarButton {...btn} key={i} />
         })
 

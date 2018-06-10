@@ -7,6 +7,8 @@ interface Props {
     attributes?: object
 }
 
+type SidebarButton = typeof SidebarButton
+
 const BUTTON_TEXT_LENGTH = 16
 
 const SidebarButton = ({text, href = "#", attributes}: Props) =>  {
