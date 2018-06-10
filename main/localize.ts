@@ -1,7 +1,6 @@
-import { def, isString } from "../utility/assertions";
-import { dig } from "../utility/collection";
+import { state } from ".";
+import { isString } from "../utility/assertions";
 import { format } from "../utility/string";
-import { INITIAL_STATE } from "./const";
 
 /**
  * Returns a localized string value from initial state's locale or the provided
@@ -46,16 +45,16 @@ function localize(key: string, defaultObject: object): object
  */
 function localize(key: string, ...args: any[]): string
 
-function localize(key: any, defaultValue = key, ...args: any[]) {
+function localize(key: any, defaultValue = key, ...args: any[]): any {
     // Accounts for the first case where localization is looking for a string.
     if(isString(defaultValue) && key !== defaultValue) {
         args.unshift(defaultValue)
         defaultValue = key
     }
 
-    let result = dig(key, INITIAL_STATE.locale)
-    // Accounts for all cases where localization is NOT looking for a string.
-    result = def(result, defaultValue)
+    key = key ? "locale." + key : "locale"
+    let result = state(key, defaultValue)
+
     // If final result is a string and there are arguments -- format the string.
     if(args && isString(result))
         result = format(result, ...args)
@@ -63,6 +62,5 @@ function localize(key: any, defaultValue = key, ...args: any[]) {
     return result
 }
 
-export {
-    localize
-}
+export { localize };
+
