@@ -1,4 +1,10 @@
 import { isObject } from "../assertions";
+import { StringDict } from "..";
+
+
+export interface ParsedObject extends StringDict<string> {
+    value: string
+}
 
 /**
  * Parses attribute values off a form element.
@@ -8,7 +14,7 @@ import { isObject } from "../assertions";
  * to the parsed data. If at least one additional value is supplied then the
  * resulting parsed data will be converted to object instead of a single value.
  */
-export function parseFormElement(element: HTMLFormElement, includeData = false): any {
+export function parseFormElement(element: HTMLFormElement, includeData = false): string | ParsedObject {
     const name = element.name
     if(!name)
         throw("Name attribute is required for serializable form nodes.")
@@ -19,21 +25,14 @@ export function parseFormElement(element: HTMLFormElement, includeData = false):
     }
     if(isObject(element, HTMLSelectElement) && element.multiple) {
         // @ts-ignore HTMLOptionsCollection can safely be transformed into an array.
-        value = [...element.options].filter(o => o.selected).map(o => o.value)
+        value = [...element.options].filter(o => o.selected).map(o => o.value).join(",")
     }
 
-    let result;
+    let result = value
     if(includeData) {
         result = {
-            [name]: {
-                value: value,
-                ...element.dataset
-            }
-        }
-    }
-    else {
-        result = {
-            [name]: value
+            value: value,
+            ...element.dataset
         }
     }
 

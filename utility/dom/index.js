@@ -6,5 +6,5 @@ export { loadScript } from "./loadScript";
 export { loadStyle } from "./loadStyle";
 export { maximize } from "./maximize";
 export { OutsideAlerter } from "./OutsideAlerter";
-export { parseFormElement } from "./parseFormElement";
+export * from "./parseFormElement";
 export { rgbColor } from "./rgbColor";
