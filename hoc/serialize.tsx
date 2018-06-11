@@ -42,28 +42,38 @@ export interface SerializationProps {
     readonly serializedData: StringDict<string>
 }
 
-
+interface WrapperState {
+    validData: SerializationProps["serializedData"]
+    inputData: SerializationProps["serializedData"]
+}
 
 /**
  * Enhances a component with serialization. See SerializationProps for more info.
  * @param WrappedComponent The component to be wrapped.
  * @param initialData Initial serialized data.
  */
-// TODO: React | implement 'required' check. Try with findDOMNode(this).querySelectorAll([required])
-// and recording the names into an array to check from.
 function Serialization(WrappedComponent: any, initialData?: SerializationProps["serializedData"]) {
 
     class withSerialization extends React.Component {
         static displayName: string
-        private hasChanged = false
+
+        state: WrapperState
         initialState: SerializationProps["serializedData"]
-        state: SerializationProps["serializedData"]
+
+        private hasChanged = false
 
         constructor(public props: any) {
             super(props)
 
             this.initialState = def(initialData, {}) as SerializationProps["serializedData"]
-            this.state = {...this.initialState}
+            this.state = {
+                validData: {
+                    ...initialData
+                },
+                inputData: {
+                    ...initialData
+                }
+            }
         }
 
         async handleChange(
@@ -83,8 +93,14 @@ function Serialization(WrappedComponent: any, initialData?: SerializationProps["
             }
 
             this.setState({
-                ...this.state,
-                [name]: isDataValid ? elementData : ""
+                validData: {
+                    ...this.state.validData,
+                    [name]: isDataValid ? elementData : ""
+                },
+                inputData: {
+                    ...this.state.inputData,
+                    [name]: elementData
+                }
             })
         }
 
@@ -98,13 +114,17 @@ function Serialization(WrappedComponent: any, initialData?: SerializationProps["
             let success = true
             if(callback) {
                 // Allow async callback.
-                const res = await callback(this.state)
+                const res = await callback(this.state.validData)
                 success = !isUndefined(res) ? res : success
             }
 
             // Reset serialized elements to passed initial state data on success.
-            if(success)
-                this.setState(this.initialState)
+            if(success) {
+                this.setState({
+                    validData: {...this.initialState},
+                    inputData: {...this.initialState}
+                })
+            }
         }
 
         setInitialDataBeforeChanged(initialData: SerializationProps["serializedData"]) {
@@ -118,7 +138,7 @@ function Serialization(WrappedComponent: any, initialData?: SerializationProps["
              return (
                 <WrappedComponent
                     {...this.props}
-                    serializedData={this.state}
+                    serializedData={this.state.inputData}
                     handleChange={this.handleChange.bind(this)}
                     handleSubmit={this.handleSubmit.bind(this)}
                     setInitialDataBeforeChange={this.setInitialDataBeforeChanged.bind(this)}
