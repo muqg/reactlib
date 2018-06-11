@@ -34,6 +34,8 @@ export interface SerializationProps {
  * @param WrappedComponent The component to be wrapped.
  * @param initialData Initial serialized data.
  */
+// TODO: React | implement verification somehow.
+// TODO: React | implement 'required' check.
 function Serialization(WrappedComponent: any, initialData?: {}) {
 
     class withSerialization extends React.Component {
