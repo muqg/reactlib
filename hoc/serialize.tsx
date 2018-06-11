@@ -1,7 +1,7 @@
 import * as React from "react";
 import { StringDict } from "../utility";
-import { def, isString, isUndefined } from "../utility/assertions";
-import { ParsedObject, parseFormElement } from "../utility/dom";
+import { def, isUndefined } from "../utility/assertions";
+import { parseFormElement } from "../utility/dom";
 
 export interface SerializationProps {
     /**
@@ -13,8 +13,9 @@ export interface SerializationProps {
      */
     readonly handleChange: (
         event: React.ChangeEvent<HTMLFormElement>,
-        callback?:(changeData: string | ParsedObject) => boolean | undefined
+        callback?:(newData: string, targetElement: HTMLFormElement) => boolean | undefined
     ) => void
+
     /**
      * Handles basic data submission and accepts a callback that handles specific
      * behaviour.
@@ -26,18 +27,21 @@ export interface SerializationProps {
         event: React.SyntheticEvent<any>,
         callback?: (serializedData: SerializationProps["serializedData"]) => boolean | undefined
     ) => void
+
     /**
      * Allows to set the initial data's value from inside the wrapped component.
      * This method can only be called once and before the change or submission
      * methods are called.
      */
     readonly setInitialDataBeforeChanged: (initialData: SerializationProps["serializedData"]) => void
+
     /**
      * Holds the serialized data. Should be used to initially set values of
      * elements. Callbacks should be used for any direct manipulation.
      */
-    readonly serializedData: StringDict<string | ParsedObject>
+    readonly serializedData: StringDict<string>
 }
+
 
 
 /**
@@ -62,34 +66,25 @@ function Serialization(WrappedComponent: any, initialData?: SerializationProps["
             this.state = {...this.initialState}
         }
 
-        // TODO: React | Allow parseFormElement to serialize data-* attributes.
-        // Then implement overloads properly to indicate return type of string or
-        // object respectively.
         async handleChange(
             event: React.ChangeEvent<HTMLFormElement>,
-            callback?:(changeData: string | ParsedObject) => boolean | undefined
+            callback?:(newData: string, targetElement: HTMLFormElement) => boolean | undefined
         ) {
             this.hasChanged = true
 
-            const name = event.target.name
-            let elementData = parseFormElement(event.target)
+            const targetElement = event.target
+            const name = targetElement.name
+            let elementData = parseFormElement(targetElement)
 
             let isDataValid = true
             if(callback) {
-                const res = await callback(elementData)
+                const res = await callback(elementData, targetElement)
                 isDataValid = !isUndefined(res) ? res : isDataValid
-            }
-
-            if(!isDataValid) {
-                if(isString(elementData))
-                    elementData = ""
-                else
-                    elementData.value = ""
             }
 
             this.setState({
                 ...this.state,
-                [name]: elementData
+                [name]: isDataValid ? elementData : ""
             })
         }
 
