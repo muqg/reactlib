@@ -1,7 +1,7 @@
 import * as React from "react";
 import { StringDict } from "../utility";
 import { def, isUndefined } from "../utility/assertions";
-import { parseFormElement } from "../utility/dom";
+import { parseFormElement, findParentWithClass } from "../utility/dom";
 
 export interface SerializationProps {
     /**
@@ -82,9 +82,20 @@ function Serialization<P extends {}>(WrappedComponent: React.ComponentType<P>, i
         ) {
             this.hasChanged = true
 
-            const targetElement = event.target
+            const targetElement = event.target as HTMLFormElement
             const name = targetElement.name
-            let elementData = parseFormElement(targetElement)
+            let elementData = ""
+
+            // TODO: React | This is only a temporary fix for l_select serialization.
+            if(
+                (targetElement.type === "checkbox" || targetElement.type === "radio") &&
+                findParentWithClass(targetElement, "l_select")
+            ) {
+                elementData = targetElement.value
+            }
+            else {
+                elementData = parseFormElement(targetElement)
+            }
 
             let isDataValid = true
             if(callback) {
