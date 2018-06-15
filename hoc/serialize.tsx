@@ -12,7 +12,7 @@ export interface SerializationProps {
      * - The callback may be async.
      */
     handleChange?: (
-        event: React.ChangeEvent<HTMLFormElement>,
+        event: React.ChangeEvent<HTMLElement>,
         callback?:(newData: string, targetElement: HTMLFormElement) => boolean | undefined
     ) => void
 
@@ -34,6 +34,14 @@ export interface SerializationProps {
      * methods are called.
      */
     setInitialDataBeforeChanged?: (initialData: SerializationProps["serializedData"]) => void
+
+    /**
+     * Directory serializes a value without any further processing. This method
+     * should only be used if serialization cannot be achieved in another way
+     * and it assumes that any verification and other processing is done and
+     * method receives the final value.
+     */
+    serializeValue?: (value: string, name: string) => void
 
     /**
      * Holds the serialized data. Should be used to initially set values of
@@ -67,12 +75,8 @@ function Serialization<P extends {}>(WrappedComponent: React.ComponentType<P>, i
 
             this.initialState = def(initialData, {}) as SerializationProps["serializedData"]
             this.state = {
-                validData: {
-                    ...initialData
-                },
-                inputData: {
-                    ...initialData
-                }
+                validData: {...initialData},
+                inputData: {...initialData}
             }
         }
 
@@ -141,8 +145,25 @@ function Serialization<P extends {}>(WrappedComponent: React.ComponentType<P>, i
         setInitialDataBeforeChanged(initialData: SerializationProps["serializedData"]) {
             if(!this.hasChanged) {
                 this.initialState = def(initialData, {}) as SerializationProps["serializedData"]
+                this.setState({
+                    validData: {...this.initialState},
+                    inputData: {...this.initialState}
+                })
                 this.hasChanged = true
             }
+        }
+
+        serializeValue(value: string, name: string) {
+            this.setState({
+                validData: {
+                    ...this.state.validData,
+                    [name]: value
+                },
+                inputData: {
+                    ...this.state.inputData,
+                    [name]: value
+                }
+            })
         }
 
         render() {
@@ -152,7 +173,8 @@ function Serialization<P extends {}>(WrappedComponent: React.ComponentType<P>, i
                     serializedData={this.state.inputData}
                     handleChange={this.handleChange.bind(this)}
                     handleSubmit={this.handleSubmit.bind(this)}
-                    setInitialDataBeforeChange={this.setInitialDataBeforeChanged.bind(this)}
+                    setInitialDataBeforeChanged={this.setInitialDataBeforeChanged.bind(this)}
+                    serializeValue={this.serializeValue.bind(this)}
                 />
              )
         }

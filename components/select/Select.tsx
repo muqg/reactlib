@@ -16,7 +16,7 @@ interface Props {
     multiple?: boolean
     className?: string
     children?: any
-    onChange?: (e: React.ChangeEvent<HTMLDivElement>) => void
+    onChange?: (e: React.ChangeEvent<any>) => void
 }
 
 interface State {

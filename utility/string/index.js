@@ -1,3 +1,5 @@
+export { asFloat } from "./asFloat";
+export { asInt } from "./asInt";
 export { capitalize } from "./capitalize";
 export { format } from "./format";
 export * from "./isAlphaNumeric";
@@ -7,3 +9,4 @@ export * from "./isPhone";
 export { lowerFirst } from "./lowerFirst";
 export { truncate } from "./truncate";
 export { upperFirst } from "./upperFirst";
+

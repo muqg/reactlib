@@ -6,7 +6,7 @@
  */
 export function clamp(val: number, min: number, max: number) {
     if(min > max)
-	[max, min] = [min, max]
+	    [max, min] = [min, max]
     return Math.min(Math.max(val, min), max)
 }
 
