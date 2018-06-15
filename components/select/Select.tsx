@@ -1,6 +1,5 @@
 import * as React from "react";
 import "../../css/select.css";
-import { isUndefined } from "../../utility/assertions";
 import { classNames, OutsideAlerter } from "../../utility/dom";
 import { StyleClass } from "../../utility/enums";
 import SelectOption from "./SelectOption";
@@ -26,7 +25,6 @@ interface State {
 
 class Select extends React.Component {
     containerRef: React.RefObject<HTMLDivElement>
-    isMultiple: boolean
     state: State
 
     constructor(public props: Props) {
@@ -36,11 +34,10 @@ class Select extends React.Component {
         this.state = {
             isActive: false
         }
-        this.isMultiple = this.props.multiple || false
     }
 
     componentDidMount() {
-        if(!this.isMultiple) {
+        if(!this.props.multiple) {
             OutsideAlerter.addContainer(
                 this.containerRef.current as HTMLElement,
                 () => this.toggleActive(false)
@@ -49,18 +46,17 @@ class Select extends React.Component {
     }
 
     componentWillUnmount() {
-        if(!this.isMultiple) {
+        if(!this.props.multiple) {
             OutsideAlerter.removeContainer(this.containerRef.current as HTMLElement)
         }
     }
 
-
-    toggleActive(isActive?: boolean) {
-        if(this.isMultiple)
+    toggleActive(isActive: boolean) {
+        if(this.props.multiple)
             return
 
         this.setState({
-            isActive: isUndefined(isActive) ? !this.state.isActive : isActive
+            isActive: isActive
         },
         () => {
             // Scroll to currently seletected element if active.
@@ -84,7 +80,7 @@ class Select extends React.Component {
             (this.props.className || ""),
             {
                 [StyleClass.Active]: this.state.isActive,
-                "multiple": this.isMultiple
+                "multiple": this.props.multiple
             }
         )
 
@@ -93,7 +89,6 @@ class Select extends React.Component {
                 className={classes}
                 ref={this.containerRef}
                 onChange={this.props.onChange}
-                onClick={() => { this.toggleActive() } }
             >
                 <div>
                     {this.getOptions()}
@@ -103,29 +98,31 @@ class Select extends React.Component {
     }
 
     getOptions() {
-        const optionType = this.isMultiple ? "checkbox" : "radio"
+        const optionType = this.props.multiple ? "checkbox" : "radio"
         return React.Children.map(this.props.children, (child, i) => {
             if(React.isValidElement<SelectOption>(child)) {
                 const props: any = {
                     name: this.props.name,
                     type: optionType,
                     // Fix for child.props.props typings bug.
-                    checked: this.isOptionChecked(this.props.children[i])
+                    checked: this.isOptionChecked(this.props.children[i], i),
+                    onClick: () => { this.toggleActive(!this.state.isActive) }
                 }
                 return React.cloneElement(child, props)
             }
         })
     }
 
-    isOptionChecked(option: SelectOption): boolean {
-        const selectValue = this.props.value || ""
-        if(!selectValue)
+    isOptionChecked(option: SelectOption, index: number): boolean {
+        const selectValues = (this.props.value || "").split(",")
+        if(!selectValues)
             return false
 
         const optionValue = option.props.value || ""
-        if(this.isMultiple)
-            return selectValue.indexOf(optionValue) >= 0
-        return selectValue === optionValue
+        if(this.props.multiple)
+            return selectValues.indexOf(optionValue) >= 0
+        // Always check first element for single selects.
+        return index === 0 || selectValues[0] === optionValue
     }
 }
 

@@ -1,6 +1,8 @@
 import * as React from "react";
+import { findDOMNode } from "react-dom";
+import { isObject } from "../../utility/assertions";
 
-interface Props {
+interface OptionProps {
     children?: any
     value?: string
 
@@ -19,11 +21,27 @@ interface Props {
      * Type is passed internally by parent Select.
      */
     type?: "checkbox" | "radio"
+    /**
+     * onClick is passed internally by parent Select.
+     */
+    onClick?: () => void
 }
 
 class SelectOption extends React.Component {
-    constructor(public props: Props) {
+    constructor(public props: OptionProps) {
         super(props)
+    }
+
+    componentDidMount() {
+        if(!this.props.checked)
+            return
+
+        const element = findDOMNode(this)
+        if(isObject(element, HTMLElement)) {
+            const input = element.querySelector("input")
+            if(input)
+                input.checked = true
+        }
     }
 
     render() {
@@ -33,9 +51,9 @@ class SelectOption extends React.Component {
                     type={this.props.type}
                     name={this.props.name}
                     value={this.props.value}
-                    checked={this.props.checked}
+                    onClick={this.props.onClick}
                 />
-                <div>
+                <div className="l_option_content">
                     {this.props.children || this.props.value}
                 </div>
             </label>

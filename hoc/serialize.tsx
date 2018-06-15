@@ -11,7 +11,7 @@ export interface SerializationProps {
      * the serialized value is valid or not. Always considered valid by default.
      * - The callback may be async.
      */
-    readonly handleChange: (
+    handleChange?: (
         event: React.ChangeEvent<HTMLFormElement>,
         callback?:(newData: string, targetElement: HTMLFormElement) => boolean | undefined
     ) => void
@@ -23,7 +23,7 @@ export interface SerializationProps {
      * submission was successful or not. Always considered successful by default.
      * - The callback may be async.
      */
-    readonly handleSubmit: (
+    handleSubmit?: (
         event: React.SyntheticEvent<any>,
         callback?: (serializedData: SerializationProps["serializedData"]) => boolean | undefined
     ) => void
@@ -33,13 +33,13 @@ export interface SerializationProps {
      * This method can only be called once and before the change or submission
      * methods are called.
      */
-    readonly setInitialDataBeforeChanged: (initialData: SerializationProps["serializedData"]) => void
+    setInitialDataBeforeChanged?: (initialData: SerializationProps["serializedData"]) => void
 
     /**
      * Holds the serialized data. Should be used to initially set values of
      * elements. Callbacks should be used for any direct manipulation.
      */
-    readonly serializedData: StringDict<string>
+    serializedData?: StringDict<string>
 }
 
 interface WrapperState {
@@ -52,9 +52,9 @@ interface WrapperState {
  * @param WrappedComponent The component to be wrapped.
  * @param initialData Initial serialized data.
  */
-function Serialization(WrappedComponent: any, initialData?: SerializationProps["serializedData"]) {
+function Serialization<P extends {}>(WrappedComponent: React.ComponentType<P>, initialData?: SerializationProps["serializedData"]): React.ComponentType<P> {
 
-    class withSerialization extends React.Component {
+    class withSerialization<P> extends React.Component<P> {
         static displayName: string
 
         state: WrapperState

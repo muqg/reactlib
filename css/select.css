@@ -10,14 +10,14 @@
         height: auto;
     }
 
-    .l_select.active > div div,
+    .l_select.active .l_option_content,
     .l_select input:checked ~ div,
     .l_select label,
-    .l_select.multiple > div div {
+    .l_select.multiple > .l_option_content {
         display: block;
     }
 
-    .l_select > div div,
+    .l_option_content,
     .l_select input {
         display: none;
     }
@@ -49,7 +49,7 @@
             position: relative;
         }
 
-        .l_select.active > div div:hover,
+        .l_select.active .l_option_content:hover,
         .l_select.active > div input:checked ~ div:hover {
             background: #efefef;
         }
@@ -61,7 +61,7 @@
                 color:#dbaa6b;
             }
 
-    .l_select > div div {
+    .l_option_content {
         border-bottom: 1px solid transparent;
         cursor: pointer;
         line-height: 25px; /* Should be equal to .l_select height */
