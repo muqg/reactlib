@@ -104,7 +104,7 @@ class Select extends React.Component {
                 const props: any = {
                     name: this.props.name,
                     type: optionType,
-                    checked: this.isOptionChecked(child, i),
+                    selected: this.isOptionSelected(child, i),
                     onClick: () => { this.toggleActive(!this.state.isActive) }
                 }
                 return React.cloneElement(child, props)
@@ -112,16 +112,14 @@ class Select extends React.Component {
         })
     }
 
-    isOptionChecked(option: React.ReactElement<SelectOption>, index: number): boolean {
+    isOptionSelected(option: React.ReactElement<SelectOption>, index: number): boolean {
         const selectValues = (this.props.value || "").split(",")
-        if(!selectValues)
-            return false
-
         // @ts-ignore Strange option.props.props typings bug.
-        const optionValue = option.props.value || ""
+        const optionValue = option.props.value
+
         if(this.props.multiple)
             return selectValues.indexOf(optionValue) >= 0
-        // Always check first element for single selects.
+        // Always mark first option as selected for single selects by default.
         return index === 0 || selectValues[0] === optionValue
     }
 }
