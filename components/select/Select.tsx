@@ -104,8 +104,7 @@ class Select extends React.Component {
                 const props: any = {
                     name: this.props.name,
                     type: optionType,
-                    // Fix for child.props.props typings bug.
-                    checked: this.isOptionChecked(this.props.children[i], i),
+                    checked: this.isOptionChecked(child, i),
                     onClick: () => { this.toggleActive(!this.state.isActive) }
                 }
                 return React.cloneElement(child, props)
@@ -113,11 +112,12 @@ class Select extends React.Component {
         })
     }
 
-    isOptionChecked(option: SelectOption, index: number): boolean {
+    isOptionChecked(option: React.ReactElement<SelectOption>, index: number): boolean {
         const selectValues = (this.props.value || "").split(",")
         if(!selectValues)
             return false
 
+        // @ts-ignore Strange option.props.props typings bug.
         const optionValue = option.props.value || ""
         if(this.props.multiple)
             return selectValues.indexOf(optionValue) >= 0

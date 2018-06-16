@@ -11,7 +11,7 @@ export interface SerializationProps {
      * the serialized value is valid or not. Always considered valid by default.
      * - The callback may be async.
      */
-    handleChange?: (
+    handleChange: (
         event: React.ChangeEvent<HTMLElement>,
         callback?:(newData: string, targetElement: HTMLFormElement) => boolean | undefined
     ) => void
@@ -23,7 +23,7 @@ export interface SerializationProps {
      * submission was successful or not. Always considered successful by default.
      * - The callback may be async.
      */
-    handleSubmit?: (
+    handleSubmit: (
         event: React.SyntheticEvent<any>,
         callback?: (serializedData: SerializationProps["serializedData"]) => boolean | undefined
     ) => void
@@ -33,7 +33,7 @@ export interface SerializationProps {
      * This method can only be called once and before the change or submission
      * methods are called.
      */
-    setInitialDataBeforeChanged?: (initialData: SerializationProps["serializedData"]) => void
+    setInitialDataBeforeChanged: (initialData: SerializationProps["serializedData"]) => void
 
     /**
      * Directory serializes a value without any further processing. This method
@@ -41,13 +41,13 @@ export interface SerializationProps {
      * and it assumes that any verification and other processing is done and
      * method receives the final value.
      */
-    serializeValue?: (value: string, name: string) => void
+    serializeValue: (value: string, name: string) => void
 
     /**
      * Holds the serialized data. Should be used to initially set values of
      * elements. Callbacks should be used for any direct manipulation.
      */
-    serializedData?: StringDict<string>
+    serializedData: StringDict<string>
 }
 
 interface WrapperState {
@@ -60,9 +60,12 @@ interface WrapperState {
  * @param WrappedComponent The component to be wrapped.
  * @param initialData Initial serialized data.
  */
-function Serialization<P extends {}>(WrappedComponent: React.ComponentType<P>, initialData?: SerializationProps["serializedData"]): React.ComponentType<P> {
+function Serialization<P extends {}>(
+    WrappedComponent: React.ComponentType<P & SerializationProps>,
+    initialData?: SerializationProps["serializedData"]): React.ComponentType<P>
+{
 
-    class withSerialization<P> extends React.Component<P> {
+    class withSerialization extends React.Component<P> {
         static displayName: string
 
         state: WrapperState

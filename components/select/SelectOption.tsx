@@ -11,7 +11,7 @@ interface OptionProps {
      * Checked attribute may also be set on individual SelectOptions but will be
      * overrriden in case of conflict with Select's value attribute.
      */
-    checked?: boolean
+    selected?: boolean
 
     /**
      * Name is passed internally by parent Select.
@@ -33,7 +33,7 @@ class SelectOption extends React.Component {
     }
 
     componentDidMount() {
-        if(!this.props.checked)
+        if(!this.props.selected)
             return
 
         const element = findDOMNode(this)
