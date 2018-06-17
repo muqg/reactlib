@@ -51,7 +51,13 @@ export interface SerializationProps {
 }
 
 interface WrapperState {
+    /**
+     * The validated data.
+     */
     validData: SerializationProps["serializedData"]
+    /**
+     * The input data (without validation).
+     */
     inputData: SerializationProps["serializedData"]
 }
 
@@ -71,7 +77,15 @@ function Serialization<P extends {}>(
         state: WrapperState
         initialState: SerializationProps["serializedData"]
 
-        private hasChanged = false
+        hasChanged: boolean = false
+        /**
+         * The awaiting validated data.
+         */
+        valid: SerializationProps["serializedData"] = {}
+        /**
+         * The awaiting input data.
+         */
+        input: SerializationProps["serializedData"] = {}
 
         constructor(public props: any) {
             super(props)
@@ -87,8 +101,6 @@ function Serialization<P extends {}>(
             event: React.ChangeEvent<HTMLFormElement>,
             callback?:(newData: string, targetElement: HTMLFormElement) => boolean | undefined
         ) {
-            this.hasChanged = true
-
             const targetElement = event.target as HTMLFormElement
             let name = targetElement.name
             let elementData = ""
@@ -109,17 +121,7 @@ function Serialization<P extends {}>(
                 const res = await callback(elementData, targetElement)
                 isDataValid = !isUndefined(res) ? res : isDataValid
             }
-
-            this.setState({
-                validData: {
-                    ...this.state.validData,
-                    [name]: isDataValid ? elementData : ""
-                },
-                inputData: {
-                    ...this.state.inputData,
-                    [name]: elementData
-                }
-            })
+            this._serialize(name, elementData, isDataValid)
         }
 
         async handleSubmit(
@@ -127,7 +129,6 @@ function Serialization<P extends {}>(
             callback?: (serializedData: SerializationProps["serializedData"]) => boolean | undefined
         ) {
             event.preventDefault();
-            this.hasChanged = true
 
             let success = true
             if(callback) {
@@ -135,44 +136,56 @@ function Serialization<P extends {}>(
                 const res = await callback(this.state.validData)
                 success = !isUndefined(res) ? res : success
             }
-
             // Reset serialized elements to passed initial state data on success.
-            if(success) {
-                this.setState({
-                    validData: {...this.initialState},
-                    inputData: {...this.initialState}
-                })
-            }
+            if(success)
+                this._resetState()
         }
 
         setInitialDataBeforeChanged(initialData: SerializationProps["serializedData"]) {
             if(!this.hasChanged) {
                 this.initialState = def(initialData, {}) as SerializationProps["serializedData"]
-                this.setState({
-                    validData: {...this.initialState},
-                    inputData: {...this.initialState}
-                })
-                this.hasChanged = true
+                this._resetState()
             }
         }
 
-
-        serializeValue(name: string, value: string): void
-        serializeValue(name: string, value: number): void
-        serializeValue(name: string, value: object | Array<any>): void
-        serializeValue(name: string, value: any) {
+        serializeValue(name: string, value: string | number | object | Array<any>) {
             if(isObject(value))
                 value = JSON.stringify(value)
+            this._serialize(name, value.toString(), true)
+        }
 
+        _serialize(name: string, value: string, isValid: boolean) {
+            this.valid = {
+                ...this.valid,
+                [name]: isValid ? value : ""
+            }
+            this.input = {
+                ...this.input,
+                [name]: value
+            }
+            this._updateState()
+        }
+
+        _resetState() {
+            this.input = {...this.initialState}
+            this.valid = {...this.initialState}
+            this._updateState()
+        }
+
+        _updateState() {
             this.setState({
                 validData: {
                     ...this.state.validData,
-                    [name]: value.toString()
+                    ...this.valid
                 },
                 inputData: {
                     ...this.state.inputData,
-                    [name]: value.toString()
+                    ...this.input
                 }
+            }, () => {
+                this.valid = {}
+                this.input = {}
+                this.hasChanged = true
             })
         }
 
