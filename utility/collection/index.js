@@ -1,1 +1,2 @@
-export { dig } from "./dig"
+export { dig } from "./dig";
+export { insertDeep } from "./dive";
