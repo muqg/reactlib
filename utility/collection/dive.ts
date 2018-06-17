@@ -7,7 +7,7 @@ import { isArray, isObject } from "../assertions";
  * @param key The key to place the item at.
  * @param item The item to place.
  */
-function diveItem(key: string, item: any): object
+function dive(key: string, item: any): object
 /**
  * Places an __item__ at the provided __key__ of a __pool__ Object. If the __pool__
  * is an Array then it is disregarded and a fresh Object with the given __item__
@@ -23,8 +23,8 @@ function diveItem(key: string, item: any): object
  * @param item The item to place.
  * @param pool The pool to put the item into.
  */
-function diveItem<T extends object = object>(key: string, item: any, pool: object): T
-function diveItem(key: string, item: any, pool: object = {}) {
+function dive<T extends object = object>(key: string, item: any, pool: object): T
+function dive(key: string, item: any, pool: object = {}) {
     const splitKey = key.split(".")
 
     let result: any = item
@@ -54,5 +54,5 @@ function diveItem(key: string, item: any, pool: object = {}) {
     return isObject(pool) ? {...pool, ...result} : {...result}
 }
 
-export { diveItem };
+export { dive };
 
