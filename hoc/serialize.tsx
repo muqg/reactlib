@@ -90,14 +90,14 @@ function Serialization<P extends {}>(
             this.hasChanged = true
 
             const targetElement = event.target as HTMLFormElement
-            const name = targetElement.name
+            let name = targetElement.name
             let elementData = ""
 
             // TODO: React | This is only a temporary fix for l_select serialization.
-            if(
-                (targetElement.type === "checkbox" || targetElement.type === "radio") &&
-                findParentWithClass(targetElement, "l_select")
-            ) {
+            // Attempt to better fix it by capturing and re-dispatching event on the select itself.
+            const parentSelect = findParentWithClass(targetElement, "l_select")
+            if((targetElement.type === "checkbox" || targetElement.type === "radio") && parentSelect) {
+                name = parentSelect.dataset["name"] || ""
                 elementData = targetElement.value
             }
             else {

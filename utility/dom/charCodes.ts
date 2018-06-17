@@ -1,0 +1,27 @@
+
+export const CHAR_CODE_A = 65
+export const CHAR_CODE_B = 66
+export const CHAR_CODE_C = 67
+export const CHAR_CODE_D = 68
+export const CHAR_CODE_E = 69
+export const CHAR_CODE_F = 70
+export const CHAR_CODE_G = 71
+export const CHAR_CODE_H = 72
+export const CHAR_CODE_I = 73
+export const CHAR_CODE_J = 74
+export const CHAR_CODE_K = 75
+export const CHAR_CODE_L = 76
+export const CHAR_CODE_M = 77
+export const CHAR_CODE_N = 78
+export const CHAR_CODE_O = 79
+export const CHAR_CODE_P = 80
+export const CHAR_CODE_Q = 81
+export const CHAR_CODE_R = 82
+export const CHAR_CODE_S = 83
+export const CHAR_CODE_T = 84
+export const CHAR_CODE_U = 85
+export const CHAR_CODE_V = 86
+export const CHAR_CODE_W = 87
+export const CHAR_CODE_X = 88
+export const CHAR_CODE_Y = 89
+export const CHAR_CODE_Z = 90

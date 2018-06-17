@@ -3,6 +3,7 @@ import "../../css/select.css";
 import { classNames, OutsideAlerter } from "../../utility/dom";
 import { StyleClass } from "../../utility/enums";
 import SelectOption from "./SelectOption";
+import { randomID } from "../../utility/string";
 
 interface Props {
     name: string
@@ -26,6 +27,8 @@ interface State {
 class Select extends React.Component {
     containerRef: React.RefObject<HTMLDivElement>
     state: State
+
+    uniqueOptionID = randomID(6)
 
     constructor(public props: Props) {
         super(props)
@@ -86,6 +89,7 @@ class Select extends React.Component {
 
         return(
             <div
+                data-name={this.props.name}
                 className={classes}
                 ref={this.containerRef}
                 onChange={this.props.onChange}
@@ -102,7 +106,7 @@ class Select extends React.Component {
         return React.Children.map(this.props.children, (child, i) => {
             if(React.isValidElement<SelectOption>(child)) {
                 const props: any = {
-                    name: this.props.name,
+                    name: this.uniqueOptionID,
                     type: optionType,
                     selected: this.isOptionSelected(child, i),
                     onClick: () => { this.toggleActive(!this.state.isActive) }

@@ -1,8 +1,10 @@
+export * from "./charCodes";
 export { classNames } from "./classNames";
 export { Editor, ImageStyle } from "./Editor";
 export { findParentWithClass } from "./findParentWithClass";
 export { hexColor } from "./hexColor";
 export { inViewport } from "./inViewport";
+export * from "./keyCode";
 export { loadScript } from "./loadScript";
 export { loadStyle } from "./loadStyle";
 export { maximize } from "./maximize";
