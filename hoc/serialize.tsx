@@ -36,12 +36,13 @@ export interface SerializationProps {
     setInitialDataBeforeChanged(initialData: SerializationProps["serializedData"]): void
 
     /**
-     * Directory serializes a value without any further processing. This method
-     * should only be used if serialization cannot be achieved in another way
-     * and it assumes that any verification and other processing is done and
-     * method receives the final value.
+     * Serializes a value.
      */
     serializeValue(name: string, value: string | number | object | Array<any>): void
+    /**
+     * Serializes a value if it is marked as valid or an empty string otherwise.
+     */
+    serializeValue(name: string, value: string | number | object | Array<any>, isValid: boolean): void
 
     /**
      * Holds the serialized data. Should be used to initially set values of
@@ -49,6 +50,7 @@ export interface SerializationProps {
      */
     serializedData: StringDict<string>
 }
+
 
 interface WrapperState {
     /**
@@ -121,7 +123,7 @@ function Serialization<P extends {}>(
                 const res = await callback(elementData, targetElement)
                 isDataValid = !isUndefined(res) ? res : isDataValid
             }
-            this._serialize(name, elementData, isDataValid)
+            this.serializeValue(name, elementData, isDataValid)
         }
 
         async handleSubmit(
@@ -148,13 +150,11 @@ function Serialization<P extends {}>(
             }
         }
 
-        serializeValue(name: string, value: string | number | object | Array<any>) {
+        serializeValue(name: string, value: string | number | object | Array<any>, isValid = true) {
             if(isObject(value))
                 value = JSON.stringify(value)
-            this._serialize(name, value.toString(), true)
-        }
+            value = value.toString()
 
-        _serialize(name: string, value: string, isValid: boolean) {
             this.valid = {
                 ...this.valid,
                 [name]: isValid ? value : ""
