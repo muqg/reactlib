@@ -1,6 +1,6 @@
 import * as React from "react";
 import { StringDict } from "../utility";
-import { def, isUndefined } from "../utility/assertions";
+import { def, isUndefined, isObject } from "../utility/assertions";
 import { parseFormElement, findParentWithClass } from "../utility/dom";
 
 export interface SerializationProps {
@@ -11,10 +11,10 @@ export interface SerializationProps {
      * the serialized value is valid or not. Always considered valid by default.
      * - The callback may be async.
      */
-    handleChange: (
+    handleChange(
         event: React.ChangeEvent<HTMLElement>,
         callback?:(newData: string, targetElement: HTMLFormElement) => boolean | undefined
-    ) => void
+    ): void
 
     /**
      * Handles basic data submission and accepts a callback that handles specific
@@ -23,17 +23,17 @@ export interface SerializationProps {
      * submission was successful or not. Always considered successful by default.
      * - The callback may be async.
      */
-    handleSubmit: (
+    handleSubmit(
         event: React.SyntheticEvent<any>,
         callback?: (serializedData: SerializationProps["serializedData"]) => boolean | undefined
-    ) => void
+    ): void
 
     /**
      * Allows to set the initial data's value from inside the wrapped component.
      * This method can only be called once and before the change or submission
      * methods are called.
      */
-    setInitialDataBeforeChanged: (initialData: SerializationProps["serializedData"]) => void
+    setInitialDataBeforeChanged(initialData: SerializationProps["serializedData"]): void
 
     /**
      * Directory serializes a value without any further processing. This method
@@ -41,7 +41,7 @@ export interface SerializationProps {
      * and it assumes that any verification and other processing is done and
      * method receives the final value.
      */
-    serializeValue: (value: string, name: string) => void
+    serializeValue(name: string, value: string | number | object | Array<any>): void
 
     /**
      * Holds the serialized data. Should be used to initially set values of
@@ -156,15 +156,22 @@ function Serialization<P extends {}>(
             }
         }
 
-        serializeValue(value: string, name: string) {
+
+        serializeValue(name: string, value: string): void
+        serializeValue(name: string, value: number): void
+        serializeValue(name: string, value: object | Array<any>): void
+        serializeValue(name: string, value: any) {
+            if(isObject(value))
+                value = JSON.stringify(value)
+
             this.setState({
                 validData: {
                     ...this.state.validData,
-                    [name]: value
+                    [name]: value.toString()
                 },
                 inputData: {
                     ...this.state.inputData,
-                    [name]: value
+                    [name]: value.toString()
                 }
             })
         }
