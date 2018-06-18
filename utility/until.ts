@@ -19,6 +19,7 @@ async function until(condition: () => boolean, checkInterval: number): Promise<v
  * @param timeout The time to wait until failure in seconds. Default is 60s.
  */
 async function until(condition: () => boolean, checkInterval: number, timeout: number): Promise<void>
+
 async function until(condition: () => boolean, checkInterval = 50, timeout = 60): Promise<void> {
     checkInterval = Math.max(10, checkInterval)
     timeout = Math.max(0, timeout) * 1000 // Convert to milliseconds.

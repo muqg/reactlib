@@ -29,7 +29,7 @@ function request(method: RequestMethod, url: string): Promise<string>
  * @param url Requested URL.
  * @param body Request body's data.
  */
-function request(method: RequestMethod, url: string, body: StringDict<string>): Promise<string>
+function request(method: RequestMethod, url: string, body: StringDict<string | undefined>): Promise<string>
 /**
  * Sends a request to the specified URL, reading response stream as text. Promise
  * always results in string except when error is thrown.
@@ -38,9 +38,9 @@ function request(method: RequestMethod, url: string, body: StringDict<string>): 
  * @param body Request body's data.
  * @param options Request options.
  */
-function request(method: RequestMethod, url: string, body: StringDict<string>, options: RequestOptions): Promise<string>
+function request(method: RequestMethod, url: string, body: StringDict<string | undefined>, options: RequestOptions): Promise<string>
 
-function request(method: RequestMethod, url: string, body: StringDict<string> = {}, options: RequestOptions = {}) {
+function request(method: RequestMethod, url: string, body: StringDict<string | undefined > = {}, options: RequestOptions = {}) {
     const headers = options.headers || {} as StringDict<string>
     headers["X-CSRF-TOKEN"] = X_CSRF_TOKEN
     headers["X-Requested-With"] = "XMLHttpRequest"
@@ -63,7 +63,7 @@ function request(method: RequestMethod, url: string, body: StringDict<string> = 
     }
     else {
         const fd = new FormData()
-        Object.keys(body).forEach(key => fd.append(key, body[key]))
+        Object.keys(body).forEach(key => fd.append(key, body[key] || ""))
         requestInit.body = fd
     }
 
