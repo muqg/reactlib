@@ -7,15 +7,20 @@ interface Props {
     buttons?: Array<SidebarButton>
 }
 
-class Sidebar extends React.Component<Props> {
-    state = {
-        isActive: false
-    }
+interface State {
+    isActive: boolean
+}
+
+class Sidebar extends React.Component<Props, State> {
     buttons: any[]
 
     constructor(public props: Props) {
         super(props)
         this.buttons = this.props.buttons || []
+
+        this.state = {
+            isActive: false
+        }
     }
 
 
@@ -46,8 +51,8 @@ class Sidebar extends React.Component<Props> {
     }
 
     onArrowClicked() {
-        this.setState({
-            isActive: !this.state.isActive
+        this.setState(prevState => {
+            return {isActive: !prevState.isActive}
         })
     }
 }

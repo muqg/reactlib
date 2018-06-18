@@ -73,10 +73,9 @@ function Serialization<P extends {}>(
     initialData?: SerializationProps["serializedData"]): React.ComponentType<P>
 {
 
-    class withSerialization extends React.Component<P> {
+    class withSerialization extends React.Component<P, WrapperState> {
         static displayName: string
 
-        state: WrapperState
         initialState: SerializationProps["serializedData"]
 
         hasChanged: boolean = false
@@ -97,6 +96,10 @@ function Serialization<P extends {}>(
                 validData: {...initialData},
                 inputData: {...initialData}
             }
+        }
+
+        componentDidUpdate() {
+            this.hasChanged = true
         }
 
         async handleChange(
@@ -173,19 +176,20 @@ function Serialization<P extends {}>(
         }
 
         _updateState() {
-            this.setState({
-                validData: {
-                    ...this.state.validData,
-                    ...this.valid
-                },
-                inputData: {
-                    ...this.state.inputData,
-                    ...this.input
+            this.setState(prevState => {
+                return {
+                    validData: {
+                        ...prevState.validData,
+                        ...this.valid
+                    },
+                    inputData: {
+                        ...prevState.inputData,
+                        ...this.input
+                    }
                 }
             }, () => {
                 this.valid = {}
                 this.input = {}
-                this.hasChanged = true
             })
         }
 

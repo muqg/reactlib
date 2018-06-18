@@ -43,10 +43,10 @@ class Expire extends React.Component<Props, State> {
 
     setTimer() {
         this.clearTimer()
-        this.setState({isVisible: true}, () => {
-            const seconds = Math.max(0, this.props.in) * 1000
-            this.timer = setTimeout(this.expire.bind(this), seconds)
-        })
+        this.setState({isVisible: true})
+
+        const seconds = Math.max(0, this.props.in) * 1000
+        this.timer = setTimeout(this.expire.bind(this), seconds)
     }
 
     clearTimer() {

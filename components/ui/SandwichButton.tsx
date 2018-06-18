@@ -28,8 +28,8 @@ class SandwichButton extends React.Component<Props, State> {
 
     handleClick(event: React.MouseEvent<any>) {
         const active = !this.state.active
-        this.setState({
-            active
+        this.setState(prevState => {
+            return {active: !prevState.active}
         })
 
         if(this.props.onClick)
