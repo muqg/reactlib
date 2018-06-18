@@ -24,9 +24,8 @@ interface State {
     isActive: boolean
 }
 
-class Select extends React.Component {
+class Select extends React.Component<Props, State> {
     containerRef: React.RefObject<HTMLDivElement>
-    state: State
 
     uniqueOptionID = randomID(6)
 

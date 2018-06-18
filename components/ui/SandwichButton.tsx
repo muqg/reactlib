@@ -4,11 +4,11 @@ import ICommonProps from "./ICommonProps";
 import { StyleClass } from "../../utility/enums";
 import { classNames } from "../../utility/dom";
 
-interface IProps extends ICommonProps {
+interface Props extends ICommonProps {
     onClick?: (isActive: boolean, e: React.MouseEvent<any>) => void
 }
 
-interface IState {
+interface State {
     active: boolean
 }
 
@@ -17,10 +17,8 @@ interface IState {
  * - className - Additional classes for the component.
  * - onClick - An optional Callback(isActive) to handle click event.
  */
-class SandwichButton extends React.Component {
-    public state: IState
-
-    constructor(public readonly props: IProps) {
+class SandwichButton extends React.Component<Props, State> {
+    constructor(public readonly props: Props) {
         super(props)
 
         this.state = {

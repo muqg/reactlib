@@ -2,7 +2,7 @@ import * as React from "react";
 import Dialog from "./Dialog";
 // TODO: React | test component.
 
-interface IProps {
+interface Props {
     children?: any
     onAccept?: () => void
     onReject?: () => void
@@ -11,20 +11,11 @@ interface IProps {
     title?: string
 }
 
-/**
- * - onAccept - A callback() for when dialog is accepted.
- * - onReject - A callback() for when dialog is rejected.
- * -----
- * From Dialog:
- * - onClose --> A valid callback() to close the dialog.
- * - show --> Whether dialog is shown.
- * - title --> The dialog's title.
- */
-class ConfirmationDialog extends React.Component {
+class ConfirmationDialog extends React.Component<Props> {
     public onAccept: () => void
     public onReject: () => void
 
-    constructor(public readonly props: IProps) {
+    constructor(public readonly props: Props) {
         super(props)
 
         this.onAccept = this.props.onAccept || (() => {})

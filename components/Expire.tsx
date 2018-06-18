@@ -17,8 +17,7 @@ interface State {
     isVisible: boolean
 }
 
-class Expire extends React.Component {
-    state: State
+class Expire extends React.Component<Props, State> {
     timer: number = -1
 
     constructor(public props: Props) {
@@ -44,7 +43,7 @@ class Expire extends React.Component {
 
     setTimer() {
         this.clearTimer()
-        this.setState({visible: true}, () => {
+        this.setState({isVisible: true}, () => {
             const seconds = Math.max(0, this.props.in) * 1000
             this.timer = setTimeout(this.expire.bind(this), seconds)
         })

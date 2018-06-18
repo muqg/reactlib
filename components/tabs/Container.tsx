@@ -2,19 +2,19 @@ import * as React from "react";
 import "../../css/tabs.css";
 import { classNames } from "../../utility/dom";
 
-interface IProps {
+interface Props {
     attributes?: {}
     children?: any
     className?: string
 }
 
-interface IState {
+interface State {
     tabIndex: number
 }
 
-class Container extends React.Component {
-    props: IProps = {}
-    state: IState = {
+class Container extends React.Component<Props, State> {
+    props: Props = {}
+    state: State = {
         tabIndex: 0
     }
 

@@ -2,18 +2,18 @@ import * as React from "react";
 import { SidebarButton } from ".";
 import "../../css/admin/sidebar.css";
 
-interface IProps {
+interface Props {
     children?: any[]
     buttons?: Array<SidebarButton>
 }
 
-class Sidebar extends React.Component {
+class Sidebar extends React.Component<Props> {
     state = {
         isActive: false
     }
     buttons: any[]
 
-    constructor(public props: IProps) {
+    constructor(public props: Props) {
         super(props)
         this.buttons = this.props.buttons || []
     }

@@ -2,7 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { isObject } from "../../utility/assertions";
 
-interface OptionProps {
+interface Props {
     children?: any
     value?: string
 
@@ -27,8 +27,8 @@ interface OptionProps {
     onClick?: () => void
 }
 
-class SelectOption extends React.Component {
-    constructor(public props: OptionProps) {
+class SelectOption extends React.Component<Props> {
+    constructor(public props: Props) {
         super(props)
     }
 

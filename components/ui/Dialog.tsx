@@ -1,22 +1,18 @@
 import * as React from "react";
 // TODO: React | test component.
 
-interface IProps {
+interface Props {
     children?: any
     onClose: (e: React.MouseEvent<any>) => void
     show?: boolean
     title?: string
 }
 
-/**
- * - onClose --> A valid callback() to close the dialog.
- * - show --> Whether dialog is shown.
- * - title --> The dialog's title.
- */
-class Dialog extends React.Component {
+
+class Dialog extends React.Component<Props> {
     public close: (e: React.MouseEvent<any>) => void
 
-    constructor(public readonly props: IProps) {
+    constructor(public readonly props: Props) {
         super(props)
         this.close = this.props.onClose
     }

@@ -4,21 +4,14 @@ import ICommonProps from "./ICommonProps";
 import { StyleClass } from "../../utility/enums";
 import { classNames } from "../../utility/dom";
 
-interface IProps extends ICommonProps {
+interface Props extends ICommonProps {
     onClick: () => void
 }
 
-/**
- * - attributes - Key/value pairs of additional attributes.
- * - className - Additional classes for the component.
- *      - .disabled - Disables the checkbox.
- *      - .checked - Marks the checkbox as checked.
- * - onClick - An optional Callback() to handle click event.
- */
-class Checkbox extends React.Component {
+class Checkbox extends React.Component<Props> {
     // TODO: React | Implement with hidden input instead of change event and
     // this way drop usave of "checked" class.
-    constructor(public readonly props: IProps) {
+    constructor(public readonly props: Props) {
         super(props)
     }
 
