@@ -2,7 +2,14 @@
 import * as React from "react"
 
 interface Props {
+    /**
+     * Expiration timeout seconds.
+     */
     in: number
+    /**
+     * Callback for when expired.
+     */
+    then?: () => void
     children?: any
 }
 
@@ -22,28 +29,37 @@ class Expire extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.children !== this.props.children) {
-            this.setTimer()
-            this.setState({visible: true})
-        }
-    }
-
     componentDidMount() {
         this.setTimer()
     }
 
     componentWillUnmount() {
-        clearTimeout(this.timer)
+        this.clearTimer()
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if(prevProps.children !== this.props.children)
+            this.setTimer()
     }
 
     setTimer() {
-        const seconds = Math.max(0, this.props.in) * 1000
+        this.clearTimer()
+        this.setState({visible: true}, () => {
+            const seconds = Math.max(0, this.props.in) * 1000
+            this.timer = setTimeout(this.expire.bind(this), seconds)
+        })
+    }
 
-        this.timer = setTimeout(function() {
-            this.setState({isVisible: false})
-            this.timer = null
-        }.bind(this), seconds)
+    clearTimer() {
+        clearTimeout(this.timer)
+    }
+
+    expire() {
+        this.setState({isVisible: false})
+        this.timer = -1
+
+        if(this.props.then)
+            this.props.then()
     }
 
     render() {

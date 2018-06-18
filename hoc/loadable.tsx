@@ -27,7 +27,7 @@ function loadAsync(loader: () => Promise<any>, loadingComponent?: LoadableState[
                 })
             }
             catch {
-                console.error("Error loading: " + loader.toString())
+                console.error("Error loading chunk.")
             }
         }
 
