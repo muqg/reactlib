@@ -25,6 +25,7 @@ async function until(condition: () => boolean, checkInterval = 50, timeout = 60)
 
     return new Promise<void>((resolve, reject) => {
         let isRejected = false
+
         const check = () => {
             if(isRejected)
                 return
@@ -34,12 +35,13 @@ async function until(condition: () => boolean, checkInterval = 50, timeout = 60)
             else
                 setTimeout(check, checkInterval)
         }
-        check()
 
         setTimeout(() => {
             isRejected = true
-            reject()
+            reject("Awaitable condition timed out.")
         }, timeout)
+
+        check()
     })
 }
 
