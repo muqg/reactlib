@@ -75,18 +75,8 @@ function Serialization<P extends {}>(
 
     class withSerialization extends React.Component<P, WrapperState> {
         static displayName: string
-
         initialState: SerializationProps["serializedData"]
-
         hasChanged: boolean = false
-        /**
-         * The awaiting validated data.
-         */
-        valid: SerializationProps["serializedData"] = {}
-        /**
-         * The awaiting input data.
-         */
-        input: SerializationProps["serializedData"] = {}
 
         constructor(public props: any) {
             super(props)
@@ -143,14 +133,14 @@ function Serialization<P extends {}>(
             }
             // Reset serialized elements to passed initial state data on success.
             if(success)
-                this._resetState()
+                this.reset()
         }
 
         setInitialDataBeforeChanged(initialData: SerializationProps["serializedData"]) {
-            if(!this.hasChanged) {
-                this.initialState = def(initialData, {}) as SerializationProps["serializedData"]
-                this._resetState()
-            }
+            if(this.hasChanged)
+                return
+            this.initialState = def(initialData, {}) as SerializationProps["serializedData"]
+            this.reset()
         }
 
         serializeValue(name: string, value: string | number | object | Array<any>, isValid = true) {
@@ -158,38 +148,24 @@ function Serialization<P extends {}>(
                 value = JSON.stringify(value)
             value = value.toString()
 
-            this.valid = {
-                ...this.valid,
-                [name]: isValid ? value : ""
-            }
-            this.input = {
-                ...this.input,
-                [name]: value
-            }
-            this._updateState()
-        }
-
-        _resetState() {
-            this.input = {...this.initialState}
-            this.valid = {...this.initialState}
-            this._updateState()
-        }
-
-        _updateState() {
             this.setState(prevState => {
                 return {
                     validData: {
                         ...prevState.validData,
-                        ...this.valid
+                        [name]: isValid ? value : ""
                     },
                     inputData: {
                         ...prevState.inputData,
-                        ...this.input
+                        [name]: value
                     }
-                }
-            }, () => {
-                this.valid = {}
-                this.input = {}
+                } as WrapperState
+            })
+        }
+
+        reset() {
+            this.setState({
+                validData: {...this.initialState},
+                inputData: {...this.initialState}
             })
         }
 
