@@ -25,30 +25,32 @@ function dive(key: string, item: any): object
  */
 function dive<T extends object = object>(key: string, item: any, pool: object): T
 function dive(key: string, item: any, pool: object = {}) {
-    const splitKey = key.split(".")
+    const splitKey = key.split(".").filter(k => k)
 
     let result: any = item
-    for(let i = splitKey.length - 1; i >= 0; i--) {
-        const currentKey = splitKey[i]
-        const poolItem = dig(splitKey.join("."), pool) || {}
+    if(splitKey) {
+        for(let i = splitKey.length - 1; i >= 0; i--) {
+            const currentKey = splitKey[i]
+            const poolItem = dig(splitKey.join("."), pool) || {}
 
-        // Expected insertion is Array.
-        if(isArray(result)) {
-            // If both items are arrays then combine them.
-            if(isArray(poolItem))
-                result = [...poolItem, ...result]
-        }
-        // Expected insertion is Object.
-        // If both items are objects then combine them.
-        else if(isObject(result) && isObject(poolItem)) {
-            result = {...poolItem, ...result}
-        }
+            // Expected insertion is Array.
+            if(isArray(result)) {
+                // If both items are arrays then combine them.
+                if(isArray(poolItem))
+                    result = [...poolItem, ...result]
+            }
+            // Expected insertion is Object.
+            // If both items are objects then combine them.
+            else if(isObject(result) && isObject(poolItem)) {
+                result = {...poolItem, ...result}
+            }
 
-        result = {
-            [currentKey]: result
-        }
+            result = {
+                [currentKey]: result
+            }
 
-        splitKey.pop()
+            splitKey.pop()
+        }
     }
 
     return isObject(pool) ? {...pool, ...result} : {...result}
