@@ -1,9 +1,14 @@
 import * as React from "react";
 import { StringDict } from "../utility";
-import { def, isUndefined, isObject } from "../utility/assertions";
-import { parseFormElement, findParentWithClass } from "../utility/dom";
+import { def, isBoolean } from "../utility/assertions";
+import { dive } from "../utility/collection";
+import { findParentWithClass, parseFormElement } from "../utility/dom";
 
-export interface SerializationProps {
+/**
+ * __NOTE__: The generic typing does __NOT__ guarantee type safety and is there
+ * for convenience.
+ */
+export interface SerializationProps<SD extends object = StringDict<any>> {
     /**
      * Handles data serialization an input element changes and accepts a callback
      * that may handle any specific change behaviour.
@@ -11,46 +16,42 @@ export interface SerializationProps {
      * the serialized value is valid or not. Always considered valid by default.
      * - The callback may be async.
      */
-    handleChange(
-        event: React.ChangeEvent<HTMLElement>,
-        callback?:(newData: string, targetElement: HTMLFormElement) => boolean | undefined
-    ): void
+    srlzChange(event: React.ChangeEvent<HTMLElement>, callback?: ChangeCallback): void
+
 
     /**
-     * Handles basic data submission and accepts a callback that handles specific
-     * behaviour.
+     * Handles basic data submission and accepts a callback that may handle
+     * any specific behaviour.
      * - The callback can optionally return True or False to indicate whether
-     * submission was successful or not. Always considered successful by default.
-     * - The callback may be async.
+     *   to reset serialized data to the inital one.
+     * - The generic typing does __NOT__ guarantee type safety and is there for
+     *   convenience.
      */
-    handleSubmit(
-        event: React.SyntheticEvent<any>,
-        callback?: (serializedData: SerializationProps["serializedData"]) => boolean | undefined
-    ): void
+    srlzSubmit<SP extends object = SD>
+        (event: React.SyntheticEvent<any>, callback: SubmissionCallback<SP>): void
 
     /**
      * Allows to set the initial data's value from inside the wrapped component.
      * This method can only be called once and before the change or submission
      * methods are called.
      */
-    setInitialDataBeforeChanged(initialData: SerializationProps["serializedData"]): void
+    setInitialDataBeforeChanged(initialData: SD): void
 
     /**
      * Serializes a value.
      */
-    serializeValue(name: string, value: string | number | object | Array<any>): void
+    serializeValue(name: string, value: any): void
     /**
-     * Serializes a value if it is marked as valid or an empty string otherwise.
+     * Serializes a value if it is valid or undefined otherwise.
      */
-    serializeValue(name: string, value: string | number | object | Array<any>, isValid: boolean): void
+    serializeValue(name: string, value: any, isValid: boolean): void
 
     /**
      * Holds the serialized data. Should be used to initially set values of
      * elements. Callbacks should be used for any direct manipulation.
      */
-    serializedData: StringDict<string>
+    serializedData: SD
 }
-
 
 interface WrapperState {
     /**
@@ -63,17 +64,23 @@ interface WrapperState {
     inputData: SerializationProps["serializedData"]
 }
 
+type CallbackReturnValue = boolean | void | Promise<boolean> | Promise<void>
+type SubmissionCallback<SP extends object = SerializationProps["serializedData"]> = (serializedData: SP) => CallbackReturnValue
+type ChangeCallback = (newData: string, targetElement: HTMLElement) => CallbackReturnValue
+
+
+
 /**
  * Enhances a component with serialization. See SerializationProps for more info.
  * @param WrappedComponent The component to be wrapped.
  * @param initialData Initial serialized data.
  */
-function Serialization<P extends {}>(
-    WrappedComponent: React.ComponentType<P & SerializationProps>,
-    initialData?: SerializationProps["serializedData"]): React.ComponentType<P>
+function Serialization<OP extends {}, SD extends object = SerializationProps["serializedData"]>(
+    WrappedComponent: React.ComponentType<OP & SerializationProps<SD>>,
+    initialData?: SerializationProps["serializedData"]): React.ComponentType<OP>
 {
 
-    class withSerialization extends React.Component<P, WrapperState> {
+    class withSerialization extends React.Component<OP, WrapperState> {
         static displayName: string
         initialState: SerializationProps["serializedData"]
         hasChanged: boolean = false
@@ -92,10 +99,7 @@ function Serialization<P extends {}>(
             this.hasChanged = true
         }
 
-        async handleChange(
-            event: React.ChangeEvent<HTMLFormElement>,
-            callback?:(newData: string, targetElement: HTMLFormElement) => boolean | undefined
-        ) {
+        async handleChange(event: React.ChangeEvent<HTMLElement>, callback: ChangeCallback = () => {}) {
             const targetElement = event.target as HTMLFormElement
             let name = targetElement.name
             let elementData = ""
@@ -111,58 +115,45 @@ function Serialization<P extends {}>(
                 elementData = parseFormElement(targetElement)
             }
 
-            let isDataValid = true
-            if(callback) {
-                const res = await callback(elementData, targetElement)
-                isDataValid = !isUndefined(res) ? res : isDataValid
-            }
+            // Allow async callback.
+            const res = await callback(elementData, targetElement)
+            const isDataValid = isBoolean(res) ? res : true
+
             this.serializeValue(name, elementData, isDataValid)
         }
 
         async handleSubmit(
             event: React.SyntheticEvent<any>,
-            callback?: (serializedData: SerializationProps["serializedData"]) => boolean | undefined
+            callback: SubmissionCallback = () => {}
         ) {
             event.preventDefault();
 
-            let success = true
-            if(callback) {
-                // Allow async callback.
-                const res = await callback(this.state.validData)
-                success = !isUndefined(res) ? res : success
-            }
+            // Allow async callback.
+            const res = await callback(this.state.validData)
+            const success = isBoolean(res) ? res : true
+
             // Reset serialized elements to passed initial state data on success.
             if(success)
-                this.reset()
+                this._reset()
         }
 
         setInitialDataBeforeChanged(initialData: SerializationProps["serializedData"]) {
             if(this.hasChanged)
                 return
-            this.initialState = def(initialData, {}) as SerializationProps["serializedData"]
-            this.reset()
+            this.initialState = {...initialData}
+            this._reset()
         }
 
-        serializeValue(name: string, value: string | number | object | Array<any>, isValid = true) {
-            if(isObject(value))
-                value = JSON.stringify(value)
-            value = value.toString()
-
+        serializeValue(name: string, value: any, isValid = true) {
             this.setState(prevState => {
                 return {
-                    validData: {
-                        ...prevState.validData,
-                        [name]: isValid ? value : ""
-                    },
-                    inputData: {
-                        ...prevState.inputData,
-                        [name]: value
-                    }
-                } as WrapperState
+                    validData: {...dive(name, (isValid ? value : undefined), prevState.validData)},
+                    inputData: {...dive(name, value, prevState.inputData)}
+                }
             })
         }
 
-        reset() {
+        _reset() {
             this.setState({
                 validData: {...this.initialState},
                 inputData: {...this.initialState}
@@ -174,8 +165,8 @@ function Serialization<P extends {}>(
                 <WrappedComponent
                     {...this.props}
                     serializedData={this.state.inputData}
-                    handleChange={this.handleChange.bind(this)}
-                    handleSubmit={this.handleSubmit.bind(this)}
+                    srlzChange={this.handleChange.bind(this)}
+                    srlzSubmit={this.handleSubmit.bind(this)}
                     setInitialDataBeforeChanged={this.setInitialDataBeforeChanged.bind(this)}
                     serializeValue={this.serializeValue.bind(this)}
                 />

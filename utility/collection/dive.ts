@@ -12,8 +12,6 @@ function dive(key: string, item: any): object
  * Places an __item__ at the provided __key__ of a __pool__ Object. If the __pool__
  * is an Array then it is disregarded and a fresh Object with the given __item__
  * at the provided __key__ is created.
- *  - If the __item__ is an Array and an Array __element__ exists at the __key__
- *      then the contents inside the __item__ Array are appended.
  *  - If the __item__ is an Object and an Object __element__ exists at the __key__
  *      then both are combined with __item__'s values overriding the __element__ ones.
  *
@@ -24,36 +22,25 @@ function dive(key: string, item: any): object
  * @param pool The pool to put the item into.
  */
 function dive<T extends object = object>(key: string, item: any, pool: object): T
+
 function dive(key: string, item: any, pool: object = {}) {
     const splitKey = key.split(".").filter(k => k)
 
     let result: any = item
-    if(splitKey) {
-        for(let i = splitKey.length - 1; i >= 0; i--) {
-            const currentKey = splitKey[i]
-            const poolItem = dig(splitKey.join("."), pool) || {}
+    for(let i = splitKey.length - 1; i >= 0; i--) {
+        const currentKey = splitKey[i]
+        const poolItem = dig(splitKey.join("."), pool) || {}
 
-            // Expected insertion is Array.
-            if(isArray(result)) {
-                // If both items are arrays then combine them.
-                if(isArray(poolItem))
-                    result = [...poolItem, ...result]
-            }
-            // Expected insertion is Object.
-            // If both items are objects then combine them.
-            else if(isObject(result) && isObject(poolItem)) {
-                result = {...poolItem, ...result}
-            }
+        // If both items are objects then combine them. Otherwise result overwrites the poolItem.
+        if((isObject(result) && !isArray(result)) && (isObject(poolItem) && !isArray(poolItem)))
+            result = {...poolItem, ...result}
 
-            result = {
-                [currentKey]: result
-            }
-
-            splitKey.pop()
+        result = {
+            [currentKey]: result
         }
+        splitKey.pop()
     }
-
-    return isObject(pool) ? {...pool, ...result} : {...result}
+    return isObject(pool) && !isArray(pool) ? {...pool, ...result} : {...result}
 }
 
 export { dive };
