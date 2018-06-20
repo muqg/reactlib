@@ -16,7 +16,7 @@ export interface SerializationProps<SD extends object = StringDict<any>> {
      * the serialized value is valid or not. Always considered valid by default.
      * - The callback may be async.
      */
-    srlzChange(event: React.ChangeEvent<HTMLElement>, callback?: ChangeCallback): void
+    srlzChange(event: React.ChangeEvent<HTMLElement>, callback?: ChangeCallback): Promise<void>
 
 
     /**
@@ -28,7 +28,7 @@ export interface SerializationProps<SD extends object = StringDict<any>> {
      *   convenience.
      */
     srlzSubmit<SP extends object = SD>
-        (event: React.SyntheticEvent<any>, callback: SubmissionCallback<SP>): void
+        (event: React.SyntheticEvent<any>, callback: SubmissionCallback<SP>): Promise<void>
 
     /**
      * Allows to set the initial data's value from inside the wrapped component.
