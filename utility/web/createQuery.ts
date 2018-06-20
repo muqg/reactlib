@@ -5,7 +5,10 @@ import { StringDict } from "../interfaces";
  * @param params Object with parameters.
  */
 export function createQuery(params: StringDict<any>): string {
-    return Object.keys(params).map(
-        key => encodeURIComponent(key) + "=" + encodeURIComponent(params[key])
-    ).join("&")
+    return Object.keys(params).map(key => {
+        const encodedValue = encodeURIComponent(params[key])
+        if(encodedValue.length) {
+            return encodeURIComponent(key) + "=" + encodedValue
+        }
+    }).filter(p => p).join("&")
 }

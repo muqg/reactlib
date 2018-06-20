@@ -26,8 +26,9 @@ function loadAsync(loader: () => Promise<any>, loadingComponent?: LoadableState[
                     component: loaded.default
                 })
             }
-            catch {
+            catch(ex) {
                 console.error("Error loading chunk.")
+                throw ex
             }
         }
 
