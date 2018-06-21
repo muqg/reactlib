@@ -1,0 +1,1 @@
+export { toolbarReducer } from "./toolbarReducer";

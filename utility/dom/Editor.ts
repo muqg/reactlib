@@ -15,6 +15,8 @@ export interface ImageStyle extends StringDict<any> {
 
 
 class Editor {
+    private lastSelectionRange: Range | null = null
+
     constructor() {
         this.exec("defaultParagraphSeparator", "p");
     }
@@ -25,6 +27,7 @@ class Editor {
      * @param value Optional value.
      */
     private exec(command: string, value?: string) {
+        this.restoreSelection()
         return document.execCommand(command, false, value)
     }
 
@@ -80,6 +83,21 @@ class Editor {
      */
     getSelectedNode() {
         return window.getSelection().getRangeAt(0).startContainer.parentNode
+    }
+
+    saveSelection(): void {
+        const selection = window.getSelection();
+        this.lastSelectionRange = selection.getRangeAt(0);
+    }
+
+    restoreSelection(): void {
+        if(!this.lastSelectionRange)
+            return
+
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(this.lastSelectionRange);
+        this.lastSelectionRange = null
     }
 
 
