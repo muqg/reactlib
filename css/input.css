@@ -1,4 +1,5 @@
-.l_gui_input {
+.l_input {
+    background: transparent;
     border: none;
     border-bottom: 2px solid #bbb;
     outline: none;
@@ -6,6 +7,6 @@
     transition: border .25s;
 }
 
-    .l_gui_input.focused {
+    .l_input:focus {
         border-bottom-color: #444;
     }

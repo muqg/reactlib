@@ -1,10 +1,11 @@
 import * as React from "react";
-import "../../css/ui/sandwich_button.css";
-import ICommonProps from "./ICommonProps";
-import { StyleClass } from "../../utility/enums";
-import { classNames } from "../../utility/dom";
+import "../../css/sandwich_button.css";
+import { StyleClass } from "../utility";
+import { classNames } from "../utility/dom";
 
-interface Props extends ICommonProps {
+interface Props {
+    attributes?: {}
+    className?: string
     onClick?: (isActive: boolean, e: React.MouseEvent<any>) => void
 }
 

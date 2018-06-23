@@ -1,11 +1,76 @@
 /* TODO: React | Complete styling. */
 
-/* This accounts for dialog's content (.l_dialog_content) */
-.l_dialog_container > div:first-child {
-    padding: 0;
+.l_dialog {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    transition-duration: .2s;
+    transition-property: opacity, visibility;
+    visibility: hidden;
+    width: 100%;
+    z-index: 100;
 }
 
-/* This accounts for dialog's buttons (.l_dialog_buttons) */
-.l_dialog_container > div:last-child {
+    .l_dialog.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+.l_dialog .l_close,
+.l_dialog .l_close > span,
+.l_dialog .l_close > span:after,
+.l_dialog .l_close > span:before {
+    width: 20px;
+}
+
+.l_dialog .l_close {
+    position: absolute;
+    right: 4px;
+    top: 0;
+}
+
+.l_dialog .back {
+    background: #000;
+    height: 100%;
+    opacity: .5;
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+}
+
+.l_dialog .wrapper {
+    background: #efefef;
+    border-radius: 3px;
+    box-sizing: border-box;
+    min-height: 54px;
+    max-height: 400px;
+    padding: 12px;
+    position: relative;
+    width: 300px;
+}
+
+.l_dialog .title:not(:empty) {
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, #555, #efefef) 1;
+    font-weight: bold;
+    margin-bottom: 27px;
+    overflow: hidden;
+    padding-bottom: 3px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 80%;
+}
+
+.l_dialog .buttons {
+    margin-top: 27px;
     text-align: center;
+}
+
+.l_dialog .l_button {
+    margin: 0 6px;
 }

@@ -92,3 +92,11 @@
 .l_tb_item.color > input {
     width: 24px
 }
+
+
+/*
+* Dialogs.
+*/
+.l_dialog.tb_link input {
+    width: 100%;
+}

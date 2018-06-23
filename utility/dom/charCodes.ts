@@ -1,3 +1,5 @@
+export const CHAR_CODE_ENTER = 13
+export const CHAR_CODE_ESCAPE = 27
 
 export const CHAR_CODE_A = 65
 export const CHAR_CODE_B = 66

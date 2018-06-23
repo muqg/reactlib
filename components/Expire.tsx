@@ -1,5 +1,5 @@
-
 import * as React from "react"
+
 
 interface Props {
     /**
@@ -16,6 +16,7 @@ interface Props {
 interface State {
     isVisible: boolean
 }
+
 
 class Expire extends React.Component<Props, State> {
     timer: number = -1

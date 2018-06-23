@@ -1,6 +1,6 @@
 import * as React from "react";
 import { SidebarButton } from ".";
-import "../../css/admin/sidebar.css";
+import "../../css/sidebar.css";
 
 interface Props {
     children?: any[]
