@@ -14,6 +14,9 @@ import ToolbarStrikethrough from "./items/ToolbarStrikethrough";
 import ToolbarUnderline from "./items/ToolbarUnderline";
 import ToolbarLink from "./items/ToolbarLink";
 import ToolbarColour from "./items/ToolbarColour";
+import ToolbarFontName from "./items/ToolbarFontName";
+import ToolbarFontSize from "./items/ToolbarFontSize";
+import ToolbarImage from "./items/ToolbarImage";
 
 
 interface StateProps {
@@ -50,7 +53,15 @@ class Toolbar extends React.Component<Props, State> {
                         <ToolbarItalic />
                         <ToolbarUnderline />
                         <ToolbarStrikethrough />
+                        <ToolbarItem onClick={() => Editor.superscript()} title="Superscript">
+                            x<sup>2</sup>
+                        </ToolbarItem>
+                        <ToolbarItem onClick={() => Editor.subscript()} title="Subscript">
+                            x<sub>2</sub>
+                        </ToolbarItem>
                         <ToolbarColour />
+                        <ToolbarFontName />
+                        <ToolbarFontSize />
                         <ToolbarAlign position="left" />
                         <ToolbarAlign position="center" />
                         <ToolbarAlign position="right" />
@@ -60,8 +71,7 @@ class Toolbar extends React.Component<Props, State> {
                         <ToolbarItem className="indent tb_img" onClick={() => Editor.indent()} title="Indent" />
                         <ToolbarItem className="outdent tb_img" onClick={() => Editor.outdent()} title="Outdent" />
                         <ToolbarLink />
-
-                        {/* TODO: React | Add titles. */}
+                        <ToolbarImage handler={() => "asd"} />
 
                         {this.props.children}
 

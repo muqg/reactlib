@@ -1,5 +1,5 @@
 import * as React from "react";
-import "../../css/checkbox.css";
+import "../css/checkbox.css";
 import { StyleClass } from "../utility";
 import { classNames } from "../utility/dom";
 

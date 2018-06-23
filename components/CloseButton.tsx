@@ -1,5 +1,5 @@
 import * as React from "react";
-import "../../css/close_button.css";
+import "../css/close_button.css";
 import { classNames } from "../utility/dom";
 
 interface Props {

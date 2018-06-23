@@ -1,5 +1,5 @@
 import * as React from "react";
-import "../../css/sandwich_button.css";
+import "../css/sandwich_button.css";
 import { StyleClass } from "../utility";
 import { classNames } from "../utility/dom";
 

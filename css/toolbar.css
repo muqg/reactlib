@@ -33,7 +33,7 @@
     transition-property: background, color, transform;
 }
 
-    .l_tb_item:hover:not(.tb_img) {
+    .l_tb_item:hover:not(.tb_img):not(.input) {
         background: #555;
         color: #ddd;
     }
@@ -89,8 +89,16 @@
     background-position-x: -256px;
 }
 
+.l_tb_item.input select {
+    height: 75%;
+}
+
 .l_tb_item.color > input {
     width: 24px
+}
+
+.l_tb_item.image input {
+    display: none;
 }
 
 

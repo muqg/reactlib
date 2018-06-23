@@ -38,7 +38,7 @@ class ToolbarColour extends React.Component<Props, State> {
 
     render() {
         return (
-            <ToolbarItem className="color" >
+            <ToolbarItem className="color input" >
                 <input
                     type="color"
                     onChange={(e) => this.colorChange(e) }
