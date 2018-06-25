@@ -24,6 +24,19 @@ interface StateProps {
 }
 interface OwnProps {
     children?: any
+    /**
+     * Custom font names to add as options.
+     *
+     * Note that these fonts must be manually served to the user if they are not
+     * supported by the browser.
+     */
+    fonts?: string[]
+    /**
+     * Callback to handle image file upload. Should return a string, representing
+     * the url to the uploaded file that will be used as src when adding the image
+     * element to the editor.
+     */
+    imageHandler?: (file: File) => string
 }
 interface State {
 }
@@ -54,13 +67,13 @@ class Toolbar extends React.Component<Props, State> {
                         <ToolbarUnderline />
                         <ToolbarStrikethrough />
                         <ToolbarItem onClick={() => Editor.superscript()} title="Superscript">
-                            x<sup>2</sup>
+                            <p>x<sup>2</sup></p>
                         </ToolbarItem>
                         <ToolbarItem onClick={() => Editor.subscript()} title="Subscript">
-                            x<sub>2</sub>
+                            <p>x<sub>2</sub></p>
                         </ToolbarItem>
                         <ToolbarColour />
-                        <ToolbarFontName />
+                        <ToolbarFontName customFonts={this.props.fonts} />
                         <ToolbarFontSize />
                         <ToolbarAlign position="left" />
                         <ToolbarAlign position="center" />
@@ -71,7 +84,10 @@ class Toolbar extends React.Component<Props, State> {
                         <ToolbarItem className="indent tb_img" onClick={() => Editor.indent()} title="Indent" />
                         <ToolbarItem className="outdent tb_img" onClick={() => Editor.outdent()} title="Outdent" />
                         <ToolbarLink />
-                        <ToolbarImage handler={() => "asd"} />
+                        { this.props.imageHandler ?
+                            <ToolbarImage handler={this.props.imageHandler} />
+                            : ""
+                        }
 
                         {this.props.children}
 

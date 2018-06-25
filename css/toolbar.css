@@ -9,6 +9,7 @@
     .l_toolbar > div {
         background: #ddd;
         border-radius: 6px;
+        box-shadow: 0 2px 0 0 #aaa;
         cursor: default;
         display: inline-block;
         padding: 3px 6px;
@@ -18,7 +19,7 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    height: 32px;
+    height: 24px;
     justify-content: center;
 }
 
@@ -26,9 +27,9 @@
     border-radius: 2px;
     color: #555;
     height: 100%;
-    line-height: 32px;
-    margin: 0 1px;
-    min-width: 32px;
+    line-height: 24px;
+    margin: 0 2px;
+    min-width: 24px;
     transition-duration: .1s;
     transition-property: background, color, transform;
 }
@@ -58,43 +59,44 @@
 }
 
 .l_tb_align_center {
-    background-position-x: -32px;
+    background-position-x: -24px;
 }
 
 .l_tb_align_left {
-    background-position-x: -64px;
+    background-position-x: -48px;
 }
 
 .l_tb_align_right {
-    background-position-x: -96px;
+    background-position-x: -72px;
 }
 
 .tb_img.outdent {
-    background-position-x: -128px;
+    background-position-x: -96px;
 }
 
 .tb_img.indent {
-    background-position-x: -160px;
+    background-position-x: -120px;
 }
 
 .tb_img.link {
-    background-position-x: -192px;
+    background-position-x: -144px;
 }
 
 .tb_img.ordered_list {
-    background-position-x: -224px;
+    background-position-x: -168px;
 }
 
 .tb_img.unordered_list {
-    background-position-x: -256px;
-}
-
-.l_tb_item.input select {
-    height: 75%;
+    background-position-x: -192px;
 }
 
 .l_tb_item.color > input {
+    border: none;
     width: 24px
+}
+
+.l_tb_item.input > select {
+    max-width: 120px;
 }
 
 .l_tb_item.image input {

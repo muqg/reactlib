@@ -1,6 +1,6 @@
 import * as React from "react";
 import "../../css/dialog.css";
-import { StyleClass } from "../../utility";
+import { StyleClass, wait } from "../../utility";
 import { classNames } from "../../utility/dom";
 import { CloseButton } from "..";
 
@@ -54,7 +54,7 @@ class Dialog extends React.Component<Props, State> {
         }
     }
 
-    componentDidUpdate(prevProps: Props) {
+    async componentDidUpdate(prevProps: Props) {
         if(this.props.visible !== prevProps.visible) {
             const visibility = this.props.visible || false
             this.setState({isVisible: visibility})
@@ -63,10 +63,14 @@ class Dialog extends React.Component<Props, State> {
         }
 
         if(this.wasClosed && this.state.isVisible) {
-            if(this.props.onOpen)
-                this.props.onOpen(this.dialogElement.current)
-
             this.wasClosed = false
+
+            if(this.props.onOpen) {
+                // Wait before calling open callback since dom interactions don't
+                // always work correctly if children are not yet rendered or updated.
+                await wait(30)
+                this.props.onOpen(this.dialogElement.current)
+            }
         }
     }
 

@@ -17,10 +17,12 @@ const FONT_NAMES = [
 
 
 interface Props {
+    customFonts?: string[]
 }
 
 
-const ToolbarFontName = (_props: Props) => {
+const ToolbarFontName = (props: Props) => {
+    const fonts = [...FONT_NAMES, ...(props.customFonts || [])]
     return(
         <ToolbarItem className="input" title="Font name">
             <select
@@ -28,7 +30,11 @@ const ToolbarFontName = (_props: Props) => {
                 onChange={e => Editor.fontName(e.target.value)}
                 onContextMenu={onRightClick}
             >
-                {FONT_NAMES.map(name => <option value={name}>{name}</option>)}
+                {fonts.map(name => (
+                    <option value={name} style={{fontFamily: name}} key={name}>
+                        {name}
+                    </option>
+                ))}
             </select>
         </ToolbarItem>
     )

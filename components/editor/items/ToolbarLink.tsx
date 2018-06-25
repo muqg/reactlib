@@ -1,10 +1,10 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import "../../../css/input.css";
+import { Editor } from "../../../utility/dom";
 import { GUI_INPUT_CLASS } from "../../const";
 import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
 import ToolbarItem from "../ToolbarItem";
-import { Editor } from "../../../utility/dom";
 
 
 interface Props {
@@ -48,8 +48,7 @@ class ToolbarLink extends React.Component<Props, State> {
         const input = dialog.querySelector("input")
         if(input) {
             input.value = ""
-            // TODO: Reactive | Make input be clicked when dialog shows.
-            input.click()
+            input.focus()
         }
     }
 

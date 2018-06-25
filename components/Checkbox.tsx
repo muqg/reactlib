@@ -10,7 +10,7 @@ interface Props {
 }
 
 // TODO: React | Implement with hidden input instead of change event and
-// this way drop usave of "checked" class.
+// this way drop usafe usage of "checked" class.
 class Checkbox extends React.Component<Props> {
     constructor(public readonly props: Props) {
         super(props)

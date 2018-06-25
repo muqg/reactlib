@@ -1,6 +1,6 @@
-import * as React from "react"
-import ToolbarItem from "../ToolbarItem";
+import * as React from "react";
 import { Editor } from "../../../utility/dom";
+import ToolbarItem from "../ToolbarItem";
 
 
 interface Props {
@@ -13,7 +13,7 @@ const ToolbarAlign = (props: Props) => {
         <ToolbarItem
             className={`l_tb_align_${props.position} tb_img`}
             onClick={() => Editor.align(props.position)}
-            title={props.position}
+            title={"Align " + props.position}
         />
     )
 }

@@ -9,7 +9,6 @@ interface Props {
 }
 
 
-// TODO: React | Implement in px instead.
 const ToolbarFontSize = (_props: Props) => {
     return(
         <ToolbarItem className="input" title="Font size">

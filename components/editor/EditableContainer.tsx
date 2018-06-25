@@ -18,6 +18,7 @@ interface State {
 type Props = OwnProps & DispatchProps
 
 
+// TODO: React | OutsideAlerter for Toolbar.
 class EditableContainer extends React.Component<Props, State> {
     container = React.createRef<HTMLDivElement>()
 

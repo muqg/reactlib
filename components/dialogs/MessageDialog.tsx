@@ -1,6 +1,5 @@
 import * as React from "react"
 import Dialog, { DialogProps } from "../dialogs/Dialog"
-// TODO: React | test component.
 
 
 interface OwnProps {
