@@ -1,4 +1,4 @@
-import { Collection } from "../types";
+import { Collection } from "../type";
 
 /**
  * Returns a nested array or object element, using dot notation key access.
