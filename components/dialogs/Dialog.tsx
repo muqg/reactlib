@@ -24,7 +24,7 @@ interface Props {
     /**
      * Called when a key press down occurs on the focused dialog.
      */
-    onKeyDown?: (dialogElement: HTMLDivElement | null, event: React.KeyboardEvent) => void
+    onKeyDown?: (dialogElement: HTMLDivElement, event: React.KeyboardEvent) => void
     /**
      * Called when dialog is closed (hidden from visibility).
      */
@@ -32,7 +32,7 @@ interface Props {
     /**
      * Called when dialog is opened (becomes visible).
      */
-    onOpen?: (dialogElement: HTMLDivElement | null) => void
+    onShow?: (dialogElement: HTMLDivElement) => void
 }
 
 interface State {
@@ -65,11 +65,13 @@ class Dialog extends React.Component<Props, State> {
         if(this.wasClosed && this.state.isVisible) {
             this.wasClosed = false
 
-            if(this.props.onOpen) {
+            const dialog = this.dialogElement.current
+            if(this.props.onShow && dialog) {
                 // Wait before calling open callback since dom interactions don't
                 // always work correctly if children are not yet rendered or updated.
                 await wait(30)
-                this.props.onOpen(this.dialogElement.current)
+                dialog.focus()
+                this.props.onShow(dialog)
             }
         }
     }
@@ -82,9 +84,18 @@ class Dialog extends React.Component<Props, State> {
             this.props.onClose(event)
     }
 
+    onClick(event: React.MouseEvent<any>) {
+        // Don't allow click to propagate outside React.createPortal().
+        event.stopPropagation()
+    }
+
     keyDown(event: React.KeyboardEvent) {
-        if(this.props.onKeyDown)
-            this.props.onKeyDown(this.dialogElement.current, event)
+        // Don't allow keyboard event to propagate outside React.createPortal().
+        event.stopPropagation()
+
+        const dialog = this.dialogElement.current
+        if(this.props.onKeyDown && dialog)
+            this.props.onKeyDown(dialog, event)
     }
 
     render() {
@@ -97,7 +108,7 @@ class Dialog extends React.Component<Props, State> {
         return (
             <div
                 className={classes}
-                onClick={e => e.stopPropagation()}
+                onClick={e => this.onClick(e)}
                 onKeyDown={e => this.keyDown(e)}
                 ref={this.dialogElement}
                 tabIndex={1}

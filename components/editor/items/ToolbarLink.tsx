@@ -41,10 +41,7 @@ class ToolbarLink extends React.Component<Props, State> {
         }
     }
 
-    onOpen(dialog: HTMLDivElement | null) {
-        if(!dialog)
-            return
-
+    onShow(dialog: HTMLDivElement) {
         const input = dialog.querySelector("input")
         if(input) {
             input.value = ""
@@ -63,9 +60,9 @@ class ToolbarLink extends React.Component<Props, State> {
                     <ConfirmationDialog
                         className="tb_link"
                         title="Въведи линк:"
+                        onShow={d => this.onShow(d)}
                         onClose={() => this.toggleDialog(false)}
                         onAccept={e => this.accept(e)}
-                        onOpen={d => this.onOpen(d)}
                         visible={this.state.isDialogVisible}
                     >
                         <input className={GUI_INPUT_CLASS} placeholder="https://example.com" />

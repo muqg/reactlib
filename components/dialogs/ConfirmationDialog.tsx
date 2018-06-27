@@ -8,7 +8,8 @@ import { CHAR_CODE_ENTER, CHAR_CODE_ESCAPE } from "../../utility/dom";
 interface OwnProps {
     children?: any
     /**
-     * Called when dialog resolves successfully.
+     * Called when dialog resolves successfully. May optionally return a boolean
+     * to indicate whether the acception was successful.
      */
     onAccept: (container: HTMLDivElement, event: React.MouseEvent<any>) => void | boolean
     /**
@@ -38,7 +39,7 @@ const ConfirmationDialog = (props: Props) => {
             props.onClose(event)
     }
 
-    const keyDown = (dialogElement: HTMLDivElement | null, event: React.KeyboardEvent) => {
+    const keyDown = (dialogElement: HTMLDivElement, event: React.KeyboardEvent) => {
         if(props.onKeyDown)
             props.onKeyDown(dialogElement, event)
         handleKeyDown(dialogElement, event)
