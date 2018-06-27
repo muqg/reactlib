@@ -1,6 +1,6 @@
 export * from "./charCodes";
 export { classNames } from "./classNames";
-export { Editor, ImageStyle } from "./Editor";
+export { Editor, SelectionStyle } from "./Editor";
 export { findParentWithClass } from "./findParentWithClass";
 export { hexColor } from "./hexColor";
 export { inViewport } from "./inViewport";

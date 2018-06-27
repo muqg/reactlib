@@ -36,11 +36,10 @@ class EditableContainer extends React.Component<Props, State> {
     }
 
     handlePaste(event: React.ClipboardEvent<any>) {
-        // TODO: React | Sanitize paste to be plaintext.
-        // TODO: React | Test if paste emits input event on its own in order to not duplicate events.
+        event.preventDefault()
 
-        if(this.props.onChange)
-            this.props.onChange(event)
+        const text = event.clipboardData.getData("text/plain")
+        Editor.insertHTML(text)
     }
 
     render() {

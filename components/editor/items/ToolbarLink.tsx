@@ -14,6 +14,9 @@ interface State {
 }
 
 
+/**
+ * TODO: React | Allow link to be removed with right click.
+ */
 class ToolbarLink extends React.Component<Props, State> {
     portalTarget = document.getElementById("dialogPortal")
 

@@ -7,13 +7,35 @@ type AlignPosition = "left" | "right" | "center" | "full"
 type FontSize = 1 | 2 | 3 | 4 | 5 | 6 | 7
 type HeadingSize = 1 | 2 | 3 | 4 | 5 | 6
 
-export interface ImageStyle extends StringDict<any> {
-    display?: string
-    height?: string
-    width?: string
+
+/**
+ * TODO: React | Implement Editor.getSelectionStyle()
+ */
+export interface SelectionStyle extends StringDict<string | boolean> {
+    alignment: AlignPosition
+    bold: boolean
+    fontFamily: string
+    foreColor: string
+    href: string
+    italic: boolean
+    size: string
+    subscript: boolean
+    superscript: boolean
+    strikethrough: boolean
+    underline: boolean
+
+    // TODO: React | To implement in Editor as styling methods.
+    backColor: string
+    letterSpacing: string
+    lineHeight: string
 }
 
 
+// TODO: React | Implement fontSize to receive px input and set text's size
+// in em such as f(em = px / 16).
+
+// TODO: React | Implement font color, size, family and other to be applied on
+// the nearest parent as CSS instaed of a FONT element.
 class Editor {
     private lastSelectionRange: Range | null = null
 
@@ -82,14 +104,22 @@ class Editor {
      * Returns the node that contains the current selection.
      */
     getSelectedNode() {
-        return window.getSelection().getRangeAt(0).startContainer.parentNode
+        return window.getSelection().getRangeAt(0).startContainer.parentNode as Node
     }
 
+    /**
+     * Saves current text selection.
+     * - __NOTE__: Selection should be saved before calling a styling method.
+     */
     saveSelection(): void {
         const selection = window.getSelection();
         this.lastSelectionRange = selection.getRangeAt(0);
     }
 
+    /**
+     * Restores last text selection.
+     * - Method is automatically called before executing any styling method.
+     */
     restoreSelection(): void {
         if(!this.lastSelectionRange)
             return
@@ -210,14 +240,10 @@ class Editor {
      * @param alt Image's alt text value.
      * @param style Additional styling for the image element. Currently suported.
      */
-    insertImage(src: string, alt: string = "", style: ImageStyle = {}) {
+    insertImage(src: string, alt: string = "") {
         const img = document.createElement("img")
         img.src = src
         img.alt = alt
-
-        for(let key in style)
-            // @ts-ignore
-            img.style[key] = style[key] || ""
 
         this.insertHTML(img.outerHTML)
     }
@@ -292,5 +318,4 @@ class Editor {
 const editor = new Editor()
 export {
     editor as Editor,
-
 }
