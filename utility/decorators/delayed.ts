@@ -7,23 +7,23 @@ import { wait } from "../wait";
  * __NOTE__: This is not instance specific.
  */
 function delayed(time: number = 250) {
-    return (_target: any, _propertyKey: string, descriptor: TypedPropertyDescriptor<(...args: any[]) => any>) => {
+    return <T>(_target: any, _propertyKey: string, descriptor: TypedPropertyDescriptor<(...args: any[]) => Promise<T>>) => {
         const originalMethod = descriptor.value
         if(!originalMethod)
             return
 
-        let current: Promise<any> | undefined = undefined
-        let currentArgs: any = []
+        let current: Promise<T> | null = null
+        let currentArgs = []
 
         descriptor.value = async (...args) => {
             currentArgs = [...args]
 
             if(!current) {
-                current = (async() => {
+                current = (async () => {
                     await wait(time)
 
                     const result = await originalMethod(...currentArgs)
-                    current = undefined
+                    current = null
                     currentArgs = []
 
                     return result

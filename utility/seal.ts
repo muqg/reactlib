@@ -10,7 +10,7 @@ const sealed: Array<string | number> = []
  * @param sealElement A callback to be executed if the key has not been called.
  * @returns Returns __True__ the first time a key is called; __False__ otherwise.
  */
-function seal(key: string | number, sealElement: () => any): boolean
+function seal(key: string | number, sealElement: () => any): void
 /**
  * Allows a single execution for a key which is then sealed and any subsequent
  * calls are ignored.
@@ -18,11 +18,11 @@ function seal(key: string | number, sealElement: () => any): boolean
  * @param sealElement A promise to be resolved if the key has not been called.
  * @returns Returns __True__ the first time a key is called; __False__ otherwise.
  */
-function seal(key: string | number, sealElement: Promise<any>): boolean
+function seal(key: string | number, sealElement: Promise<any>): void
 
-function seal(key: string | number, sealElement: Promise<any> | (() => any)): boolean {
+function seal(key: string | number, sealElement: Promise<any> | (() => any)): void {
     if(sealed.includes(key)) {
-        return false
+        return
     }
 
     (async () => {
@@ -33,8 +33,6 @@ function seal(key: string | number, sealElement: Promise<any> | (() => any)): bo
             awaitable = sealElement()
         await awaitable
     })()
-
-    return true
 }
 
 export { seal };

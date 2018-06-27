@@ -4,18 +4,17 @@
  * __NOTE__: This is not instance specific.
  */
 function sealed() {
-    return (_target: any, _propertyKey: string, descriptor: TypedPropertyDescriptor<(...args: any[]) => any>) => {
+    return <T>(_target: any, _propertyKey: string, descriptor: TypedPropertyDescriptor<(...args: any[]) => T>) => {
         const originalMethod = descriptor.value
 
         if(!originalMethod)
             return
 
-        let isExcuted = false
+        let sealedResult: T | null = null
         descriptor.value = (...args) => {
-            if(!isExcuted) {
-                isExcuted = true
-                return originalMethod(...args)
-            }
+            if(!sealedResult)
+                sealedResult = originalMethod(...args)
+            return sealedResult
         }
     }
 }

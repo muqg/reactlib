@@ -4,16 +4,18 @@
  * __NOTE__: This is not instance specific.
  */
 function locked() {
-    return (_target: any, _propertyKey: string, descriptor: TypedPropertyDescriptor<(...args: any[]) => Promise<any>>) => {
+    return <T>(_target: any, _propertyKey: string, descriptor: TypedPropertyDescriptor<(...args: any[]) => Promise<T>>) => {
         const originalMethod = descriptor.value
 
         if(!originalMethod)
             return
 
-        let executing: Promise<any> | undefined = undefined
+        let executing: Promise<T> | null = null
         descriptor.value = async (...args) => {
-            if(!executing)
-                executing = originalMethod(...args).then(() => { executing = undefined })
+            if(!executing) {
+                executing = originalMethod(...args)
+                executing.then(() => { executing = null })
+            }
             return executing
         }
     }

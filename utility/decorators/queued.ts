@@ -1,31 +1,52 @@
+interface QueuedElement<T> {
+    callback: (...args: any[]) => Promise<T>
+    args: any[]
+    resolve: (val: T) => void
+}
+
 /**
  * Allows method calls to be executed in their occuring order.
  *
  * __NOTE__: This is not instance specific.
  */
 function queued() {
-    return (_target: any, _propertyKey: string, descriptor: TypedPropertyDescriptor<(...args: any[]) => any>) => {
+    return <T>(_target: any, _propertyKey: string, descriptor: TypedPropertyDescriptor<QueuedElement<T>["callback"]>) => {
         const originalMethod = descriptor.value
         if(!originalMethod)
             return
 
-        let queue = [] as ((...args: any[]) => any)[]
-        let executor: Promise<void> | undefined = undefined
+        let queue = [] as QueuedElement<T>[]
+        let isExecuting = false
 
-        descriptor.value = async (...args) => {
-            queue.push(() => originalMethod(...args))
+        descriptor.value = (...args) => {
+            const element: QueuedElement<T> = {
+                callback: originalMethod,
+                args: args,
+                resolve: () => {}
+            }
+            // An empty Promise that will resolve once the queue has reached the callback in order.
+            const result = new Promise<T>((resolve) => {
+                element.resolve = resolve
+            })
 
-            if(!executor) {
-                executor = (async () => {
+            queue.push(element)
+
+            if(!isExecuting) {
+                isExecuting = true;
+
+                // Start an execution queue.
+                (async () => {
                     while(queue.length > 0) {
                         const element = queue.shift()
-                        if(element)
-                            await element()
+                        if(element) {
+                            element.resolve(await element.callback(...element.args))
+                        }
                     }
-                    executor = undefined
+                    isExecuting = false
                 })()
             }
-            return executor
+
+            return result
         }
     }
 }
