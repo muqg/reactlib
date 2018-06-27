@@ -2,6 +2,7 @@ export { asFloat } from "./asFloat";
 export { asInt } from "./asInt";
 export { capitalize } from "./capitalize";
 export { format } from "./format";
+export { isAlphabetic } from "./isAlphabetic";
 export * from "./isAlphaNumeric";
 export * from "./isEmail";
 export { isNumeric } from "./isNumeric";
