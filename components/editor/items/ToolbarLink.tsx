@@ -18,15 +18,10 @@ interface State {
  * TODO: React | Allow link to be removed with right click.
  */
 class ToolbarLink extends React.Component<Props, State> {
-    portalTarget = document.getElementById("dialogPortal")
-
-    constructor(public props: Props) {
-        super(props)
-
-        this.state = {
-            isDialogVisible: false
-        }
+    state = {
+        isDialogVisible: false
     }
+    portalTarget = document.getElementById("dialogPortal")
 
     toggleDialog(visible: boolean) {
         this.setState({isDialogVisible: visible})

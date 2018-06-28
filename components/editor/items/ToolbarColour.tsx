@@ -12,18 +12,15 @@ interface State {
 
 
 class ToolbarColour extends React.Component<Props, State> {
-    constructor(public props: Props) {
-        super(props)
-
-        this.state = {
-            color: {
-                red: 0,
-                green: 0,
-                blue: 0
-            } as Color
-        }
+    state = {
+        color: {
+            red: 0,
+            green: 0,
+            blue: 0
+        } as Color
     }
 
+    // TODO: React | Implement to be Word-like color select.
     colorChange(event: React.ChangeEvent<HTMLInputElement>) {
         const input = event.target
         const color = rgbColor(input.value)

@@ -13,7 +13,6 @@ interface State {
 }
 
 class Container extends React.Component<Props, State> {
-    props: Props = {}
     state: State = {
         tabIndex: 0
     }

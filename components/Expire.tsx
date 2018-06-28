@@ -19,15 +19,10 @@ interface State {
 
 
 class Expire extends React.Component<Props, State> {
-    timer: number = -1
-
-    constructor(public props: Props) {
-        super(props)
-
-        this.state = {
-            isVisible: true
-        }
+    state = {
+        isVisible: true
     }
+    timer: number = -1
 
     componentDidMount() {
         this.setTimer()

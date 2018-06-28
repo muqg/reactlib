@@ -45,12 +45,7 @@ type Props = OwnProps & StateProps
 
 
 class Toolbar extends React.Component<Props, State> {
-
-    constructor(public props: Props) {
-        super(props)
-
-        this.state = {}
-    }
+    state = {}
 
     render() {
         const classes = classNames(

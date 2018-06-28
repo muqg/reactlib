@@ -12,21 +12,15 @@ interface State {
 }
 
 class Sidebar extends React.Component<Props, State> {
-    buttons: any[]
-
-    constructor(public props: Props) {
-        super(props)
-        this.buttons = this.props.buttons || []
-
-        this.state = {
-            isActive: false
-        }
+    state = {
+        isActive: false
     }
 
-
     render() {
+        const buttons = this.props.buttons || []
+
         const activeClass = this.state.isActive ? " active" : ""
-        const buttonElements = this.buttons.map((btn: any, i) => {
+        const buttonElements = buttons.map((btn: any, i) => {
                 return <SidebarButton {...btn} key={i} />
         })
 

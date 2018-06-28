@@ -20,13 +20,8 @@ type Props = OwnProps & DispatchProps
 
 // TODO: React | OutsideAlerter for Toolbar.
 class EditableContainer extends React.Component<Props, State> {
+    state = {}
     container = React.createRef<HTMLDivElement>()
-
-    constructor(public props: Props) {
-        super(props)
-
-        this.state = {}
-    }
 
     handleBlur(event: React.FocusEvent<any>) {
         Editor.saveSelection()

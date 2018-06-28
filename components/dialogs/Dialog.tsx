@@ -41,17 +41,18 @@ interface State {
 
 
 class Dialog extends React.Component<Props, State> {
+    state = {
+        isVisible: this.props.visible || false
+    }
     wasClosed = true
     dialogElement = React.createRef<HTMLDivElement>()
 
-    constructor(public readonly props: Props) {
+    constructor(public props: Props) {
         super(props)
 
         this.close = this.close.bind(this)
-
-        this.state = {
-            isVisible: this.props.visible || false
-        }
+        this.onClick = this.onClick.bind(this)
+        this.keyDown = this.keyDown.bind(this)
     }
 
     async componentDidUpdate(prevProps: Props) {
@@ -109,8 +110,8 @@ class Dialog extends React.Component<Props, State> {
         return (
             <div
                 className={classes}
-                onClick={e => this.onClick(e)}
-                onKeyDown={e => this.keyDown(e)}
+                onClick={this.onClick}
+                onKeyDown={this.keyDown}
                 ref={this.dialogElement}
                 tabIndex={1}
             >

@@ -19,12 +19,8 @@ interface State {
  * - onClick - An optional Callback(isActive) to handle click event.
  */
 class SandwichButton extends React.Component<Props, State> {
-    constructor(public readonly props: Props) {
-        super(props)
-
-        this.state = {
-            active: false
-        }
+    state = {
+        active: false
     }
 
     handleClick(event: React.MouseEvent<any>) {

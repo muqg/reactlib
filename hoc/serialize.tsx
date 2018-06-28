@@ -82,8 +82,9 @@ function Serialization<OP extends {}, SD extends object = SerializationProps["se
 
     class withSerialization extends React.Component<OP, WrapperState> {
         static displayName: string
+        state: WrapperState
         initialState: SerializationProps["serializedData"]
-        hasChanged: boolean = false
+        hasChanged = false
 
         constructor(public props: any) {
             super(props)
