@@ -1,4 +1,4 @@
-import { state } from ".";
+import { initialState } from ".";
 import { isString } from "../utility/assertions";
 import { format } from "../utility/string";
 
@@ -53,7 +53,7 @@ function localize(key: any, defaultValue = key, ...args: any[]): any {
     }
 
     key = key ? "locale." + key : "locale"
-    let result = state(key, defaultValue)
+    let result = initialState(key, defaultValue)
 
     // If final result is a string and there are arguments -- format the string.
     if(args && isString(result))

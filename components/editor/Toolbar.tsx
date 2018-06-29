@@ -3,7 +3,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { ToolbarItem } from "..";
 import "../../css/toolbar.css";
-import { Redux } from "../../main";
+import { ReduxFactory } from "../../main";
 import { toolbarReducer } from "../../reducers";
 import { StyleClass } from "../../utility";
 import { classNames, Editor } from "../../utility/dom";
@@ -101,7 +101,7 @@ const mapStateToProps = (state: any): StateProps => {
 }
 
 
-Redux.addToState({lubToolbar: false})
-Redux.addReducers({lubToolbar: toolbarReducer})
+ReduxFactory.addToState({lubToolbar: false})
+ReduxFactory.addReducers({lubToolbar: toolbarReducer})
 
 export default connect(mapStateToProps, null)(Toolbar) as React.ComponentType<OwnProps>

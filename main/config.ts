@@ -1,4 +1,4 @@
-import { state } from ".";
+import { initialState } from ".";
 
 /**
  * Returns a string configuration value or throws an error if the found value is
@@ -44,7 +44,7 @@ function config(key: string, defaultBoolean: object) : object
 
 function config(key: any, defaultValue: any = ""): any {
     key = key ? "config." + key : "config"
-    let result = state(key, defaultValue)
+    let result = initialState(key, defaultValue)
 
     // Configuration value is either not of the searched type or is missing and
     // should be applied with a fix.

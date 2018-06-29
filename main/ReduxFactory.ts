@@ -4,7 +4,7 @@ import { INITIAL_STATE } from "./const";
 /**
  * Redux universal store builder class.
  */
-class Redux {
+class ReduxFactory {
     reducers: object = {}
     state: object = {...INITIAL_STATE}
 
@@ -38,7 +38,7 @@ class Redux {
     }
 }
 
-const redux = new Redux()
+const redux = new ReduxFactory()
 export {
-    redux as Redux
+    redux as ReduxFactory
 }

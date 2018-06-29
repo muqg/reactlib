@@ -2,6 +2,6 @@ export { config } from "./config";
 export { CURRENT_LOCALE } from "./const";
 export { getURI } from "./getURI";
 export { localize } from "./localize";
-export { Redux } from "./Redux";
+export { ReduxFactory } from "./ReduxFactory";
 export { render } from "./render";
-export { state } from "./state";
+export { initialState } from "./initialState";
