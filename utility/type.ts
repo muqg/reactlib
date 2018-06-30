@@ -15,3 +15,11 @@ export interface Pointer<T> {
      */
     value: T
 }
+
+/**
+ * A basic object with a name and a key.
+ */
+export interface NamedKey<T = string> {
+    id: T
+    name: string
+}
