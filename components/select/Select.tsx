@@ -24,11 +24,12 @@ interface State {
 }
 
 class Select extends React.Component<Props, State> {
+    static optionID = 420
+
     state: State = {
         isActive: false
     }
     containerRef = React.createRef<HTMLDivElement>()
-    optionID = 420
 
     componentDidMount() {
         if(!this.props.multiple) {
@@ -94,10 +95,12 @@ class Select extends React.Component<Props, State> {
 
     getOptions() {
         const optionType = this.props.multiple ? "checkbox" : "radio"
+        Select.optionID++
+
         return React.Children.map(this.props.children, (child, i) => {
             if(React.isValidElement<SelectOption>(child)) {
                 const props: any = {
-                    name: this.optionID++,
+                    name: Select.optionID,
                     type: optionType,
                     selected: this.isOptionSelected(child, i),
                     onClick: () => { this.toggleActive(!this.state.isActive) }
