@@ -1,6 +1,6 @@
 import * as React from "react";
 import { StringDict } from "../utility";
-import { def, isBoolean } from "../utility/assertions";
+import { def } from "../utility/assertions";
 import { dive } from "../utility/collection";
 import { findParentWithClass, parseFormElement } from "../utility/dom";
 
@@ -9,7 +9,7 @@ import { findParentWithClass, parseFormElement } from "../utility/dom";
  * for convenience.
  */
 export interface ModelProps<MD extends object = StringDict<any>> {
-    model: Model<MD>
+    readonly model: Model<MD>
 }
 
 
@@ -17,9 +17,7 @@ interface Model<MD extends object = StringDict<any>> {
     /**
      * Handles data change of an input element and accepts a callback that may
      * handle any specific change behaviour.
-     * - The callback can optionally return True or False to indicate whether
-     * the value is valid or not. Always considered valid by default.
-     * - The callback may be async.
+     * - The callback may be async and will be awaited for.
      * - Causes a re-render (with the new model data).
      */
     change(event: React.ChangeEvent<HTMLElement>, callback?: ChangeCallback): Promise<void>
@@ -28,11 +26,9 @@ interface Model<MD extends object = StringDict<any>> {
     /**
      * Handles basic data submission and accepts a callback that may handle
      * any specific behaviour.
-     * - The generic typing does __NOT__ guarantee type safety and is there for
-     *   convenience.
+     * - The callback may be async and will be awaited for.
      */
-    submit<MP extends object = MD>
-        (event: React.SyntheticEvent<any>, callback: SubmissionCallback<MP>): Promise<void>
+    submit<MP extends object = MD>(event: React.SyntheticEvent<any>, callback: SubmissionCallback<MP>): Promise<void>
 
     /**
      * Sets the base model data to the passed object, overwriting any previous data.
@@ -41,11 +37,10 @@ interface Model<MD extends object = StringDict<any>> {
     setBaseData(base: MD): void
 
     /**
-     * Sets a model value to the passed value if it is valid or undefined otherwise.
-     * - Value is assumed valid by default.
+     * Sets a model value.
      * - Causes a re-render (with the new model data).
      */
-    setValue(name: string, value: any, isValid?: boolean): void
+    setValue(name: string, value: any): void
 
     /**
      * Resets to the base data and causes a re-render.
@@ -56,18 +51,7 @@ interface Model<MD extends object = StringDict<any>> {
      * Holds the model's data. Should be used to initially set values of elements.
      * Callbacks should be used for any direct manipulation.
      */
-    data: MD
-}
-
-interface WrapperState {
-    /**
-     * The validated data.
-     */
-    validData: Model["data"]
-    /**
-     * The input data (without validation).
-     */
-    inputData: Model["data"]
+    readonly data: MD
 }
 
 type CallbackReturnValue = boolean | void | Promise<boolean> | Promise<void>
@@ -86,25 +70,11 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
     baseData?: Model["data"]): React.ComponentType<OP>
 {
 
-    class withModel extends React.Component<OP, WrapperState> {
+    class withModel extends React.Component<OP, Model["data"]> {
         static displayName: string
-        state: WrapperState
-        baseData: Model["data"]
-        hasChanged = false
 
-        constructor(public props: any) {
-            super(props)
-
-            this.baseData = def(baseData, {}) as Model["data"]
-            this.state = {
-                validData: {...baseData},
-                inputData: {...baseData}
-            }
-        }
-
-        componentDidUpdate() {
-            this.hasChanged = true
-        }
+        baseData = def(baseData, {}) as Model["data"]
+        state: Model["data"] = {...baseData}
 
         async handleChange(event: React.ChangeEvent<HTMLElement>, callback: ChangeCallback = () => {}) {
             const targetElement = event.target as HTMLFormElement
@@ -123,20 +93,16 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
             }
 
             // Allow async callback.
-            const res = await callback(elementData, targetElement)
-            const isDataValid = isBoolean(res) ? res : true
+            await callback(elementData, targetElement)
 
-            this.setValue(name, elementData, isDataValid)
+            this.setValue(name, elementData)
         }
 
-        async handleSubmit(
-            event: React.SyntheticEvent<any>,
-            callback: SubmissionCallback = () => {}
-        ) {
+        async handleSubmit(event: React.SyntheticEvent<any>, callback: SubmissionCallback = () => {}) {
             event.preventDefault();
 
             // Allow async callback.
-            await callback(this.state.validData)
+            await callback({...this.state})
         }
 
         setBaseData(baseData: Model["data"]) {
@@ -144,20 +110,14 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
             this.reset()
         }
 
-        setValue(name: string, value: any, isValid = true) {
+        setValue(name: string, value: any) {
             this.setState(prevState => {
-                return {
-                    validData: {...dive(name, (isValid ? value : undefined), prevState.validData)},
-                    inputData: {...dive(name, value, prevState.inputData)}
-                }
+                return {...dive(name, value, prevState)}
             })
         }
 
         reset() {
-            this.setState({
-                validData: {...this.baseData},
-                inputData: {...this.baseData}
-            })
+            this.setState({...this.baseData})
         }
 
         render() {
@@ -165,13 +125,13 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
                 <WrappedComponent
                     {...this.props}
                     model={{
-                        data: this.state.inputData,
+                        data: {...this.state},
                         change: this.handleChange.bind(this),
                         submit: this.handleSubmit.bind(this),
                         setValue: this.setValue.bind(this),
                         setBaseData: this.setBaseData.bind(this),
                         reset: this.reset.bind(this)
-                    } as Model}
+                    } as Model<MD>}
                 />
              )
         }
