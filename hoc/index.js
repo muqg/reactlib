@@ -1,2 +1,2 @@
-export { serialize, SerializationProps } from "./serialize"
+export { model, ModelProps } from "./model"
 export { loadable } from "./loadable"
