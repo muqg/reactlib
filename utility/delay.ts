@@ -38,10 +38,10 @@ function delay(key: string | number, time: number, callback: () => any, reset = 
     }
 
     if(!existingElement || reset) {
-        const timeoutCallback = async () => {
+        const timeoutCallback = () => {
             const target = delayed[key]
             if(target)
-                await target.callback()
+                target.callback()
 
             delayed[key] = undefined
         }
