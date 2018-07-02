@@ -63,7 +63,7 @@ function def(value: any, defaultValue: any) {
                 break
             case "number":
                 isDefaultType = assert.isNumber(value)
-                return
+                break
             case "object":
                 isDefaultType = assert.isObject(value)
                 break
