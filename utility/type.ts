@@ -23,3 +23,11 @@ export interface NamedKey<T = string> {
     id: T
     name: string
 }
+
+/**
+ * A simple key-value pair.
+ */
+export interface KeyValuePair<K = string, V = string> {
+    key: K
+    value: V
+}

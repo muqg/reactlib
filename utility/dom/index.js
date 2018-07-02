@@ -9,7 +9,6 @@ export { loadScript } from "./loadScript";
 export { loadStyle } from "./loadStyle";
 export { maximize } from "./maximize";
 export { OutsideAlerter } from "./OutsideAlerter";
-export * from "./parseFormElement";
 export { rgbColor } from "./rgbColor";
 export { querySelector } from "./wrappers/querySelector";
 export { querySelectorAll } from "./wrappers/querySelectorAll";

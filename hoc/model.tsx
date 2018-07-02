@@ -1,12 +1,10 @@
 import * as React from "react";
 import { StringDict } from "../utility";
+import { isObject } from "../utility/assertions";
 import { dive } from "../utility/collection";
-import { findParentWithClass, parseFormElement } from "../utility/dom";
+import { findParentWithClass } from "../utility/dom";
 
-/**
- * __NOTE__: The generic typing does __NOT__ guarantee type safety and is there
- * for convenience.
- */
+
 export interface ModelProps<MD extends object = StringDict<any>> {
     readonly model: Model<MD>
 }
@@ -14,12 +12,9 @@ export interface ModelProps<MD extends object = StringDict<any>> {
 
 interface Model<MD extends object = StringDict<any>> {
     /**
-     * Handles data change of an input element and accepts a callback that may
-     * handle any specific change behaviour.
-     * - The callback may be async and will be awaited for.
-     * - Causes a re-render.
+     * Handles data change for a valid form control event and causes a re-render.
      */
-    change(event: React.ChangeEvent<HTMLElement>, callback?: ChangeCallback): Promise<void>
+    change(event: ChangeEvent): void
 
     /**
      * Sets the base model data to the passed object, overwriting any previous
@@ -39,52 +34,45 @@ interface Model<MD extends object = StringDict<any>> {
     reset(): void
 
     /**
-     * Readable Model data. Use methods to set changes to Model's data.
+     * Readable Model data. Use methods to set changes to this data.
      */
-    readonly data: MD
+    data: MD
 }
 
-type CallbackReturnValue = boolean | void | Promise<boolean> | Promise<void>
-type ChangeCallback = (newData: string, targetElement: HTMLElement) => CallbackReturnValue
+type ChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
 
 
 
 /**
  * Enhances a component with model serialization. See ModelProps for more info.
  * @param WrappedComponent The component to be wrapped.
- * @param baseModelData Model's base data.
  */
 function CreateModel<OP extends {}, MD extends object = Model["data"]>(
-    WrappedComponent: React.ComponentType<OP & ModelProps<MD>>,
-    baseModelData: Model["data"] = {}): React.ComponentType<OP>
-{
+    WrappedComponent: React.ComponentType<OP & ModelProps<MD>>
+): React.ComponentType<OP> {
 
     class withModel extends React.Component<OP, Model["data"]> {
         static displayName: string
 
-        baseData = baseModelData
-        state: Model["data"] = {...baseModelData}
+        baseData = {} as Model["data"]
+        state = {} as Model["data"]
 
-        async handleChange(event: React.ChangeEvent<HTMLElement>, callback: ChangeCallback = () => {}) {
-            const targetElement = event.target as HTMLFormElement
-            let name = targetElement.name
-            let elementData = ""
+        change(event: ChangeEvent) {
+            const element = event.target
+            let name = element.name
+            let value = element.value
 
-            // TODO: React | This is only a temporary fix for l_select serialization.
-            // Attempt to better fix it by capturing and re-dispatching event on the select itself.
-            const parentSelect = findParentWithClass(targetElement, "l_select")
-            if((targetElement.type === "checkbox" || targetElement.type === "radio") && parentSelect) {
+            const parentSelect = findParentWithClass(element, "l_select")
+            if((element.type === "checkbox" || element.type === "radio") && parentSelect) {
                 name = parentSelect.dataset["name"] || ""
-                elementData = targetElement.value
             }
-            else {
-                elementData = parseFormElement(targetElement)
+            else if(isObject(element, HTMLSelectElement) && element.multiple) {
+                value = Object.values(element.options)
+                    .filter(o => o.selected)
+                    .map(o => o.value).join(",")
             }
 
-            // Allow async callback.
-            await callback(elementData, targetElement)
-
-            this.setValue(name, elementData)
+            this.setValue(name, value)
         }
 
         setBaseData(baseData: Model["data"]) {
@@ -94,7 +82,7 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
 
         setValue(name: string, value: any) {
             this.setState(prevState => {
-                return {...dive(name, value, prevState)}
+                return dive(name, value, prevState)
             })
         }
 
@@ -108,7 +96,7 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
                     {...this.props}
                     model={{
                         data: {...this.state},
-                        change: this.handleChange.bind(this),
+                        change: this.change.bind(this),
                         setValue: this.setValue.bind(this),
                         setBaseData: this.setBaseData.bind(this),
                         reset: this.reset.bind(this)
