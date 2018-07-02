@@ -8,12 +8,28 @@ export interface RequestOptions {
     headers?: StringDict<string>
     mode?: RequestMode
     redirect?: RequestRedirect
+
+    /**
+     * When enabled the HTTP method is passed as __method value in the form data
+     * and all requests are sent as POST.
+     */
+    useFormDataMethod?: boolean
+    /**
+     * Request data's format. Type "query" is appended to the url as a query
+     * string and is used by default for GET and HEAD requests. All other formats
+     * and request methods are included in the request body.
+     */
+    requestDataFormat?: "formData" | "json" | "query"
 }
 
 const X_CSRF_TOKEN = (() => {
     const element = document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')
     return element ? element.content : ""
 })()
+
+const DEFAULT_OPTIONS: RequestOptions = {
+    requestDataFormat: "json"
+}
 
 /**
  * Sends a request to the specified URL, reading response stream as text. Promise
@@ -40,10 +56,15 @@ function request(method: RequestMethod, url: string, body: StringDict<string>): 
  */
 function request(method: RequestMethod, url: string, body: StringDict<string>, options: RequestOptions): Promise<string>
 
-function request(method: RequestMethod, url: string, body: StringDict<string> = {} , options: RequestOptions = {}) {
+function request(method: RequestMethod, url: string, body: StringDict<string> = {} , options: RequestOptions = DEFAULT_OPTIONS) {
     const headers = options.headers || {} as StringDict<string>
     headers["X-CSRF-TOKEN"] = X_CSRF_TOKEN
     headers["X-Requested-With"] = "XMLHttpRequest"
+
+    if(options.useFormDataMethod) {
+        body["__method"] = method
+        method = RequestMethod.POST
+    }
 
     const requestInit: RequestInit = {
         cache: options.cache || "no-cache",
@@ -56,15 +77,18 @@ function request(method: RequestMethod, url: string, body: StringDict<string> = 
     }
 
     // GET and HEAD methods are not allowed to have a request body.
-    if(method === RequestMethod.GET || method === RequestMethod.HEAD) {
+    if(method === RequestMethod.GET || method === RequestMethod.HEAD || options.requestDataFormat === "query") {
         const index = url.indexOf("?")
         const cleanURL = index >= 0 ? url.substring(0, index) : url
         url = cleanURL + "?" + createQuery(body)
     }
-    else {
+    else if(options.requestDataFormat === "formData") {
         const fd = new FormData()
         Object.keys(body).forEach(key => fd.append(key, body[key]))
         requestInit.body = fd
+    }
+    else if(options.requestDataFormat === "json") {
+        requestInit.body = JSON.stringify(body)
     }
 
     return window.fetch(url, requestInit)
