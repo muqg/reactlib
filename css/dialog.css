@@ -19,10 +19,7 @@
         visibility: visible;
     }
 
-.l_dialog .l_close,
-.l_dialog .l_close > span,
-.l_dialog .l_close > span:after,
-.l_dialog .l_close > span:before {
+.l_dialog .l_close {
     width: 20px;
 }
 

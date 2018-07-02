@@ -10,7 +10,7 @@
         content: '';
         display: block;
         position: absolute;
-        width: 30px;
+        width: inherit;
         height: 2px;
         background: #444;
         border-radius: 1px;

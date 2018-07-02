@@ -87,7 +87,7 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
         }
 
         reset() {
-            this.setState({...this.baseData})
+            this.setState(this.baseData)
         }
 
         render() {
@@ -95,7 +95,7 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
                 <WrappedComponent
                     {...this.props}
                     model={{
-                        data: {...this.state},
+                        data: this.state,
                         change: this.change.bind(this),
                         setValue: this.setValue.bind(this),
                         setBaseData: this.setBaseData.bind(this),
