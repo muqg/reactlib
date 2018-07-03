@@ -15,9 +15,9 @@ export interface RequestOptions {
      */
     useFormDataMethod?: boolean
     /**
-     * Request data's format. Type "query" is appended to the url as a query
-     * string and is used by default for GET and HEAD requests. All other formats
-     * and request methods are included in the request body.
+     * Request data's format. All formats are included in the request body,
+     * except for the methods that do not allow a body, where the request data
+     * is appended as a query to the URL.
      */
     requestDataFormat?: "formData" | "json" | "query"
 }
@@ -77,7 +77,7 @@ function request(method: RequestMethod, url: string, body: StringDict<string> = 
     }
 
     // GET and HEAD methods are not allowed to have a request body.
-    if(method === RequestMethod.GET || method === RequestMethod.HEAD || options.requestDataFormat === "query") {
+    if(method === RequestMethod.GET || method === RequestMethod.HEAD || method === RequestMethod.OPTIONS) {
         const index = url.indexOf("?")
         const cleanURL = index >= 0 ? url.substring(0, index) : url
         url = cleanURL + "?" + createQuery(body)
@@ -89,6 +89,9 @@ function request(method: RequestMethod, url: string, body: StringDict<string> = 
     }
     else if(options.requestDataFormat === "json") {
         requestInit.body = JSON.stringify(body)
+    }
+    else if(options.requestDataFormat === "query") {
+        requestInit.body = createQuery(body)
     }
 
     return window.fetch(url, requestInit)
