@@ -17,7 +17,7 @@ interface State {
 /**
  * TODO: React | Allow link to be removed with right click.
  */
-class ToolbarLink extends React.Component<Props, State> {
+class ToolbarLink extends React.PureComponent<Props, State> {
     state = {
         isDialogVisible: false
     }

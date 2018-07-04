@@ -40,7 +40,7 @@ interface State {
 }
 
 
-class Dialog extends React.Component<Props, State> {
+class Dialog extends React.PureComponent<Props, State> {
     state = {
         isVisible: this.props.visible || false
     }

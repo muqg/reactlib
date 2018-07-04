@@ -27,11 +27,7 @@ interface Props {
     onClick?: () => void
 }
 
-class SelectOption extends React.Component<Props> {
-    constructor(public props: Props) {
-        super(props)
-    }
-
+class SelectOption extends React.PureComponent<Props> {
     componentDidMount() {
         if(!this.props.selected)
             return

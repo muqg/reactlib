@@ -1,13 +1,15 @@
 import * as React from "react";
 import { isUndefined } from "../utility/assertions";
 
+
 interface LoadableState {
     component?: new() => React.Component
 }
 
+
 function loadAsync(loader: () => Promise<any>, loadingComponent?: LoadableState["component"]) {
 
-    class LoadableComponent extends React.Component {
+    class LoadableComponent extends React.PureComponent {
         static displayName: string
         state: LoadableState
 

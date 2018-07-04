@@ -11,7 +11,7 @@ interface State {
     isActive: boolean
 }
 
-class Sidebar extends React.Component<Props, State> {
+class Sidebar extends React.PureComponent<Props, State> {
     state = {
         isActive: false
     }

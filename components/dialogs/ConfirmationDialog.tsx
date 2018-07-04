@@ -46,13 +46,13 @@ const ConfirmationDialog = (props: Props) => {
     }
 
     return(
-        <Dialog {...props} onClose={e => reject(e)} onKeyDown={keyDown}>
+        <Dialog {...props} onClose={reject} onKeyDown={keyDown}>
             <div className="content" ref={container}>
                 {props.children}
             </div>
             <div className="buttons">
-                <button className={GUI_BUTTON_CLASS} onClick={e => accept(e)}>Okay</button>
-                <button className={GUI_BUTTON_CLASS} onClick={e => reject(e)}>Cancel</button>
+                <button className={GUI_BUTTON_CLASS} onClick={reject}>Okay</button>
+                <button className={GUI_BUTTON_CLASS} onClick={accept}>Cancel</button>
             </div>
         </Dialog>
     )

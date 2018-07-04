@@ -60,11 +60,21 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
     WrappedComponent: React.ComponentType<OP & ModelProps<MD>>
 ): React.ComponentType<OP> {
 
-    class withModel extends React.Component<OP, Model["data"]> {
+    class withModel extends React.PureComponent<OP, Model["data"]> {
         static displayName: string
 
         baseData = {} as Model["data"]
         state = {} as Model["data"]
+
+        constructor(public props: OP) {
+            super(props)
+
+            this.change = this.change.bind(this)
+            this.setValue = this.setValue.bind(this)
+            this.setValues = this.setValues.bind(this)
+            this.setBaseData = this.setBaseData.bind(this)
+            this.reset = this.reset.bind(this)
+        }
 
         change(event: ChangeEvent) {
             const element = event.target
@@ -114,11 +124,11 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
                     {...this.props}
                     model={{
                         data: this.state,
-                        change: this.change.bind(this),
-                        setValue: this.setValue.bind(this),
-                        setValues: this.setValues.bind(this),
-                        setBaseData: this.setBaseData.bind(this),
-                        reset: this.reset.bind(this)
+                        change: this.change,
+                        setValue: this.setValue,
+                        setValues: this.setValues,
+                        setBaseData: this.setBaseData,
+                        reset: this.reset,
                     } as Model<MD>}
                 />
              )

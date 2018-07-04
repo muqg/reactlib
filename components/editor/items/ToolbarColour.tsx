@@ -11,7 +11,7 @@ interface State {
 }
 
 
-class ToolbarColour extends React.Component<Props, State> {
+class ToolbarColour extends React.PureComponent<Props, State> {
     state = {
         color: {
             red: 0,

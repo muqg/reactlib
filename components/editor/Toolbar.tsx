@@ -22,6 +22,7 @@ import ToolbarImage from "./items/ToolbarImage";
 interface StateProps {
     isVisible: boolean
 }
+
 interface OwnProps {
     children?: any
     /**
@@ -38,13 +39,14 @@ interface OwnProps {
      */
     imageHandler?: (file: File) => string
 }
+
 interface State {
 }
 
 type Props = OwnProps & StateProps
 
 
-class Toolbar extends React.Component<Props, State> {
+class Toolbar extends React.PureComponent<Props, State> {
     state = {}
 
     render() {

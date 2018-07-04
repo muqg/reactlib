@@ -8,18 +8,21 @@ import { Editor } from "../../utility/dom";
 interface DispatchProps {
     setToolbarVisibility: (isVisible: boolean) => void
 }
+
 interface OwnProps {
     className?: string
     onChange?: (event: React.SyntheticEvent<HTMLDivElement>) => void
     content?: string
 }
+
 interface State {
 }
+
 type Props = OwnProps & DispatchProps
 
 
 // TODO: React | OutsideAlerter for Toolbar.
-class EditableContainer extends React.Component<Props, State> {
+class EditableContainer extends React.PureComponent<Props, State> {
     state = {}
     container = React.createRef<HTMLDivElement>()
 

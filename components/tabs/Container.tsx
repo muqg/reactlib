@@ -12,7 +12,7 @@ interface State {
     tabIndex: number
 }
 
-class Container extends React.Component<Props, State> {
+class Container extends React.PureComponent<Props, State> {
     state: State = {
         tabIndex: 0
     }
