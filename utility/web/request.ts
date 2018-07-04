@@ -1,11 +1,11 @@
-import { RequestMethod } from "../enums";
 import { createQuery } from ".";
-import { StringDict } from "../interfaces";
+import { RequestMethod } from "../enums";
+import { Dict } from "../type";
 
 export interface RequestOptions {
     cache?: RequestCache
     credentials?: RequestCredentials
-    headers?: StringDict<string>
+    headers?: Dict<string>
     mode?: RequestMode
     redirect?: RequestRedirect
 
@@ -45,7 +45,7 @@ function request(method: RequestMethod, url: string): Promise<string>
  * @param url Requested URL.
  * @param body Request body's data.
  */
-function request(method: RequestMethod, url: string, body: StringDict<string>): Promise<string>
+function request(method: RequestMethod, url: string, body: Dict<string>): Promise<string>
 /**
  * Sends a request to the specified URL, reading response stream as text. Promise
  * always results in string except when error is thrown.
@@ -54,10 +54,10 @@ function request(method: RequestMethod, url: string, body: StringDict<string>): 
  * @param body Request body's data.
  * @param options Request options.
  */
-function request(method: RequestMethod, url: string, body: StringDict<string>, options: RequestOptions): Promise<string>
+function request(method: RequestMethod, url: string, body: Dict<string>, options: RequestOptions): Promise<string>
 
-function request(method: RequestMethod, url: string, body: StringDict<string> = {} , options: RequestOptions = DEFAULT_OPTIONS) {
-    const headers = options.headers || {} as StringDict<string>
+function request(method: RequestMethod, url: string, body: Dict<string> = {} , options: RequestOptions = DEFAULT_OPTIONS) {
+    const headers = options.headers || {} as Dict<string>
     headers["X-CSRF-TOKEN"] = X_CSRF_TOKEN
     headers["X-Requested-With"] = "XMLHttpRequest"
 
@@ -102,6 +102,5 @@ function request(method: RequestMethod, url: string, body: StringDict<string> = 
         })
 }
 
-export {
-    request
-}
+export { request };
+

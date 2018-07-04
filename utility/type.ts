@@ -1,10 +1,40 @@
-import { StringDict } from ".";
+/**
+ * Represents a RGBA color.
+ */
+export interface Color {
+    /**
+     * Color's transparency value (alpha channel).
+     */
+    alpha: number
+    /**
+     * Red color value.
+     */
+    red: number
+    /**
+     * Green color value.
+     */
+    green: number
+    /**
+     * Blue color value.
+     */
+    blue: number
+}
 
 /**
- * A collection can either be represented by any keyed element such as object
- * or array of any type.
+ * A simple dictionary with string keys and values of generic type.
  */
-export type Collection<T = any> = StringDict<T> | T[]
+export interface Dict<T> {
+    [key: string]: T
+}
+
+/**
+ * A simple dictionary that is the same as Dict except that its values are also
+ * explicitly typed as possibly undefined which makes it safer to use in many
+ * cases.
+ */
+export interface UDict<T> {
+    [key: string]: T | undefined
+}
 
 /**
  * Represents a pointer value.
@@ -22,12 +52,4 @@ export interface Pointer<T> {
 export interface NamedKey<T = string> {
     id: T
     name: string
-}
-
-/**
- * A simple key-value pair.
- */
-export interface KeyValuePair<K = string, V = string> {
-    key: K
-    value: V
 }

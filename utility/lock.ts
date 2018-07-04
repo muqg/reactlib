@@ -1,7 +1,7 @@
 import { isFunction } from "./assertions";
-import { StringDict } from "./interfaces";
+import { UDict } from "./type";
 
-const locked: StringDict<boolean | undefined> = {}
+const locked: UDict<boolean> = {}
 
 
 /**

@@ -1,4 +1,4 @@
-import { Color } from "../interfaces";
+import { Color } from "..";
 
 /**
  * Converts a 6 or 7-digit hexadecimal to its RGB color representation.

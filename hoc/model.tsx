@@ -1,16 +1,16 @@
 import * as React from "react";
-import { StringDict } from "../utility";
+import { Dict } from "../utility";
 import { isObject } from "../utility/assertions";
 import { dive } from "../utility/collection";
 import { findParentWithClass } from "../utility/dom";
 
 
-export interface ModelProps<MD extends object = StringDict<any>> {
+export interface ModelProps<MD extends object = Dict<any>> {
     readonly model: Model<MD>
 }
 
 
-interface Model<MD extends object = StringDict<any>> {
+interface Model<MD extends object = Dict<any>> {
     /**
      * Handles data change for a valid form control event and causes a re-render.
      */

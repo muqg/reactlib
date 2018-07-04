@@ -1,6 +1,6 @@
-import { StringDict } from "./interfaces";
+import { UDict } from "./type";
 
-const delayed: StringDict<Delayed | undefined> = {}
+const delayed: UDict<Delayed> = {}
 
 interface Delayed {
     timer: number
@@ -57,4 +57,5 @@ function delay(key: string | number, time: number, callback: () => any, reset = 
     }
 }
 
-export { delay }
+export { delay };
+

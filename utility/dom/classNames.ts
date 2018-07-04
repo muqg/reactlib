@@ -1,5 +1,5 @@
-﻿import { isString, isNumber, isObject, isArray } from "../assertions"
-import { StringDict } from "../interfaces";
+﻿import { isArray, isNumber, isObject, isString } from "../assertions";
+import { Dict } from "../type";
 
 
 /**
@@ -10,7 +10,7 @@ import { StringDict } from "../interfaces";
  * that are truthy take precedence over falsey ones.
  */
 export function classNames(...classArgs: any[]): string {
-    const classes: StringDict<boolean> = {}
+    const classes: Dict<boolean> = {}
 
     classArgs.forEach(arg => {
         if (!arg) return
@@ -18,7 +18,7 @@ export function classNames(...classArgs: any[]): string {
         if(isString(arg) || isNumber(arg)) {
             classes[arg] = true
         }
-        else if(isObject<StringDict<boolean>>(arg) && !isArray(arg)) {
+        else if(isObject<Dict<boolean>>(arg) && !isArray(arg)) {
             for (let cls in arg) {
                 // Always prefers the TRUE value, i.e. class is applied
                 // if at least one of the duplicate values is TRUE.

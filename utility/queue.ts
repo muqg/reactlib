@@ -1,7 +1,7 @@
 import { isFunction } from "./assertions";
-import { StringDict } from "./interfaces";
+import { UDict } from "./type";
 
-const queued: StringDict<Array<QueueElement> | undefined> = {}
+const queued: UDict<QueueElement[]> = {}
 
 type QueueElement = Promise<any> | (() => Promise<any>)
 

@@ -1,8 +1,8 @@
-import { StringDict } from "../interfaces";
+import { Dict } from "../type";
 
 class OutsideAlerter {
     private currentId = 0
-    private containers: StringDict<{
+    private containers: Dict<{
         element: HTMLElement,
         callback: () => void
     }>
@@ -59,6 +59,5 @@ class OutsideAlerter {
  * Alerts (via callback) when a click occurs outside of a container element.
  */
 const alerter = new OutsideAlerter()
-export {
-    alerter as OutsideAlerter
-}
+export { alerter as OutsideAlerter };
+

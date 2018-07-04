@@ -1,6 +1,6 @@
-import { StringDict } from "../interfaces";
 import { clamp } from "../number";
 import { capitalize } from "../string";
+import { Dict } from "../type";
 
 
 type AlignPosition = "left" | "right" | "center" | "full"
@@ -11,7 +11,7 @@ type HeadingSize = 1 | 2 | 3 | 4 | 5 | 6
 /**
  * TODO: React | Implement Editor.getSelectionStyle()
  */
-export interface SelectionStyle extends StringDict<string | boolean> {
+export interface SelectionStyle extends Dict<string | boolean> {
     alignment: AlignPosition
     bold: boolean
     fontFamily: string
@@ -316,6 +316,5 @@ class Editor {
 
 
 const editor = new Editor()
-export {
-    editor as Editor,
-}
+export { editor as Editor, };
+
