@@ -18,14 +18,23 @@ interface Model<MD extends object = Dict<any>> {
 
     /**
      * Sets the base model data to the passed object, overwriting any previous
-     * data. Calls the reset method of the model and thus causes a re-render.
+     * data or creating a shallow merge of the existing base data and the new
+     * base data if merge is True. Calls the reset method of the model and thus
+     * causes a re-render.
      */
-    setBaseData(base: MD): void
+    setBaseData(base: MD, merge?: boolean): void
 
     /**
      * Sets a model value and causes a re-render.
      */
     setValue(name: string, value: any): void
+
+    /**
+     * Allows to batch set values to the model in order to prevent possible
+     * multiple re-renders, in cases where multiple calls to setValue are needed.
+     * - Object entries represent the values as name/value pairs.
+     */
+    setValues(values: Dict<any>): void
 
     /**
      * Resets to the base data and causes a re-render. Any value using Model's
@@ -75,14 +84,23 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
             this.setValue(name, value)
         }
 
-        setBaseData(baseData: Model["data"]) {
-            this.baseData = {...baseData}
+        setBaseData(baseData: Model["data"], merge: boolean = false) {
+            this.baseData = merge ? {...this.baseData, ...baseData} : {...baseData}
             this.reset()
         }
 
         setValue(name: string, value: any) {
             this.setState(prevState => {
                 return dive(name, value, prevState)
+            })
+        }
+
+        setValues(values: Dict<any>) {
+            this.setState(prevState => {
+                let newState = {...prevState}
+                Object.entries(values).forEach(([k, v]) => newState = dive(k, v, newState))
+
+                return newState
             })
         }
 
@@ -98,6 +116,7 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
                         data: this.state,
                         change: this.change.bind(this),
                         setValue: this.setValue.bind(this),
+                        setValues: this.setValues.bind(this),
                         setBaseData: this.setBaseData.bind(this),
                         reset: this.reset.bind(this)
                     } as Model<MD>}
