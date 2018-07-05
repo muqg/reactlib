@@ -1,2 +1,2 @@
-export { model, ModelProps } from "./model"
+export { model, ModelProps, Model } from "./model"
 export { loadable } from "./loadable"

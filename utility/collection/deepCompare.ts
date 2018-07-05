@@ -29,7 +29,7 @@ function deepCompare(objA: object, objB: object): boolean {
         }
     }
 
-    return false
+    return !Object.keys(objA).length && !Object.keys(objB).length
 }
 
 export { deepCompare }

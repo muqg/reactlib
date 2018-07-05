@@ -10,40 +10,41 @@ export interface ModelProps<MD extends object = Dict<any>> {
 }
 
 
-interface Model<MD extends object = Dict<any>> {
+export interface Model<MD extends object = Dict<any>> {
     /**
      * Handles data change for a valid form control event and causes a re-render.
+     *
+     * - The form control must have a name and a value attribute.
      */
-    change(event: ChangeEvent): void
+    change(event: ChangeEvent): void | Promise<void>
 
     /**
-     * Sets the base model data to the passed object, overwriting any previous
-     * data or creating a shallow merge of the existing base data and the new
-     * base data if merge is True. Calls the reset method of the model and thus
-     * causes a re-render.
+     * Sets an object of name/value pairs to the model data. This may be used to
+     * set multiple values or set deeply nested values by passing a nested object
+     * or a dot notation name with an object value to insert at the desired
+     * nested key.
      */
-    setBaseData(base: MD, merge?: boolean): void
-
-    /**
-     * Sets a model value and causes a re-render.
-     */
-    setValue(name: string, value: any): void
-
-    /**
-     * Allows to batch set values to the model in order to prevent possible
-     * multiple re-renders, in cases where multiple calls to setValue are needed.
-     * - Object entries represent the values as name/value pairs.
-     */
-    setValues(values: Dict<any>): void
+    value(values: MD | Dict<any>): void | Promise<void>
 
     /**
      * Resets to the base data and causes a re-render. Any value using Model's
      * data will be reset to its base value if one has been provided.
      */
-    reset(): void
+    reset(): void | Promise<void>
+    /**
+     * Sets the base model data to the passed data object, overwriting any previous
+     * data or creating a shallow merge of the existing base data and the new data
+     * if merge is True and then resets the Model's data and causes a re-render.
+     */
+    reset(data?: MD | Dict<any>, merge?: boolean): void | Promise<void>
 
     /**
      * Readable Model data. Use methods to set changes to this data.
+     *
+     * __NOTE__: Never pass model data non-primitive values to child components
+     * since this will cause them to re-render anytime model changes. Use separate
+     * model for each component that requires to have its data modelled and then
+     * combine the models via model methods.
      */
     data: MD
 }
@@ -66,17 +67,7 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
         baseData = {} as Model["data"]
         state = {} as Model["data"]
 
-        constructor(public props: OP) {
-            super(props)
-
-            this.change = this.change.bind(this)
-            this.setValue = this.setValue.bind(this)
-            this.setValues = this.setValues.bind(this)
-            this.setBaseData = this.setBaseData.bind(this)
-            this.reset = this.reset.bind(this)
-        }
-
-        change(event: ChangeEvent) {
+        change = async (event: ChangeEvent) => {
             const element = event.target
             let name = element.name
             let value = element.value
@@ -91,21 +82,12 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
                     .map(o => o.value).join(",")
             }
 
-            this.setValue(name, value)
-        }
-
-        setBaseData(baseData: Model["data"], merge: boolean = false) {
-            this.baseData = merge ? {...this.baseData, ...baseData} : {...baseData}
-            this.reset()
-        }
-
-        setValue(name: string, value: any) {
-            this.setState(prevState => {
-                return dive(name, value, prevState)
+            this.value({
+                [name]: value
             })
         }
 
-        setValues(values: Dict<any>) {
+        value = async (values: Dict<any>) => {
             this.setState(prevState => {
                 let newState = {...prevState}
                 Object.entries(values).forEach(([k, v]) => newState = dive(k, v, newState))
@@ -114,7 +96,9 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
             })
         }
 
-        reset() {
+        reset = async (data?: Model["data"], merge?: boolean) => {
+            if(data)
+                this.baseData = merge ? {...this.baseData, ...data} : {...data}
             this.setState(this.baseData)
         }
 
@@ -125,9 +109,7 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
                     model={{
                         data: this.state,
                         change: this.change,
-                        setValue: this.setValue,
-                        setValues: this.setValues,
-                        setBaseData: this.setBaseData,
+                        value: this.value,
                         reset: this.reset,
                     } as Model<MD>}
                 />
