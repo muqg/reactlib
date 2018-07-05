@@ -41,15 +41,12 @@ export interface Model<MD extends object = ModelData> {
 
     /**
      * Readable Model data. Use methods to set changes to this data.
-     *
-     * __NOTE__: Never pass model data non-primitive values to child components
-     * since this will cause them to re-render anytime model changes. Use separate
-     * model for each component that requires to have its data modelled and then
-     * combine the models via model methods.
      */
-    data: MD
+    readonly data: MD
 }
 
+// Don't allow non-primitive type values in model data without making sure that
+// they can be scanned properly for change.
 type ModelData = Dict<string>
 type Return = void | Promise<void>
 type ChangeElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
