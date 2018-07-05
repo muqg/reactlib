@@ -18,7 +18,7 @@ interface State {
 }
 
 
-class Expire extends React.PureComponent<Props, State> {
+class Expire extends React.Component<Props, State> {
     state = {
         isVisible: true
     }

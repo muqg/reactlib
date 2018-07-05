@@ -23,7 +23,7 @@ interface State {
     isActive: boolean
 }
 
-class Select extends React.PureComponent<Props, State> {
+class Select extends React.Component<Props, State> {
     static optionID = 420
 
     state: State = {

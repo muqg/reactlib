@@ -46,7 +46,7 @@ interface State {
 type Props = OwnProps & StateProps
 
 
-class Toolbar extends React.PureComponent<Props, State> {
+class Toolbar extends React.Component<Props, State> {
     state = {}
 
     render() {

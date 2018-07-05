@@ -5,7 +5,6 @@ import { classNames } from "../utility/dom";
 
 
 interface Props {
-    attributes?: {}
     className?: string
     onClick?: (isActive: boolean, e: React.MouseEvent<any>) => void
 }
@@ -40,7 +39,7 @@ class SandwichButton extends React.PureComponent<Props, State> {
         )
 
         return (
-            <div className="l_sandwich_container" {...this.props.attributes}>
+            <div className="l_sandwich_container">
                 <button
                     className={classes}
                     onClick={this.handleClick}

@@ -60,7 +60,7 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
     WrappedComponent: React.ComponentType<OP & ModelProps<MD>>
 ): React.ComponentType<OP> {
 
-    class withModel extends React.PureComponent<OP, Model["data"]> {
+    class withModel extends React.Component<OP, Model["data"]> {
         static displayName: string
 
         baseData = {} as Model["data"]
