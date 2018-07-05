@@ -1,42 +1,43 @@
 import * as React from "react";
 import { Dict } from "../utility";
-import { isObject } from "../utility/assertions";
-import { dive } from "../utility/collection";
+import { isObject, isType } from "../utility/assertions";
 import { findParentWithClass } from "../utility/dom";
 
 
-export interface ModelProps<MD extends object = Dict<any>> {
+export interface ModelProps<MD extends object = ModelData> {
     readonly model: Model<MD>
 }
 
 
-export interface Model<MD extends object = Dict<any>> {
+export interface Model<MD extends object = ModelData> {
     /**
      * Handles data change for a valid form control event and causes a re-render.
      *
      * - The form control must have a name and a value attribute.
      */
-    change(event: ChangeEvent): void | Promise<void>
+    change(changed: ModelChange): Return
 
     /**
-     * Sets an object of name/value pairs to the model data. This may be used to
-     * set multiple values or set deeply nested values by passing a nested object
-     * or a dot notation name with an object value to insert at the desired
-     * nested key.
+     * Adds one or more name/value pairs to model's data.
      */
-    value(values: MD | Dict<any>): void | Promise<void>
+    value(values: MD | ModelData): Return
 
     /**
-     * Resets to the base data and causes a re-render. Any value using Model's
-     * data will be reset to its base value if one has been provided.
+     * Resets the model data. If any base data has been provided it will be set
+     * to the values or they will be emptied otherwise. Causes a re-render.
      */
-    reset(): void | Promise<void>
+    reset(): Return
     /**
      * Sets the base model data to the passed data object, overwriting any previous
      * data or creating a shallow merge of the existing base data and the new data
      * if merge is True and then resets the Model's data and causes a re-render.
      */
-    reset(data?: MD | Dict<any>, merge?: boolean): void | Promise<void>
+    reset(data?: MD | ModelData, merge?: boolean): Return
+
+    /**
+     * Whether the model data has changed.
+     */
+    hasChanged(): boolean
 
     /**
      * Readable Model data. Use methods to set changes to this data.
@@ -49,32 +50,43 @@ export interface Model<MD extends object = Dict<any>> {
     data: MD
 }
 
-type ChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-
+type ModelData = Dict<string>
+type Return = void | Promise<void>
+type ChangeElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+type ChangeEvent = React.ChangeEvent<ChangeElement>
+type ModelChange = ChangeEvent | ChangeElement
 
 
 /**
  * Enhances a component with model serialization. See ModelProps for more info.
  * @param WrappedComponent The component to be wrapped.
  */
-function CreateModel<OP extends {}, MD extends object = Model["data"]>(
+function CreateModel<OP extends {}, MD extends object = ModelData>(
     WrappedComponent: React.ComponentType<OP & ModelProps<MD>>
 ): React.ComponentType<OP> {
 
-    class withModel extends React.Component<OP, Model["data"]> {
+    class withModel extends React.Component<OP, ModelData> {
         static displayName: string
 
-        baseData = {} as Model["data"]
-        state = {} as Model["data"]
+        state = {} as ModelData
+        baseData = {} as ModelData
+        _changed = false
 
-        change = async (event: ChangeEvent) => {
-            const element = event.target
+        componentDidUpdate() {
+            this._changed = false
+        }
+
+        change = async (changed: ModelChange) => {
+            const element = isObject(changed, Element) ? changed : changed.target
             let name = element.name
             let value = element.value
 
-            const parentSelect = findParentWithClass(element, "l_select")
-            if((element.type === "checkbox" || element.type === "radio") && parentSelect) {
-                name = parentSelect.dataset["name"] || ""
+            if(isType<HTMLInputElement>(element, () => element.type === "checkbox" || element.type === "radio")) {
+                const parentSelect = findParentWithClass(element, "l_select")
+                // TODO: React | Model for multiple Select.
+                if(parentSelect)
+                    name = parentSelect.dataset["name"] || ""
+                value = element.checked ? value : ""
             }
             else if(isObject(element, HTMLSelectElement) && element.multiple) {
                 value = Object.values(element.options)
@@ -82,24 +94,44 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
                     .map(o => o.value).join(",")
             }
 
-            this.value({
+            return this.value({
                 [name]: value
             })
         }
 
-        value = async (values: Dict<any>) => {
+        value = async(values: ModelData) => {
             this.setState(prevState => {
-                let newState = {...prevState}
-                Object.entries(values).forEach(([k, v]) => newState = dive(k, v, newState))
-
-                return newState
+                this._checkChange(prevState, values)
+                return values
             })
         }
 
-        reset = async (data?: Model["data"], merge?: boolean) => {
+        reset = async (data?: ModelData, merge?: boolean) => {
             if(data)
                 this.baseData = merge ? {...this.baseData, ...data} : {...data}
-            this.setState(this.baseData)
+
+            this.setState(prevState => {
+                let nextState: ModelData = {}
+                Object.keys(prevState).forEach(key => {
+                    nextState[key] = ""
+                })
+
+                nextState = {...nextState, ...this.baseData}
+                this._checkChange(prevState, nextState)
+                return nextState
+            })
+        }
+
+        hasChanged = () => {
+            return this._changed
+        }
+
+        _checkChange = (current: ModelData, incoming: ModelData) => {
+            // Avoid checking multiple times on batch calls if already marked as changed.
+            if(!this._changed) {
+                const keys = Object.keys(incoming)
+                this._changed = (keys.length > 0) && !keys.every(k => incoming[k] === current[k])
+            }
         }
 
         render() {
@@ -111,6 +143,7 @@ function CreateModel<OP extends {}, MD extends object = Model["data"]>(
                         change: this.change,
                         value: this.value,
                         reset: this.reset,
+                        hasChanged: this.hasChanged
                     } as Model<MD>}
                 />
              )
