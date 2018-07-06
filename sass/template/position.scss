@@ -1,23 +1,41 @@
-%fixed_position {
+%full_size {
+    height: 100%;
+    width: 100%;
+}
+
+%top_left_position {
     left: 0;
+    top: 0;
+}
+
+@mixin size($width, $height) {
+    @if $width == 100% and $height == 100% {
+        @extend %full_size;
+    }
+    @else {
+        height: $height;
+        width: $width;
+    }
+}
+
+@mixin fixed_position($top, $left) {
+    @if $left == 0 and $top == 0 {
+        @extend %top_left_position;
+    }
+    @else {
+        left: $left;
+        top: $top;
+    }
     position: fixed;
-    top: 0;
 }
 
-%fixed_position_full {
-    @extend %fixed_position;
-    height: 100%;
-    width: 100%;
-}
-
-%absolute_position {
-    left: 0;
+@mixin absolute_position($top, $left) {
+    @if $left == 0 and $top == 0 {
+        @extend %top_left_position;
+    }
+    @else {
+        left: $left;
+        top: $top;
+    }
     position: absolute;
-    top: 0;
-}
-
-%absolute_position_full {
-    @extend %absolute_position;
-    height: 100%;
-    width: 100%;
 }

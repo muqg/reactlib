@@ -13,3 +13,14 @@
     align-items: center;
     display: flex;
 }
+
+%truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@mixin truncate($width) {
+    @extend %truncate;
+    width: $width;
+}

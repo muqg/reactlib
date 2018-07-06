@@ -51,8 +51,8 @@ const ConfirmationDialog = (props: Props) => {
                 {props.children}
             </div>
             <div className="buttons">
-                <button className={GUI_BUTTON_CLASS} onClick={reject}>Okay</button>
-                <button className={GUI_BUTTON_CLASS} onClick={accept}>Cancel</button>
+                <button className={GUI_BUTTON_CLASS} onClick={accept}>Okay</button>
+                <button className={GUI_BUTTON_CLASS} onClick={reject}>Cancel</button>
             </div>
         </Dialog>
     )

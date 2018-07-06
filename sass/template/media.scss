@@ -1,0 +1,31 @@
+@import "../const";
+
+@mixin laptop {
+    @media screen and(max-width: $DESKTOP_WIDTH) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media screen and(max-width: $LAPTOP_WIDTH) {
+        @content;
+    }
+}
+
+@mixin small_tablet {
+    @media screen and(max-width: $TABLET_WIDTH) {
+        @content;
+    }
+}
+
+@mixin mobile {
+    @media screen and(max-width: $SMALL_TABLET_WIDTH) {
+        @content;
+    }
+}
+
+@mixin small_mobile {
+    @media screen and(max-width: $MOBILE_WIDTH) {
+        @content;
+    }
+}
