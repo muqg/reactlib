@@ -7,6 +7,10 @@ import { classNames } from "../utility/dom";
 interface Props {
     className?: string
     onClick?: (isActive: boolean, e: React.MouseEvent<any>) => void
+    /**
+     * Close button's size in pixels. This accounts for both width and height.
+     */
+    size?: number
 }
 
 interface State {
@@ -38,11 +42,21 @@ class SandwichButton extends React.PureComponent<Props, State> {
             }
         )
 
+        let style = {}
+        if(this.props.size) {
+            const size = this.props.size + "px";
+            style = {
+                height: size,
+                width: size
+            }
+        }
+
         return (
             <div className="l_sandwich_container">
                 <button
                     className={classes}
                     onClick={this.handleClick}
+                    style={style}
                 >
                     <span></span>
                 </button>

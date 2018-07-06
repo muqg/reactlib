@@ -1,0 +1,23 @@
+%fixed_position {
+    left: 0;
+    position: fixed;
+    top: 0;
+}
+
+%fixed_position_full {
+    @extend %fixed_position;
+    height: 100%;
+    width: 100%;
+}
+
+%absolute_position {
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+
+%absolute_position_full {
+    @extend %absolute_position;
+    height: 100%;
+    width: 100%;
+}

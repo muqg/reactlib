@@ -1,0 +1,15 @@
+%flex_center {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+%flex_vertical_center {
+    display: flex;
+    justify-content: center;
+}
+
+%flex_horizontal_center {
+    align-items: center;
+    display: flex;
+}

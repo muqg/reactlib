@@ -1,0 +1,34 @@
+@import "../const";
+
+$rotation: 45deg;
+
+%span_common {
+    background: $MAIN_DARK_COLOUR;
+    border-radius: 1px;
+    content: '';
+    display: block;
+    height: 2px;
+    position: absolute;
+    width: inherit;
+}
+
+.l_close {
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+
+    > span {
+        @extend %span_common;
+        background: transparent;
+
+        &:before {
+            @extend %span_common;
+            transform: rotate($rotation);
+        }
+
+        &:after {
+            @extend %span_common;
+            transform: rotate(-$rotation);
+        }
+    }
+}
