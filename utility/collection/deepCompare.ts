@@ -1,4 +1,5 @@
-import { isObject, isNull, isUndefined } from "../assertions";
+import { isNullOrUndefined, isObject } from "../assertions";
+import { isEmpty } from "./isEmpty";
 
 /**
  * Performs a deep comparison of two objects.
@@ -13,7 +14,7 @@ function deepCompare(objA: object, objB: object): boolean {
             // @ts-ignore
             const itemB = objB[b]
 
-            if(isNull(itemA) || isUndefined(itemA) || isNull(itemB) || isUndefined(itemB))
+            if(isNullOrUndefined(itemA) || isNullOrUndefined(itemB))
                 return itemA === itemB
 
             if(itemA.constructor !== itemB.constructor)
@@ -29,7 +30,7 @@ function deepCompare(objA: object, objB: object): boolean {
         }
     }
 
-    return !Object.keys(objA).length && !Object.keys(objB).length
+    return !isEmpty(objA) && !isEmpty(objB)
 }
 
-export { deepCompare }
+export { deepCompare };

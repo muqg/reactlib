@@ -1,3 +1,5 @@
+export type Collection = object | Array<any>
+
 /**
  * Represents a RGBA color.
  */
