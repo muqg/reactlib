@@ -1,20 +1,31 @@
-import { isArray } from "../assertions";
+import { isObject } from "../assertions";
+import { Dict } from "../type";
+
+export type FormatArgument = string | number | boolean
 
 /**
  * Formats a string by replacing valid placeholders with provided values.
  * @param str The string subject to replace in.
- * @param args A variable number of arguments which are used to replace
- * numeric placeholders or a key/value pair to replace named placeholders.
+ * @param args A variable number of arguments which are used to replace positional
+ * value placeholders.
  */
-export function format(str: string, ...args: any[]) {
-    const namedValues = args[0] || null
-    if(namedValues && isArray(namedValues)) {
-        for(let key in namedValues)
-            str = str.replace(`{${key}}`, namedValues[key])
-    }
-    else {
-        for(let i = 0; i < args.length; i++)
-            str = str.replace(`{${i}}`, args[i])
-    }
+function format(str: string, ...args: FormatArgument[]): string
+/**
+ * Formats a string by replacing valid placeholders with provided values.
+ * @param str The string subject to replace in.
+ * @param args An object of keys and values to use to replace named value
+ * placeholders.
+ */
+function format(str: string, args: Dict<FormatArgument>): string
+
+function format(str: string, ...args: any[]): string {
+    const values = isObject(args[0]) ? args[0] : args
+
+    Object.entries<FormatArgument>(values).map(
+        ([key, val]) => str = str.replace(`{${key}}`, val.toString())
+    )
+
     return str
 }
+
+export { format };

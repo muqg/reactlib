@@ -52,7 +52,7 @@ function config(key: any, defaultValue: any = ""): any {
     // Configuration value is either not of the searched type
     // or is missing and should be applied with a fix.
     if(result === defaultValue)
-        throw("Config error for key: " + key)
+        throw "Config error for key: " + key
     return result
 }
 
