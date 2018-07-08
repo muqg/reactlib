@@ -1,6 +1,6 @@
 import { initialState } from ".";
 import { isString } from "../utility/assertions";
-import { format, asInt, pluralize } from "../utility/string";
+import { format, asInt, plural } from "../utility/string";
 import { FormatArgument } from "../utility/string/format";
 import { Dict } from "../utility";
 
@@ -41,7 +41,7 @@ function localize(key: any, ...args: any[]): any {
 
         result = format(result, ...args)
         if(pluralCount >= 0)
-            result = pluralize(result, pluralCount)
+            result = plural(result, pluralCount)
     }
 
     return result
