@@ -1,4 +1,7 @@
 import { initialState } from ".";
+import { def } from "../utility/assertions";
+
+const CONFIG_STATE_KEY = "config"
 
 /**
  * Returns a string configuration value or throws an error if the found value is
@@ -43,11 +46,11 @@ function config(key: string, defaultNumber: number) : number
 function config(key: string, defaultBoolean: object) : object
 
 function config(key: any, defaultValue: any = ""): any {
-    key = key ? "config." + key : "config"
-    let result = initialState(key, defaultValue)
+    key = key ? `${CONFIG_STATE_KEY}.${key}` : CONFIG_STATE_KEY
+    const result = def(initialState(key), defaultValue)
 
-    // Configuration value is either not of the searched type or is missing and
-    // should be applied with a fix.
+    // Configuration value is either not of the searched type
+    // or is missing and should be applied with a fix.
     if(result === defaultValue)
         throw("Config error for key: " + key)
     return result

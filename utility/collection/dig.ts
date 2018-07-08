@@ -5,9 +5,9 @@ import { isObject } from "util";
  * @param key The key to the element, using dot notation.
  * @param col The subject array or object.
  */
-export function dig(key: string, col: object | any[]): object | any[] | string | boolean | number | null {
+function dig<T = any>(key: string, col: object | any[]): T {
     if(!key.length)
-        return col
+        return col as any
 
     const split = key.split(".")
 
@@ -19,3 +19,5 @@ export function dig(key: string, col: object | any[]): object | any[] | string |
 
     return result
 }
+
+export { dig };
