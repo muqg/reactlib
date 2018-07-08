@@ -4,6 +4,8 @@ import { format } from "../utility/string";
 
 const LOCALIZATION_STATE_KEY = "locale"
 
+type Arg = string | number | boolean
+
 /**
  * Returns a localized value from initial state's locale.
  * @param key Localization key, using dot notation.
@@ -16,14 +18,14 @@ function localize<T = string>(key: string): T
  * @param args A variable number of arguments which are used to replace
  * positional placeholders or key/value pairs to replace named placeholders.
  */
-function localize(key: string, ...args: any[]): string
+function localize(key: string, ...args: Arg[]): string
 
-function localize(key: any, ...args: any[]): any {
+function localize(key: any, ...args: Arg[]): any {
     key = key ? `${LOCALIZATION_STATE_KEY}.${key}` : LOCALIZATION_STATE_KEY
     let result = initialState(key)
 
     // If final result is a string and there are arguments -- format the string.
-    if(args && isString(result))
+    if(args.length && isString(result))
         result = format(result, ...args)
 
     return result
