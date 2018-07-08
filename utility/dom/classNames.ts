@@ -13,13 +13,13 @@ export function classNames(...classArgs: any[]): string {
     const classes: Dict<boolean> = {}
 
     classArgs.forEach(arg => {
-        if (!arg) return
+        if(!arg) return
 
         if(isString(arg) || isNumber(arg)) {
             classes[arg] = true
         }
         else if(isObject<Dict<boolean>>(arg) && !isArray(arg)) {
-            for (let cls in arg) {
+            for(let cls in arg) {
                 // Always prefers the TRUE value, i.e. class is applied
                 // if at least one of the duplicate values is TRUE.
                 classes[cls] = arg[cls] || classes[cls]

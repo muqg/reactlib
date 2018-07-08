@@ -67,7 +67,6 @@ function handleKeyDown(dialogElement: HTMLDivElement | null, event: React.Keyboa
     switch(event.keyCode) {
         case CHAR_CODE_ENTER:
             const acceptButton = buttons[0] as HTMLButtonElement | undefined
-            console.log(buttons)
             if(acceptButton)
                 acceptButton.click()
             break

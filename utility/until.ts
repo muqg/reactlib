@@ -27,10 +27,7 @@ async function until(condition: () => boolean, checkInterval = 100, timeout = 60
     checkInterval = Math.max(10, checkInterval)
     timeout = Math.max(0, timeout) * 1000 // Convert to milliseconds.
 
-    setTimeout(() => {
-        isRejected = true
-    }, timeout)
-
+    setTimeout(() => isRejected = true, timeout)
     while(!(await condition()) && !isRejected)
         await wait(checkInterval)
 }

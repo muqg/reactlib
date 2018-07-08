@@ -96,7 +96,7 @@ function CreateModel<OP extends {}, MD extends object = ModelData>(
             })
         }
 
-        value = async(values: ModelData) => {
+        value = async (values: ModelData) => {
             this.setState(prevState => {
                 this._checkChange(prevState, values)
                 return values
@@ -125,10 +125,8 @@ function CreateModel<OP extends {}, MD extends object = ModelData>(
 
         _checkChange = (current: ModelData, incoming: ModelData) => {
             // Avoid checking multiple times on batch calls if already marked as changed.
-            if(!this._changed) {
-                const keys = Object.keys(incoming)
-                this._changed = (keys.length > 0) && !keys.every(k => incoming[k] === current[k])
-            }
+            if(!this._changed)
+                this._changed = !Object.keys(incoming).every(k => incoming[k] === current[k])
         }
 
         render() {
