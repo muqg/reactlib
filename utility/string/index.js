@@ -8,7 +8,7 @@ export * from "./isEmail";
 export { isNumeric } from "./isNumeric";
 export * from "./isPhone";
 export { lowerFirst } from "./lowerFirst";
+export { pluralize } from "./pluralize";
 export { randomID } from "./randomID";
 export { truncate } from "./truncate";
 export { upperFirst } from "./upperFirst";
-

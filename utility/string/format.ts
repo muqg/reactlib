@@ -1,6 +1,8 @@
 import { isObject } from "../assertions";
 import { Dict } from "../type";
 
+const FORMAT_PATTERN = /{(\d+|\w+)}/gi
+
 export type FormatArgument = string | number | boolean
 
 /**
@@ -20,12 +22,9 @@ function format(str: string, args: Dict<FormatArgument>): string
 
 function format(str: string, ...args: any[]): string {
     const values = isObject(args[0]) ? args[0] : args
-
-    Object.entries<FormatArgument>(values).map(
-        ([key, val]) => str = str.replace(`{${key}}`, val.toString())
+    return str.replace(FORMAT_PATTERN,
+        (match, val) => values[val] || match
     )
-
-    return str
 }
 
 export { format };

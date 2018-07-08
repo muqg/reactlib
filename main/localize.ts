@@ -1,6 +1,6 @@
 import { initialState } from ".";
 import { isString } from "../utility/assertions";
-import { format } from "../utility/string";
+import { format, asInt, pluralize } from "../utility/string";
 import { FormatArgument } from "../utility/string/format";
 import { Dict } from "../utility";
 
@@ -17,6 +17,7 @@ function localize<T = string>(key: string): T
  * @param key Localization key, using dot notation.
  * @param args A variable number of arguments which are used to replace positional
  * value placeholders.
+ * - First argument may be a pluralization argument in format __|count__
  */
 function localize(key: string, ...args: FormatArgument[]): string
 /**
@@ -32,8 +33,16 @@ function localize(key: any, ...args: any[]): any {
     key = key ? `${LOCALIZATION_STATE_KEY}.${key}` : LOCALIZATION_STATE_KEY
     let result = initialState(key)
 
-    if(isString(result))
+    if(isString(result)) {
+        const firstArg = args[0]
+        let pluralCount = -1
+        if(isString(firstArg) && firstArg.startsWith("|"))
+            pluralCount = asInt(args.shift().substring(1))
+
         result = format(result, ...args)
+        if(pluralCount >= 0)
+            result = pluralize(result, pluralCount)
+    }
 
     return result
 }
