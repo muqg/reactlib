@@ -6,20 +6,22 @@ const X_CSRF_TOKEN = (() => {
     return element ? element.content : ""
 })()
 
+// TODO: Replace RequestInit interface for options with another interface that
+// mimics the allowed options.
 function baseRequest(method: RequestMethod, url: string, options: RequestInit) {
     const headers = (options.headers || {}) as Dict<string>
     headers["X-CSRF-TOKEN"] = X_CSRF_TOKEN
     headers["X-Requested-With"] = "XMLHttpRequest"
 
     const requestInit: RequestInit = {
+        body: options.body,
         cache: options.cache || "no-cache",
         credentials: options.credentials || "same-origin",
+        headers: headers,
         method: method,
         mode: options.mode ||"cors",
         redirect: options.redirect || "follow",
         referrer: "no-referrer",
-
-        ...options
     }
 
     return window.fetch(url, requestInit)
