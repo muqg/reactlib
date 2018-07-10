@@ -1,3 +1,4 @@
+export { DefaultToolbar } from "./DefaultToolbar";
 export { EditableContainer } from "./EditableContainer";
 export { ToolbarAlign } from "./items/ToolbarAlign";
 export { ToolbarBold } from "./items/ToolbarBold";
