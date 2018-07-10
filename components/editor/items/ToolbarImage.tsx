@@ -1,9 +1,12 @@
 import * as React from "react"
-import ToolbarItem from "../ToolbarItem";
+import {ToolbarItem} from "../ToolbarItem";
 import { Editor } from "../../../utility/dom";
 
 
 interface Props {
+    /**
+     * Callback to handle the added image file.
+     */
     handler: (file: File) => string
 }
 
@@ -34,4 +37,4 @@ function onChange(event: React.ChangeEvent<HTMLInputElement>, handleImage: Props
 }
 
 
-export default ToolbarImage
+export {ToolbarImage}

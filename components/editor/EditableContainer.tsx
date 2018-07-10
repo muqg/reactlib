@@ -65,4 +65,5 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(EditableContainer) as React.ComponentType<OwnProps>
+const container = connect(null, mapDispatchToProps)(EditableContainer) as React.ComponentType<OwnProps>
+export { container as EditableContainer }

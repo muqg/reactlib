@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 import { classNames } from "../../utility/dom";
 
 
@@ -21,4 +21,4 @@ const ToolbarItem = (props: Props) => {
 }
 
 
-export default ToolbarItem
+export { ToolbarItem };

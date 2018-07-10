@@ -141,7 +141,7 @@ class Editor {
      * @param position Alignment position type.
      */
     // Wraps around justify commands.
-    align(position: AlignPosition) {
+    align = (position: AlignPosition) => {
         const cmd = "justify" + capitalize(position)
         this.exec(cmd)
     }
@@ -152,7 +152,7 @@ class Editor {
     /**
      * Toggles bold styling for the selected text.
      */
-    bold() {
+    bold = () => {
         this.exec("bold")
     }
 
@@ -160,7 +160,7 @@ class Editor {
      * Transforms selected text into a link.
      * @param url Link's url path.
      */
-    createLink(url: string = "#") {
+    createLink = (url: string = "#") => {
         const container = this.getSelectedNode() as HTMLElement
         const isLink = container.nodeName === "A"
         if(!isLink)
@@ -173,7 +173,7 @@ class Editor {
      * Sets the font name for the selected text.
      * @param name Font name.
      */
-    fontName(name: string) {
+    fontName = (name: string) => {
         this.modifyFontValue("fontName", name, "face")
     }
 
@@ -181,7 +181,7 @@ class Editor {
      * Sets the size of the font for the selected text.
      * @param size The size of the font.
      */
-    fontSize(size: FontSize = 3) {
+    fontSize = (size: FontSize = 3) => {
         this.modifyFontValue("fontSize", size.toString(), "size")
     }
 
@@ -191,7 +191,7 @@ class Editor {
      * @param green Green colour value.
      * @param blue Blue colour value.
      */
-    foreColor(red: number, green: number, blue: number) {
+    foreColor = (red: number, green: number, blue: number) => {
         red = clamp(red, 0, 255)
         green = clamp(green, 0, 255)
         blue = clamp(blue, 0, 255)
@@ -205,7 +205,7 @@ class Editor {
      * heading of the same size.
      * @param size Heading's size.
      */
-    heading(size: HeadingSize) {
+    heading = (size: HeadingSize) => {
         const headingBlock = "h" + size
         const currentBlock = this.val("formatBlock").toLowerCase()
         const val = headingBlock === currentBlock ? "<p>" : headingBlock
@@ -215,14 +215,14 @@ class Editor {
     /**
      * Indents the paragraph that contains the selected text.
      */
-    indent() {
+    indent = () => {
         this.exec("indent")
     }
 
     /**
      * Inserts a horizontal line at cursor's position.
      */
-    insertHorizontalRule() {
+    insertHorizontalRule = () => {
         this.exec("insertHorizontalRule")
     }
 
@@ -230,7 +230,7 @@ class Editor {
      * Inserts HTML at cursor's position while replacing any selected text.
      * @param html The HTML to be inserted.
      */
-    insertHTML(html: string) {
+    insertHTML = (html: string) => {
         this.exec("insertHTML", html)
     }
 
@@ -240,7 +240,7 @@ class Editor {
      * @param alt Image's alt text value.
      * @param style Additional styling for the image element. Currently suported.
      */
-    insertImage(src: string, alt: string = "") {
+    insertImage = (src: string, alt: string = "") => {
         const img = document.createElement("img")
         img.src = src
         img.alt = alt
@@ -251,7 +251,7 @@ class Editor {
     /**
      * Toggles italic styling for the selected text.
      */
-    italic() {
+    italic = () => {
         this.exec("italic")
     }
 
@@ -259,49 +259,49 @@ class Editor {
      * Toggles ordered list bullet styling for the paragraph that contains the
      * selected text.
      */
-    orderedList() {
+    orderedList = () => {
         this.exec("insertOrderedList")
     }
 
     /**
      * Toggles bold styling for the selected text.
      */
-    outdent() {
+    outdent = () => {
         this.exec("outdent")
     }
 
     /**
      * Removes any formatting from the selected text.
      */
-    removeFormat() {
+    removeFormat = () => {
         this.exec("removeFormat")
     }
 
     /**
      * Toggles strike-through styling for the selected text.
      */
-    strikeThrough() {
+    strikeThrough = () => {
         this.exec("strikeThrough")
     }
 
     /**
      * Toggles subscript styling for the selected text.
      */
-    subscript() {
+    subscript = () => {
         this.exec("subscript")
     }
 
     /**
      * Toggles superscript styling for the selected text.
      */
-    superscript() {
+    superscript = () => {
         this.exec("superscript")
     }
 
     /**
      * Toggles underline styling for the selected text.
      */
-    underline() {
+    underline = () => {
         this.exec("underline")
     }
 
@@ -309,7 +309,7 @@ class Editor {
      * Toggles unordered list bullet styling for the paragraph that contains the
      * selected text.
      */
-    unorderedList() {
+    unorderedList = () => {
         this.exec("insertUnorderedList")
     }
 }

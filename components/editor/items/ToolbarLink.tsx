@@ -4,7 +4,7 @@ import "../../../css/input.css";
 import { Editor } from "../../../utility/dom";
 import { GUI_INPUT_CLASS } from "../../const";
 import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
-import ToolbarItem from "../ToolbarItem";
+import {ToolbarItem} from "../ToolbarItem";
 
 
 interface Props {
@@ -74,4 +74,4 @@ class ToolbarLink extends React.PureComponent<Props, State> {
 }
 
 
-export default ToolbarLink
+export {ToolbarLink}

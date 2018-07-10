@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Color } from "../../../utility";
 import { Editor, rgbColor } from "../../../utility/dom";
-import ToolbarItem from "../ToolbarItem";
+import {ToolbarItem} from "../ToolbarItem";
 
 
 interface Props {
@@ -50,4 +50,4 @@ class ToolbarColour extends React.PureComponent<Props, State> {
 }
 
 
-export default ToolbarColour
+export {ToolbarColour}

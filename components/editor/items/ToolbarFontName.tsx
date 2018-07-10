@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ToolbarItem } from "../..";
+import { ToolbarItem } from "../ToolbarItem";
 import { Editor } from "../../../utility/dom";
 
 
@@ -47,4 +47,4 @@ function onRightClick(event: React.MouseEvent<HTMLSelectElement>) {
 }
 
 
-export default ToolbarFontName
+export {ToolbarFontName}

@@ -1,6 +1,6 @@
 
 import * as React from "react"
-import ToolbarItem from "../ToolbarItem";
+import {ToolbarItem} from "../ToolbarItem";
 import { Editor } from "../../../utility/dom";
 import { asInt } from "../../../utility/string";
 
@@ -35,4 +35,4 @@ function setSize(select: HTMLSelectElement) {
 }
 
 
-export default ToolbarFontSize
+export {ToolbarFontSize}
