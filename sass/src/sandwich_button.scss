@@ -1,9 +1,7 @@
-@import "../const";
-
 $rotation: 45deg;
 
 %span_common {
-    background: $MAIN_DARK_COLOUR;
+    background: #fff;
     border-radius: 1px;
     content: '';
     display: block;
@@ -34,7 +32,7 @@ $rotation: 45deg;
     }
 
     &.active > span {
-        background: transparent;
+        background: transparent !important;
 
         &:before {
             top: 0;
