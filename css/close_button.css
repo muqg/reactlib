@@ -1,1 +1,0 @@
-.l_close > span:after,.l_close > span:before,.l_close > span{background:#555;border-radius:1px;content:"";display:block;height:2px;position:absolute;width:inherit}.l_close{cursor:pointer;height:30px;width:30px}.l_close > span{background:transparent}.l_close > span:before{transform:rotate(45deg)}.l_close > span:after{transform:rotate(-45deg)}
