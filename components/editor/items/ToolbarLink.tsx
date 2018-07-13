@@ -5,6 +5,17 @@ import { Editor } from "../../../utility/dom";
 import { GUI_INPUT_CLASS } from "../../const";
 import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
 import {ToolbarItem} from "../ToolbarItem";
+import { styled } from "../../../styles";
+import { TOOLBAR_SPRITESHEET } from "../Toolbar";
+
+
+const StyledToolbarItem = styled(ToolbarItem)`
+    background-position-x: -144px;
+`
+
+const StyledInput = styled.input`
+    width: 100%;
+`
 
 
 interface Props {
@@ -49,10 +60,11 @@ class ToolbarLink extends React.PureComponent<Props, State> {
 
     render() {
         return (
-            <ToolbarItem
+            <StyledToolbarItem
                 className="link tb_img"
                 title="Hyperlink"
                 onClick={() => this.toggleDialog(true)}
+                backgroundImage={TOOLBAR_SPRITESHEET}
             >
                 {createPortal(
                     <ConfirmationDialog
@@ -63,12 +75,12 @@ class ToolbarLink extends React.PureComponent<Props, State> {
                         onAccept={e => this.accept(e)}
                         visible={this.state.isDialogVisible}
                     >
-                        <input className={GUI_INPUT_CLASS} placeholder="https://example.com" />
+                        <StyledInput className={GUI_INPUT_CLASS} placeholder="https://example.com" />
                     </ConfirmationDialog>,
 
                     document.getElementById("contentContainer") as HTMLElement
                 )}
-            </ToolbarItem>
+            </StyledToolbarItem>
         )
     }
 }

@@ -1,11 +1,5 @@
 import * as React from "react";
-import { ToolbarAlign, ToolbarBold, ToolbarColour, ToolbarFontName, ToolbarFontSize, ToolbarImage, ToolbarItalic, ToolbarLink, ToolbarOrderedList, ToolbarStrikethrough, ToolbarUnderline } from "..";
-import "../../css/toolbar.css";
-import { ToolbarIndent } from "./items/ToolbarIndent";
-import { ToolbarOutdent } from "./items/ToolbarOutdent";
-import { ToolbarSubscript } from "./items/ToolbarSubscript";
-import { ToolbarSuperscript } from "./items/ToolbarSuperscript";
-import { ToolbarUnorderedList } from "./items/ToolbarUnorderedList";
+import { ToolbarAlignCenter, ToolbarAlignFull, ToolbarAlignLeft, ToolbarAlignRight, ToolbarBold, ToolbarColour, ToolbarFontName, ToolbarFontSize, ToolbarImage, ToolbarIndent, ToolbarItalic, ToolbarLink, ToolbarOrderedList, ToolbarOutdent, ToolbarStrikethrough, ToolbarSubscript, ToolbarSuperscript, ToolbarUnderline, ToolbarUnorderedList } from "..";
 import { Toolbar } from "./Toolbar";
 
 
@@ -39,10 +33,10 @@ const DefaultToolbar = (props: Props) => {
             <ToolbarColour />
             <ToolbarFontName customFonts={props.fonts} />
             <ToolbarFontSize />
-            <ToolbarAlign position="left" />
-            <ToolbarAlign position="center" />
-            <ToolbarAlign position="right" />
-            <ToolbarAlign position="full" />
+            <ToolbarAlignLeft />
+            <ToolbarAlignCenter />
+            <ToolbarAlignRight />
+            <ToolbarAlignFull />
             <ToolbarOrderedList />
             <ToolbarUnorderedList />
             <ToolbarIndent />

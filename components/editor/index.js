@@ -1,6 +1,9 @@
 export { DefaultToolbar } from "./DefaultToolbar";
 export { EditableContainer } from "./EditableContainer";
-export { ToolbarAlign } from "./items/ToolbarAlign";
+export { ToolbarAlignCenter } from "./items/ToolbarAlignCenter";
+export { ToolbarAlignFull } from "./items/ToolbarAlignFull";
+export { ToolbarAlignLeft } from "./items/ToolbarAlignLeft";
+export { ToolbarAlignRight } from "./items/ToolbarAlignRight";
 export { ToolbarBold } from "./items/ToolbarBold";
 export { ToolbarColour } from "./items/ToolbarColour";
 export { ToolbarFontName } from "./items/ToolbarFontName";

@@ -1,6 +1,7 @@
 import * as React from "react"
 import { ToolbarItem } from "../ToolbarItem";
 import { Editor } from "../../../utility/dom";
+import { styled } from "../../../styles";
 
 
 const FONT_NAMES = [
@@ -15,6 +16,10 @@ const FONT_NAMES = [
     "Verdana",
 ]
 
+const StyledSelect = styled.select`
+    max-width: 120px;
+`
+
 
 interface Props {
     customFonts?: string[]
@@ -24,8 +29,8 @@ interface Props {
 const ToolbarFontName = (props: Props) => {
     const fonts = [...FONT_NAMES, ...(props.customFonts || [])]
     return(
-        <ToolbarItem className="input" title="Font name">
-            <select
+        <ToolbarItem className="input" title="Font name" animateHover={false}>
+            <StyledSelect
                 name="tb_font_name"
                 onChange={e => Editor.fontName(e.target.value)}
                 onContextMenu={onRightClick}
@@ -35,7 +40,7 @@ const ToolbarFontName = (props: Props) => {
                         {name}
                     </option>
                 ))}
-            </select>
+            </StyledSelect>
         </ToolbarItem>
     )
 }

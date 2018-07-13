@@ -1,8 +1,51 @@
 import * as React from "react";
-import { classNames } from "../../utility/dom";
+import { styled, css } from "../../styles";
+
+
+const withImage = css`
+    background: url('${(p: Props) => p.backgroundImage}') no-repeat;
+    background-size: auto 100%;
+    filter: contrast(1);
+    transition-property: filter;
+
+    &:hover {
+        filter: contrast(0);
+    }
+`
+
+const withHover = css`
+    &:hover {
+        background: #555;
+        color: #ddd;
+    }
+`
+
+const Container = styled.div`
+    border-radius: 2px;
+    color: #555;
+    height: 100%;
+    line-height: 24px;
+    margin: 0 2px;
+    min-width: 24px;
+    transition-duration: .1s;
+    transition-property: background, color, transform;
+
+    ${(p: Props) => p.backgroundImage && withImage}
+
+    ${p => (p.animateHover && !p.backgroundImage) && withHover}
+
+    &:active {
+        transform: translate(1px)
+    }
+`
+Container.defaultProps = {
+    animateHover: true
+}
 
 
 interface Props {
+    animateHover?: boolean
+    backgroundImage?: string
     children?: any
     className?: string
     onClick?: (event: React.MouseEvent<HTMLDivElement>) => void
@@ -11,12 +54,16 @@ interface Props {
 
 
 const ToolbarItem = (props: Props) => {
-    const classes = classNames("l_tb_item", props.className)
-
     return(
-        <div className={classes} onClick={props.onClick} title={props.title}>
+        <Container
+            className={props.className}
+            onClick={props.onClick}
+            title={props.title}
+            animateHover={props.animateHover}
+            backgroundImage={props.backgroundImage}
+        >
             {props.children}
-        </div>
+        </Container>
     )
 }
 

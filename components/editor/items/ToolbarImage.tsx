@@ -1,6 +1,7 @@
 import * as React from "react"
 import {ToolbarItem} from "../ToolbarItem";
 import { Editor } from "../../../utility/dom";
+import { TOOLBAR_SPRITESHEET } from "../Toolbar";
 
 
 interface Props {
@@ -13,7 +14,7 @@ interface Props {
 
 const ToolbarImage = (props: Props) => {
     return(
-        <ToolbarItem className="image" title="Insert image">
+        <ToolbarItem title="Insert image" backgroundImage={TOOLBAR_SPRITESHEET}>
             <label>
                 {/* TODO: React | Implement datatype. */}
                 <input

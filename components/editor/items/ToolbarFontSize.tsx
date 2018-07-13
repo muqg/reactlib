@@ -11,7 +11,7 @@ interface Props {
 
 const ToolbarFontSize = (_props: Props) => {
     return(
-        <ToolbarItem className="input" title="Font size">
+        <ToolbarItem className="input" title="Font size" animateHover={false}>
             <select name="tb_font_size" onChange={e => setSize(e.target)} onContextMenu={onRightClick}>
                 <option value="1">1</option>
                 <option value="2">2</option>

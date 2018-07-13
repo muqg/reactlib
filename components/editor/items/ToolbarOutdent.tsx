@@ -1,6 +1,13 @@
 import * as React from "react";
 import { Editor } from "../../../utility/dom";
 import { ToolbarItem } from "../ToolbarItem";
+import { TOOLBAR_SPRITESHEET } from "../Toolbar";
+import { styled } from "../../../styles";
+
+
+const StyledToolbarItem = styled(ToolbarItem)`
+    background-position-x: -96px;
+`
 
 
 interface Props {
@@ -9,10 +16,10 @@ interface Props {
 
 const ToolbarOutdent = (_props: Props) => {
     return(
-        <ToolbarItem
-            className="outdent tb_img"
+        <StyledToolbarItem
             onClick={Editor.outdent}
             title="Outdent"
+            backgroundImage={TOOLBAR_SPRITESHEET}
         />
     )
 }

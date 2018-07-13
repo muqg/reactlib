@@ -2,6 +2,13 @@ import * as React from "react";
 import { Color } from "../../../utility";
 import { Editor, rgbColor } from "../../../utility/dom";
 import {ToolbarItem} from "../ToolbarItem";
+import { styled } from "../../../styles";
+
+
+const StyledInput = styled.input`
+    border: none;
+    width: 24px;
+`
 
 
 interface Props {
@@ -36,7 +43,7 @@ class ToolbarColour extends React.PureComponent<Props, State> {
     render() {
         return (
             <ToolbarItem className="color" title="Font colour">
-                <input
+                <StyledInput
                     type="color"
                     onChange={(e) => this.colorChange(e) }
                     onContextMenu={(e) => {

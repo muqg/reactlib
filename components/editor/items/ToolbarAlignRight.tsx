@@ -1,12 +1,12 @@
 import * as React from "react";
 import { Editor } from "../../../utility/dom";
-import { ToolbarItem } from "../ToolbarItem";
 import { TOOLBAR_SPRITESHEET } from "../Toolbar";
+import { ToolbarItem } from "../ToolbarItem";
 import { styled } from "../../../styles";
 
 
 const StyledToolbarItem = styled(ToolbarItem)`
-    background-position-x: -168px;
+    background-position-x: -72px;
 `
 
 
@@ -14,15 +14,15 @@ interface Props {
 }
 
 
-const ToolbarOrderedList = (_props: Props) => {
+const ToolbarAlignRight = (_props: Props) => {
     return(
         <StyledToolbarItem
-            onClick={Editor.orderedList}
-            title="Ordered list"
+            onClick={() => Editor.align("right")}
+            title={"Align right"}
             backgroundImage={TOOLBAR_SPRITESHEET}
         />
     )
 }
 
 
-export { ToolbarOrderedList };
+export { ToolbarAlignRight };

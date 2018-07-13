@@ -1,11 +1,37 @@
 import * as React from "react";
 // @ts-ignore
 import { connect } from "react-redux";
-import "../../css/toolbar.css";
 import { ReduxFactory } from "../../main";
 import { toolbarReducer } from "../../reducers";
-import { StyleClass } from "../../utility";
-import { classNames } from "../../utility/dom";
+import { styled } from "../../styles";
+
+
+export const TOOLBAR_SPRITESHEET = "/img/toolbar.png"
+
+const ToolbarWrapper = styled.div`
+    left: 0;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    width: 100%;
+
+    > div {
+        background: #ddd;
+        border-radius: 6px;
+        box-shadow: 0 2px 0 0 #aaa;
+        cursor: default;
+        display: inline-block;
+        padding: 3px 6px;
+    }
+`
+
+const ToolbarContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 24px;
+    justify-content: center;
+`
 
 
 interface StateProps {
@@ -39,21 +65,16 @@ class Toolbar extends React.Component<Props, State> {
     state = {}
 
     render() {
-        const classes = classNames(
-            "l_toolbar",
-            {[StyleClass.Active]: this.props.isVisible}
-        )
-
         return (
-            <div className={classes}>
+            <ToolbarWrapper>
                 <div>
-                    <div className="l_tb_container">
+                    <ToolbarContainer>
 
                         {this.props.children}
 
-                    </div>
+                    </ToolbarContainer>
                 </div>
-            </div>
+            </ToolbarWrapper>
         )
     }
 }
@@ -70,4 +91,4 @@ ReduxFactory.addToState({lubToolbar: false})
 ReduxFactory.addReducers({lubToolbar: toolbarReducer})
 
 const toolbar = connect(mapStateToProps, null)(Toolbar) as React.ComponentType<OwnProps>
-export { toolbar as Toolbar }
+export { toolbar as Toolbar };
