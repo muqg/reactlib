@@ -1,9 +1,16 @@
 import * as React from "react";
-import Dialog, { DialogProps } from "../dialogs/Dialog";
-import { GUI_BUTTON_CLASS } from "../const";
-import "../../css/button.css"
 import { isUndefined } from "util";
+import { Button } from "..";
+import { styled } from "../../styles";
 import { CHAR_CODE_ENTER, CHAR_CODE_ESCAPE } from "../../utility/dom";
+import Dialog, { DialogProps } from "../dialogs/Dialog";
+
+
+const ButtonsContainer = styled.div`
+    margin-top: 27px;
+    text-align: center;
+`
+
 
 interface OwnProps {
     children?: any
@@ -11,7 +18,7 @@ interface OwnProps {
      * Called when dialog resolves successfully. May optionally return a boolean
      * to indicate whether the acception was successful.
      */
-    onAccept: (container: HTMLDivElement, event: React.MouseEvent<any>) => void | boolean
+    onAccept: (container: HTMLDivElement, event: React.SyntheticEvent<any>) => void | boolean
     /**
      * Called whenever dialog is canceled (including when closed).
      */
@@ -23,7 +30,7 @@ type Props = OwnProps & DialogProps
 const ConfirmationDialog = (props: Props) => {
     const container = React.createRef<HTMLDivElement>()
 
-    const accept = (event: React.MouseEvent<any>) => {
+    const accept = (event: React.SyntheticEvent<any>) => {
         const res = props.onAccept(container.current as HTMLDivElement, event)
 
         const success = !(isUndefined(res)) ? res : true
@@ -42,40 +49,28 @@ const ConfirmationDialog = (props: Props) => {
     const keyDown = (dialogElement: HTMLDivElement, event: React.KeyboardEvent) => {
         if(props.onKeyDown)
             props.onKeyDown(dialogElement, event)
-        handleKeyDown(dialogElement, event)
+
+        switch(event.keyCode) {
+            case CHAR_CODE_ENTER:
+                accept(event)
+                break
+            case CHAR_CODE_ESCAPE:
+                reject(event)
+                break
+        }
     }
 
     return(
         <Dialog {...props} onClose={reject} onKeyDown={keyDown}>
-            <div className="content" ref={container}>
+            <div ref={container}>
                 {props.children}
             </div>
-            <div className="buttons">
-                <button className={GUI_BUTTON_CLASS} onClick={accept}>Okay</button>
-                <button className={GUI_BUTTON_CLASS} onClick={reject}>Cancel</button>
-            </div>
+            <ButtonsContainer>
+                <Button onClick={accept} margin={"0 6px"}>Okay</Button>
+                <Button onClick={reject} margin={"0 6px"}>Cancel</Button>
+            </ButtonsContainer>
         </Dialog>
     )
-}
-
-function handleKeyDown(dialogElement: HTMLDivElement | null, event: React.KeyboardEvent) {
-    if(!dialogElement)
-        return
-
-    const buttons = dialogElement.querySelectorAll(".buttons > button")
-
-    switch(event.keyCode) {
-        case CHAR_CODE_ENTER:
-            const acceptButton = buttons[0] as HTMLButtonElement | undefined
-            if(acceptButton)
-                acceptButton.click()
-            break
-        case CHAR_CODE_ESCAPE:
-            const rejectButton = buttons[1] as HTMLButtonElement | undefined
-            if(rejectButton)
-                rejectButton.click()
-            break
-    }
 }
 
 

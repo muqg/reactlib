@@ -1,20 +1,15 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import "../../../css/input.css";
-import { Editor } from "../../../utility/dom";
-import { GUI_INPUT_CLASS } from "../../const";
-import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
-import {ToolbarItem} from "../ToolbarItem";
+import { Input } from "../..";
 import { styled } from "../../../styles";
+import { Editor } from "../../../utility/dom";
+import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
 import { TOOLBAR_SPRITESHEET } from "../Toolbar";
+import { ToolbarItem } from "../ToolbarItem";
 
 
 const StyledToolbarItem = styled(ToolbarItem)`
     background-position-x: -144px;
-`
-
-const StyledInput = styled.input`
-    width: 100%;
 `
 
 
@@ -75,7 +70,7 @@ class ToolbarLink extends React.PureComponent<Props, State> {
                         onAccept={e => this.accept(e)}
                         visible={this.state.isDialogVisible}
                     >
-                        <StyledInput className={GUI_INPUT_CLASS} placeholder="https://example.com" />
+                        <Input placeholder="https://example.com" width="100%" />
                     </ConfirmationDialog>,
 
                     document.getElementById("contentContainer") as HTMLElement
@@ -86,4 +81,4 @@ class ToolbarLink extends React.PureComponent<Props, State> {
 }
 
 
-export {ToolbarLink}
+export { ToolbarLink };
