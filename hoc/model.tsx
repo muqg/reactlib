@@ -147,7 +147,7 @@ function CreateModel<OP extends {}, MD extends object = ModelData>(
 
 
     const name = WrappedComponent.displayName || WrappedComponent.name || "Component"
-    withModel.displayName = `withModel(${name})`
+    withModel.displayName = `Model(${name})`
     return withModel
 }
 

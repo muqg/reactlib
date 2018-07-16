@@ -41,7 +41,7 @@ function loadAsync(loader: () => Promise<any>, loadingComponent?: LoadableState[
     }
 
     // TODO: React | Better way to set display name for loadable components.
-    LoadableComponent.displayName = `loadable(${loader.toString()})`
+    LoadableComponent.displayName = `Loadable(${loader.toString()})`
     return LoadableComponent
 }
 
