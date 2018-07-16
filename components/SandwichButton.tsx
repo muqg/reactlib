@@ -1,21 +1,80 @@
 import * as React from "react";
-import "../css/sandwich_button.css";
-import { StyleClass } from "../utility";
-import { classNames } from "../utility/dom";
+import { css, styled, COLOR_PRIMARY_DARK } from "../styles";
 
 
-interface Props {
-    className?: string
-    onClick?: (isActive: boolean, e: React.MouseEvent<any>) => void
+const spanCommon = css`
+    background: ${(p: StyleProps) => p.color};
+    border-radius: 1px;
+    content: '';
+    display: block;
+    height: 2px;
+    position: absolute;
+    transition: all .3s;
+    width: inherit;
+`
+
+const activeStyle = css`
+    > span {
+        background: transparent !important;
+
+        &:before {
+            top: 0;
+            transform: rotate(45deg);
+        }
+
+        &:after {
+            top: 0;
+            transform: rotate(-45deg);
+        }
+    }
+`
+
+const Button = styled.button`
+    cursor: pointer;
+    height: ${(p: StyleProps) => p.size}px;
+    width: ${(p: StyleProps) => p.size}px;
+
+    > span {
+        ${spanCommon}
+
+        &:before {
+            ${spanCommon}
+            top: -10px;
+        }
+
+        &:after {
+            ${spanCommon}
+            top: 10px;
+        }
+    }
+
+    ${p => p.active && activeStyle}
+`
+Button.defaultProps = {
+    color: COLOR_PRIMARY_DARK,
+    size: 30
+}
+
+
+
+interface StyleProps {
+    color?: string
     /**
-     * Close button's size in pixels. This accounts for both width and height.
+     * Sandwich button's size in pixels. This accounts for both width and height.
      */
     size?: number
+    active?: boolean
+}
+
+interface OwnProps {
+    className?: string
+    onClick?: (isActive: boolean, e: React.MouseEvent<any>) => void
 }
 
 interface State {
     active: boolean
 }
+type Props = OwnProps & StyleProps
 
 
 class SandwichButton extends React.PureComponent<Props, State> {
@@ -34,32 +93,15 @@ class SandwichButton extends React.PureComponent<Props, State> {
     }
 
     render() {
-        const classes = classNames(
-            "l_sandwich",
-            this.props.className,
-            {
-                [StyleClass.Active]: this.state.active,
-            }
-        )
-
-        let style = {}
-        if(this.props.size) {
-            const size = this.props.size + "px";
-            style = {
-                height: size,
-                width: size
-            }
-        }
-
         return (
-            <div className="l_sandwich_container">
-                <button
-                    className={classes}
+            <div className={this.props.className}>
+                <Button
+                    color={this.props.color}
                     onClick={this.handleClick}
-                    style={style}
+                    size={this.props.size}
                 >
                     <span></span>
-                </button>
+                </Button>
             </div>
         )
     }

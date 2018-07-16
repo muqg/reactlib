@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CloseButton } from "..";
-import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled, COLOR_SECONDARY_LIGHT } from "../../styles";
+import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled, COLOR_SECONDARY_LIGHT, COLOR_BLACK } from "../../styles";
 import { wait } from "../../utility";
 
 
@@ -28,7 +28,7 @@ const Wrapper = styled.div`
 `
 
 const Back = styled.div`
-    background: #000;
+    background: ${COLOR_BLACK};
     height: 100%;
     left: 0;
     opacity: .5;
