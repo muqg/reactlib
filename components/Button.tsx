@@ -1,8 +1,7 @@
-import * as React from "react"
-import { styled, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT } from "../styles";
+import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../styles";
 
 
-const StyledButton = styled.button`
+const Button = styled.button`
     background: ${(p: StyleProps) => p.background};
 	border-radius: 3px;
 	color: ${p => p.color};
@@ -19,7 +18,7 @@ const StyledButton = styled.button`
 		color: ${p => p.hoverColor};
     }
 `
-StyledButton.defaultProps = {
+Button.defaultProps = {
     background: COLOR_PRIMARY_DARK,
     color: COLOR_PRIMARY_LIGHT,
     hoverBackground: "#aaa",
@@ -35,19 +34,5 @@ interface StyleProps {
     margin?: string
 }
 
-interface Props {
-    children?: string
-    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
-}
 
-
-const Button = (props: Props & StyleProps) => {
-    return(
-        <StyledButton {...props}>
-            {props.children}
-        </StyledButton>
-    )
-}
-
-
-export { Button }
+export { Button };
