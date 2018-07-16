@@ -1,11 +1,51 @@
 import * as React from "react";
-import "../../css/select.css";
-import { classNames, OutsideAlerter } from "../../utility/dom";
-import { StyleClass } from "../../utility/enums";
+import { COLOR_PRIMARY_DARK, COLOR_WHITE, css, styled } from "../../styles";
+import { OutsideAlerter } from "../../utility/dom";
 import SelectOption from "./SelectOption";
 
+const DEFAULT_HEIGHT = 25
+
+const divCommon = css`
+    background: ${COLOR_WHITE};
+    border: 1px solid #dedede;
+    color: ${COLOR_PRIMARY_DARK};
+    cursor: pointer;
+    height: 100%;
+    outline: none;
+    overflow: hidden;
+    position: ${p => p.multiple ? "relative" : "absolute"};
+    width: 100%;
+    z-index: ${p => p.active ? 3 : 2};
+
+    ${(p: StyleProps) => (p.multiple || p.active) && css`
+        height: auto;
+        max-height: 165px; /* Determines dropped height */
+        overflow-y: auto;
+    `}
+`
+const Container = styled.div`
+    display: inline-block;
+    height: ${(p: StyleProps) => p.active ? "auto" : p.height + "px"};
+    position: relative;
+    vertical-align: middle;
+    width: 250px;
+
+    > div {
+        ${divCommon}
+    }
+`
+Container.defaultProps = {
+    height: DEFAULT_HEIGHT
+}
+
+interface StyleProps {
+    active?: boolean
+    height?: number
+    multiple?: boolean
+}
 interface Props {
     name: string
+    height?: number
     /**
      * Value of checked option or options if select is multiple.
      */
@@ -14,6 +54,9 @@ interface Props {
      * Whether select is a multiple choice.
      */
     multiple?: boolean
+    /**
+     * Provided for styled components extensibility.
+     */
     className?: string
     children?: any
     onChange?: (e: React.ChangeEvent<any>) => void
@@ -23,18 +66,19 @@ interface State {
     isActive: boolean
 }
 
+
 class Select extends React.Component<Props, State> {
     static optionID = 420
 
     state: State = {
         isActive: false
     }
-    containerRef = React.createRef<HTMLDivElement>()
+    container = React.createRef<HTMLDivElement>()
 
     componentDidMount() {
         if(!this.props.multiple) {
             OutsideAlerter.addContainer(
-                this.containerRef.current as HTMLElement,
+                this.container.current as HTMLElement,
                 () => this.toggleActive(false)
             )
         }
@@ -42,7 +86,7 @@ class Select extends React.Component<Props, State> {
 
     componentWillUnmount() {
         if(!this.props.multiple) {
-            OutsideAlerter.removeContainer(this.containerRef.current as HTMLElement)
+            OutsideAlerter.removeContainer(this.container.current as HTMLElement)
         }
     }
 
@@ -56,7 +100,7 @@ class Select extends React.Component<Props, State> {
         () => {
             // Scroll to currently seletected element if active.
             if(this.state.isActive) {
-                const node = this.containerRef.current as HTMLElement
+                const node = this.container.current as HTMLElement
                 const selectedInput = node.querySelector<HTMLInputElement>("input:checked")
 
                 // Should null check in case that there is no initially checked element.
@@ -70,26 +114,22 @@ class Select extends React.Component<Props, State> {
     }
 
     render() {
-        const classes = classNames(
-            "l_select",
-            (this.props.className || ""),
-            {
-                [StyleClass.Active]: this.state.isActive,
-                "multiple": this.props.multiple
-            }
-        )
-
         return(
-            <div
+            <Container
                 data-name={this.props.name}
-                className={classes}
-                ref={this.containerRef}
+                // Pass l_select class since it is used by model.
+                className={this.props.className + " " + "l_select"}
+                innerRef={this.container}
                 onChange={this.props.onChange}
+
+                active={this.state.isActive}
+                height={this.props.height}
+                multiple={this.props.multiple}
             >
                 <div>
                     {this.getOptions()}
                 </div>
-            </div>
+            </Container>
         )
     }
 
@@ -103,7 +143,11 @@ class Select extends React.Component<Props, State> {
                     name: Select.optionID,
                     type: optionType,
                     selected: this.isOptionSelected(child, i),
-                    onClick: () => { this.toggleActive(!this.state.isActive) }
+                    onClick: () => this.toggleActive(!this.state.isActive),
+
+                    active: this.state.isActive,
+                    height: this.props.height || DEFAULT_HEIGHT,
+                    multiple: this.props.multiple,
                 }
                 return React.cloneElement(child, props)
             }

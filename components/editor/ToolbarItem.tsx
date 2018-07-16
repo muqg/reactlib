@@ -12,14 +12,12 @@ const withImage = css`
         filter: contrast(0);
     }
 `
-
 const withHover = css`
     &:hover {
         background: #555;
         color: #ddd;
     }
 `
-
 const Container = styled.div`
     border-radius: 2px;
     color: #555;

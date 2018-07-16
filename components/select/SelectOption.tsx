@@ -1,6 +1,72 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { isObject } from "../../utility/assertions";
+import { styled, css, COLOR_SECONDARY_LIGHT, COLOR_PRIMARY_LIGHT } from "../../styles";
+
+
+const Container = styled.label`
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+    display: block;
+    /* Should be equal to .l_select height */
+    line-height: ${(p: StyleProps) => p.height}px;
+    margin: 0;
+    padding: 0 3px;
+    position: relative;
+    transition: background .3s ease;
+
+    ${p => p.active && css`
+        display: block;
+        &:hover {
+            background: ${COLOR_SECONDARY_LIGHT}
+        }
+    `}
+
+    input {
+        display: none;
+    }
+`
+const contentCommon = css`
+    display: block;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    &:hover {
+        background: ${COLOR_SECONDARY_LIGHT}
+    }
+`
+const Content = styled.div`
+    box-sizing: border-box;
+    display: ${(p: StyleProps) => (p.active || p.multiple) ? "block" : "none"};
+    height: 100%;
+
+    input:checked ~ & {
+        ${p => !p.active && contentCommon}
+
+        ${p => (p.active || p.multiple) && css`
+            background: #f7f7f7;
+            border-bottom-color: ${COLOR_PRIMARY_LIGHT};
+            color: #dbaa6b;
+        `}
+    }
+`
+
+interface StyleProps {
+    /**
+     * Property is passed internally by parent Select.
+     */
+    active?: boolean
+    /**
+     * Property is passed internally by parent Select.
+     */
+    height?: number
+    /**
+     * Property is passed internally by parent Select.
+     */
+    multiple?: boolean
+}
 
 interface Props {
     children?: any
@@ -14,20 +80,21 @@ interface Props {
     selected?: boolean
 
     /**
-     * Name is passed internally by parent Select.
+     * Property is passed internally by parent Select.
      */
     name?: string
     /**
-     * Type is passed internally by parent Select.
+     * Property is passed internally by parent Select.
      */
     type?: "checkbox" | "radio"
     /**
-     * onClick is passed internally by parent Select.
+     * Property is passed internally by parent Select.
      */
     onClick?: () => void
 }
 
-class SelectOption extends React.PureComponent<Props> {
+
+class SelectOption extends React.PureComponent<Props & StyleProps> {
     componentDidMount() {
         if(!this.props.selected)
             return
@@ -42,17 +109,25 @@ class SelectOption extends React.PureComponent<Props> {
 
     render() {
         return (
-            <label>
+            <Container
+                active={this.props.active}
+                height={this.props.height}
+                multiple={this.props.multiple}
+            >
                 <input
                     type={this.props.type}
                     name={this.props.name}
                     value={this.props.value}
                     onClick={this.props.onClick}
                 />
-                <div className="l_option_content">
+                <Content
+                    active={this.props.active}
+                    height={this.props.height}
+                    multiple={this.props.multiple}
+                >
                     {this.props.children || this.props.value}
-                </div>
-            </label>
+                </Content>
+            </Container>
         )
     }
 }
