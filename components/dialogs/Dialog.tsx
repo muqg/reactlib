@@ -103,20 +103,14 @@ class Dialog extends React.Component<Props, State> {
     state = {
         isVisible: this.props.visible || false
     }
-    wasClosed = true
     dialogElement = React.createRef<HTMLDivElement>()
 
-    async componentDidUpdate(prevProps: Props) {
+    async componentDidUpdate(prevProps: Props, prevState: State) {
         if(this.props.visible !== prevProps.visible) {
-            const visibility = this.props.visible || false
-            this.setState({isVisible: visibility})
-            // If it becomes visible then it was already closed thus it is equal to visibility.
-            this.wasClosed = visibility
+            this.setState({isVisible: this.props.visible || false})
         }
 
-        if(this.wasClosed && this.state.isVisible) {
-            this.wasClosed = false
-
+        if(this.state.isVisible && !prevState.isVisible) {
             const dialog = this.dialogElement.current
             if(this.props.onShow && dialog) {
                 // Wait before calling open callback since dom interactions don't
@@ -130,7 +124,6 @@ class Dialog extends React.Component<Props, State> {
 
     close = (event: React.SyntheticEvent<any>) => {
         this.setState({isVisible: false})
-        this.wasClosed = true
 
         if(this.props.onClose)
             this.props.onClose(event)
@@ -149,7 +142,6 @@ class Dialog extends React.Component<Props, State> {
         const dialog = this.dialogElement.current
         if(this.props.onKeyDown && dialog)
             this.props.onKeyDown(dialog, event)
-        console.log(event.keyCode)
     }
 
     render() {
