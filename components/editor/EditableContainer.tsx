@@ -26,14 +26,14 @@ class EditableContainer extends React.PureComponent<Props, State> {
     state = {}
     container = React.createRef<HTMLDivElement>()
 
-    handleBlur(event: React.FocusEvent<any>) {
+    handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
         Editor.saveSelection()
 
         if(this.props.onChange)
             this.props.onChange(event)
     }
 
-    handlePaste(event: React.ClipboardEvent<any>) {
+    handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
         event.preventDefault()
 
         const text = event.clipboardData.getData("text/plain")
@@ -47,9 +47,9 @@ class EditableContainer extends React.PureComponent<Props, State> {
                 ref={this.container}
                 contentEditable
 
-                onBlur={() => { Editor.saveSelection() }}
+                onBlur={this.handleBlur}
                 onInput={this.props.onChange}
-                onPaste={this.handlePaste.bind(this)}
+                onPaste={this.handlePaste}
 
                 dangerouslySetInnerHTML={{__html: this.props.content || ""}}
             >

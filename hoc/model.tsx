@@ -50,7 +50,7 @@ export interface Model<MD extends object = ModelData> {
 type ModelData = Dict<string>
 type Return = void | Promise<void>
 type ChangeElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-type ChangeEvent = React.ChangeEvent<ChangeElement>
+type ChangeEvent = React.SyntheticEvent<ChangeElement>
 type ModelChange = ChangeEvent | ChangeElement
 
 
@@ -74,7 +74,7 @@ function CreateModel<OP extends {}, MD extends object = ModelData>(
         }
 
         change = async (changed: ModelChange) => {
-            const element = isObject(changed, Element) ? changed : changed.target
+            const element = isObject(changed, Element) ? changed : changed.target as ChangeElement
             let name = element.name
             let value = element.value
 
@@ -103,7 +103,7 @@ function CreateModel<OP extends {}, MD extends object = ModelData>(
             })
         }
 
-        reset = async (data?: ModelData, merge?: boolean) => {
+        reset = async (data: ModelData = {}, merge: boolean = false) => {
             if(data)
                 this.baseData = merge ? {...this.baseData, ...data} : {...data}
 
