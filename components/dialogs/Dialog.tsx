@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CloseButton } from "..";
-import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled, COLOR_SECONDARY_LIGHT, COLOR_BLACK } from "../../styles";
+import { COLOR_BLACK, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_SECONDARY_LIGHT, css, styled } from "../../styles";
 import { wait } from "../../utility";
 import { CHAR_CODE_ESCAPE } from "../../utility/dom";
 
@@ -61,7 +61,7 @@ const Title = styled.p`
 `
 
 
-export type DialogProps = Props & StyleProps
+export type DialogProps = Props
 
 interface StyleProps {
     visible?: boolean
@@ -176,4 +176,4 @@ class Dialog extends React.Component<Props, State> {
 }
 
 
-export default Dialog
+export { Dialog };

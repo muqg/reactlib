@@ -1,9 +1,8 @@
 import * as React from "react";
 import { isUndefined } from "util";
-import { Button } from "..";
+import { Button, DialogProps, Dialog } from "..";
 import { styled } from "../../styles";
 import { CHAR_CODE_ENTER } from "../../utility/dom";
-import Dialog, { DialogProps } from "../dialogs/Dialog";
 
 
 const ButtonsContainer = styled.div`

@@ -1,5 +1,5 @@
 import * as React from "react"
-import Dialog, { DialogProps } from "../dialogs/Dialog"
+import { DialogProps, Dialog } from "..";
 
 
 interface OwnProps {
