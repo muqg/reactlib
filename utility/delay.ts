@@ -24,7 +24,7 @@ function delay(key: string | number, time: number, callback: () => any): void
  * @param callback The callback to be delayed.
  * @param reset Whether to restart the timeout countdown on each call.
  */
-function delay(key: string | number, time: number, callback: () => any): void
+function delay(key: string | number, time: number, callback: () => any, reset?: boolean): void
 
 function delay(key: string | number, time: number, callback: () => any, reset = true): void {
     const existingElement = delayed[key]
