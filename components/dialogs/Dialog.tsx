@@ -7,6 +7,7 @@ import { CHAR_CODE_ESCAPE } from "../../utility/dom";
 
 const visibleStyle = css`
     opacity: 1;
+    transform: scale(1);
     visibility: visible;
 `
 const Wrapper = styled.div`
@@ -18,8 +19,9 @@ const Wrapper = styled.div`
     opacity: 0;
     position: fixed;
     top: 0;
+    transform: scale(1.5);
     transition: .25s;
-    transition-property: opacity, visibility;
+    transition-property: opacity, transform, visibility;
     visibility: hidden;
     width: 100%;
     z-index: 200;
