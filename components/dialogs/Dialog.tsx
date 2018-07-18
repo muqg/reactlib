@@ -84,11 +84,11 @@ interface Props {
     /**
      * Called when a key press down occurs on the focused dialog.
      */
-    onKeyDown?: (dialogElement: HTMLDivElement, event: React.KeyboardEvent) => void
+    onKeyDown?: (event: React.KeyboardEvent, dialogElement: HTMLDivElement) => void
     /**
      * Called when dialog is closed (hidden from visibility).
      */
-    onClose?: (event: React.SyntheticEvent<any>) => void
+    onClose?: () => void
     /**
      * Called when dialog is opened (becomes visible).
      */
@@ -126,11 +126,11 @@ class Dialog extends React.Component<Props, State> {
         }
     }
 
-    close = (event: React.SyntheticEvent<any>) => {
+    close = () => {
         this.setState({isVisible: false})
 
         if(this.props.onClose)
-            this.props.onClose(event)
+            this.props.onClose()
     }
 
     onClick = (event: React.MouseEvent<any>) => {
@@ -145,10 +145,10 @@ class Dialog extends React.Component<Props, State> {
 
         const dialog = this.dialogElement.current
         if(this.props.onKeyDown && dialog)
-            this.props.onKeyDown(dialog, event)
+            this.props.onKeyDown(event, dialog)
 
         if(event.keyCode === CHAR_CODE_ESCAPE)
-            this.close(event)
+            this.close()
     }
 
     render() {

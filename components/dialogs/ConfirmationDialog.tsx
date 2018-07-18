@@ -18,11 +18,11 @@ interface OwnProps {
      * Called when dialog resolves successfully. May optionally return a boolean
      * to indicate whether the acception was successful.
      */
-    onAccept: (container: HTMLDivElement, event: React.SyntheticEvent<any>) => void | boolean
+    onAccept: (container: HTMLDivElement) => void | boolean
     /**
      * Called whenever dialog is canceled (including when closed).
      */
-    onReject?: (container: HTMLDivElement, event: React.SyntheticEvent<any>) => void
+    onReject?: (container: HTMLDivElement) => void
 }
 type Props = OwnProps & DialogProps
 
@@ -30,28 +30,28 @@ type Props = OwnProps & DialogProps
 const ConfirmationDialog = (props: Props) => {
     const container = React.createRef<HTMLDivElement>()
 
-    const accept = (event: React.SyntheticEvent<any>) => {
-        const res = props.onAccept(container.current as HTMLDivElement, event)
+    const accept = () => {
+        const res = props.onAccept(container.current as HTMLDivElement)
 
         const success = !(isUndefined(res)) ? res : true
         if(success && props.onClose)
-            props.onClose(event)
+            props.onClose()
     }
 
-    const reject = (event: React.SyntheticEvent<any>) => {
+    const reject = () => {
         if(props.onReject)
-            props.onReject(container.current as HTMLDivElement, event)
+            props.onReject(container.current as HTMLDivElement)
 
         if(props.onClose)
-            props.onClose(event)
+            props.onClose()
     }
 
-    const keyDown = (dialogElement: HTMLDivElement, event: React.KeyboardEvent) => {
+    const keyDown = (event: React.KeyboardEvent, dialogElement: HTMLDivElement) => {
         if(props.onKeyDown)
-            props.onKeyDown(dialogElement, event)
+            props.onKeyDown(event, dialogElement)
 
         if(event.keyCode === CHAR_CODE_ENTER)
-            accept(event)
+            accept()
     }
 
     return(
