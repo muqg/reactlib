@@ -22,7 +22,7 @@ const Wrapper = styled.div`
     transition-property: opacity, visibility;
     visibility: hidden;
     width: 100%;
-    z-index: 100;
+    z-index: 200;
 
     ${(p: StyleProps) => p.visible && visibleStyle}
 `

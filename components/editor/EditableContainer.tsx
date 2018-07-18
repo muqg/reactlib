@@ -2,7 +2,17 @@ import * as React from "react";
 // @ts-ignore
 import { connect } from "react-redux";
 import { setToolbarVisibility } from "../../actions";
+import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
 import { Editor } from "../../utility/dom";
+
+
+const Container = styled.div`
+    border: ${COLOR_PRIMARY_LIGHT} 1px solid;
+    box-sizing: border-box;
+    outline: none;
+    overflow: auto;
+    padding: 5px;
+`
 
 
 interface DispatchProps {
@@ -42,9 +52,9 @@ class EditableContainer extends React.PureComponent<Props, State> {
 
     render() {
         return (
-            <div
+            <Container
                 className={this.props.className}
-                ref={this.container}
+                innerRef={this.container}
                 contentEditable
 
                 onBlur={this.handleBlur}
@@ -52,8 +62,7 @@ class EditableContainer extends React.PureComponent<Props, State> {
                 onPaste={this.handlePaste}
 
                 dangerouslySetInnerHTML={{__html: this.props.content || ""}}
-            >
-            </div>
+            />
         )
     }
 }
@@ -66,4 +75,4 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => {
 }
 
 const container = connect(null, mapDispatchToProps)(EditableContainer) as React.ComponentType<OwnProps>
-export { container as EditableContainer }
+export { container as EditableContainer };

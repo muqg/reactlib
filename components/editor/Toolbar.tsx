@@ -14,6 +14,7 @@ const ToolbarWrapper = styled.div`
     text-align: center;
     top: 0;
     width: 100%;
+    z-index: 110;
 
     > div {
         background: #ddd;
