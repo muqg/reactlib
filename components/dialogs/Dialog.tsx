@@ -2,6 +2,7 @@ import * as React from "react";
 import { CloseButton } from "..";
 import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled, COLOR_SECONDARY_LIGHT, COLOR_BLACK } from "../../styles";
 import { wait } from "../../utility";
+import { CHAR_CODE_ESCAPE } from "../../utility/dom";
 
 
 const visibleStyle = css`
@@ -112,12 +113,15 @@ class Dialog extends React.Component<Props, State> {
 
         if(this.state.isVisible && !prevState.isVisible) {
             const dialog = this.dialogElement.current
-            if(this.props.onShow && dialog) {
-                // Wait before calling open callback since dom interactions don't
-                // always work correctly if children are not yet rendered or updated.
-                await wait(30)
+
+            // Wait before calling open callback since dom interactions don't
+            // always work correctly if children are not yet rendered or updated.
+            await wait(30)
+            if(dialog) {
                 dialog.focus()
-                this.props.onShow(dialog)
+
+                if(this.props.onShow)
+                    this.props.onShow(dialog)
             }
         }
     }
@@ -142,6 +146,9 @@ class Dialog extends React.Component<Props, State> {
         const dialog = this.dialogElement.current
         if(this.props.onKeyDown && dialog)
             this.props.onKeyDown(dialog, event)
+
+        if(event.keyCode === CHAR_CODE_ESCAPE)
+            this.close(event)
     }
 
     render() {
@@ -153,7 +160,7 @@ class Dialog extends React.Component<Props, State> {
                 tabIndex={1}
                 visible={this.state.isVisible}
             >
-                <Back onClick={this.close}></Back>
+                <Back onClick={this.close} />
                 <Container>
                     <CloseButton onClick={this.close} right="5px" top="5px" size={22} />
                     <div>

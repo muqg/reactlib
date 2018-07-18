@@ -2,7 +2,7 @@ import * as React from "react";
 import { isUndefined } from "util";
 import { Button } from "..";
 import { styled } from "../../styles";
-import { CHAR_CODE_ENTER, CHAR_CODE_ESCAPE } from "../../utility/dom";
+import { CHAR_CODE_ENTER } from "../../utility/dom";
 import Dialog, { DialogProps } from "../dialogs/Dialog";
 
 
@@ -50,14 +50,8 @@ const ConfirmationDialog = (props: Props) => {
         if(props.onKeyDown)
             props.onKeyDown(dialogElement, event)
 
-        switch(event.keyCode) {
-            case CHAR_CODE_ENTER:
-                accept(event)
-                break
-            case CHAR_CODE_ESCAPE:
-                reject(event)
-                break
-        }
+        if(event.keyCode === CHAR_CODE_ENTER)
+            accept(event)
     }
 
     return(
