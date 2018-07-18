@@ -10,3 +10,6 @@ export const INITIAL_STATE = (() => {
  * Current page's locale value.
  */
 export const CURRENT_LOCALE = document.getElementsByTagName("html")[0].getAttribute("lang") || ''
+
+export const CONTENT_CONTAINER_ID = "contentContainer"
+export const CONTENT_CONTAINER_ELEMENT = document.getElementById(CONTENT_CONTAINER_ID) as HTMLDivElement

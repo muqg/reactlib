@@ -1,6 +1,7 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { Input } from "../..";
+import { CONTENT_CONTAINER_ELEMENT } from "../../../main";
 import { styled } from "../../../styles";
 import { Editor } from "../../../utility/dom";
 import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
@@ -73,7 +74,7 @@ class ToolbarLink extends React.PureComponent<Props, State> {
                         <Input placeholder="https://example.com" width="100%" />
                     </ConfirmationDialog>,
 
-                    document.getElementById("contentContainer") as HTMLElement
+                    CONTENT_CONTAINER_ELEMENT
                 )}
             </StyledToolbarItem>
         )

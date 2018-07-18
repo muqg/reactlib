@@ -1,4 +1,5 @@
 import * as ReactDOM from "react-dom";
+import { CONTENT_CONTAINER_ELEMENT } from ".";
 
 /**
  * Renders JSX as DOM inside page's element with id="contentContainer", using
@@ -8,6 +9,6 @@ import * as ReactDOM from "react-dom";
 export function render(element: JSX.Element) {
     ReactDOM.render(
         element,
-        document.getElementById("contentContainer") as HTMLElement
+        CONTENT_CONTAINER_ELEMENT
     )
 }
