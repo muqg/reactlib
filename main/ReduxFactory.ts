@@ -1,5 +1,6 @@
 import { combineReducers, createStore } from "redux";
 import { INITIAL_STATE } from "./const";
+import { isEmpty } from "../utility/collection";
 
 /**
  * Redux universal store builder class.
@@ -28,7 +29,7 @@ class ReduxFactory {
      * Returns a new store object, using the class' reducers and state.
      */
     getStore() {
-        if(!this.reducers)
+        if(isEmpty(this.reducers))
             throw("Cannot create a store when there are no reducers.")
         const store = createStore(combineReducers(this.reducers), this.state)
 
