@@ -13,6 +13,7 @@ const spanCommon = css`
     height: 2px;
     position: absolute;
     width: inherit;
+    z-index: 1;
 `
 
 const StyledButton = styled.button`
@@ -41,8 +42,8 @@ const StyledButton = styled.button`
 StyledButton.defaultProps = {
     color: COLOR_PRIMARY_DARK,
     size: 30,
-    right: "0",
-    top: "0",
+    right: "5px",
+    top: "5px",
 }
 
 
@@ -58,7 +59,6 @@ interface StyleProps extends PositionStyle {
 interface Props {
     className?: string
     onClick: (e: React.MouseEvent<any>) => void
-
 }
 
 const CloseButton = (props: Props & StyleProps) => {

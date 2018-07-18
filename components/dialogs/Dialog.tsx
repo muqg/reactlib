@@ -162,7 +162,7 @@ class Dialog extends React.Component<Props, State> {
             >
                 <Back onClick={this.close} />
                 <Container>
-                    <CloseButton onClick={this.close} right="5px" top="5px" size={22} />
+                    <CloseButton onClick={this.close} size={22} />
                     <div>
                         <Title>
                             {this.props.title}
