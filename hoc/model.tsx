@@ -15,7 +15,7 @@ export interface Model<MD extends object = ModelData> {
      *
      * - The form control must have a name and a value attribute.
      */
-    change(changed: ModelChange): Return
+    change(changed: ModelChange): {name: string, value: ModelDataType}
 
     /**
      * Adds one or more name/value pairs to model's data.
@@ -47,11 +47,12 @@ export interface Model<MD extends object = ModelData> {
 
 // Don't allow non-primitive type values in model data without making sure that
 // they can be scanned properly for change.
-type ModelData = Dict<string>
-type Return = void | Promise<void>
-type ChangeElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-type ChangeEvent = React.SyntheticEvent<ChangeElement>
-type ModelChange = ChangeEvent | ChangeElement
+type ModelDataType = string
+export type ModelData = Dict<ModelDataType>
+type Return = void
+export type ModelChangeElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+export type ModelChangeEvent = React.SyntheticEvent<ModelChangeElement>
+export type ModelChange = ModelChangeEvent | ModelChangeElement
 
 
 /**
@@ -73,8 +74,8 @@ function CreateModel<OP extends {}, MD extends object = ModelData>(
             this._changed = false
         }
 
-        change = async (changed: ModelChange) => {
-            const element = isObject(changed, Element) ? changed : changed.target as ChangeElement
+        change = (changed: ModelChange) => {
+            const element = isObject(changed, Element) ? changed : changed.target as ModelChangeElement
             let name = element.name
             let value = element.value
 
@@ -91,19 +92,21 @@ function CreateModel<OP extends {}, MD extends object = ModelData>(
                     .map(o => o.value).join(",")
             }
 
-            return this.value({
+            this.value({
                 [name]: value
             })
+
+            return { name, value }
         }
 
-        value = async (values: ModelData) => {
+        value = (values: ModelData) => {
             this.setState(prevState => {
                 this._checkChange(prevState, values)
                 return values
             })
         }
 
-        reset = async (data: ModelData = {}, merge: boolean = false) => {
+        reset = (data: ModelData = {}, merge: boolean = false) => {
             if(data)
                 this.baseData = merge ? {...this.baseData, ...data} : {...data}
 
