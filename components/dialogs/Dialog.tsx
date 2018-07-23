@@ -140,7 +140,7 @@ class Dialog extends React.Component<Props, State> {
         event.stopPropagation()
     }
 
-    // TODO: React | Fix keyboard event propagation to outside dialog (e.g. link insertion with enter).
+    // TODO: Lib | Fix keyboard event propagation to outside dialog (e.g. link insertion with enter).
     keyDown = (event: React.KeyboardEvent): void => {
         // Don't allow keyboard event to propagate outside React.createPortal().
         event.stopPropagation()

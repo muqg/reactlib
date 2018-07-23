@@ -1,1 +1,1 @@
-// TODO: React | implement image slider
+// TODO: Lib | implement image slider

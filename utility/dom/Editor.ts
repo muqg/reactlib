@@ -9,7 +9,7 @@ type HeadingSize = 1 | 2 | 3 | 4 | 5 | 6
 
 
 /**
- * TODO: React | Implement Editor.getSelectionStyle()
+ * TODO: Lib | Implement Editor.getSelectionStyle()
  */
 export interface SelectionStyle extends Dict<string | boolean> {
     alignment: AlignPosition
@@ -24,17 +24,17 @@ export interface SelectionStyle extends Dict<string | boolean> {
     strikethrough: boolean
     underline: boolean
 
-    // TODO: React | To implement in Editor as styling methods.
+    // TODO: Lib | To implement in Editor as styling methods.
     backColor: string
     letterSpacing: string
     lineHeight: string
 }
 
 
-// TODO: React | Implement fontSize to receive px input and set text's size
+// TODO: Lib | Implement fontSize to receive px input and set text's size
 // in em such as f(em = px / 16).
 
-// TODO: React | Implement font color, size, family and other to be applied on
+// TODO: Lib | Implement font color, size, family and other to be applied on
 // the nearest parent as CSS instaed of a FONT element.
 class Editor {
     private lastSelectionRange: Range | null = null

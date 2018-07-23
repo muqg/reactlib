@@ -6,7 +6,7 @@ const X_CSRF_TOKEN = (() => {
     return element ? element.content : ""
 })()
 
-// TODO: Replace RequestInit interface for options with another interface that
+// TODO: Lib | Replace RequestInit interface for options with another interface that
 // mimics the allowed options.
 function baseRequest(method: RequestMethod, url: string, options: RequestInit) {
     const headers = (options.headers || {}) as Dict<string>

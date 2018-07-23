@@ -81,7 +81,7 @@ function CreateModel<OP extends {}, MD extends object = ModelData>(
 
             if(isType<HTMLInputElement>(element, () => element.type === "checkbox" || element.type === "radio")) {
                 const parentSelect = findParentWithClass(element, "l_select")
-                // TODO: React | Model for multiple Select.
+                // TODO: Lib | Model for multiple Select.
                 if(parentSelect)
                     name = parentSelect.dataset["name"] || ""
                 value = element.checked ? value : ""

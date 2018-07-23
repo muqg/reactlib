@@ -22,7 +22,7 @@ interface State {
 
 
 /**
- * TODO: React | Allow link to be removed with right click.
+ * TODO: Lib | Allow link to be removed with right click.
  */
 class ToolbarLink extends React.PureComponent<Props, State> {
     state = {

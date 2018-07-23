@@ -27,7 +27,7 @@ class ToolbarColour extends React.PureComponent<Props, State> {
         } as Color
     }
 
-    // TODO: React | Implement to be Word-like color select.
+    // TODO: Lib | Implement to be Word-like color select.
     colorChange(event: React.ChangeEvent<HTMLInputElement>) {
         const input = event.target
         const color = rgbColor(input.value)

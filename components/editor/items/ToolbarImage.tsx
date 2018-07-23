@@ -16,7 +16,7 @@ const ToolbarImage = (props: Props) => {
     return(
         <ToolbarItem title="Insert image" backgroundImage={TOOLBAR_SPRITESHEET}>
             <label>
-                {/* TODO: React | Implement datatype. */}
+                {/* TODO: Lib | Implement datatype. */}
                 <input
                     type="file"
                     datatype="*.*"
