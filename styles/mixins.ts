@@ -9,3 +9,11 @@ export function positionMixin(pos: PositionStyle) {
         ${pos.top && `top: ${pos.top};`}
     `
 }
+
+export function truncateMixin() {
+    return css`
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    `;
+}
