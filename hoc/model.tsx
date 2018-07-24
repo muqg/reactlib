@@ -50,7 +50,7 @@ export interface Model<MD extends object = ModelData> {
 type ModelDataType = string
 export type ModelData = Dict<ModelDataType>
 type Return = void
-export type ModelChangeElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+export type ModelChangeElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | HTMLButtonElement
 export type ModelChangeEvent = React.SyntheticEvent<ModelChangeElement>
 export type ModelChange = ModelChangeEvent | ModelChangeElement
 
