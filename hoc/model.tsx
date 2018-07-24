@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Dict } from "../utility";
-import { isObject, isType } from "../utility/assertions";
-import { findParentWithClass } from "../utility/dom";
+import { isObject } from "../utility/assertions";
+import { ParseableElement, parseElement } from "../utility/dom";
 
 
 export interface ModelProps<MD extends object = ModelData> {
@@ -50,7 +50,7 @@ export interface Model<MD extends object = ModelData> {
 type ModelDataType = string
 export type ModelData = Dict<ModelDataType>
 type Return = void
-export type ModelChangeElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | HTMLButtonElement
+export type ModelChangeElement = ParseableElement
 export type ModelChangeEvent = React.SyntheticEvent<ModelChangeElement>
 export type ModelChange = ModelChangeEvent | ModelChangeElement
 
@@ -76,27 +76,13 @@ function CreateModel<OP extends {}, MD extends object = ModelData>(
 
         change = (changed: ModelChange) => {
             const element = isObject(changed, Element) ? changed : changed.target as ModelChangeElement
-            let name = element.name
-            let value = element.value
-
-            if(isType<HTMLInputElement>(element, () => element.type === "checkbox" || element.type === "radio")) {
-                const parentSelect = findParentWithClass(element, "l_select")
-                // TODO: Lib | Model for multiple Select.
-                if(parentSelect)
-                    name = parentSelect.dataset["name"] || ""
-                value = element.checked ? value : ""
-            }
-            else if(isObject(element, HTMLSelectElement) && element.multiple) {
-                value = Object.values(element.options)
-                    .filter(o => o.selected)
-                    .map(o => o.value).join(",")
-            }
+            const parsed = parseElement(element)
 
             this.value({
-                [name]: value
+                [parsed.name]: parsed.value
             })
 
-            return { name, value }
+            return {...parsed}
         }
 
         value = (values: ModelData) => {
