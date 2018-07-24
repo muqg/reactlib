@@ -36,7 +36,7 @@ class EditableContainer extends React.PureComponent<Props, State> {
     state = {}
     container = React.createRef<HTMLDivElement>()
 
-    handleBlur = (event: React.FocusEvent<HTMLDivElement>) => {
+    handleChange = (event: React.SyntheticEvent<HTMLDivElement>) => {
         Editor.saveSelection()
 
         if(this.props.onChange)
@@ -57,8 +57,8 @@ class EditableContainer extends React.PureComponent<Props, State> {
                 innerRef={this.container}
                 contentEditable
 
-                onBlur={this.handleBlur}
-                onInput={this.props.onChange}
+                onBlur={this.handleChange}
+                onInput={this.handleChange}
                 onPaste={this.handlePaste}
 
                 dangerouslySetInnerHTML={{__html: this.props.content || ""}}
