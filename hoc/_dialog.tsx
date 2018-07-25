@@ -33,6 +33,14 @@ interface StyleProps {
 
 interface Props {
     className?: string
+    /*
+     * TODO: This method should accept a keyCode value and optionally ctrl, alt
+     * and shift modifiers. These values should be compared against the event
+     * and then check that the target is not an INPUT, TEXTAREA, contentetiable
+     * and other possible input-like elements.
+     *
+     * See ConfirmationDialog.tsx for a little bit of reference.
+     */
     globalHotkey?: (e: KeyboardEvent) => boolean
     isVisible: boolean
     onClose: (dialog: HTMLDivElement) => void

@@ -54,17 +54,8 @@ const Content = styled.div`
 `
 
 interface StyleProps {
-    /**
-     * Property is passed internally by parent Select.
-     */
     active?: boolean
-    /**
-     * Property is passed internally by parent Select.
-     */
     height?: number
-    /**
-     * Property is passed internally by parent Select.
-     */
     multiple?: boolean
 }
 
@@ -73,8 +64,8 @@ interface Props {
     value?: string
 
     /**
-     * Checked is passed internally by parent Select based on its provided value.
-     * Checked attribute may also be set on individual SelectOptions but will be
+     * Attribute is passed internally by parent Select based on its provided value.
+     * This attribute may also be set on individual SelectOptions but will be
      * overrriden in case of conflict with Select's value attribute.
      */
     selected?: boolean

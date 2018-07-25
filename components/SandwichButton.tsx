@@ -63,11 +63,17 @@ interface StyleProps {
      * Sandwich button's size in pixels. This accounts for both width and height.
      */
     size?: number
+    /**
+     * Whether it is initially active or not.
+     */
     active?: boolean
 }
 
 interface OwnProps {
     className?: string
+    /**
+     * Called when the button is clicked and its active state changes.
+     */
     onClick?: (isActive: boolean, e: React.MouseEvent<any>) => void
 }
 

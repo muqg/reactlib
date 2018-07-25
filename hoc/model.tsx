@@ -59,7 +59,7 @@ export type ModelChange = ModelChangeEvent | ModelChangeElement
  * Enhances a component with model serialization. See ModelProps for more info.
  * @param WrappedComponent The component to be wrapped.
  */
-function CreateModel<OP extends {}, MD extends object = ModelData>(
+function model<OP extends {}, MD extends object = ModelData>(
     WrappedComponent: React.ComponentType<OP & ModelProps<MD>>
 ): React.ComponentType<OP> {
 
@@ -141,5 +141,5 @@ function CreateModel<OP extends {}, MD extends object = ModelData>(
 }
 
 
-export { CreateModel as model };
+export { model };
 
