@@ -1,8 +1,10 @@
 import * as React from "react";
 import { isUndefined } from "util";
-import { Button, DialogProps, Dialog } from "..";
+import { Button } from "..";
+import { dialog, InjectedDialogProps } from "../../hoc";
 import { styled } from "../../styles";
 import { CHAR_CODE_ENTER } from "../../utility/dom";
+import { DialogTemplate, TemplateProps } from "./DialogTemplate";
 
 
 const ButtonsContainer = styled.div`
@@ -23,7 +25,7 @@ interface OwnProps {
      */
     onReject?: (container: HTMLDivElement) => void
 }
-type Props = OwnProps & DialogProps
+type Props = OwnProps & InjectedDialogProps & TemplateProps
 
 
 const ConfirmationDialog = (props: Props) => {
@@ -31,40 +33,41 @@ const ConfirmationDialog = (props: Props) => {
 
     const accept = () => {
         const res = props.onAccept(container.current as HTMLDivElement)
-
         const success = !(isUndefined(res)) ? res : true
-        if(success && props.onClose)
-            props.onClose()
+
+        if(success)
+            props.closeDialog()
     }
 
     const reject = () => {
         if(props.onReject)
             props.onReject(container.current as HTMLDivElement)
-
-        if(props.onClose)
-            props.onClose()
+        props.closeDialog()
     }
 
-    const keyDown = (event: React.KeyboardEvent, dialogElement: HTMLDivElement) => {
-        if(props.onKeyDown)
-            props.onKeyDown(event, dialogElement)
-
+    const keyDown = (event: React.KeyboardEvent) => {
         if(event.keyCode === CHAR_CODE_ENTER)
             accept()
     }
 
     return(
-        <Dialog {...props} onClose={reject} onKeyDown={keyDown}>
-            <div ref={container}>
-                {props.children}
+        <DialogTemplate {...props}>
+            <div onKeyDown={keyDown}>
+                <div ref={container}>
+                    {props.children}
+                </div>
+                <ButtonsContainer>
+                    <Button onClick={accept} margin={"0 6px"}>
+                        Okay
+                    </Button>
+                    <Button onClick={reject} margin={"0 6px"}>
+                        Cancel
+                    </Button>
+                </ButtonsContainer>
             </div>
-            <ButtonsContainer>
-                <Button onClick={accept} margin={"0 6px"}>Okay</Button>
-                <Button onClick={reject} margin={"0 6px"}>Cancel</Button>
-            </ButtonsContainer>
-        </Dialog>
+        </DialogTemplate>
     )
 }
 
 
-export default ConfirmationDialog
+export default dialog(ConfirmationDialog)

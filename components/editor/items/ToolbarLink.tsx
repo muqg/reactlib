@@ -30,7 +30,7 @@ class ToolbarLink extends React.PureComponent<Props, State> {
     }
     portalTarget = document.getElementById("dialogPortal")
 
-    toggleDialog(visible: boolean) {
+    toggleDialog = (visible: boolean) => {
         this.setState({isDialogVisible: visible})
     }
 
@@ -65,11 +65,11 @@ class ToolbarLink extends React.PureComponent<Props, State> {
                 {createPortal(
                     <ConfirmationDialog
                         className="tb_link"
-                        title="Въведи линк:"
+                        isVisible={this.state.isDialogVisible}
                         onShow={d => this.onShow(d)}
-                        onClose={() => this.toggleDialog(false)}
                         onAccept={e => this.accept(e)}
-                        visible={this.state.isDialogVisible}
+                        visibilityChange={this.toggleDialog}
+                        title="Въведи линк:"
                     >
                         <Input placeholder="https://example.com" width="100%" />
                     </ConfirmationDialog>,

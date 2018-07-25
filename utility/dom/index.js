@@ -3,6 +3,7 @@ export { classNames } from "./classNames";
 export { Editor, SelectionStyle } from "./Editor";
 export { findParentWithClass } from "./findParentWithClass";
 export { hexColor } from "./hexColor";
+export { Hotkey } from "./Hotkey";
 export { inViewport } from "./inViewport";
 export * from "./keyCode";
 export { loadScript } from "./loadScript";

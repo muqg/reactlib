@@ -1,38 +1,48 @@
 import * as React from "react";
-import { css, styled } from "../styles";
+import { COLOR_TRANSPARENT, css, styled } from "../styles";
 import { wait } from "../utility";
-import { CHAR_CODE_ESCAPE } from "../utility/dom";
+import { CHAR_CODE_ESCAPE, Hotkey } from "../utility/dom";
 
 
-const ESCAPE_HOTKEY: Hotkey = {
-    charCode: CHAR_CODE_ESCAPE,
-    alt: false,
-    ctrl: false,
-    shift: false
-}
-const RENDER_WAIT_TIME = 30
+const ESCAPE_HOTKEY = new Hotkey(CHAR_CODE_ESCAPE)
+const RENDER_WAIT_TIME = 35
 
 
 const visibleStyle = css`
     opacity: 1;
+    transform: scale(1);
     visibility: visible;
 `
 const Dialog = styled.div`
     align-items: center;
+    background: ${COLOR_TRANSPARENT};
+    box-sizing: border-box;
     display: flex;
     height: 100%;
     justify-content: center;
     left: 0;
     opacity: 0;
+    overflow: auto;
+    padding: 60px 15px;
     position: fixed;
     top: 0;
+    transform: scale(1.5);
     transition: .25s;
-    transition-property: opacity, visibility;
+    transition-property: opacity, transform, visibility;
     visibility: hidden;
     width: 100%;
     z-index: 200;
 
     ${(p: StyleProps) => p.visible && visibleStyle}
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #aaa;
+        border-radius: 12px;
+    }
 `
 
 
@@ -68,7 +78,7 @@ interface PublicProps {
     /**
      * Called when dialog is closed.
      */
-    onClose: (dialog: HTMLDivElement) => void
+    onClose?: (dialog: HTMLDivElement) => void
     /**
      * Called any time a key is pressed down.
      *
@@ -79,23 +89,22 @@ interface PublicProps {
      * Called when dialog is shown.
      */
     onShow?: (dialog: HTMLDivElement) => void
+    /**
+     * Called when dialog's visibility changes and is
+     * typically used to mirror its visibility state.
+     */
+    visibilityChange?: (isVisible: boolean) => void
 }
 
 interface State {
     isVisible: boolean
 }
 
-interface Hotkey {
-    alt: boolean
-    charCode: number
-    ctrl: boolean
-    shift: boolean
-}
-
-export type DialogProps = PrivateProps
+export type InjectedDialogProps = PrivateProps
+export type DialogProps = PublicProps
 
 
-function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & DialogProps>): React.ComponentType<OP & PublicProps> {
+function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & InjectedDialogProps>): React.ComponentType<OP & PublicProps> {
 
     class withDialog extends React.Component<OP & PublicProps, State> {
         static displayName: string
@@ -107,12 +116,12 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Dialog
 
         componentDidMount() {
             if(this.props.globalHotkey)
-                window.addEventListener("keydown", () => {})
+                window.addEventListener("keydown", this.pressGlobal)
         }
 
         componentWillUnmount() {
             if(this.props.globalHotkey)
-                window.addEventListener("keydown", () => {})
+                window.addEventListener("keydown", this.pressGlobal)
         }
 
         async componentDidUpdate(prevProps: PublicProps, prevState: State) {
@@ -144,9 +153,12 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Dialog
 
         toggle(visible?: boolean) {
             this.setState(prevState => {
-                return {
-                    isVisible: visible || !prevState.isVisible
-                }
+                const isVisible = visible || !prevState.isVisible
+
+                if(this.props.visibilityChange)
+                    this.props.visibilityChange(isVisible)
+
+                return {isVisible}
             })
         }
 
@@ -159,20 +171,31 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Dialog
             // Do NOT allow keyboard event to propagate outside React.createPortal().
             event.stopPropagation()
 
-            const {globalHotkey} = this.props
             if(this._isPressed(ESCAPE_HOTKEY, event))
                 this.toggle(false)
-            else if(globalHotkey && this._isPressed(globalHotkey!, event))
-                this.toggle()
+            else
+                this.pressGlobal(event.nativeEvent)
 
             const dialog = this.dialog.current
             if(dialog && this.props.onKeyDown)
                 this.props.onKeyDown(event, dialog)
         }
 
+        pressGlobal = (event: KeyboardEvent) => {
+            const {globalHotkey} = this.props
+            const target = event.target as HTMLElement | null
+
+            if(!globalHotkey || !this._isPressed(globalHotkey!, event) || !target)
+                return
+
+            const node = target.nodeName
+            if(node !== "INPUT" && node !== "TEXTAREA" && !target.hasAttribute("contenteditable"))
+                this.toggle()
+        }
+
         _isPressed(key: Hotkey, event: KeyboardEvent | React.KeyboardEvent) {
             return (
-                key.charCode === event.keyCode &&
+                key.code === event.keyCode &&
                 key.alt === event.altKey &&
                 key.ctrl === event.ctrlKey &&
                 key.shift === event.shiftKey
