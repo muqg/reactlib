@@ -1,17 +1,17 @@
 import * as React from "react";
 
-export interface StateModelProps<S extends object = {}> {
-    readonly lift: StateModel<S>
+export interface LiftProps<S extends object = {}> {
+    readonly lift: Lift<S>
 }
 
-export interface StateModel<S extends object = {}> {
+interface Lift<S extends object = {}> {
     setState: React.Component["setState"]
 
     readonly state: S
 }
 
 function lift<P extends {} = {}, S extends object = {}>(
-    WrappedComponent: React.ComponentType<P & StateModelProps<S>>
+    WrappedComponent: React.ComponentType<P & LiftProps<S>>
 ): React.ComponentType<P> {
 
     class withLift extends React.Component<P, S> {
@@ -26,7 +26,7 @@ function lift<P extends {} = {}, S extends object = {}>(
                     lift={{
                         setState: this.setState,
                         state: this.state
-                    } as StateModel<S>}
+                    } as Lift<S>}
                 />
              )
         }
