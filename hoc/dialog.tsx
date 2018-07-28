@@ -31,7 +31,7 @@ const Dialog = styled.div`
     transition-property: opacity, transform, visibility;
     visibility: hidden;
     width: 100%;
-    z-index: 105;
+    z-index: 200;
 
     ${(p: StyleProps) => p.visible && visibleStyle}
 
