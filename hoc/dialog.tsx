@@ -78,7 +78,7 @@ interface PublicProps {
     /**
      * Called when dialog is closed.
      */
-    onClose?: (dialog: HTMLDivElement) => void
+    onClose?: () => void
     /**
      * Called any time a key is pressed down.
      *
@@ -147,7 +147,7 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
             }
             else if(!stateVisible && prevState.isVisible) {
                 if(this.props.onClose)
-                    this.props.onClose(dialog)
+                    this.props.onClose()
             }
         }
 
