@@ -1,13 +1,15 @@
 import { findParentWithClass } from ".";
 import { isObject, isType } from "../assertions";
 
+export type ParseableChange = React.ChangeEvent<ParseableElement> | ParseableElement
 export type ParseableElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | HTMLButtonElement
 
 /**
- * Parses a element's model data.
- * @param element The element to be parsed.
+ * Parses a valid change event's element.
+ * @param change The change event or element to be parsed.
  */
-function parseElement(element: ParseableElement) {
+function parseElement(change: ParseableChange) {
+    const element = isObject(change, Element) ? change : change.target as ParseableElement
     let name = element.name
     let value = element.value
 
