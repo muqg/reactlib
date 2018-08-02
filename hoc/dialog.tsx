@@ -2,6 +2,7 @@ import * as React from "react";
 import { COLOR_TRANSPARENT, css, styled } from "../styles";
 import { wait } from "../utility";
 import { CHAR_CODE_ESCAPE, Hotkey } from "../utility/dom";
+import { isUndefined } from "../utility/assertions";
 
 
 const ESCAPE_HOTKEY = new Hotkey(CHAR_CODE_ESCAPE)
@@ -153,7 +154,7 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
 
         toggle(visible?: boolean) {
             this.setState(prevState => {
-                const isVisible = visible || !prevState.isVisible
+                const isVisible = isUndefined(visible) ? !prevState.isVisible : visible
 
                 if(this.props.visibilityChange)
                     this.props.visibilityChange(isVisible)
