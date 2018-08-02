@@ -54,6 +54,8 @@ function request(method: RequestMethod, url: string, body: Dict<string>): Return
 function request(method: RequestMethod, url: string, body: Dict<string>, options: RequestOptions): ReturnType<typeof baseRequest>
 
 function request(method: RequestMethod, url: string, body: Dict<string> = {} , options: RequestOptions = DEFAULT_OPTIONS) {
+    const headers = options.headers || {} as Dict<string>
+
     if(options.useBodyMethod) {
         body["__method"] = method
         method = RequestMethod.POST
@@ -62,7 +64,6 @@ function request(method: RequestMethod, url: string, body: Dict<string> = {} , o
     const requestInit: RequestInit = {
         cache: options.cache,
         credentials: options.credentials,
-        headers: options.headers,
         method: method,
         mode: options.mode,
         redirect: options.redirect,
@@ -82,10 +83,13 @@ function request(method: RequestMethod, url: string, body: Dict<string> = {} , o
     }
     else if(options.requestDataFormat === "json") {
         requestInit.body = JSON.stringify(body)
+        headers["Content-Type"] = "application/json"
     }
     else if(options.requestDataFormat === "query") {
         requestInit.body = createQuery(body)
     }
+
+    requestInit.headers = headers
 
     return baseRequest(method, url, requestInit)
 }
