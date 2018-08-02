@@ -24,6 +24,15 @@ interface OwnProps {
      * Called whenever dialog is canceled (including when closed).
      */
     onReject?: (container: HTMLDivElement) => void
+
+    /**
+     * Text for the cancel (reject) button.
+     */
+    textCancel?: string
+    /**
+     * Text for the okay (accept) button.
+     */
+    textOkay?: string
 }
 type Props = OwnProps & InjectedDialogProps & TemplateProps
 
@@ -58,10 +67,10 @@ const ConfirmationDialog = (props: Props) => {
                 </div>
                 <ButtonsContainer>
                     <Button onClick={accept} margin={"0 6px"}>
-                        Okay
+                        {props.textOkay || "Okay"}
                     </Button>
                     <Button onClick={reject} margin={"0 6px"}>
-                        Cancel
+                        {props.textCancel || "Cancel"}
                     </Button>
                 </ButtonsContainer>
             </div>
