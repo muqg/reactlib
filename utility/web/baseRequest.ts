@@ -12,6 +12,7 @@ function baseRequest(method: RequestMethod, url: string, options: RequestInit) {
     const headers = (options.headers || {}) as Dict<string>
     headers["X-CSRF-TOKEN"] = X_CSRF_TOKEN
     headers["X-Requested-With"] = "XMLHttpRequest"
+    headers["Accept"] = "application/json; charset=utf-8";
 
     const requestInit: RequestInit = {
         body: options.body,
@@ -28,7 +29,7 @@ function baseRequest(method: RequestMethod, url: string, options: RequestInit) {
         .then(response => {
             if(!response.ok)
                 throw(`(${response.status}) ${response.statusText}`)
-            return response.text()
+            return response.json()
         })
 }
 
