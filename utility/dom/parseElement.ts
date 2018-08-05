@@ -15,10 +15,17 @@ function parseElement(change: ParseableChange) {
 
     if(isType<HTMLInputElement>(element, () => element.type === "checkbox" || element.type === "radio")) {
         const parentSelect = findParentWithClass(element, "l_select")
-        // TODO: Lib | Model for multiple Select.
         if(parentSelect)
             name = parentSelect.dataset["name"] || ""
-        value = element.checked ? value : ""
+
+        // TODO: Lib | Better Model for multiple Select.
+        if(parentSelect && parentSelect.classList.contains("multiple")) {
+            const checked = parentSelect.querySelectorAll<HTMLInputElement>(":checked")
+            value = Object.values(checked).map(c => c.value).join(",")
+        }
+        else {
+            value = element.checked ? value : ""
+        }
     }
     else if(isObject(element, HTMLSelectElement) && element.multiple) {
         value = Object.values(element.options)

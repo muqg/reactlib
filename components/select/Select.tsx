@@ -1,6 +1,6 @@
 import * as React from "react";
 import { COLOR_PRIMARY_DARK, COLOR_WHITE, css, styled } from "../../styles";
-import { OutsideAlerter } from "../../utility/dom";
+import { OutsideAlerter, classNames } from "../../utility/dom";
 import SelectOption from "./SelectOption";
 
 const DEFAULT_HEIGHT = 25
@@ -114,11 +114,17 @@ class Select extends React.Component<Props, State> {
     }
 
     render() {
+        // Pass l_select and multiple class since it is used by model.
+        const classes = classNames(
+            this.props.className,
+            "l_select",
+            {multiple: this.props.multiple}
+        )
+
         return(
             <Container
                 data-name={this.props.name}
-                // Pass l_select class since it is used by model.
-                className={this.props.className + " " + "l_select"}
+                className={classes}
                 innerRef={this.container}
                 onChange={this.props.onChange}
 
