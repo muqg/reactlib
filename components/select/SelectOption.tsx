@@ -2,6 +2,7 @@ import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { isObject } from "../../utility/assertions";
 import { styled, css, COLOR_SECONDARY_LIGHT, COLOR_PRIMARY_LIGHT } from "../../styles";
+import { truncateMixin } from "../../styles/mixins";
 
 
 const Container = styled.label`
@@ -29,7 +30,7 @@ const Container = styled.label`
 const contentCommon = css`
     display: block;
     left: 0;
-    position: absolute;
+    position: relative;
     top: 0;
     width: 100%;
 
@@ -41,6 +42,7 @@ const Content = styled.div`
     box-sizing: border-box;
     display: ${(p: StyleProps) => (p.active || p.multiple) ? "block" : "none"};
     height: 100%;
+    ${truncateMixin}
 
     input:checked ~ & {
         ${p => !p.active && contentCommon}
@@ -61,6 +63,7 @@ interface StyleProps {
 
 interface Props {
     children?: any
+    className?: string
     value?: string
 
     /**
@@ -113,6 +116,7 @@ class SelectOption extends React.PureComponent<Props & StyleProps> {
                 />
                 <Content
                     active={this.props.active}
+                    className={this.props.className}
                     height={this.props.height}
                     multiple={this.props.multiple}
                 >
