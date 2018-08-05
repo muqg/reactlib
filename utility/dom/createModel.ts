@@ -14,7 +14,7 @@ function createModel(component: React.Component, key = "") {
         const name = parsed.name
         let value: string | number = parsed.value
 
-        if(!isNaN(value as any))
+        if(value.length && !isNaN(value as any))
             value = value.indexOf(".") >= 0 ? asFloat(value) : asInt(value)
 
         component.setState(
