@@ -95,7 +95,7 @@ class Select extends React.Component<Props, State> {
             return
 
         this.setState({
-            isActive: isActive
+            isActive
         },
         () => {
             // Scroll to currently seletected element if active.
@@ -155,7 +155,7 @@ class Select extends React.Component<Props, State> {
                     height: this.props.height || DEFAULT_HEIGHT,
                     multiple: this.props.multiple,
                 }
-                return React.cloneElement(child, props)
+                return React.cloneElement(child, {...child.props, ...props})
             }
         })
     }

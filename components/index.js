@@ -7,5 +7,4 @@ export { default as Expire } from "./Expire";
 export { Input } from "./Input";
 export { Notification } from "./Notification";
 export { default as SandwichButton } from "./SandwichButton";
-export { default as Select } from "./select/Select";
-export { default as SelectOption } from "./select/SelectOption";
+export * from "./select"
