@@ -142,6 +142,7 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
                 // fully render and allow proper interactions.
                 await wait(RENDER_WAIT_TIME)
                 dialog.focus()
+                dialog.scrollTop = 0
 
                 if(this.props.onShow)
                     this.props.onShow(dialog)
