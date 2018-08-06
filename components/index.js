@@ -7,4 +7,6 @@ export { default as Expire } from "./Expire";
 export { Input } from "./Input";
 export { Notification } from "./Notification";
 export { default as SandwichButton } from "./SandwichButton";
-export * from "./select"
+export * from "./select";
+export { Timer } from "./Timer";
+
