@@ -84,6 +84,9 @@ class Timer extends React.PureComponent<Props, State> {
             // Ever wondered how long can a single second be...?
             await wait(1000);
         }
+
+        if(this.props.onExpire)
+            this.props.onExpire()
     }
 
     render() {
