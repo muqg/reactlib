@@ -1,61 +1,20 @@
-import { UDict } from "./type";
-
-const delayed: UDict<Delayed> = {}
-
-interface Delayed {
-    timer: number
-    delay: number
-    callback: () => any
-}
-
 /**
- * Delays execution so that this function can be called multiple times before it
- * times out and then executes the last callback this function was provided with.
- * @param key The key to the delayed callback.
- * @param time The time to delay execution in milliseconds.
- * @param callback The callback to be delayed.
+ * Decorates a function, allowing it to delay its execution,
+ * while debouncing any following calls in the meantime.
+ *
+ * @param func The function to be delayed.
+ *
+ * @param wait Delay time in milliseconds.
  */
-function delay(key: string | number, time: number, callback: () => any): void
-/**
- * Delays execution so that this function can be called multiple times before it
- * times out and then executes the last callback this function was provided with.
- * @param key The key to the delayed callback.
- * @param time The time to delay execution in milliseconds.
- * @param callback The callback to be delayed.
- * @param reset Whether to restart the timeout countdown on each call.
- */
-function delay(key: string | number, time: number, callback: () => any, reset?: boolean): void
+// @ts-ignore Odd error reporting for generic array after v.3.0.1
+function delay<A extends any[]>(func: (...args: A) => Promise<void> | void, wait = 250) {
+    let timeout: number | undefined
 
-function delay(key: string | number, time: number, callback: () => any, reset = true): void {
-    const existingElement = delayed[key]
-
-    let timer = -1
-    if(existingElement) {
-        timer = existingElement.timer
-
-        if(reset)
-            clearTimeout(existingElement.timer)
-    }
-
-    if(!existingElement || reset) {
-        const timeoutCallback = () => {
-            const target = delayed[key]
-            if(target)
-                target.callback()
-
-            delayed[key] = undefined
-        }
-
-        // As 'any' in order to return a number.
-        timer = setTimeout(timeoutCallback as any, time)
-    }
-
-    delayed[key] = {
-        delay: time,
-        timer: timer,
-        callback: callback
+    // @ts-ignore Odd error reporting for generic array after v.3.0.1
+    return (...args: A) => {
+        clearTimeout(timeout)
+        timeout = setTimeout(func, wait, ...args)
     }
 }
 
 export { delay };
-

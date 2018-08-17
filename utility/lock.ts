@@ -1,40 +1,21 @@
-import { isFunction } from "./assertions";
-import { UDict } from "./type";
-
-const locked: UDict<boolean> = {}
-
-
 /**
- * Locks a key, disallowing (ignoring) any duplicate calls to it until the first
- * locked element for this key is resolved.
- * @param key The lock key.
- * @param lockElement A callable to be locked.
+ * Decorates a function, allowing it be called once and then
+ * disregard any following calls until the first one returns.
+ *
+ * @param func The function to be locked.
  */
-function lock(key: string | number, lockElement: () => any): void
-/**
- * Locks a key, disallowing (ignoring) any duplicate calls to it until the first
- * locked element for this key is resolved.
- * @param key The lock key.
- * @param lockElement A Promise to be locked.
- */
-function lock(key: string | number, lockElement: Promise<any>): void
+// @ts-ignore Odd error reporting for generic array after v.3.0.1
+function lock<A extends any[]>(func: (...args: A) => Promise<void> | void) {
+    let locked = false
 
-function lock(key: string | number, lockElement: Promise<void> | (() => Promise<any>)): void {
-    (async () => {
-        if(locked[key])
-            return
-        try {
-            locked[key] = true
-            let awaitable = lockElement
-            if(isFunction(lockElement))
-                awaitable = lockElement()
-            await awaitable
+    // @ts-ignore Odd error reporting for generic array after v.3.0.1
+    return async (...args: A) => {
+        if(!locked) {
+            locked = true
+            await func(...args)
+            locked = false
         }
-        finally {
-            locked[key] = false
-        }
-    })()
+    }
 }
 
 export { lock };
-

@@ -71,12 +71,13 @@ class Notification extends React.Component<Props, State> {
         }
         else {
             this.setState({isActive: true})
-
-            delay("ntfctn", NOTIFICATION_DURATION, () => {
-                this.props.hide()
-            }, true)
+            this.hide()
         }
     }
+
+    hide = delay(() => {
+        this.props.hide()
+    }, NOTIFICATION_DURATION)
 
     render() {
         return (
