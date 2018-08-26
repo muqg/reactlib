@@ -1,4 +1,5 @@
 export { Button } from "./Button";
+export { Checkbox } from "./Checkbox";
 export { default as CloseButton } from "./CloseButton";
 export { default as ConfirmationDialog } from "./dialogs/ConfirmationDialog";
 export { default as Dialog } from "./dialogs/Dialog";

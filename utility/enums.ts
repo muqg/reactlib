@@ -1,12 +1,4 @@
 /**
- * Widely used CSS classes for state modification.
- */
-export enum StyleClass {
-    Active = "active",
-    Disabled = "disabled",
-}
-
-/**
  * HTTP request method verbs.
  */
 export enum RequestMethod {
