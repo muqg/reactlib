@@ -24,7 +24,7 @@ function parseElement(change: ParseableChange) {
             value = Object.values(checked).map(c => c.value).join(",")
         }
         else {
-            value = element.checked ? value : ""
+            value = element.checked ? "true" : "false"
         }
     }
     else if(isObject(element, HTMLSelectElement) && element.multiple) {
