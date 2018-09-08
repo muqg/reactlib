@@ -3,7 +3,7 @@ import { isUndefined } from "../utility/assertions";
 
 
 interface LoadableState {
-    component?: new() => React.Component
+    component?: React.ComponentClass
 }
 
 /**
@@ -14,24 +14,22 @@ interface LoadableState {
  */
 function loadable(loader: () => Promise<any>, loadingComponent?: LoadableState["component"]) {
 
-    class LoadableComponent extends React.PureComponent {
+    return class LoadableComponent extends React.PureComponent {
         static displayName: string
-        state: LoadableState
-
-        constructor(public props: any) {
-            super(props)
-
-            this.state = {
-                component: loadingComponent
-            }
+        state: LoadableState = {
+            component: loadingComponent
         }
 
         async componentDidMount() {
             try {
                 const loaded = await loader()
-                this.setState({
-                    component: loaded.default
-                })
+                const component = loaded.default
+                if(!component)
+                    console.error("Loadable component does not have a default export.")
+
+                LoadableComponent.displayName = `Loadable(${component.displayName})`
+
+                this.setState({component})
             }
             catch(ex) {
                 console.error("Error loading chunk.")
@@ -44,10 +42,6 @@ function loadable(loader: () => Promise<any>, loadingComponent?: LoadableState["
             return !isUndefined(C) ? <C {...this.props} /> : ""
         }
     }
-
-    // TODO: Lib | Better way to set display name for loadable components.
-    LoadableComponent.displayName = `Loadable(${loader.toString()})`
-    return LoadableComponent
 }
 
 export { loadable };
