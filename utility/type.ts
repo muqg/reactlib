@@ -59,7 +59,9 @@ export interface NamedKey<T = string> {
 /**
  * Error thrown by library's request functions.
  */
-export interface RequestException {
+export interface RequestException<T extends object = {}> {
+    body: T
     status: number
     statusText: string
+    text: string
 }

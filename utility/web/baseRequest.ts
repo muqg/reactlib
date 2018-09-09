@@ -26,11 +26,15 @@ function baseRequest(method: RequestMethod, url: string, options: RequestInit) {
     }
 
     return window.fetch(url, requestInit)
-        .then(response => {
+        .then(async (response) => {
             if(!response.ok) {
+                const responseBody = await response.json()
+
                 throw {
+                    body: responseBody,
                     status: response.status,
-                    statusText: response.statusText
+                    statusText: response.statusText,
+                    text: responseBody.__error || responseBody.message || "",
                 } as RequestException
             }
             return response.json()
