@@ -55,3 +55,11 @@ export interface NamedKey<T = string> {
     id: T
     name: string
 }
+
+/**
+ * Error thrown by library's request functions.
+ */
+export interface RequestException {
+    status: number
+    statusText: string
+}

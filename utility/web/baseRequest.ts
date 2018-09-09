@@ -1,4 +1,4 @@
-import { Dict } from "..";
+import { Dict, RequestException } from "..";
 import { RequestMethod } from "../enums";
 
 const X_CSRF_TOKEN = (() => {
@@ -27,8 +27,12 @@ function baseRequest(method: RequestMethod, url: string, options: RequestInit) {
 
     return window.fetch(url, requestInit)
         .then(response => {
-            if(!response.ok)
-                throw(`(${response.status}) ${response.statusText}`)
+            if(!response.ok) {
+                throw {
+                    status: response.status,
+                    statusText: response.statusText
+                } as RequestException
+            }
             return response.json()
         })
 }
