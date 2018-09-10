@@ -1,5 +1,6 @@
 import * as React from "react";
 import { isUndefined } from "../utility/assertions";
+import { getDisplayName } from "../utility/misc";
 
 
 interface LoadableState {
@@ -16,6 +17,7 @@ function loadable(loader: () => Promise<any>, loadingComponent?: LoadableState["
 
     return class LoadableComponent extends React.PureComponent {
         static displayName: string
+
         state: LoadableState = {
             component: loadingComponent
         }
@@ -27,7 +29,7 @@ function loadable(loader: () => Promise<any>, loadingComponent?: LoadableState["
                 if(!component)
                     console.error("Loadable component does not have a default export.")
 
-                LoadableComponent.displayName = `Loadable(${component.displayName})`
+                LoadableComponent.displayName = getDisplayName('Loadable', component)
 
                 this.setState({component})
             }

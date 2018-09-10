@@ -2,6 +2,7 @@ import * as React from "react";
 import { Dict } from "../utility";
 import { isObject } from "../utility/assertions";
 import { ParseableElement, parseElement } from "../utility/dom";
+import { getDisplayName } from "../utility/misc";
 
 
 export interface ModelProps<MD extends object = ModelData> {
@@ -63,8 +64,8 @@ function model<OP extends {}, MD extends object = ModelData>(
     WrappedComponent: React.ComponentType<OP & ModelProps<MD>>
 ): React.ComponentType<OP> {
 
-    class withModel extends React.Component<OP, ModelData> {
-        static displayName: string
+    return class extends React.Component<OP, ModelData> {
+        static displayName = getDisplayName('Model', WrappedComponent)
 
         state = {} as ModelData
         baseData = {} as ModelData
@@ -133,11 +134,6 @@ function model<OP extends {}, MD extends object = ModelData>(
              )
         }
     }
-
-
-    const name = WrappedComponent.displayName || WrappedComponent.name || "Component"
-    withModel.displayName = `Model(${name})`
-    return withModel
 }
 
 

@@ -1,8 +1,9 @@
 import * as React from "react";
 import { COLOR_TRANSPARENT, css, styled } from "../styles";
-import { wait } from "../utility";
 import { CHAR_CODE_ESCAPE, Hotkey } from "../utility/dom";
 import { isUndefined } from "../utility/assertions";
+import { getDisplayName } from "../utility/misc";
+import { wait } from "../utility";
 
 
 const ESCAPE_HOTKEY = new Hotkey(CHAR_CODE_ESCAPE)
@@ -107,8 +108,8 @@ export type DialogProps = PublicProps
 
 function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & InjectedDialogProps>): React.ComponentType<OP & PublicProps> {
 
-    class withDialog extends React.Component<OP & PublicProps, State> {
-        static displayName: string
+    return class extends React.Component<OP & PublicProps, State> {
+        static displayName = getDisplayName("Dialog", WrappedComponent)
 
         state: State = {
             isVisible: false
@@ -223,11 +224,6 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
             )
         }
     }
-
-
-    const name = WrappedComponent.displayName || WrappedComponent.name || "Component"
-    withDialog.displayName = `Dialog(${name})`
-    return withDialog
 }
 
 
