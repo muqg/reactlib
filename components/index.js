@@ -10,4 +10,5 @@ export { Notification } from "./Notification";
 export { default as SandwichButton } from "./SandwichButton";
 export * from "./select";
 export { Timer } from "./Timer";
+export { Translation, Translator } from "./Translation"
 
