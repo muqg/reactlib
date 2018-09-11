@@ -7,6 +7,8 @@ import { FormatArgument } from "../utility/string/format";
 
 
 const TranslatorContext = React.createContext({} as Dict<any>)
+
+TranslatorContext.Provider.displayName = "Translator"
 export const Translator = TranslatorContext.Provider
 
 
@@ -22,24 +24,24 @@ interface Props {
      */
     count?: number
     /**
-     * The key to retrieve text for.
-     */
-    key: string
-    /**
      * A function that may perform any final format on the text
      * or even wrap it inside JSX.
      */
     middleware?: (text: string) => string | JSX.Element
+    /**
+     * The key to retrieve text for.
+     */
+    value: string
 }
 
 
-export const Translation = ({args, count, key, middleware}: Props) => (
+export const Translation = ({args, count, value, middleware}: Props) => (
     <TranslatorContext.Consumer>
-        {(src) => {
-            let text = dig(key, src)
+        {(source) => {
+            let text = dig(value, source) || value
 
-            if(text === key)
-                console.error("No translation value found for key: " + key)
+            if(text === value)
+                console.error("No translation value found for key: " + value)
 
             if(args) {
                 if(isArray(args))
