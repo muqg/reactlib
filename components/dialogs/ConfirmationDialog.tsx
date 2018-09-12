@@ -37,7 +37,7 @@ interface OwnProps {
 type Props = OwnProps & InjectedDialogProps & TemplateProps
 
 
-const ConfirmationDialog = (props: Props) => {
+const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}: Props) => {
     const container = React.createRef<HTMLDivElement>()
 
     const accept = () => {
@@ -67,10 +67,10 @@ const ConfirmationDialog = (props: Props) => {
                 </div>
                 <ButtonsContainer>
                     <Button onClick={accept} margin={"0 6px"}>
-                        {props.textOkay || "Okay"}
+                        {textOkay}
                     </Button>
                     <Button onClick={reject} margin={"0 6px"}>
-                        {props.textCancel || "Cancel"}
+                        {textCancel}
                     </Button>
                 </ButtonsContainer>
             </div>

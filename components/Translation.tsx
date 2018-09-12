@@ -35,7 +35,7 @@ interface Props {
 }
 
 
-export const Translation = ({args, count, value, middleware}: Props) => (
+export const Translate = ({args, count, value, middleware}: Props) => (
     <TranslatorContext.Consumer>
         {(source) => {
             let text = dig(value, source) || value
