@@ -1,4 +1,4 @@
-import { dive } from "../collection";
+import { put } from "../collection";
 import { asFloat, asInt } from "../string";
 import { ParseableChange, parseElement } from "./parseElement";
 
@@ -36,7 +36,7 @@ function createModel(component: React.Component, key = "", options: CreateModelO
         }
 
         component.setState(
-            prevState => dive(key, {[name]: value}, prevState),
+            prevState => put(key, {[name]: value}, prevState),
             callback
         )
         return {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Dict } from "../utility";
 import { isArray } from "../utility/assertions";
-import { dig } from "../utility/collection";
+import { pull } from "../utility/collection";
 import { format, plural } from "../utility/string";
 import { FormatArgument } from "../utility/string/format";
 
@@ -38,7 +38,7 @@ interface Props {
 export const Translate = ({args, count, value, middleware}: Props) => (
     <TranslatorContext.Consumer>
         {(source) => {
-            let text = dig(value, source) || value
+            let text = pull(value, source) || value
 
             if(text === value)
                 console.error("No translation value found for key: " + value)

@@ -1,4 +1,4 @@
-import { dig } from "../utility/collection";
+import { pull } from "../utility/collection";
 import { INITIAL_STATE } from "./const";
 
 /**
@@ -6,7 +6,7 @@ import { INITIAL_STATE } from "./const";
  * @param key Key to the state item.
  */
 function initialState<T = any>(key: any): T {
-    let result = dig<T>(key, INITIAL_STATE)
+    let result = pull<T>(key, INITIAL_STATE)
     return result
 }
 

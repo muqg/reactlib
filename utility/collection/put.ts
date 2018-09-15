@@ -1,4 +1,4 @@
-import { dig } from ".";
+import { pull } from ".";
 import { isArray, isObject } from "../assertions";
 
 
@@ -7,7 +7,7 @@ import { isArray, isObject } from "../assertions";
  * @param key The key to place the item at.
  * @param item The item to place.
  */
-function dive(key: string, item: any): object
+function put(key: string, item: any): object
 /**
  * Places an __item__ at the provided __key__ of a __pool__ Object. If the __pool__
  * is an Array then it is disregarded and a fresh Object with the given __item__
@@ -21,15 +21,15 @@ function dive(key: string, item: any): object
  * @param item The item to place.
  * @param pool The pool to put the item into.
  */
-function dive<T extends object = object>(key: string, item: any, pool: object): T
+function put<T extends object = object>(key: string, item: any, pool: object): T
 
-function dive(key: string, item: any, pool: object = {}) {
+function put(key: string, item: any, pool: object = {}) {
     const splitKey = key.split(".").filter(k => k)
 
     let result: any = item
     for(let i = splitKey.length - 1; i >= 0; i--) {
         const currentKey = splitKey[i]
-        const poolItem = dig(splitKey.join("."), pool) || {}
+        const poolItem = pull(splitKey.join("."), pool) || {}
 
         // If both items are objects then combine them. Otherwise result overwrites the poolItem.
         if((isObject(result) && !isArray(result)) && (isObject(poolItem) && !isArray(poolItem)))
@@ -43,5 +43,5 @@ function dive(key: string, item: any, pool: object = {}) {
     return isObject(pool) && !isArray(pool) ? {...pool, ...result} : {...result}
 }
 
-export { dive };
+export { put };
 

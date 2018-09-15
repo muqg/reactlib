@@ -6,7 +6,7 @@ import { Collection } from "..";
  * @param key The key to the element, using dot notation.
  * @param col The subject array or object.
  */
-function dig<T = any>(key: string, col: Collection): T {
+function pull<T = any>(key: string, col: Collection): T {
     if(!key.length)
         return col as any
 
@@ -21,4 +21,4 @@ function dig<T = any>(key: string, col: Collection): T {
     return result
 }
 
-export { dig };
+export { pull };
