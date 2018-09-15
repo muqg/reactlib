@@ -26,7 +26,7 @@ class GlobalHotkey extends React.Component<Props> {
 
     handle = (event: KeyboardEvent) => {
         const hotkey = new Hotkey(
-            (({code, key, keyCode}: HotkeyKey) => ({code, key, keyCode}))(this.props),
+            (({code, eventKey, keyCode}: HotkeyKey) => ({code, eventKey, keyCode}))(this.props),
             (({alt, ctrl, meta, shift}: HotkeyModifiers) => ({alt, ctrl, meta, shift}))(this.props)
         )
 

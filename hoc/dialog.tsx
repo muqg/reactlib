@@ -1,10 +1,10 @@
 import * as React from "react";
+import { GlobalHotkey } from "../components/GlobalHotkey";
 import { COLOR_TRANSPARENT, css, styled } from "../styles";
 import { wait } from "../utility";
 import { isUndefined } from "../utility/assertions";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../utility/dom";
 import { getDisplayName } from "../utility/misc";
-import { GlobalHotkey } from "../components";
 
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})

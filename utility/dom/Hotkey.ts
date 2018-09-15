@@ -25,7 +25,7 @@ export interface HotkeyKey {
     /**
      * Key value of the key.
      */
-    key?: string
+    eventKey?: string
     /**
      * KeyCode value of the key.
      */
@@ -34,7 +34,7 @@ export interface HotkeyKey {
 
 export class Hotkey implements HotkeyModifiers, HotkeyKey {
     code    = ""
-    key     = ""
+    eventKey     = ""
     keyCode = 0
     alt     = false
     ctrl    = false
