@@ -1,9 +1,9 @@
 import * as React from "react";
 import { COLOR_TRANSPARENT, css, styled } from "../styles";
-import { CHAR_CODE_ESCAPE, Hotkey } from "../utility/dom";
-import { isUndefined } from "../utility/assertions";
-import { getDisplayName } from "../utility/misc";
 import { wait } from "../utility";
+import { isUndefined } from "../utility/assertions";
+import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../utility/dom";
+import { getDisplayName } from "../utility/misc";
 
 
 const ESCAPE_HOTKEY = new Hotkey(CHAR_CODE_ESCAPE)
@@ -174,7 +174,7 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
             // Do NOT allow keyboard event to propagate outside React.createPortal().
             event.stopPropagation()
 
-            if(this._isPressed(ESCAPE_HOTKEY, event))
+            if(isKeyPressed(ESCAPE_HOTKEY, event))
                 this.toggle(false)
             else
                 this.pressGlobal(event.nativeEvent)
@@ -188,21 +188,12 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
             const {globalHotkey} = this.props
             const target = event.target as HTMLElement | null
 
-            if(!globalHotkey || !this._isPressed(globalHotkey!, event) || !target)
+            if(!globalHotkey || !isKeyPressed(globalHotkey!, event) || !target)
                 return
 
             const node = target.nodeName
             if(node !== "INPUT" && node !== "TEXTAREA" && !target.hasAttribute("contenteditable"))
                 this.toggle()
-        }
-
-        _isPressed(key: Hotkey, event: KeyboardEvent | React.KeyboardEvent) {
-            return (
-                key.code === event.keyCode &&
-                key.alt === event.altKey &&
-                key.ctrl === event.ctrlKey &&
-                key.shift === event.shiftKey
-            )
         }
 
         render() {
@@ -228,3 +219,4 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
 
 
 export { dialog };
+

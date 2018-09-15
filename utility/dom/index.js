@@ -6,6 +6,7 @@ export { findParentWithClass } from "./findParentWithClass";
 export { hexColor } from "./hexColor";
 export { Hotkey } from "./Hotkey";
 export { inViewport } from "./inViewport";
+export { isKeyPressed } from "./isKeyPressed";
 export * from "./keyCode";
 export { loadScript } from "./loadScript";
 export { loadStyle } from "./loadStyle";
