@@ -6,6 +6,7 @@ export { default as Dialog } from "./dialogs/Dialog";
 export { DocumentTitle } from "./DocumentTitle";
 export * from "./editor";
 export { default as Expire } from "./Expire";
+export { GlobalHotkey } from "./GlobalHotkey";
 export { Input } from "./Input";
 export { Notification } from "./Notification";
 export { default as SandwichButton } from "./SandwichButton";

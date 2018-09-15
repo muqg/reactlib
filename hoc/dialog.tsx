@@ -4,6 +4,7 @@ import { wait } from "../utility";
 import { isUndefined } from "../utility/assertions";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../utility/dom";
 import { getDisplayName } from "../utility/misc";
+import { GlobalHotkey } from "../components";
 
 
 const ESCAPE_HOTKEY = new Hotkey(CHAR_CODE_ESCAPE)
@@ -116,16 +117,6 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
         }
         dialog = React.createRef<HTMLDivElement>()
 
-        componentDidMount() {
-            if(this.props.globalHotkey)
-                window.addEventListener("keydown", this.pressGlobal)
-        }
-
-        componentWillUnmount() {
-            if(this.props.globalHotkey)
-                window.addEventListener("keydown", this.pressGlobal)
-        }
-
         async componentDidUpdate(prevProps: PublicProps, prevState: State) {
             const stateVisible = this.state.isVisible
             const propsVisible = this.props.isVisible
@@ -206,6 +197,9 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
                     tabIndex={-1}
                     visible={this.state.isVisible}
                 >
+                    {this.props.globalHotkey &&
+                        <GlobalHotkey {...this.props.globalHotkey} onPress={this.pressGlobal} />
+                    }
                     <WrappedComponent
                         {...this.props}
                         closeDialog={() => this.toggle(false)}
