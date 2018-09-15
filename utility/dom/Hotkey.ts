@@ -1,3 +1,5 @@
+import { clean } from "../collection";
+
 export interface HotkeyModifiers {
     /**
      * Whether alt key is presssed.
@@ -42,6 +44,6 @@ export class Hotkey implements HotkeyModifiers, HotkeyKey {
     shift   = false
 
     constructor(key?: HotkeyKey, mods?: HotkeyModifiers) {
-        Object.assign(this, key, mods)
+        Object.assign(this, clean({...key, ...mods}))
     }
 }
