@@ -1,5 +1,5 @@
 import { Hotkey } from ".";
-import { isObject } from "../assertions";
+import { isObject, isType } from "../assertions";
 
 /**
  * Determines whether a keyboard event corresponds to a key being pressed.
@@ -15,8 +15,15 @@ function isKeyPressed(key: Hotkey, event: KeyboardEvent | React.KeyboardEvent): 
             return false
     }
 
+    if(isType<React.KeyboardEvent>(event, e => e.nativeEvent))
+        event = event.nativeEvent
+
     return (
-        key.code === event.keyCode &&
+        (
+            key.code && key.code === event.code ||
+            key.key && key.key === event.key ||
+            key.keyCode > 0 && key.keyCode === event.keyCode
+        ) &&
         key.alt === event.altKey &&
         key.ctrl === event.ctrlKey &&
         key.meta === event.metaKey &&

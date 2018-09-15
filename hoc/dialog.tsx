@@ -7,7 +7,7 @@ import { getDisplayName } from "../utility/misc";
 import { GlobalHotkey } from "../components";
 
 
-const ESCAPE_HOTKEY = new Hotkey(CHAR_CODE_ESCAPE)
+const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 const RENDER_WAIT_TIME = 35
 
 
@@ -199,7 +199,7 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
                     visible={this.state.isVisible}
                 >
                     {this.props.globalHotkey &&
-                        <GlobalHotkey {...this.props.globalHotkey} onPress={this.pressGlobal} />
+                        <GlobalHotkey {...this.props.globalHotkey} handler={this.pressGlobal} />
                     }
                     <WrappedComponent
                         {...this.props}

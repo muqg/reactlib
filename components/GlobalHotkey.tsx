@@ -1,37 +1,18 @@
-import * as React from "react"
+import * as React from "react";
 import { Hotkey, isKeyPressed } from "../utility/dom";
-import { HotkeyModifiers } from "../utility/dom/Hotkey";
+import { HotkeyModifiers, HotkeyKey } from "../utility/dom/Hotkey";
 
 
-interface Props {
+interface OwnProps {
     children?: any
 
     /**
-     * The target key's character code.
-     */
-    code: number
-    /**
      * Handler for when the key is pressed.
      */
-    onPress: (event: KeyboardEvent) => void
-
-    /**
-     * Wheter alt key is presssed.
-     */
-    alt?: boolean
-    /**
-     * Wheter ctrl key is presssed.
-     */
-    ctrl?: boolean
-    /**
-     * Wheter system's meta key is presssed.
-     */
-    meta?: boolean
-    /**
-     * Wheter shift key is presssed.
-     */
-    shift?: boolean
+    handler: (event: KeyboardEvent) => void
 }
+
+type Props = OwnProps & HotkeyModifiers & HotkeyKey
 
 
 class GlobalHotkey extends React.Component<Props> {
@@ -45,12 +26,12 @@ class GlobalHotkey extends React.Component<Props> {
 
     handle = (event: KeyboardEvent) => {
         const hotkey = new Hotkey(
-            this.props.code,
+            (({code, key, keyCode}: HotkeyKey) => ({code, key, keyCode}))(this.props),
             (({alt, ctrl, meta, shift}: HotkeyModifiers) => ({alt, ctrl, meta, shift}))(this.props)
         )
 
         if(isKeyPressed(hotkey, event))
-            this.props.onPress(event)
+            this.props.handler(event)
     }
 
     render() {
@@ -61,4 +42,5 @@ class GlobalHotkey extends React.Component<Props> {
 }
 
 
-export { GlobalHotkey }
+export { GlobalHotkey };
+

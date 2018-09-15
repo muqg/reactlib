@@ -4,7 +4,7 @@ export { createModel } from "./createModel";
 export { Editor, SelectionStyle } from "./Editor";
 export { findParentWithClass } from "./findParentWithClass";
 export { hexColor } from "./hexColor";
-export { Hotkey } from "./Hotkey";
+export * from "./Hotkey";
 export { inViewport } from "./inViewport";
 export { isKeyPressed } from "./isKeyPressed";
 export * from "./keyCode";
