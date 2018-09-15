@@ -156,34 +156,14 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
             })
         }
 
-        click = (event: React.MouseEvent<any>) => {
-            // Do NOT allow click evebt to propagate outside React.createPortal().
-            event.stopPropagation()
-        }
 
         keyDown = (event: React.KeyboardEvent) => {
-            // Do NOT allow keyboard event to propagate outside React.createPortal().
-            event.stopPropagation()
-
             if(isKeyPressed(ESCAPE_HOTKEY, event))
                 this.toggle(false)
-            else
-                this.pressGlobal(event.nativeEvent)
 
             const dialog = this.dialog.current
             if(dialog && this.props.onKeyDown)
                 this.props.onKeyDown(event, dialog)
-        }
-
-        pressGlobal = (event: KeyboardEvent) => {
-            const {globalHotkey} = this.props
-
-            if(globalHotkey && isKeyPressed(globalHotkey!, event))
-                this.toggle()
-        }
-
-        _stop = (event: React.SyntheticEvent) => {
-            event.stopPropagation()
         }
 
         render() {
@@ -191,15 +171,12 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
                 <Dialog
                     className={this.props.className}
                     innerRef={this.dialog}
-                    onClick={this.click}
                     onKeyDown={this.keyDown}
-                    onKeyPress={this._stop}
-                    onKeyUp={this._stop}
                     tabIndex={-1}
                     visible={this.state.isVisible}
                 >
                     {this.props.globalHotkey &&
-                        <GlobalHotkey {...this.props.globalHotkey} handler={this.pressGlobal} />
+                        <GlobalHotkey {...this.props.globalHotkey} handler={() => this.toggle()} />
                     }
                     <WrappedComponent
                         {...this.props}
