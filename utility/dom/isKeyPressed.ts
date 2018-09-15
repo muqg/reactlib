@@ -6,10 +6,11 @@ import { isObject, isType } from "../assertions";
  * Keypress when user is typing input is always False.
  * @param hotkey Target hotkey data.
  * @param event The keyboard event.
+ * @param allowInsideInputs Whether to allow keypress inside input elements.
  */
-function isKeyPressed(hotkey: Hotkey, event: KeyboardEvent | React.KeyboardEvent): boolean {
+function isKeyPressed(hotkey: Hotkey, event: KeyboardEvent | React.KeyboardEvent, allowInsideInputs = false): boolean {
     const target = event.target
-    if(isObject(target, Element)) {
+    if(!allowInsideInputs && isObject(target, Element)) {
         const nodeName = target.nodeName.toLowerCase()
         if(nodeName === "input" || nodeName === "textarea" || target.hasAttribute("contenteditable"))
             return false

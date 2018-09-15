@@ -4,6 +4,11 @@ import { HotkeyModifiers, HotkeyKey } from "../utility/dom/Hotkey";
 
 
 interface OwnProps {
+    /**
+     * Whether to allow hotkey inside input elements.
+     */
+    allowInsideInputs?: boolean
+
     children?: any
 
     /**
@@ -30,7 +35,7 @@ class GlobalHotkey extends React.Component<Props> {
             (({alt, ctrl, meta, shift}: HotkeyModifiers) => ({alt, ctrl, meta, shift}))(this.props)
         )
 
-        if(isKeyPressed(hotkey, event))
+        if(isKeyPressed(hotkey, event, this.props.allowInsideInputs))
             this.props.handler(event)
     }
 
