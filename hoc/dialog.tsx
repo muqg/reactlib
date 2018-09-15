@@ -1,5 +1,4 @@
 import * as React from "react";
-import { GlobalHotkey } from "../components/GlobalHotkey";
 import { COLOR_TRANSPARENT, css, styled } from "../styles";
 import { wait } from "../utility";
 import { isUndefined } from "../utility/assertions";
@@ -70,10 +69,6 @@ interface PublicProps {
      * dialog. Do NOT use to stlye any children elements.
      */
     className?: string
-    /**
-     * A window-wide hotkey for the dialog.
-     */
-    globalHotkey?: Hotkey
     /**
      * Whether the dialog is currently visible or not.
      */
@@ -175,9 +170,6 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
                     tabIndex={-1}
                     visible={this.state.isVisible}
                 >
-                    {this.props.globalHotkey &&
-                        <GlobalHotkey {...this.props.globalHotkey} handler={() => this.toggle()} />
-                    }
                     <WrappedComponent
                         {...this.props}
                         closeDialog={() => this.toggle(false)}
