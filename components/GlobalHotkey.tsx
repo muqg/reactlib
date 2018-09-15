@@ -26,7 +26,7 @@ class GlobalHotkey extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        window.addEventListener("keydown", this.handle)
+        window.removeEventListener("keydown", this.handle)
     }
 
     handle = (event: KeyboardEvent) => {
