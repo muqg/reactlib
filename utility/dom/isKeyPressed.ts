@@ -20,9 +20,9 @@ function isKeyPressed(hotkey: Hotkey, event: KeyboardEvent | React.KeyboardEvent
 
     return (
         (
-            (hotkey.code && hotkey.code === event.code) ||
-            (hotkey.eventKey && hotkey.eventKey === event.key) ||
-            (hotkey.keyCode > 0 && hotkey.keyCode === event.keyCode)
+            hotkey.code === event.code ||
+            hotkey.eventKey === event.key ||
+            hotkey.keyCode === event.keyCode
         ) &&
         hotkey.alt === event.altKey &&
         hotkey.ctrl === event.ctrlKey &&
