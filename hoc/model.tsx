@@ -2,7 +2,7 @@ import * as React from "react";
 import { Dict } from "../utility";
 import { isObject } from "../utility/assertions";
 import { ParseableElement, parseElement } from "../utility/dom";
-import { getDisplayName } from "../utility/misc";
+import { getDisplayName } from "../utility/react";
 
 
 export interface ModelProps<MD extends object = ModelData> {

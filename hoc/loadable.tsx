@@ -1,6 +1,6 @@
 import * as React from "react";
 import { isUndefined } from "../utility/assertions";
-import { getDisplayName } from "../utility/misc";
+import { getDisplayName } from "../utility/react";
 
 
 interface LoadableState {
