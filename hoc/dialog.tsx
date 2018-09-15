@@ -182,6 +182,10 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
                 this.toggle()
         }
 
+        _stop = (event: React.SyntheticEvent) => {
+            event.stopPropagation()
+        }
+
         render() {
             return (
                 <Dialog
@@ -189,6 +193,8 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
                     innerRef={this.dialog}
                     onClick={this.click}
                     onKeyDown={this.keyDown}
+                    onKeyPress={this._stop}
+                    onKeyUp={this._stop}
                     tabIndex={-1}
                     visible={this.state.isVisible}
                 >
