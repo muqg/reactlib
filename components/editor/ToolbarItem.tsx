@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, css } from "../../styles";
+import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
 
 
 const withImage = css`
@@ -14,13 +14,13 @@ const withImage = css`
 `
 const withHover = css`
     &:hover {
-        background: #555;
-        color: #ddd;
+        background: ${COLOR_PRIMARY_DARK};
+        color: ${COLOR_PRIMARY_LIGHT};
     }
 `
 const Container = styled.div`
     border-radius: 2px;
-    color: #555;
+    color: ${COLOR_PRIMARY_DARK};
     height: 100%;
     line-height: 24px;
     margin: 0 2px;
@@ -67,3 +67,4 @@ const ToolbarItem = (props: Props) => {
 
 
 export { ToolbarItem };
+

@@ -7,7 +7,7 @@ import { padStart } from "../utility/string";
 const Container = styled.div`
     background: ${COLOR_PRIMARY_LIGHT};
     border-radius: 0 0 8px 8px;
-    box-shadow: 0 2px 3px #555;
+    box-shadow: 0 2px 3px ${COLOR_PRIMARY_DARK};
     display: flex;
     left: 50%;
     position: fixed;
@@ -107,3 +107,4 @@ class Timer extends React.PureComponent<Props, State> {
 
 
 export { Timer };
+

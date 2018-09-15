@@ -1,5 +1,5 @@
 import * as React from "react";
-import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_WHITE, css, styled } from "../styles";
+import { COLOR_GREEN, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_WHITE, css, styled } from "../styles";
 
 const BORDER_RADIUS_VALUE = "3px"
 
@@ -52,7 +52,7 @@ const Background = styled.span`
             }
 
             input:checked ~ & {
-                background: #2d9e21;
+                background: ${COLOR_GREEN};
             }
 
             input:checked ~ &:after {

@@ -3,7 +3,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { ReduxFactory } from "../../main";
 import { toolbarReducer } from "../../reducers";
-import { styled } from "../../styles";
+import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
 
 
 export const TOOLBAR_SPRITESHEET = "/img/toolbar.png"
@@ -17,7 +17,7 @@ const ToolbarWrapper = styled.div`
     z-index: 110;
 
     > div {
-        background: #ddd;
+        background: ${COLOR_PRIMARY_LIGHT};
         border-radius: 6px;
         box-shadow: 0 2px 0 0 #aaa;
         cursor: default;
@@ -93,3 +93,4 @@ ReduxFactory.addReducers({lubToolbar: toolbarReducer})
 
 const toolbar = connect(mapStateToProps, null)(Toolbar) as React.ComponentType<OwnProps>
 export { toolbar as Toolbar };
+
