@@ -177,13 +177,8 @@ function dialog<OP extends {}>(WrappedComponent: React.ComponentType<OP & Inject
 
         pressGlobal = (event: KeyboardEvent) => {
             const {globalHotkey} = this.props
-            const target = event.target as HTMLElement | null
 
-            if(!globalHotkey || !isKeyPressed(globalHotkey!, event) || !target)
-                return
-
-            const node = target.nodeName
-            if(node !== "INPUT" && node !== "TEXTAREA" && !target.hasAttribute("contenteditable"))
+            if(globalHotkey && isKeyPressed(globalHotkey!, event))
                 this.toggle()
         }
 
