@@ -1,20 +1,20 @@
 interface Modifiers {
-    alt: boolean
-    ctrl: boolean
-    shift: boolean
+    alt?: boolean
+    ctrl?: boolean
+    meta?: boolean
+    shift?: boolean
 }
 
 class Hotkey {
     readonly code: number
-    readonly alt: boolean
-    readonly ctrl: boolean
-    readonly shift: boolean
+    readonly alt = false
+    readonly ctrl = false
+    readonly meta = false
+    readonly shift = false
 
     constructor(code: number, mod?: Modifiers) {
         this.code = code
-        this.alt = (mod && mod.alt) || false
-        this.ctrl = (mod && mod.ctrl) || false
-        this.shift = (mod && mod.shift) || false
+        Object.assign(this, mod)
     }
 }
 
