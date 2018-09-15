@@ -1,3 +1,4 @@
+export { AddButton } from "./AddButton";
 export { Button } from "./Button";
 export { Checkbox } from "./Checkbox";
 export { default as CloseButton } from "./CloseButton";
@@ -8,7 +9,9 @@ export * from "./editor";
 export { default as Expire } from "./Expire";
 export { GlobalHotkey } from "./GlobalHotkey";
 export { Input } from "./Input";
+export { Line } from "./Line";
 export { Notification } from "./Notification";
+export { RemoveButton } from "./RemoveButton";
 export { default as SandwichButton } from "./SandwichButton";
 export * from "./select";
 export { Timer } from "./Timer";
