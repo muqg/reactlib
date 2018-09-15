@@ -4,10 +4,10 @@ import { isObject, isType } from "../assertions";
 /**
  * Determines whether a keyboard event corresponds to a key being pressed.
  * Keypress when user is typing input is always False.
- * @param key The key to be checked if pressed.
+ * @param hotkey Target hotkey data.
  * @param event The keyboard event.
  */
-function isKeyPressed(key: Hotkey, event: KeyboardEvent | React.KeyboardEvent): boolean {
+function isKeyPressed(hotkey: Hotkey, event: KeyboardEvent | React.KeyboardEvent): boolean {
     const target = event.target
     if(isObject(target, Element)) {
         const nodeName = target.nodeName.toLowerCase()
@@ -20,14 +20,14 @@ function isKeyPressed(key: Hotkey, event: KeyboardEvent | React.KeyboardEvent): 
 
     return (
         (
-            key.code && key.code === event.code ||
-            key.key && key.key === event.key ||
-            key.keyCode > 0 && key.keyCode === event.keyCode
+            hotkey.code && hotkey.code === event.code ||
+            hotkey.key && hotkey.key === event.key ||
+            hotkey.keyCode > 0 && hotkey.keyCode === event.keyCode
         ) &&
-        key.alt === event.altKey &&
-        key.ctrl === event.ctrlKey &&
-        key.meta === event.metaKey &&
-        key.shift === event.shiftKey
+        hotkey.alt === event.altKey &&
+        hotkey.ctrl === event.ctrlKey &&
+        hotkey.meta === event.metaKey &&
+        hotkey.shift === event.shiftKey
     )
 }
 
