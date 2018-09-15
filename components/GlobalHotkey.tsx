@@ -35,9 +35,7 @@ class GlobalHotkey extends React.Component<Props> {
     }
 
     render() {
-        if(this.props.children)
-            return this.props.children
-        return null
+        return this.props.children || null
     }
 }
 
