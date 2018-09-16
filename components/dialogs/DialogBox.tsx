@@ -1,7 +1,7 @@
 import * as React from "react";
 import { CloseButton } from "..";
-import { InjectedDialogProps } from "../../hoc";
 import { COLOR_BLACK, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_SECONDARY_LIGHT, styled } from "../../styles";
+import { Dialog, DialogProps } from "./Dialog";
 
 
 const Back = styled.div`
@@ -38,7 +38,7 @@ const Title = styled.p`
     }
 `
 
-export interface TemplateProps {
+export interface DialogBoxProps {
     children?: any
     /**
      * Dialog's title.
@@ -46,21 +46,24 @@ export interface TemplateProps {
     title?: string
 }
 
-
-const DialogTemplate = (props: TemplateProps & InjectedDialogProps) => {
+const DialogBox = (props: DialogBoxProps & DialogProps) => {
     return(
-        <>
-            <Back onClick={props.closeDialog} />
-            <Container>
-                <CloseButton onClick={props.closeDialog} size={22} />
-                <div>
-                    <Title>
-                        {props.title}
-                    </Title>
-                    {props.children}
-                </div>
-            </Container>
-        </>
+        <Dialog {...props}>
+            {(close, show) =>
+                <>
+                    <Back onClick={close} />
+                    <Container>
+                        <CloseButton onClick={show} size={22} />
+                        <div>
+                            <Title>
+                                {props.title}
+                            </Title>
+                            {props.children}
+                        </div>
+                    </Container>
+                </>
+            }
+        </Dialog>
     )
 }
 
@@ -68,4 +71,5 @@ const DialogTemplate = (props: TemplateProps & InjectedDialogProps) => {
 
 
 
-export { DialogTemplate };
+export { DialogBox };
+

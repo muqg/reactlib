@@ -1,10 +1,9 @@
 import * as React from "react";
 import { isUndefined } from "util";
-import { Button } from "..";
-import { dialog, InjectedDialogProps } from "../../hoc";
+import { Button, DialogProps } from "..";
 import { styled } from "../../styles";
 import { CHAR_CODE_ENTER } from "../../utility/dom";
-import { DialogTemplate, TemplateProps } from "./DialogTemplate";
+import { DialogBox, DialogBoxProps } from "./DialogBox";
 
 
 const ButtonsContainer = styled.div`
@@ -34,7 +33,7 @@ interface OwnProps {
      */
     textOkay?: string
 }
-type Props = OwnProps & InjectedDialogProps & TemplateProps
+type Props = OwnProps & DialogProps & DialogBoxProps
 
 
 const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}: Props) => {
@@ -44,24 +43,27 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
         const res = props.onAccept(container.current as HTMLDivElement)
         const success = !(isUndefined(res)) ? res : true
 
-        if(success)
-            props.closeDialog()
+        if(success && props.onClose)
+            props.onClose()
     }
 
     const reject = () => {
         if(props.onReject)
             props.onReject(container.current as HTMLDivElement)
-        props.closeDialog()
+        if(props.onClose)
+            props.onClose()
     }
 
-    const keyDown = (event: React.KeyboardEvent) => {
+    const keyDown: DialogProps["onKeyDown"] = (event, dialog) => {
         if(event.keyCode === CHAR_CODE_ENTER)
             accept()
+        if(props.onKeyDown)
+            props.onKeyDown(event, dialog)
     }
 
     return(
-        <DialogTemplate {...props}>
-            <div onKeyDown={keyDown}>
+        <DialogBox {...props} onKeyDown={keyDown} onClose={reject}>
+            <div>
                 <div ref={container}>
                     {props.children}
                 </div>
@@ -74,9 +76,9 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
                     </Button>
                 </ButtonsContainer>
             </div>
-        </DialogTemplate>
+        </DialogBox>
     )
 }
 
 
-export default dialog(ConfirmationDialog)
+export default ConfirmationDialog
