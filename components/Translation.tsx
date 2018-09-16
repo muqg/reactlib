@@ -6,10 +6,7 @@ import { format, plural } from "../utility/string";
 import { FormatArgument } from "../utility/string/format";
 
 
-const TranslatorContext = React.createContext({} as Dict<any>)
-
-TranslatorContext.Provider.displayName = "Translator"
-export const Translator = TranslatorContext.Provider
+export const Translation = React.createContext({} as Dict<any>)
 
 
 interface Props {
@@ -36,7 +33,7 @@ interface Props {
 
 
 export const Translate = ({args, count, value, middleware}: Props) => (
-    <TranslatorContext.Consumer>
+    <Translation.Consumer>
         {(source) => {
             let text = pull(value, source) || value
 
@@ -55,5 +52,5 @@ export const Translate = ({args, count, value, middleware}: Props) => (
 
             return middleware ? middleware(text) : text
         }}
-    </TranslatorContext.Consumer>
+    </Translation.Consumer>
 )
