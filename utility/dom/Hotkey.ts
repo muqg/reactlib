@@ -1,49 +1,38 @@
 import { clean } from "../collection";
 
-export interface HotkeyModifiers {
-    /**
-     * Whether alt key is presssed.
-     */
-    alt?: boolean
-    /**
-     * Whether ctrl key is presssed.
-     */
-    ctrl?: boolean
-    /**
-     * Whether system's meta key is presssed.
-     */
-    meta?: boolean
-    /**
-     * Whether shift key is presssed.
-     */
-    shift?: boolean
-}
-
-export interface HotkeyKey {
+export class Hotkey {
     /**
      * Code value of the key.
      */
-    code?: string
+    code? = ""
     /**
      * Key value of the key.
      */
-    eventKey?: string
+    eventKey? = ""
     /**
      * KeyCode value of the key.
      */
-    keyCode?: number
-}
+    keyCode? = 0
+    /**
+     * Whether alt modifier key is presssed.
+     */
+    alt? = false
+    /**
+     * Whether ctrl modifier key is presssed.
+     */
+    ctrl? = false
+    /**
+     * Whether system's meta modifier key is presssed.
+     */
+    meta? = false
+    /**
+     * Whether shift modifier key is presssed.
+     */
+    shift? = false
 
-export class Hotkey implements HotkeyModifiers, HotkeyKey {
-    code    = ""
-    eventKey     = ""
-    keyCode = 0
-    alt     = false
-    ctrl    = false
-    meta    = false
-    shift   = false
-
-    constructor(key?: HotkeyKey, mods?: HotkeyModifiers) {
-        Object.assign(this, clean({...key, ...mods}))
+    constructor(data?: Hotkey) {
+        if(data) {
+            Object.assign(this, clean(data))
+        }
     }
 }
