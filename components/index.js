@@ -15,4 +15,4 @@ export { RemoveButton } from "./RemoveButton";
 export { default as SandwichButton } from "./SandwichButton";
 export * from "./select";
 export { Timer } from "./Timer";
-export { Translate, Translator } from "./Translation";
+export { Translate, Translation } from "./Translation";
