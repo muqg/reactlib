@@ -9,21 +9,16 @@ import { FormatArgument } from "../utility/string/format";
 export const Translation = React.createContext({} as Dict<any>)
 
 
-interface Props {
+interface Props<T> {
     /**
      * Arguments to format the text with.
      */
     args?: Dict<FormatArgument> | FormatArgument[]
     /**
-     * Same as middleware prop, but passed as a child instead. This function
-     * takes has a higher priority if both are provided.
-     *
-     * ---
-     *
      * A function that may perform any final format on the text
      * or even wrap it inside JSX.
      */
-    children?: (text: string) => React.ReactNode
+    children?: (text: T) => React.ReactNode
     /**
      * The number to be used when pluralizing the text. Pluralization format
      * inside the text is singular|plural. It is performed after formatting,
@@ -31,18 +26,13 @@ interface Props {
      */
     count?: number
     /**
-     * A function that may perform any final format on the text
-     * or even wrap it inside JSX.
-     */
-    middleware?: (text: string) => React.ReactNode
-    /**
      * The key to retrieve text for.
      */
     value: string
 }
 
 
-export const Translate = ({args, children, count, value, middleware}: Props) => (
+export const Translate = <T extends any= string>({args, children, count, value}: Props<T>) => (
     <Translation.Consumer>
         {(source) => {
             let text = pull(value, source) || value
@@ -62,8 +52,6 @@ export const Translate = ({args, children, count, value, middleware}: Props) => 
 
             if(children)
                 return children(text)
-            if(middleware)
-                return middleware(text)
             return text
         }}
     </Translation.Consumer>
