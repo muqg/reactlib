@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Dict } from "../utility";
-import { isArray, isUndefined } from "../utility/assertions";
+import { isArray, isUndefined, isString } from "../utility/assertions";
 import { pull } from "../utility/collection";
 import { format, plural } from "../utility/string";
 import { FormatArgument } from "../utility/string/format";
@@ -35,24 +35,24 @@ interface Props<T> {
 export const Translate = <T extends any= string>({args, children, count, value}: Props<T>) => (
     <Translation.Consumer>
         {(source) => {
-            let text = pull(value, source) || value
+            let result = pull(value, source) || value
 
-            if(text === value)
+            if(result === value)
                 console.error("No translation value found for key: " + value)
 
-            if(args) {
-                if(isArray(args))
-                    text = format(text, ...args)
-                else
-                    text = format(text, args)
+            if(isString(result)) {
+                if(args) {
+                    if(isArray(args))
+                        result = format(result, ...args)
+                    else
+                        result = format(result, args)
+                }
+
+                if(!isUndefined(count))
+                    result = plural(result, count)
             }
 
-            if(!isUndefined(count))
-                text = plural(text, count)
-
-            if(children)
-                return children(text)
-            return text
+            return children ? children(result) : result
         }}
     </Translation.Consumer>
 )
