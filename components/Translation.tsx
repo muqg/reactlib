@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Dict } from "../utility";
-import { isArray } from "../utility/assertions";
+import { isArray, isUndefined } from "../utility/assertions";
 import { pull } from "../utility/collection";
 import { format, plural } from "../utility/string";
 import { FormatArgument } from "../utility/string/format";
@@ -47,7 +47,7 @@ export const Translate = <T extends any= string>({args, children, count, value}:
                     text = format(text, args)
             }
 
-            if(count)
+            if(!isUndefined(count))
                 text = plural(text, count)
 
             if(children)
