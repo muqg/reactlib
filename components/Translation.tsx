@@ -15,6 +15,16 @@ interface Props {
      */
     args?: Dict<FormatArgument> | FormatArgument[]
     /**
+     * Same as middleware prop, but passed as a child instead. This function
+     * takes has a higher priority if both are provided.
+     *
+     * ---
+     *
+     * A function that may perform any final format on the text
+     * or even wrap it inside JSX.
+     */
+    children?: (text: string) => React.ReactNode
+    /**
      * The number to be used when pluralizing the text. Pluralization format
      * inside the text is singular|plural. It is performed after formatting,
      * which allows for dynamic inclusion of pluralizable text.
@@ -24,7 +34,7 @@ interface Props {
      * A function that may perform any final format on the text
      * or even wrap it inside JSX.
      */
-    middleware?: (text: string) => string | JSX.Element
+    middleware?: (text: string) => React.ReactNode
     /**
      * The key to retrieve text for.
      */
@@ -32,7 +42,7 @@ interface Props {
 }
 
 
-export const Translate = ({args, count, value, middleware}: Props) => (
+export const Translate = ({args, children, count, value, middleware}: Props) => (
     <Translation.Consumer>
         {(source) => {
             let text = pull(value, source) || value
@@ -50,7 +60,11 @@ export const Translate = ({args, count, value, middleware}: Props) => (
             if(count)
                 text = plural(text, count)
 
-            return middleware ? middleware(text) : text
+            if(children)
+                return children(text)
+            if(middleware)
+                return middleware(text)
+            return text
         }}
     </Translation.Consumer>
 )
