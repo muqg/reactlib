@@ -50,23 +50,19 @@ const Button = styled.button`
 
     ${p => p.active && activeStyle}
 `
-Button.defaultProps = {
-    color: COLOR_PRIMARY_DARK,
-    size: 30
-}
 
 
 
 interface StyleProps {
-    color?: string
+    color: string
     /**
      * Sandwich button's size in pixels. This accounts for both width and height.
      */
-    size?: number
+    size: number
     /**
      * Whether it is initially active or not.
      */
-    active?: boolean
+    active: boolean
 }
 
 interface OwnProps {
@@ -84,8 +80,19 @@ type Props = OwnProps & StyleProps
 
 
 class SandwichButton extends React.PureComponent<Props, State> {
-    state = {
-        active: false
+    static defaultProps = {
+        active: false,
+        color: COLOR_PRIMARY_DARK,
+        size: 30
+    }
+
+    state: State = {
+        active: this.props.active
+    }
+
+    componentDidUpdate(prevProps: Props, prevState: State) {
+        if(this.props.active !== prevProps.active && this.props.active !== prevState.active)
+            this.setState({active: this.props.active})
     }
 
     handleClick = (event: React.MouseEvent<any>) => {
@@ -102,6 +109,7 @@ class SandwichButton extends React.PureComponent<Props, State> {
         return (
             <div className={this.props.className}>
                 <Button
+                    active={this.state.active}
                     color={this.props.color}
                     onClick={this.handleClick}
                     size={this.props.size}
