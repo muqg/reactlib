@@ -3,7 +3,7 @@ import { cast } from "../string";
 import { ParseableChange, parseElement } from "./parseElement";
 
 
-interface CreateModelOptions {
+export interface CreateModelOptions {
     /**
      * Whether to cast modelled value to its
      * respective primitive or leave it as is.
@@ -17,8 +17,14 @@ interface CreateModelOptions {
  *
  * @param component The component to model the state of.
  * @param key A nested state model key using "dot notation".
+ * @param options Model options.
  */
-function createModel(component: React.Component, key = "", options: CreateModelOptions = {cast: true}) {
+function createModel(component: React.Component, key = "", options: CreateModelOptions = {}) {
+    options = {
+        cast: true,
+        ...options
+    }
+
     return (change: ParseableChange, callback?: () => void | undefined) => {
         const parsed = parseElement(change)
 
