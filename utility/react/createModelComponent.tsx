@@ -28,7 +28,6 @@ function createModelComponent(component: React.Component, key = "", {model, ...o
         model = createModel(component, key, options)
 
     return function Model(props: Props) {
-        console.log(key ? `${key}.${props.name}` : props.name, component.state, props.name)
         return React.cloneElement(props.children, {
             name: props.name,
             onChange: model,
