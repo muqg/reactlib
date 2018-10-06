@@ -13,7 +13,7 @@ interface OwnProps {
     /**
      * Handler for when the key is pressed.
      */
-    handler: (event: KeyboardEvent) => void
+    handler: (event?: KeyboardEvent) => void
 }
 
 type Props = OwnProps & Hotkey
