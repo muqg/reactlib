@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Dict } from "..";
-import { isString } from "../assertions";
-import { createModel, CreateModelOptions } from "../dom/createModel";
+import { pull } from "../collection";
+import { createModel } from "../dom/createModel";
 
 
 interface Props {
@@ -12,6 +11,11 @@ interface Props {
     name: string
 }
 
+interface CreateModelComponentOptions {
+    model?: ReturnType<typeof createModel>
+}
+
+
 /**
  *
  * @param component The component to model the state of.
@@ -19,16 +23,16 @@ interface Props {
  * of a model function.
  * @param options Model options.
  */
-function createModelComponent(component: React.Component, key: string | ReturnType<typeof createModel> = "", options: CreateModelOptions = {}): React.SFC<Props> {
-    const model = isString(key) ? createModel(component, key, options) : key
+function createModelComponent(component: React.Component, key = "", {model, ...options}: CreateModelComponentOptions = {}): React.SFC<Props> {
+    if(!model)
+        model = createModel(component, key, options)
 
     return function Model(props: Props) {
-        const state = component.state as Dict<any>
-
+        console.log(key ? `${key}.${props.name}` : props.name, component.state, props.name)
         return React.cloneElement(props.children, {
             name: props.name,
             onChange: model,
-            value: state[props.name]
+            value: pull(key ? `${key}.${props.name}` : props.name, component.state)
         })
     }
 }
