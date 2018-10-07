@@ -1,18 +1,25 @@
 import * as React from "react";
+import { isFunction } from "../assertions";
 import { pull } from "../collection";
 import { createModel } from "../dom/createModel";
 
 
 interface Props {
-    children: JSX.Element
+    children: JSX.Element | ((props: InjectedModelProps) => JSX.Element)
     /**
      * The name of the key within the modelled state.
      */
-    name: string
+    name?: string
 }
 
 interface CreateModelComponentOptions {
     model?: ReturnType<typeof createModel>
+}
+
+interface InjectedModelProps {
+    name: string
+    onChange: ReturnType<typeof createModel>
+    value: string | number | boolean
 }
 
 
@@ -27,12 +34,16 @@ function createModelComponent(component: React.Component, key = "", {model, ...o
     if(!model)
         model = createModel(component, key, options)
 
-    return function Model(props: Props) {
-        return React.cloneElement(props.children, {
-            name: props.name,
-            onChange: model,
-            value: pull(key ? `${key}.${props.name}` : props.name, component.state)
-        })
+    return function Model({name = "", ...props}: Props) {
+        const injectedProps: InjectedModelProps = {
+            name,
+            onChange: model!,
+            value: name ? pull(key ? `${key}.${name}` : name, component.state) : ""
+        }
+
+        if(isFunction<(props: InjectedModelProps) => JSX.Element>(props.children))
+            return props.children(injectedProps)
+        return React.cloneElement(props.children, injectedProps)
     }
 }
 
