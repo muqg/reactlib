@@ -24,10 +24,10 @@ interface InjectedModelProps {
 
 
 /**
- *
+ * Creates a higher-order component that injects modelling props to its child
+ * component and thus models its changes to a state key.
  * @param component The component to model the state of.
- * @param key A nested state model key using "dot notation" or an existing instance
- * of a model function.
+ * @param key A nested state key using "dot notation".
  * @param options Model options.
  */
 function createModelComponent(component: React.Component, key = "", {model, ...options}: CreateModelComponentOptions = {}): React.SFC<Props> {
