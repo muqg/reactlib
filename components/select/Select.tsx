@@ -73,7 +73,7 @@ class Select extends React.Component<Props, State> {
     state: State = {
         isActive: false
     }
-    container = React.createRef<HTMLDivElement>()
+    container = React.createRef<any>()
 
     componentDidMount() {
         if(!this.props.multiple) {
@@ -125,7 +125,7 @@ class Select extends React.Component<Props, State> {
             <Container
                 data-name={this.props.name}
                 className={classes}
-                innerRef={this.container}
+                ref={this.container}
                 onChange={this.props.onChange}
 
                 active={this.state.isActive}

@@ -98,7 +98,7 @@ class Dialog extends React.PureComponent<Props, State> {
     state: State = {
         isVisible: false
     }
-    dialog = React.createRef<HTMLDivElement>()
+    dialog = React.createRef<any>()
 
     async componentDidUpdate(prevProps: DialogProps, prevState: State) {
         const stateVisible = this.state.isVisible
@@ -152,7 +152,7 @@ class Dialog extends React.PureComponent<Props, State> {
         return (
             <Container
                 className={this.props.className}
-                innerRef={this.dialog}
+                ref={this.dialog}
                 onKeyDown={this.keyDown}
                 tabIndex={-1}
                 visible={this.state.isVisible}

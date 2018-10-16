@@ -34,7 +34,6 @@ type Props = OwnProps & DispatchProps
 // TODO: Lib | OutsideAlerter for Toolbar.
 class EditableContainer extends React.PureComponent<Props, State> {
     state = {}
-    container = React.createRef<HTMLDivElement>()
 
     handleChange = (event: React.SyntheticEvent<HTMLDivElement>) => {
         Editor.saveSelection()
@@ -54,7 +53,6 @@ class EditableContainer extends React.PureComponent<Props, State> {
         return (
             <Container
                 className={this.props.className}
-                innerRef={this.container}
                 contentEditable
 
                 onBlur={this.handleChange}

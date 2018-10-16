@@ -5,9 +5,9 @@ import { ThemeInterface } from './theme';
 const {
   default: styled,
   css,
-  injectGlobal,
+  createGlobalStyle,
   keyframes,
   ThemeProvider
 } = styledComponents as ThemedStyledComponentsModule<ThemeInterface>
 
-export { styled, css, injectGlobal, keyframes, ThemeProvider };
+export { styled, css, createGlobalStyle, keyframes, ThemeProvider };
