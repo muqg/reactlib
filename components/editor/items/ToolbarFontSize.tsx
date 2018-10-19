@@ -1,8 +1,18 @@
 
-import * as React from "react"
-import {ToolbarItem} from "../ToolbarItem";
+import * as React from "react";
+import { COLOR_PRIMARY_LIGHT, COLOR_WHITE, styled } from "../../../styles";
 import { Editor } from "../../../utility/dom";
 import { asInt } from "../../../utility/string";
+import { ToolbarItem } from "../ToolbarItem";
+
+
+const StyledSelect = styled.select`
+    background: ${COLOR_WHITE};
+    border: 1px solid ${COLOR_PRIMARY_LIGHT};
+    min-width: auto;
+    max-width: 120px;
+    padding: 2px;
+`
 
 
 interface Props {
@@ -12,7 +22,7 @@ interface Props {
 const ToolbarFontSize = (_props: Props) => {
     return(
         <ToolbarItem className="input" title="Font size" animateHover={false}>
-            <select name="tb_font_size" onChange={e => setSize(e.target)} onContextMenu={onRightClick}>
+            <StyledSelect name="tb_font_size" onChange={e => setSize(e.target)} onContextMenu={onRightClick}>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3" selected>3</option>
@@ -20,7 +30,7 @@ const ToolbarFontSize = (_props: Props) => {
                 <option value="5">5</option>
                 <option value="6">6</option>
                 <option value="7">7</option>
-            </select>
+            </StyledSelect>
         </ToolbarItem>
     )
 }
@@ -35,4 +45,5 @@ function setSize(select: HTMLSelectElement) {
 }
 
 
-export {ToolbarFontSize}
+export { ToolbarFontSize };
+

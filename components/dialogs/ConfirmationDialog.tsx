@@ -13,7 +13,7 @@ const ButtonsContainer = styled.div`
 
 
 interface OwnProps {
-    children?: any
+    children?: React.ReactNode
     /**
      * Called when dialog resolves successfully. May optionally return a boolean
      * to indicate whether the acception was successful.
@@ -33,7 +33,7 @@ interface OwnProps {
      */
     textOkay?: string
 }
-type Props = OwnProps & DialogProps & DialogBoxProps
+type Props = OwnProps & DialogProps & Pick<DialogBoxProps, Exclude<keyof DialogBoxProps, "children">>
 
 
 const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}: Props) => {
@@ -63,19 +63,23 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
 
     return(
         <DialogBox {...props} onKeyDown={keyDown} onClose={reject}>
-            <div>
-                <div ref={container}>
-                    {props.children}
-                </div>
-                <ButtonsContainer>
-                    <Button onClick={accept} margin={"0 6px"}>
-                        {textOkay}
-                    </Button>
-                    <Button onClick={reject} margin={"0 6px"}>
-                        {textCancel}
-                    </Button>
-                </ButtonsContainer>
-            </div>
+            {(close) => {
+                return (
+                    <div>
+                        <div ref={container}>
+                            {props.children}
+                        </div>
+                        <ButtonsContainer>
+                            <Button onClick={() => { accept(); close(); }} margin={"0 6px"}>
+                                {textOkay}
+                            </Button>
+                            <Button onClick={() => { reject(); close(); }} margin={"0 6px"}>
+                                {textCancel}
+                            </Button>
+                        </ButtonsContainer>
+                    </div>
+                )
+            }}
         </DialogBox>
     )
 }

@@ -39,7 +39,7 @@ const Title = styled.p`
 `
 
 export interface DialogBoxProps {
-    children?: any
+    children?: Dialog["props"]["children"]
     /**
      * Dialog's title.
      */
@@ -53,12 +53,12 @@ const DialogBox = (props: DialogBoxProps & DialogProps) => {
                 <>
                     <Back onClick={close} />
                     <Container>
-                        <CloseButton onClick={show} size={22} />
+                        <CloseButton onClick={close} size={22} />
                         <div>
                             <Title>
                                 {props.title}
                             </Title>
-                            {props.children}
+                            {props.children && props.children(close, show)}
                         </div>
                     </Container>
                 </>
