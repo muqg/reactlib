@@ -15,7 +15,7 @@ interface LoadableState {
  */
 function loadable(loader: () => Promise<any>, loadingComponent?: LoadableState["component"]) {
 
-    return class LoadableComponent extends React.PureComponent {
+    return class LoadableComponent extends React.Component {
         static displayName: string
 
         state: LoadableState = {
