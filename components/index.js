@@ -9,6 +9,7 @@ export { DocumentTitle } from "./DocumentTitle";
 export * from "./editor";
 export { default as Expire } from "./Expire";
 export { GlobalHotkey } from "./GlobalHotkey";
+export { ImageView } from "./ImageView";
 export { Input } from "./Input";
 export { Line } from "./Line";
 export { Notification } from "./Notification";
@@ -17,3 +18,4 @@ export { default as SandwichButton } from "./SandwichButton";
 export * from "./select";
 export { Timer } from "./Timer";
 export { Translate, Translation } from "./Translation";
+
