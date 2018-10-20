@@ -35,6 +35,11 @@ function parseElement(change: ParseableChange) {
             .filter(o => o.selected)
             .map(o => o.value).join(",")
     }
+    // Temporary compatibility fix for contenteditable divs.
+    else if(element.hasAttribute("contenteditable")) {
+        name = element.getAttribute("name") || ""
+        value = element.innerHTML
+    }
 
     return { name, value }
 }
