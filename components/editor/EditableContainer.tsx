@@ -1,9 +1,5 @@
 import * as React from "react";
-// @ts-ignore
-import { connect } from "react-redux";
-import { setToolbarVisibility } from "../../actions";
 import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
-import { isUndefined } from "../../utility/assertions";
 import { CHAR_CODE_ENTER, Editor, isKeyPressed } from "../../utility/dom";
 
 
@@ -16,12 +12,7 @@ const Container = styled.div`
     padding: 5px;
 `
 
-
-interface DispatchProps {
-    setToolbarVisibility: (isVisible: boolean) => void
-}
-
-interface OwnProps {
+interface Props {
     className?: string
     content?: string
     contentChange?: (name: string, content: string) => void
@@ -34,18 +25,13 @@ interface State {
     content?: Props["content"]
 }
 
-type Props = OwnProps & DispatchProps
 
-
-// TODO: Lib | OutsideAlerter for Toolbar.
 class EditableContainer extends React.PureComponent<Props, State> {
     state: State = {}
     container = React.createRef<any>()
 
-    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-        if(isUndefined(prevState.content))
-            return {content: nextProps.content}
-        return prevState
+    componentDidMount() {
+        this.setState({content: this.props.content})
     }
 
     handleChange = () => {
@@ -80,6 +66,7 @@ class EditableContainer extends React.PureComponent<Props, State> {
                 onPaste={this.handlePaste}
 
                 ref={this.container}
+                spellCheck={false}
 
                 dangerouslySetInnerHTML={{__html: this.state.content || ""}}
             />
@@ -88,12 +75,5 @@ class EditableContainer extends React.PureComponent<Props, State> {
 }
 
 
-const mapDispatchToProps = (dispatch: any): DispatchProps => {
-    return {
-        setToolbarVisibility: (isVisible: boolean) => dispatch(setToolbarVisibility(isVisible))
-    }
-}
-
-const container = connect(null, mapDispatchToProps)(EditableContainer) as React.ComponentType<OwnProps>
-export { container as EditableContainer };
+export { EditableContainer };
 
