@@ -1,8 +1,4 @@
 import * as React from "react";
-// @ts-ignore
-import { connect } from "react-redux";
-import { ReduxFactory } from "../../main";
-import { toolbarReducer } from "../../reducers";
 import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
 
 
@@ -35,11 +31,7 @@ const ToolbarContainer = styled.div`
 `
 
 
-interface StateProps {
-    isVisible: boolean
-}
-
-interface OwnProps {
+interface Props {
     children?: any
     /**
      * Custom font names to add as options.
@@ -58,8 +50,6 @@ interface OwnProps {
 
 interface State {
 }
-
-type Props = OwnProps & StateProps
 
 
 class Toolbar extends React.Component<Props, State> {
@@ -80,17 +70,5 @@ class Toolbar extends React.Component<Props, State> {
     }
 }
 
-
-const mapStateToProps = (state: any): StateProps => {
-    return {
-        isVisible: state.lubToolbar
-    }
-}
-
-
-ReduxFactory.addToState({lubToolbar: false})
-ReduxFactory.addReducers({lubToolbar: toolbarReducer})
-
-const toolbar = connect(mapStateToProps, null)(Toolbar) as React.ComponentType<OwnProps>
-export { toolbar as Toolbar };
+export { Toolbar };
 
