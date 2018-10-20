@@ -3,7 +3,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { setToolbarVisibility } from "../../actions";
 import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
-import { Editor } from "../../utility/dom";
+import { CHAR_CODE_ENTER, Editor, isKeyPressed } from "../../utility/dom";
 
 
 const Container = styled.div`
@@ -21,8 +21,10 @@ interface DispatchProps {
 
 interface OwnProps {
     className?: string
+    name?: string
     onChange?: (event: React.SyntheticEvent<HTMLDivElement>) => void
-    content?: string
+    preventNewline?: boolean
+    value?: string
 }
 
 interface State {
@@ -49,17 +51,25 @@ class EditableContainer extends React.PureComponent<Props, State> {
         Editor.insertHTML(text)
     }
 
+    preventNewline = (event: React.KeyboardEvent) => {
+        if(isKeyPressed({keyCode: CHAR_CODE_ENTER}, event, true))
+            event.preventDefault()
+    }
+
     render() {
         return (
             <Container
                 className={this.props.className}
                 contentEditable
+                // @ts-ignore Make component completely compatible with model functions
+                name={this.props.name}
 
                 onBlur={this.handleChange}
+                onKeyPress={this.props.preventNewline ? this.preventNewline : undefined}
                 onInput={this.handleChange}
                 onPaste={this.handlePaste}
 
-                dangerouslySetInnerHTML={{__html: this.props.content || ""}}
+                dangerouslySetInnerHTML={{__html: this.props.value || ""}}
             />
         )
     }
@@ -74,3 +84,4 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => {
 
 const container = connect(null, mapDispatchToProps)(EditableContainer) as React.ComponentType<OwnProps>
 export { container as EditableContainer };
+
