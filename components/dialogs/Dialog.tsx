@@ -1,11 +1,10 @@
-import * as React from "react"
-import { Hotkey, CHAR_CODE_ESCAPE, isKeyPressed } from "../../utility/dom";
+import * as React from "react";
+import { createPortal } from "react-dom";
 import styled, { css } from "styled-components";
+import { isUndefined } from "util";
 import { COLOR_TRANSPARENT } from "../../styles";
 import { wait } from "../../utility";
-import { isUndefined } from "util";
-import { createPortal } from "react-dom";
-import { CONTENT_CONTAINER_ELEMENT } from "../../main";
+import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
@@ -159,7 +158,9 @@ class Dialog extends React.PureComponent<Props, State> {
                 tabIndex={-1}
                 visible={this.state.isVisible}
             >
-                {this.props.children(() => this.toggle(false), () => this.toggle(true))}
+                {this.state.isVisible &&
+                    this.props.children(() => this.toggle(false), () => this.toggle(true))
+                }
             </Container>,
             document.body
         )
@@ -167,4 +168,5 @@ class Dialog extends React.PureComponent<Props, State> {
 }
 
 
-export { Dialog }
+export { Dialog };
+
