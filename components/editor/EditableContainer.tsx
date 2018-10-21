@@ -28,19 +28,20 @@ interface Props {
 
 interface State {
     content?: Props["content"]
+    delay?: boolean
 }
 
 
-class EditableContainer extends React.PureComponent<Props, State> {
+class EditableContainer extends React.Component<Props, State> {
     state: State = {
-        content: this.props.content
+        content: this.props.content,
+        delay: this.props.delayedContent
     }
     container = React.createRef<any>()
 
-    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-        if(!prevState.content && nextProps.content && nextProps.delayedContent)
-            return {content: nextProps.content}
-        return prevState
+    componentDidUpdate() {
+        if(!this.state.content && this.state.delay)
+            this.setState({content: this.props.content, delay: false})
     }
 
     handleChange = () => {
