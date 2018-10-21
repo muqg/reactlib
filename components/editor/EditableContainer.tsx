@@ -16,6 +16,11 @@ interface Props {
     className?: string
     content?: string
     contentChange?: (name: string, content: string) => void
+    /**
+     * Indicates whether content is expected to be delayed
+     * e.g. awaiting an API call and a state update.
+     */
+    delayedContent?: boolean
     name?: string
     preventNewline?: boolean
     ref?: React.Ref<any>
@@ -27,11 +32,15 @@ interface State {
 
 
 class EditableContainer extends React.PureComponent<Props, State> {
-    state: State = {}
+    state: State = {
+        content: this.props.content
+    }
     container = React.createRef<any>()
 
-    componentDidMount() {
-        this.setState({content: this.props.content})
+    static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+        if(!prevState.content && nextProps.content && nextProps.delayedContent)
+            return {content: nextProps.content}
+        return prevState
     }
 
     handleChange = () => {
