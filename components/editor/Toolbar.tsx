@@ -1,4 +1,5 @@
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
 
 
@@ -56,7 +57,7 @@ class Toolbar extends React.Component<Props, State> {
     state = {}
 
     render() {
-        return (
+        return createPortal(
             <ToolbarWrapper>
                 <div>
                     <ToolbarContainer>
@@ -65,7 +66,9 @@ class Toolbar extends React.Component<Props, State> {
 
                     </ToolbarContainer>
                 </div>
-            </ToolbarWrapper>
+            </ToolbarWrapper>,
+
+            document.body
         )
     }
 }
