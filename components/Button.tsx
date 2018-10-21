@@ -6,9 +6,9 @@ const Button = styled.button`
 	border-radius: 3px;
 	color: ${p => p.color};
     cursor: pointer;
+    display: inline-block;
 	font-weight: bold;
     margin: ${p => p.margin};
-    min-height: 28px;
 	padding: 6px 12px;
 	transition: .1s;
 	transition-property: background, color, transform;
