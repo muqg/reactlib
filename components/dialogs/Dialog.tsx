@@ -88,7 +88,7 @@ export interface DialogProps {
 }
 
 interface State {
-    isVisible: boolean
+    isVisible?: boolean
 }
 
 type Props = OwnProps & DialogProps
@@ -96,7 +96,7 @@ type Props = OwnProps & DialogProps
 
 class Dialog extends React.PureComponent<Props, State> {
     state: State = {
-        isVisible: false
+        isVisible: this.props.isVisible
     }
     dialog = React.createRef<any>()
 
