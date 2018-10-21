@@ -5,7 +5,7 @@ import CloseButton from "./CloseButton";
 import { DialogProps } from "./dialogs/Dialog";
 
 const StyledDialog = styled(Dialog)`
-    padding: 10% 0;
+    padding: 0;
     transition: none;
 `
 const Image = styled.img`
