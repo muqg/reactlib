@@ -1,7 +1,5 @@
 import * as React from "react";
-import { createPortal } from "react-dom";
 import { Input } from "../..";
-import { CONTENT_CONTAINER_ELEMENT } from "../../../main";
 import { styled } from "../../../styles";
 import { Editor } from "../../../utility/dom";
 import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
@@ -62,20 +60,16 @@ class ToolbarLink extends React.PureComponent<Props, State> {
                 onClick={() => this.toggleDialog(true)}
                 backgroundImage={TOOLBAR_SPRITESHEET}
             >
-                {createPortal(
-                    <ConfirmationDialog
-                        className="tb_link"
-                        isVisible={this.state.isDialogVisible}
-                        onShow={d => this.onShow(d)}
-                        onAccept={e => this.accept(e)}
-                        visibilityChange={this.toggleDialog}
-                        title="Въведи линк:"
-                    >
-                        <Input placeholder="https://example.com" width="100%" />
-                    </ConfirmationDialog>,
-
-                    CONTENT_CONTAINER_ELEMENT
-                )}
+                <ConfirmationDialog
+                    className="tb_link"
+                    isVisible={this.state.isDialogVisible}
+                    onShow={d => this.onShow(d)}
+                    onAccept={e => this.accept(e)}
+                    visibilityChange={this.toggleDialog}
+                    title="Въведи линк:"
+                >
+                    <Input placeholder="https://example.com" width="100%" />
+                </ConfirmationDialog>
             </StyledToolbarItem>
         )
     }
@@ -83,3 +77,4 @@ class ToolbarLink extends React.PureComponent<Props, State> {
 
 
 export { ToolbarLink };
+

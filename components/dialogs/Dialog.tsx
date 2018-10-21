@@ -4,6 +4,8 @@ import styled, { css } from "styled-components";
 import { COLOR_TRANSPARENT } from "../../styles";
 import { wait } from "../../utility";
 import { isUndefined } from "util";
+import { createPortal } from "react-dom";
+import { CONTENT_CONTAINER_ELEMENT } from "../../main";
 
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
@@ -149,7 +151,7 @@ class Dialog extends React.PureComponent<Props, State> {
     }
 
     render() {
-        return (
+        return createPortal(
             <Container
                 className={this.props.className}
                 ref={this.dialog}
@@ -158,7 +160,8 @@ class Dialog extends React.PureComponent<Props, State> {
                 visible={this.state.isVisible}
             >
                 {this.props.children(() => this.toggle(false), () => this.toggle(true))}
-            </Container>
+            </Container>,
+            document.body
         )
     }
 }
