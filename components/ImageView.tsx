@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Dialog } from ".";
+import { AspectImage, Dialog } from ".";
 import { COLOR_BLACK, COLOR_WHITE, styled } from "../styles";
 import CloseButton from "./CloseButton";
 import { DialogProps } from "./dialogs/Dialog";
@@ -7,12 +7,6 @@ import { DialogProps } from "./dialogs/Dialog";
 const StyledDialog = styled(Dialog)`
     padding: 0;
     transition: none;
-`
-const Image = styled.img`
-    height: auto;
-    max-height: 100%;
-    max-width: 100%;
-    width: auto;
 `
 const Back = styled.div`
     background: ${COLOR_BLACK};
@@ -47,7 +41,11 @@ const ImageView = (props: Props) => {
                 <>
                     <Back onClick={close} />
                     <CloseButton color={COLOR_WHITE} onClick={close} />
-                    <Image src={props.src} onClick={props.closeOnClick ? close : undefined} />
+                    <AspectImage
+                        onClick={props.closeOnClick ? close : undefined}
+                        size="100%"
+                        src={props.src}
+                    />
                 </>
             )}
         </StyledDialog>

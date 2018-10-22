@@ -16,6 +16,7 @@ export { Notification } from "./Notification";
 export { RemoveButton } from "./RemoveButton";
 export { default as SandwichButton } from "./SandwichButton";
 export * from "./select";
+export { AspectImage } from "./styled/AspectImage";
 export { Timer } from "./Timer";
 export { Translate, Translation } from "./Translation";
 
