@@ -2,6 +2,7 @@ import * as React from "react";
 import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../styles";
 import { wait } from "../utility";
 import { padStart } from "../utility/string";
+import { createPortal } from "react-dom";
 
 
 const Container = styled.div`
@@ -92,7 +93,7 @@ class Timer extends React.PureComponent<Props, State> {
     render() {
         const {seconds, minutes} = this.state
 
-        return (
+        return createPortal(
             <Container>
                 <Timepiece>
                     {padStart(minutes.toString(), 2)}
@@ -100,7 +101,9 @@ class Timer extends React.PureComponent<Props, State> {
                 <Timepiece>
                     {padStart(seconds.toString(), 2)}
                 </Timepiece>
-            </Container>
+            </Container>,
+
+            document.body
         )
     }
 }
