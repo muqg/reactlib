@@ -71,6 +71,12 @@ function model<OP extends {}, MD extends object = ModelData>(
         baseData = {} as ModelData
         _changed = false
 
+        constructor(public props: OP) {
+            super(props)
+
+            console.warn("model HOC is deprecated. Use createModel and createModelComponent functions instead.")
+        }
+
         componentDidUpdate() {
             this._changed = false
         }
