@@ -1,8 +1,7 @@
 import * as React from "react";
 import { COLOR_BLACK, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
 import { delay } from "../../utility";
-import { Notify, NotificationContext } from "./contexts";
-import { withNotify } from "./withNotify";
+import { NotificationContext } from "./contexts";
 
 
 const NOTIFICATION_DURATION = 2_000
@@ -34,15 +33,13 @@ interface StyleProps {
     active: boolean
 }
 
-interface OwnProps {
+interface Props {
     message: string
 }
 
 interface State {
     isActive: boolean
 }
-
-type Props = OwnProps & {notify: Notify}
 
 class Notification extends React.PureComponent<Props, State> {
     state: State = {
