@@ -1,7 +1,7 @@
 import * as React from "react";
 import { COLOR_BLACK, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
 import { delay } from "../../utility";
-import { Notify } from "./contexts";
+import { Notify, NotificationContext } from "./contexts";
 import { withNotify } from "./withNotify";
 
 
@@ -48,6 +48,8 @@ class Notification extends React.PureComponent<Props, State> {
     state: State = {
         isActive: false
     }
+    static contextType = NotificationContext
+    notify = this.context
 
     componentDidUpdate(prevProps: Props) {
         if(prevProps.message === this.props.message)
@@ -63,7 +65,7 @@ class Notification extends React.PureComponent<Props, State> {
     }
 
     hide = delay(() => {
-        this.props.notify("")
+        this.notify("")
     }, NOTIFICATION_DURATION)
 
     render() {
@@ -75,6 +77,5 @@ class Notification extends React.PureComponent<Props, State> {
     }
 }
 
-const notif = withNotify<OwnProps>(Notification)
-export { notif as Notification };
+export { Notification };
 
