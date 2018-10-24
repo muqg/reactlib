@@ -16,11 +16,6 @@ interface Props {
     className?: string
     content?: string
     contentChange?: (name: string, content: string) => void
-    /**
-     * Indicates whether content is expected to be delayed
-     * e.g. awaiting an API call and a state update.
-     */
-    delayedContent?: boolean
     name?: string
     preventNewline?: boolean
     ref?: React.Ref<any>
@@ -28,21 +23,14 @@ interface Props {
 
 interface State {
     content?: Props["content"]
-    delay?: boolean
 }
 
 
 class EditableContainer extends React.Component<Props, State> {
     state: State = {
         content: this.props.content,
-        delay: this.props.delayedContent
     }
     container = React.createRef<any>()
-
-    componentDidUpdate() {
-        if(!this.state.content && this.state.delay)
-            this.setState({content: this.props.content, delay: false})
-    }
 
     handleChange = () => {
         Editor.saveSelection()
