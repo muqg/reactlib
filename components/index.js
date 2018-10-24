@@ -12,7 +12,7 @@ export { GlobalHotkey } from "./GlobalHotkey";
 export { ImageView } from "./ImageView";
 export { Input } from "./Input";
 export { Line } from "./Line";
-export { Notification } from "./Notification";
+export * from "./notificaton";
 export { RemoveButton } from "./RemoveButton";
 export { default as SandwichButton } from "./SandwichButton";
 export * from "./select";
