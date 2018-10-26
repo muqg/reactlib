@@ -17,6 +17,7 @@ export { RemoveButton } from "./RemoveButton";
 export { default as SandwichButton } from "./SandwichButton";
 export * from "./select";
 export { AspectImage } from "./styled/AspectImage";
+export * from "./tabs";
 export { Timer } from "./Timer";
 export { Translate, Translation } from "./Translation";
 
