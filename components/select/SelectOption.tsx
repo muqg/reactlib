@@ -1,7 +1,7 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
 import { COLOR_PRIMARY_LIGHT, COLOR_SECONDARY_LIGHT, css, styled } from "../../styles";
-import { positionMixin, truncateMixin } from "../../styles/mixins";
+import { position, truncate } from "../../styles/mixins";
 import { isObject } from "../../utility/assertions";
 
 
@@ -13,7 +13,7 @@ const Container = styled.label`
     line-height: ${(p: StyleProps) => p.height}px;
     margin: 0;
     padding: 0 3px;
-    ${positionMixin("relative")}
+    ${position("relative")}
     transition: background .3s ease;
 
     ${p => p.active && css`
@@ -30,7 +30,7 @@ const Container = styled.label`
 const contentCommon = css`
     display: block;
     width: 100%;
-    ${positionMixin("relative", "0", null, null, "0")}
+    ${position("relative", "0", "", "", "0")}
 
     &:hover {
         background: ${COLOR_SECONDARY_LIGHT}
@@ -40,7 +40,7 @@ const Content = styled.div`
     box-sizing: border-box;
     display: ${(p: StyleProps) => (p.active || p.multiple) ? "block" : "none"};
     height: 100%;
-    ${truncateMixin()}
+    ${truncate()}
 
     input:checked ~ & {
         ${p => !p.active && contentCommon}

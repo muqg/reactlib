@@ -1,6 +1,6 @@
 import * as React from "react";
 import { COLOR_BLACK, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
-import { positionMixin } from "../../styles/mixins";
+import { position } from "../../styles/mixins";
 import { delay } from "../../utility";
 import { NotificationContext } from "./contexts";
 
@@ -21,7 +21,7 @@ const Container = styled.div`
     transition: transform .3s;
     width: 250px;
     z-index: 250;
-    ${positionMixin("fixed", "", "", "12px", "50%")}
+    ${position("fixed", "", "", "12px", "50%")}
 
     ${(p: StyleProps) => p.active && css`
         transform: translateX(-50%);

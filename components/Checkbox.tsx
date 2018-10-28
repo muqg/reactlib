@@ -1,6 +1,6 @@
 import * as React from "react";
 import { COLOR_GREEN, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_WHITE, css, styled } from "../styles";
-import { positionMixin } from "../styles/mixins";
+import { position } from "../styles/mixins";
 
 const BORDER_RADIUS_VALUE = "3px"
 
@@ -25,7 +25,7 @@ const Background = styled.span`
     transition-duration: .25s;
     transition-property: background, opacity;
     width: 100%;
-    ${positionMixin("relative")}
+    ${position("relative")}
 
     &:after {
         background: ${COLOR_WHITE};
@@ -35,7 +35,7 @@ const Background = styled.span`
         transition: .2s;
         transition-property: left, width;
         width: 17px;
-        ${positionMixin("absolute", "0", null, null, "0")}
+        ${position("absolute", "0", "", "", "0")}
     }
 
     ${(p: StyleProps) =>

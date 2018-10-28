@@ -1,7 +1,7 @@
 import * as React from "react";
 import { AspectImage, Dialog } from ".";
 import { COLOR_BLACK, COLOR_WHITE, styled } from "../styles";
-import { positionMixin } from "../styles/mixins";
+import { position } from "../styles/mixins";
 import CloseButton from "./CloseButton";
 import { DialogProps } from "./dialogs/Dialog";
 
@@ -15,7 +15,7 @@ const Back = styled.div`
     opacity: .75;
     width: 100%;
     z-index: -1;
-    ${positionMixin("absolute", "0", null, null, "0")}
+    ${position("absolute", "0", "", "", "0")}
 `
 
 interface Props {

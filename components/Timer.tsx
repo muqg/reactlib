@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../styles";
-import { positionMixin } from "../styles/mixins";
+import { position } from "../styles/mixins";
 import { wait } from "../utility";
 import { padStart } from "../utility/string";
 
@@ -12,7 +12,7 @@ const Container = styled.div`
     box-shadow: 0 2px 3px ${COLOR_PRIMARY_DARK};
     display: flex;
     transform: translateX(-50%);
-    ${positionMixin("fixed", "0", null, null, "50%")}
+    ${position("fixed", "0", "", "", "50%")}
 `
 const Timepiece = styled.div`
     font-size: 1.2em;

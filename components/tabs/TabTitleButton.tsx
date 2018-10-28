@@ -1,13 +1,13 @@
 import * as React from "react";
 import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
-import { truncateMixin } from "../../styles/mixins";
+import { truncate } from "../../styles/mixins";
 
 
 const StyledButton = styled.button`
     border: 1px solid ${COLOR_PRIMARY_LIGHT};
     box-sizing: border-box;
     padding: 4px;
-    ${truncateMixin("150px")}
+    ${truncate("150px")}
 
     &:not(:first-child) {
         border-left: none;

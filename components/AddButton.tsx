@@ -1,5 +1,5 @@
 import { COLOR_DARK_GREEN, COLOR_GREEN, COLOR_WHITE, styled } from "../styles";
-import { positionMixin } from "../styles/mixins";
+import { position } from "../styles/mixins";
 
 const AddButton = styled.button`
     ${(_p: StyleProps) => ''}
@@ -10,7 +10,7 @@ const AddButton = styled.button`
     cursor: pointer;
     height: ${p => p.size}px;
     width: ${p => p.size}px;
-    ${positionMixin("relative")}
+    ${position("relative")}
 
     &:hover {
         background: ${COLOR_DARK_GREEN}
@@ -23,7 +23,7 @@ const AddButton = styled.button`
         height: 2px;
         transform: translate(-50%);
         width: calc(${p => p.size}px / 3 + 5px);
-        ${positionMixin("absolute", "50%", null, null, "50%")}
+        ${position("absolute", "50%", "", "", "50%")}
     }
 
     &:after {

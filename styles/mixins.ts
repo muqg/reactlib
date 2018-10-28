@@ -1,7 +1,7 @@
 import { FlexDirectionProperty, PositionProperty } from "csstype";
 import { css } from ".";
 
-export function truncateMixin(width?: string) {
+export function truncate(width?: string) {
     return css`
         overflow: hidden;
         text-overflow: ellipsis;
@@ -10,7 +10,7 @@ export function truncateMixin(width?: string) {
     `
 }
 
-export function flexCenterMixin(direction: FlexDirectionProperty = "initial") {
+export function flexCenter(direction: FlexDirectionProperty = "initial") {
     return css`
         align-items: center;
         display: flex;
@@ -19,8 +19,7 @@ export function flexCenterMixin(direction: FlexDirectionProperty = "initial") {
     `
 }
 
-type PosType = string | null
-export function positionMixin(pos: PositionProperty, top?: PosType, right?: PosType, bottom?: PosType, left?: PosType) {
+export function position(pos: PositionProperty, top?: string, right?: string, bottom?: string, left?: string) {
     return css`
         position: ${pos};
         ${top && `top: ${top};`}

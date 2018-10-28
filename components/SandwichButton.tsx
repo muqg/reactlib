@@ -1,6 +1,6 @@
 import * as React from "react";
 import { COLOR_PRIMARY_DARK, css, styled } from "../styles";
-import { positionMixin } from "../styles/mixins";
+import { position } from "../styles/mixins";
 
 
 const spanCommon = css`
@@ -9,7 +9,7 @@ const spanCommon = css`
     content: '';
     display: block;
     height: 2px;
-    ${positionMixin("absolute")}
+    ${position("absolute")}
     transition: all .3s;
     width: inherit;
 `
