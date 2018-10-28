@@ -38,7 +38,7 @@ function createModelComponent(component: React.Component, key = "", {model, ...o
         const injectedProps: InjectedModelProps = {
             name,
             onChange: model!,
-            value: name ? pull(key ? `${key}.${name}` : name, component.state) : ""
+            value: name ? pull(component.state, key ? `${key}.${name}` : name) : ""
         }
 
         if(isFunction<(props: InjectedModelProps) => JSX.Element>(props.children))

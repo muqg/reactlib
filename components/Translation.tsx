@@ -35,7 +35,7 @@ interface Props<T> {
 export const Translate = <T extends any= string>({args, children, count, value}: Props<T>) => (
     <Translation.Consumer>
         {(source) => {
-            let result = pull(value, source) || value
+            let result = pull(source, value) || value
 
             if(result === value)
                 console.error("No translation value found for key: " + value)

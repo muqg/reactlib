@@ -29,7 +29,7 @@ function put(key: string, item: any, pool: object = {}) {
     let result: any = item
     for(let i = splitKey.length - 1; i >= 0; i--) {
         const currentKey = splitKey[i]
-        const poolItem = pull(splitKey.join("."), pool) || {}
+        const poolItem = pull(pool, splitKey.join(".")) || {}
 
         // If both items are objects then combine them. Otherwise result overwrites the poolItem.
         if((isObject(result) && !isArray(result)) && (isObject(poolItem) && !isArray(poolItem)))

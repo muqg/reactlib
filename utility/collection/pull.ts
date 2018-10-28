@@ -3,10 +3,10 @@ import { Collection } from "..";
 
 /**
  * Returns a nested array or object element, using dot notation key access.
- * @param key The key to the element, using dot notation.
  * @param col The subject array or object.
+ * @param key The key to the element, using dot notation.
  */
-function pull<T = any>(key: string, col: Collection): T {
+function pull<T = any>(col: Collection, key: string): T {
     if(!key.length)
         return col as any
 
