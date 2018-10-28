@@ -65,3 +65,8 @@ export interface RequestException<T extends object = {}> {
     statusText: string
     text: string
 }
+
+/**
+ * From T omit a set of properties K.
+ */
+export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>

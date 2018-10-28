@@ -2,6 +2,7 @@ import * as React from "react";
 import { isUndefined } from "util";
 import { Button, DialogProps } from "..";
 import { styled } from "../../styles";
+import { Omit } from "../../utility";
 import { CHAR_CODE_ENTER } from "../../utility/dom";
 import { DialogBox, DialogBoxProps } from "./DialogBox";
 
@@ -33,7 +34,7 @@ interface OwnProps {
      */
     textOkay?: string
 }
-type Props = OwnProps & DialogProps & Pick<DialogBoxProps, Exclude<keyof DialogBoxProps, "children">>
+type Props = OwnProps & DialogProps & Omit<DialogBoxProps, "children">
 
 
 const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}: Props) => {
