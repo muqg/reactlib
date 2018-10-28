@@ -1,6 +1,6 @@
 import * as React from "react";
 import { COLOR_PRIMARY_LIGHT, COLOR_SECONDARY_LIGHT, css, styled } from "../../styles";
-import { truncateMixin } from "../../styles/mixins";
+import { positionMixin, truncateMixin } from "../../styles/mixins";
 
 
 const Container = styled.label`
@@ -11,7 +11,7 @@ const Container = styled.label`
     line-height: ${(p: StyleProps) => p.height}px;
     margin: 0;
     padding: 0 3px;
-    position: relative;
+    ${positionMixin("relative")}
     transition: background .3s ease;
 
     ${p => p.active && css`
@@ -27,10 +27,8 @@ const Container = styled.label`
 `
 const contentCommon = css`
     display: block;
-    left: 0;
-    position: relative;
-    top: 0;
     width: 100%;
+    ${positionMixin("relative", "0", null, null, "0")}
 
     &:hover {
         background: ${COLOR_SECONDARY_LIGHT}

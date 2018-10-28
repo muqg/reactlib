@@ -1,18 +1,17 @@
 import * as React from "react";
 import { CloseButton } from "..";
 import { COLOR_BLACK, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_SECONDARY_LIGHT, styled } from "../../styles";
+import { positionMixin } from "../../styles/mixins";
 import { Dialog, DialogProps } from "./Dialog";
 
 
 const Back = styled.div`
     background: ${COLOR_BLACK};
     height: 100%;
-    left: 0;
     opacity: .5;
-    position: absolute;
-    top: 0;
     width: 100%;
     z-index: -1;
+    ${positionMixin("absolute", "0", null, null, "0")}
 `
 const Container = styled.div`
     background: ${COLOR_SECONDARY_LIGHT};
@@ -21,7 +20,7 @@ const Container = styled.div`
     min-height: 54px;
     max-height: 400px;
     padding: 12px;
-    position: relative;
+    ${positionMixin("relative")}
     width: 300px;
 `
 const Title = styled.p`

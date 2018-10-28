@@ -1,6 +1,7 @@
 import * as React from "react";
 import { COLOR_PRIMARY_DARK, COLOR_WHITE, css, styled } from "../../styles";
-import { OutsideAlerter, classNames } from "../../utility/dom";
+import { positionMixin } from "../../styles/mixins";
+import { classNames, OutsideAlerter } from "../../utility/dom";
 import SelectOption from "./SelectOption";
 
 const DEFAULT_HEIGHT = 25
@@ -26,7 +27,7 @@ const divCommon = css`
 const Container = styled.div`
     display: inline-block;
     height: ${(p: StyleProps) => p.active ? "auto" : p.height + "px"};
-    position: relative;
+    ${positionMixin("relative")}
     vertical-align: middle;
     width: 250px;
 

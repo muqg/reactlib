@@ -5,7 +5,7 @@ import { isUndefined } from "util";
 import { COLOR_TRANSPARENT } from "../../styles";
 import { wait } from "../../utility";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
-import { flexCenterMixin } from "../../styles/mixins";
+import { flexCenterMixin, positionMixin } from "../../styles/mixins";
 
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
@@ -21,18 +21,16 @@ const Container = styled.div`
     background: ${COLOR_TRANSPARENT};
     box-sizing: border-box;
     height: 100%;
-    left: 0;
     opacity: 0;
     overflow: auto;
     padding: 60px 15px;
-    position: fixed;
-    top: 0;
     transform: scale(1.5);
     transition: .25s;
     transition-property: opacity, transform, visibility;
     visibility: hidden;
     width: 100%;
     z-index: 200;
+    ${positionMixin("fixed", "0", null, null, "0")}
     ${flexCenterMixin()}
 
     ${(p: StyleProps) => p.visible && visibleStyle}

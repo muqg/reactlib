@@ -1,6 +1,7 @@
 import * as React from "react";
 import { css, styled } from "../styles";
 import { COLOR_PRIMARY_DARK } from "../styles/colours";
+import { positionMixin } from "../styles/mixins";
 
 
 const spanCommon = css`
@@ -9,21 +10,16 @@ const spanCommon = css`
     content: '';
     display: block;
     height: 2px;
-    position: absolute;
     width: inherit;
     z-index: 1;
+    ${positionMixin("absolute")}
 `
 
 const StyledButton = styled.button`
     cursor: pointer;
     height: ${(p: StyleProps) => p.size}px;
-    position: absolute;
     width: ${p => p.size}px;
-
-    ${p => p.bottom && css`bottom: ${p.bottom};`}
-    ${p => p.left && css`left: ${p.left};`}
-    ${p => p.right && css`right: ${p.right};`}
-    ${p => p.top && css`top: ${p.top};`}
+    ${p => positionMixin("absolute", p.top, p.right, p.bottom, p.left)}
 
     > span {
         ${spanCommon}

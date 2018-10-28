@@ -1,4 +1,5 @@
-import { COLOR_RED, COLOR_WHITE, styled, COLOR_DARK_RED } from "../styles";
+import { COLOR_DARK_RED, COLOR_RED, COLOR_WHITE, styled } from "../styles";
+import { positionMixin } from "../styles/mixins";
 
 const RemoveButton = styled.button`
     ${(_p: StyleProps) => ''}
@@ -8,7 +9,7 @@ const RemoveButton = styled.button`
     box-sizing: border-box;
     cursor: pointer;
     height: ${p => p.size}px;
-    position: relative;
+    ${positionMixin("relative")}
     width: ${p => p.size}px;
 
     &:hover {
@@ -19,11 +20,9 @@ const RemoveButton = styled.button`
         background: ${COLOR_WHITE};
         content: '';
         height: 2px;
-        left: 50%;
-        position: absolute;
-        top: 50%;
         transform: translate(-50%);
         width: calc(${p => p.size}px / 3 + 5px);
+        ${positionMixin("absolute", "50%", "", "", "50%")}
     }
 `
 RemoveButton.defaultProps = {
@@ -36,3 +35,4 @@ interface StyleProps {
 
 
 export { RemoveButton };
+

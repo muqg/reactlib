@@ -1,5 +1,6 @@
 import * as React from "react";
 import { COLOR_GREEN, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_WHITE, css, styled } from "../styles";
+import { positionMixin } from "../styles/mixins";
 
 const BORDER_RADIUS_VALUE = "3px"
 
@@ -21,22 +22,20 @@ const Background = styled.span`
     border-radius: ${BORDER_RADIUS_VALUE};
     display: inline-block;
     height: 100%;
-    position: relative;
     transition-duration: .25s;
     transition-property: background, opacity;
     width: 100%;
+    ${positionMixin("relative")}
 
     &:after {
         background: ${COLOR_WHITE};
         border-radius: ${BORDER_RADIUS_VALUE};
         content: '';
         height: 100%;
-        left: 0;
-        position: absolute;
-        top: 0;
         transition: .2s;
         transition-property: left, width;
         width: 17px;
+        ${positionMixin("absolute", "0", null, null, "0")}
     }
 
     ${(p: StyleProps) =>

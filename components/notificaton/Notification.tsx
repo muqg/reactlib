@@ -1,5 +1,6 @@
 import * as React from "react";
 import { COLOR_BLACK, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
+import { positionMixin } from "../../styles/mixins";
 import { delay } from "../../utility";
 import { NotificationContext } from "./contexts";
 
@@ -9,20 +10,18 @@ const NOTIFICATION_DURATION = 2_000
 const Container = styled.div`
     background: ${COLOR_PRIMARY_LIGHT};
     border-radius: 3px;
-    bottom: 12px;
     box-shadow: 0 0 9px -1px ${COLOR_PRIMARY_DARK};
     box-sizing: border-box;
     color: ${COLOR_BLACK};
     cursor: default;
-    left: 50%;
     padding: 12px;
-    position: fixed;
     text-align: center;
     /* Y translate should account for box-shadow and bottom offset. */
     transform: translate(-50%, calc(100% + 15px));
     transition: transform .3s;
     width: 250px;
     z-index: 250;
+    ${positionMixin("fixed", "", "", "12px", "50%")}
 
     ${(p: StyleProps) => p.active && css`
         transform: translateX(-50%);

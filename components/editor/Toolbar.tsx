@@ -1,18 +1,16 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
-import { flexCenterMixin } from "../../styles/mixins";
+import { flexCenterMixin, positionMixin } from "../../styles/mixins";
 
 
 export const TOOLBAR_SPRITESHEET = "/img/toolbar.png"
 
 const ToolbarWrapper = styled.div`
-    left: 0;
-    position: fixed;
     text-align: center;
-    top: 0;
     width: 100%;
     z-index: 110;
+    ${positionMixin("fixed", "0", null, null, "0")}
 
     > div {
         background: ${COLOR_PRIMARY_LIGHT};
