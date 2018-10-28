@@ -1,8 +1,6 @@
 import * as React from "react";
 import { css, styled } from "../styles";
 import { COLOR_PRIMARY_DARK } from "../styles/colours";
-import { PositionStyle } from "../styles/types";
-import { positionMixin } from "../styles/mixins";
 
 
 const spanCommon = css`
@@ -22,7 +20,10 @@ const StyledButton = styled.button`
     position: absolute;
     width: ${p => p.size}px;
 
-    ${p => positionMixin(p)}
+    ${p => p.bottom && css`bottom: ${p.bottom};`}
+    ${p => p.left && css`bottom: ${p.left};`}
+    ${p => p.right && css`bottom: ${p.right};`}
+    ${p => p.top && css`bottom: ${p.top};`}
 
     > span {
         ${spanCommon}
@@ -47,7 +48,12 @@ StyledButton.defaultProps = {
 }
 
 
-interface StyleProps extends PositionStyle {
+interface StyleProps {
+    bottom?: string
+    left?: string
+    right?: string
+    top?: string
+
     /**
      * Close button's size in pixels. This accounts for both width and height.
      */
