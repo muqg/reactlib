@@ -6,7 +6,7 @@ import { INITIAL_STATE } from "./const";
  * @param key Key to the state item.
  */
 function initialState<T = any>(key: any): T {
-    let result = pull<T>(key, INITIAL_STATE)
+    let result = pull<T>(INITIAL_STATE, key)
     return result
 }
 
