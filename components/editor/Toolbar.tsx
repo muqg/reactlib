@@ -1,6 +1,7 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
+import { flexCenterMixin } from "../../styles/mixins";
 
 
 export const TOOLBAR_SPRITESHEET = "/img/toolbar.png"
@@ -24,11 +25,9 @@ const ToolbarWrapper = styled.div`
 `
 
 const ToolbarContainer = styled.div`
-    display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
     height: 24px;
-    justify-content: center;
+    ${flexCenterMixin("row")}
 `
 
 
