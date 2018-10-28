@@ -7,8 +7,7 @@ const StyledButton = styled.button`
     border: 1px solid ${COLOR_PRIMARY_LIGHT};
     box-sizing: border-box;
     padding: 4px;
-    ${truncateMixin()}
-    width: 150px;
+    ${truncateMixin("150px")}
 
     &:not(:first-child) {
         border-left: none;

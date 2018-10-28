@@ -21,9 +21,9 @@ const StyledButton = styled.button`
     width: ${p => p.size}px;
 
     ${p => p.bottom && css`bottom: ${p.bottom};`}
-    ${p => p.left && css`bottom: ${p.left};`}
-    ${p => p.right && css`bottom: ${p.right};`}
-    ${p => p.top && css`bottom: ${p.top};`}
+    ${p => p.left && css`left: ${p.left};`}
+    ${p => p.right && css`right: ${p.right};`}
+    ${p => p.top && css`top: ${p.top};`}
 
     > span {
         ${spanCommon}

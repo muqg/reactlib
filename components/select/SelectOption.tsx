@@ -42,7 +42,7 @@ const Content = styled.div`
     box-sizing: border-box;
     display: ${(p: StyleProps) => (p.active || p.multiple) ? "block" : "none"};
     height: 100%;
-    ${truncateMixin}
+    ${truncateMixin()}
 
     input:checked ~ & {
         ${p => !p.active && contentCommon}
