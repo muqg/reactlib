@@ -1,4 +1,4 @@
-import { FlexDirectionProperty, PositionProperty } from "csstype";
+import { AlignItemsProperty, FlexDirectionProperty, FlexWrapProperty, JustifyContentProperty, PositionProperty } from "csstype";
 import { css } from ".";
 
 export function truncate(width?: string) {
@@ -10,12 +10,18 @@ export function truncate(width?: string) {
     `
 }
 
-export function flexCenter(direction: FlexDirectionProperty = "initial") {
+export function flex(
+    horizontal?: JustifyContentProperty | null,
+    vertical?: AlignItemsProperty | null,
+    direction?: FlexDirectionProperty | null,
+    wrap?: FlexWrapProperty | null,
+) {
     return css`
-        align-items: center;
+        ${vertical && `align-items: ${vertical};`}
         display: flex;
-        flex-direction: ${direction};
-        justify-content: center;
+        ${direction && `flex-direction: ${direction};`}
+        ${wrap && `flex-wrap: ${wrap};`}
+        ${horizontal && `justify-content: ${horizontal};`}
     `
 }
 

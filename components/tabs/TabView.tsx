@@ -1,12 +1,13 @@
 import * as React from "react";
-import { Tab } from "./Tab";
 import { styled } from "../../styles";
+import { flex } from "../../styles/mixins";
 import { isFunction } from "../../utility/assertions";
+import { Tab } from "./Tab";
 import { TabTitleButton } from "./TabTitleButton";
 
 
 const TitleContainer = styled.div`
-    display: flex;
+    ${flex()}
     padding-top: 50px;
 `
 
