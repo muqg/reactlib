@@ -2,7 +2,7 @@
  * Shuffles an array using the Fisher-Yattes algorithm.
  * @param arr The array to shuffle.
  */
-export function shuffle(arr: any[]) {
+export function shuffle<T extends any[]>(arr: T): T {
     // Copy into a new array in order to not affect the other one.
     const newArray = arr.slice()
 
@@ -15,5 +15,5 @@ export function shuffle(arr: any[]) {
         newArray[currentIndex] = newArray[randomIndex]
         newArray[randomIndex] = temporaryValue
     }
-    return newArray
+    return newArray as T
 }
