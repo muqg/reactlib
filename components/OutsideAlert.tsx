@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Dict, Omit } from "../utility";
-import { len, remove } from "../utility/collection";
+import { except, len } from "../utility/collection";
 import { only } from "../utility/collection/only";
 
 
@@ -40,7 +40,7 @@ class OutsideAlert extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        OutsideAlert.alerts = remove(OutsideAlert.alerts, this.index)
+        OutsideAlert.alerts = except(OutsideAlert.alerts, this.index)
 
         if(!len(OutsideAlert.alerts))
             document.removeEventListener("mouseup", this.triggerAlerts)

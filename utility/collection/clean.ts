@@ -1,11 +1,10 @@
-import { Collection } from "..";
 import { isUndefined } from "../assertions";
 
 /**
  * Removes undefined values from a collection object.
  * @param col The collection to clean.
  */
-function clean<T extends object>(col: Collection): T {
+function clean<T extends object>(col: object): T {
     const res: any = {}
 
     Object.entries(col).forEach(([key, value]) => {

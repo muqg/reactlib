@@ -1,4 +1,3 @@
-import { Collection } from "..";
 import { Omit } from "../type";
 
 /**
@@ -6,7 +5,7 @@ import { Omit } from "../type";
  * @param col The subject collection.
  * @param keys Keys for the entries to not include in the new collection.
  */
-function except<T extends Collection, K extends keyof T>(col: T, ...keys: K[]): Omit<T, K> {
+function except<T extends object, K extends keyof T>(col: T, ...keys: K[]): Omit<T, K> {
     const collection = col as any
     const res = {} as any
 

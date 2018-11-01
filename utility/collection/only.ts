@@ -1,4 +1,3 @@
-import { Collection } from "..";
 
 
 /**
@@ -6,7 +5,7 @@ import { Collection } from "..";
  * @param col The subject collection.
  * @param keys Keys for the entries to include in the new collection.
  */
-function only<T extends Collection, K extends keyof T>(col: T, ...keys: K[]): Pick<T, K> {
+function only<T extends object, K extends keyof T>(col: T, ...keys: K[]): Pick<T, K> {
     const collection = col as any
     const res = {} as any
 

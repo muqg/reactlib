@@ -7,5 +7,4 @@ export { len } from "./len";
 export { only } from "./only";
 export { pull } from "./pull";
 export { put } from "./put";
-export { remove } from "./remove";
 
