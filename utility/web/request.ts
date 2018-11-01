@@ -34,7 +34,7 @@ export interface RequestOptions {
  * @param method HTTP request method.
  * @param url Requested URL.
  */
-function request(method: RequestMethod, url: string): ReturnType<typeof baseRequest>
+function request<T extends object>(method: RequestMethod, url: string): Promise<T>
 /**
  * Sends a request to the specified URL, reading response stream as text. Promise
  * always results in string except when error is thrown.
@@ -42,7 +42,7 @@ function request(method: RequestMethod, url: string): ReturnType<typeof baseRequ
  * @param url Requested URL.
  * @param body Request body's data.
  */
-function request(method: RequestMethod, url: string, body: object): ReturnType<typeof baseRequest>
+function request<T extends object>(method: RequestMethod, url: string, body: object): Promise<T>
 /**
  * Sends a request to the specified URL, reading response stream as text. Promise
  * always results in string except when error is thrown.
@@ -51,7 +51,7 @@ function request(method: RequestMethod, url: string, body: object): ReturnType<t
  * @param body Request body's data.
  * @param options Request options.
  */
-function request(method: RequestMethod, url: string, body: object, options: RequestOptions): ReturnType<typeof baseRequest>
+function request<T extends object>(method: RequestMethod, url: string, body: object, options: RequestOptions): Promise<T>
 
 function request(method: RequestMethod, url: string, body = {} , options: RequestOptions = DEFAULT_OPTIONS) {
     const headers: Dict<string> = options.headers || {}
