@@ -1,7 +1,7 @@
 import { CHAR_CODE_A, CHAR_CODE_Z } from "../dom";
 import { random } from "../math";
 
-function randomID(length: number, keyspace = "") {
+function randomId(length: number, keyspace = "") {
     const result: string[] = []
 
     for(let i = 0; i < length; i++) {
@@ -15,4 +15,4 @@ function randomID(length: number, keyspace = "") {
 }
 
 
-export { randomID }
+export { randomId }

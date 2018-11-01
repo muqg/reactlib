@@ -11,6 +11,7 @@ export * from "./isPhone";
 export { lowerFirst } from "./lowerFirst";
 export { padStart } from "./padStart";
 export { plural } from "./plural";
-export { randomID } from "./randomID";
+export { randomId } from "./randomId";
 export { truncate } from "./truncate";
 export { upperFirst } from "./upperFirst";
+

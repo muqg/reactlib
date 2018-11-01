@@ -13,6 +13,7 @@ export { ImageView } from "./ImageView";
 export { Input } from "./Input";
 export { Line } from "./Line";
 export * from "./notificaton";
+export { OutsideAlert } from "./OutsideAlert";
 export { RemoveButton } from "./RemoveButton";
 export { default as SandwichButton } from "./SandwichButton";
 export * from "./select";
