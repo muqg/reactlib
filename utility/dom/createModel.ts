@@ -25,16 +25,13 @@ function createModel(component: React.Component, key = "", options: CreateModelO
         ...options
     }
 
-    return (change: ParseableChange, callback?: () => void | undefined) => {
-        const parsed = parseElement(change)
+    return (change: ParseableChange | string, changeVal?: string) => {
+        const parsed = parseElement(change, changeVal)
 
         const name = parsed.name
         const value = options.cast ? cast(parsed.value) : parsed.value
 
-        component.setState(
-            prevState => put(key, {[name]: value}, prevState),
-            callback
-        )
+        component.setState(prevState => put(key, {[name]: value}, prevState))
 
         return {
             name,
