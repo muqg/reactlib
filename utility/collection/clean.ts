@@ -1,12 +1,12 @@
-import { Dict } from "..";
+import { Collection } from "..";
 import { isUndefined } from "../assertions";
 
 /**
  * Removes undefined values from a collection object.
  * @param col The collection to clean.
  */
-function clean(col: object) {
-    const res: Dict<any> = {}
+function clean<T extends object>(col: Collection): T {
+    const res: any = {}
 
     Object.entries(col).forEach(([key, value]) => {
         if(!isUndefined(value))
@@ -17,4 +17,5 @@ function clean(col: object) {
 }
 
 
-export { clean }
+export { clean };
+

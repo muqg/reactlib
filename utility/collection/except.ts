@@ -1,11 +1,12 @@
 import { Collection } from "..";
+import { Omit } from "../type";
 
 /**
  * Creates a new collection which contains only the entries at the given keys.
  * @param col The subject collection.
  * @param keys Keys for the entries to include in the new collection.
  */
-function except<R extends object, C extends Collection, K extends keyof C>(col: C, ...keys: K[]): R {
+function except<T extends Collection, K extends keyof T>(col: T, ...keys: K[]): Omit<T, K> {
     const collection = col as any
     const res = {} as any
 

@@ -6,7 +6,7 @@ import { Collection } from "..";
  * @param col The subject collection.
  * @param keys Keys for the entries to include in the new collection.
  */
-function only<R extends object, C extends Collection, K extends keyof C>(col: C, ...keys: K[]): R {
+function only<T extends Collection, K extends keyof T>(col: T, ...keys: K[]): Pick<T, K> {
     const collection = col as any
     const res = {} as any
 
