@@ -1,7 +1,8 @@
 import * as React from "react";
 import { COLOR_PRIMARY_DARK, COLOR_WHITE, css, styled } from "../../styles";
 import { position } from "../../styles/mixins";
-import { classNames, OutsideAlerter } from "../../utility/dom";
+import { classNames } from "../../utility/dom";
+import { OutsideAlert } from "../OutsideAlert";
 import SelectOption from "./SelectOption";
 
 const DEFAULT_HEIGHT = 25
@@ -76,21 +77,6 @@ class Select extends React.Component<Props, State> {
     }
     container = React.createRef<any>()
 
-    componentDidMount() {
-        if(!this.props.multiple) {
-            OutsideAlerter.addContainer(
-                this.container.current as HTMLElement,
-                () => this.toggleActive(false)
-            )
-        }
-    }
-
-    componentWillUnmount() {
-        if(!this.props.multiple) {
-            OutsideAlerter.removeContainer(this.container.current as HTMLElement)
-        }
-    }
-
     toggleActive(isActive: boolean) {
         if(this.props.multiple)
             return
@@ -123,20 +109,25 @@ class Select extends React.Component<Props, State> {
         )
 
         return(
-            <Container
-                data-name={this.props.name}
-                className={classes}
-                ref={this.container}
-                onChange={this.props.onChange}
-
-                active={this.state.isActive}
-                height={this.props.height}
-                multiple={this.props.multiple}
+            <OutsideAlert
+                enabled={!this.props.multiple && this.state.isActive}
+                trigger={() => this.toggleActive(false)}
             >
-                <div>
-                    {this.getOptions()}
-                </div>
-            </Container>
+                <Container
+                    data-name={this.props.name}
+                    className={classes}
+                    ref={this.container}
+                    onChange={this.props.onChange}
+
+                    active={this.state.isActive}
+                    height={this.props.height}
+                    multiple={this.props.multiple}
+                >
+                    <div>
+                        {this.getOptions()}
+                    </div>
+                </Container>
+            </OutsideAlert>
         )
     }
 

@@ -5,7 +5,7 @@ import { Collection, Dict } from "..";
  * @param col The collection to remove item from.
  * @param key The key to the removed item
  */
-function remove(col: Collection, key: string) {
+function remove(col: Collection, key: string | number) {
     const collection = col as Dict<any>
     const {[key]: item, ...rest} = collection
 

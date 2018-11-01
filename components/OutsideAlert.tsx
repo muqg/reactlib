@@ -1,51 +1,73 @@
 import * as React from "react";
-import { Dict } from "../utility";
-import { len } from "../utility/collection";
-import { remove } from "../utility/collection/remove";
-import { randomId } from "../utility/string";
+import { Dict, Omit } from "../utility";
+import { len, remove } from "../utility/collection";
+
 
 interface Alert {
+    container: HTMLDivElement
+    /**
+     * Whether the alert trigger is enabled.
+     */
     enabled: boolean
-    trigger: () => void
+    /**
+     * Callback for when outside alert is triggered.
+     */
+    trigger: () => any
 }
 
+type Props = Omit<Alert, "container">
 
-class OutsideAlert extends React.Component<Alert> {
+class OutsideAlert extends React.Component<Props> {
     static defaultProps: Partial<Alert> = {
         enabled: true
     }
     static alerts: Dict<Alert> = {}
+    static nextIndex = 0
 
     container = React.createRef<HTMLDivElement>()
-    index = randomId(4)
+    index = OutsideAlert.nextIndex++
 
     componentDidMount() {
-        if(len(OutsideAlert) === 0)
+        if(!len(OutsideAlert.alerts))
             document.addEventListener("mouseup", this.triggerAlerts)
 
-        OutsideAlert.alerts[this.index] = this.props
+        this._update()
     }
 
     componentDidUpdate() {
-        OutsideAlert.alerts[this.index] = this.props
+        this._update()
     }
 
     componentWillUnmount() {
         OutsideAlert.alerts = remove(OutsideAlert.alerts, this.index)
 
-        if(len(OutsideAlert.alerts) === 0)
+        if(!len(OutsideAlert.alerts))
             document.removeEventListener("mouseup", this.triggerAlerts)
     }
 
-    triggerAlerts = () => {
-        Object.values(OutsideAlert.alerts)
-              .forEach(alert => alert.enabled && alert.trigger())
+    _update() {
+        if(!this.container.current)
+            return
+
+        OutsideAlert.alerts[this.index] = {
+            container: this.container.current,
+            enabled: this.props.enabled,
+            trigger: this.props.trigger,
+        } as Alert
+    }
+
+    triggerAlerts = (event: MouseEvent) => {
+        const target = event.target as HTMLElement
+        Object.values(OutsideAlert.alerts).forEach(alert => {
+            if(alert.enabled && !alert.container.contains(target))
+                alert.trigger()
+        })
     }
 
     render() {
         return (
             <div ref={this.container}>
-
+                {this.props.children}
             </div>
         )
     }
