@@ -42,7 +42,7 @@ function request(method: RequestMethod, url: string): ReturnType<typeof baseRequ
  * @param url Requested URL.
  * @param body Request body's data.
  */
-function request(method: RequestMethod, url: string, body: Dict<string>): ReturnType<typeof baseRequest>
+function request(method: RequestMethod, url: string, body: object): ReturnType<typeof baseRequest>
 /**
  * Sends a request to the specified URL, reading response stream as text. Promise
  * always results in string except when error is thrown.
@@ -51,13 +51,14 @@ function request(method: RequestMethod, url: string, body: Dict<string>): Return
  * @param body Request body's data.
  * @param options Request options.
  */
-function request(method: RequestMethod, url: string, body: Dict<string>, options: RequestOptions): ReturnType<typeof baseRequest>
+function request(method: RequestMethod, url: string, body: object, options: RequestOptions): ReturnType<typeof baseRequest>
 
-function request(method: RequestMethod, url: string, body: Dict<string> = {} , options: RequestOptions = DEFAULT_OPTIONS) {
-    const headers = options.headers || {} as Dict<string>
+function request(method: RequestMethod, url: string, body = {} , options: RequestOptions = DEFAULT_OPTIONS) {
+    const headers: Dict<string> = options.headers || {}
+    const requestBody = body as Dict<any>
 
     if(options.useBodyMethod) {
-        body["__method"] = method
+        requestBody["__method"] = method
         method = RequestMethod.POST
     }
 
@@ -74,19 +75,19 @@ function request(method: RequestMethod, url: string, body: Dict<string> = {} , o
     if(method === RequestMethod.GET || method === RequestMethod.HEAD || method === RequestMethod.OPTIONS) {
         const index = url.indexOf("?")
         const cleanURL = index >= 0 ? url.substring(0, index) : url
-        url = cleanURL + "?" + createQuery(body)
+        url = cleanURL + "?" + createQuery(requestBody)
     }
     else if(options.requestDataFormat === "formData") {
         const fd = new FormData()
-        Object.keys(body).forEach(key => fd.append(key, body[key]))
+        Object.keys(requestBody).forEach(key => fd.append(key, requestBody[key]))
         requestInit.body = fd
     }
     else if(options.requestDataFormat === "json") {
-        requestInit.body = JSON.stringify(body)
+        requestInit.body = JSON.stringify(requestBody)
         headers["Content-Type"] = "application/json"
     }
     else if(options.requestDataFormat === "query") {
-        requestInit.body = createQuery(body)
+        requestInit.body = createQuery(requestBody)
     }
 
     requestInit.headers = headers
