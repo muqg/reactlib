@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Dict, Omit } from "../utility";
 import { len, remove } from "../utility/collection";
+import { only } from "../utility/collection/only";
 
 
 interface Alert {
@@ -51,8 +52,7 @@ class OutsideAlert extends React.Component<Props> {
 
         OutsideAlert.alerts[this.index] = {
             container: this.container.current,
-            enabled: this.props.enabled,
-            trigger: this.props.trigger,
+            ...only(this.props, "enabled", "trigger")
         } as Alert
     }
 
