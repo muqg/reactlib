@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Dict, Omit } from "../utility";
-import { except, len } from "../utility/collection";
-import { only } from "../utility/collection/only";
+import { except, len, only } from "../utility/collection";
 
 
 interface Alert {
@@ -40,7 +39,7 @@ class OutsideAlert extends React.Component<Props> {
     }
 
     componentWillUnmount() {
-        OutsideAlert.alerts = except(OutsideAlert.alerts, this.index)
+        OutsideAlert.alerts = except(OutsideAlert.alerts, this.index.toString())
 
         if(!len(OutsideAlert.alerts))
             document.removeEventListener("mouseup", this.triggerAlerts)
