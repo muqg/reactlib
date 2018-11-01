@@ -27,17 +27,28 @@ function baseRequest(method: RequestMethod, url: string, options: RequestInit) {
 
     return window.fetch(url, requestInit)
         .then(async (response) => {
-            if(!response.ok) {
-                const responseBody = await response.json()
 
+            let responseBody: any = {}
+            try {
+                responseBody = await response.json()
+            }
+            catch {
+                /**
+                 * No need to take any action since responseBody
+                 * is already initialized as an empty object.
+                 */
+            }
+
+            if(!response.ok) {
                 throw {
                     body: responseBody,
                     status: response.status,
                     statusText: response.statusText,
-                    text: responseBody.__error || responseBody.message || "",
+                    text: responseBody.__error || responseBody.message || "RequestException",
                 } as RequestException
             }
-            return response.json()
+
+            return responseBody
         })
 }
 
