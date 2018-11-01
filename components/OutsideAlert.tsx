@@ -1,7 +1,8 @@
-import * as React from "react"
-import { randomId } from "../utility/string";
+import * as React from "react";
 import { Dict } from "../utility";
 import { len } from "../utility/collection";
+import { remove } from "../utility/collection/remove";
+import { randomId } from "../utility/string";
 
 interface Alert {
     enabled: boolean
@@ -30,8 +31,7 @@ class OutsideAlert extends React.Component<Alert> {
     }
 
     componentWillUnmount() {
-        const {[this.index]: current, ...rest} = OutsideAlert.alerts
-        OutsideAlert.alerts = rest
+        OutsideAlert.alerts = remove(OutsideAlert.alerts, this.index)
 
         if(len(OutsideAlert.alerts) === 0)
             document.removeEventListener("mouseup", this.triggerAlerts)
@@ -52,4 +52,5 @@ class OutsideAlert extends React.Component<Alert> {
 }
 
 
-export { OutsideAlert }
+export { OutsideAlert };
+

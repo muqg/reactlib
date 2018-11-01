@@ -5,3 +5,5 @@ export { isNullOrEmpty } from "./isNullOrEmpty";
 export { len } from "./len";
 export { pull } from "./pull";
 export { put } from "./put";
+export { remove } from "./remove";
+
