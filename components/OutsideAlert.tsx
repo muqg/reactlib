@@ -1,10 +1,13 @@
 import * as React from "react";
-import { Dict, Omit } from "../utility";
+import { Dict } from "../utility";
 import { except, len, only } from "../utility/collection";
 
 
 interface Alert {
-    container: HTMLDivElement
+    /**
+     * The container that a click outside of which should be alerted.
+     */
+    container?: HTMLElement
     /**
      * Whether the alert trigger is enabled.
      */
@@ -15,8 +18,13 @@ interface Alert {
     trigger: () => any
 }
 
-type Props = Omit<Alert, "container">
+type Props = Alert
 
+/**
+ * Alerts a container when a click outside of it occurs by calling a trigger
+ * callback. If a container prop is not passed then children are wrapped inside
+ * a <div> container.
+ */
 class OutsideAlert extends React.Component<Props> {
     static defaultProps: Partial<Alert> = {
         enabled: true
@@ -46,11 +54,8 @@ class OutsideAlert extends React.Component<Props> {
     }
 
     _update() {
-        if(!this.container.current)
-            return
-
         OutsideAlert.alerts[this.index] = {
-            container: this.container.current,
+            container: this.props.container || this.container.current,
             ...only(this.props, "enabled", "trigger")
         } as Alert
     }
@@ -58,12 +63,15 @@ class OutsideAlert extends React.Component<Props> {
     triggerAlerts = (event: MouseEvent) => {
         const target = event.target as HTMLElement
         Object.values(OutsideAlert.alerts).forEach(alert => {
-            if(alert.enabled && !alert.container.contains(target))
+            if(alert.enabled && alert.container && !alert.container.contains(target))
                 alert.trigger()
         })
     }
 
     render() {
+        if(this.props.container)
+            return this.props.children
+
         return (
             <div ref={this.container}>
                 {this.props.children}

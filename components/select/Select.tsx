@@ -110,6 +110,7 @@ class Select extends React.Component<Props, State> {
 
         return(
             <OutsideAlert
+                container={this.container.current}
                 enabled={!this.props.multiple && this.state.isActive}
                 trigger={() => this.toggleActive(false)}
             >
