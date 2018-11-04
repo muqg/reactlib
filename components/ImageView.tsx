@@ -1,10 +1,15 @@
 import * as React from "react";
 import { AspectImage, Dialog } from ".";
-import { COLOR_BLACK, COLOR_WHITE, styled } from "../styles";
+import { COLOR_BLACK, COLOR_WHITE, createGlobalStyle, styled } from "../styles";
 import { position } from "../styles/mixins";
 import CloseButton from "./CloseButton";
 import { DialogProps } from "./dialogs/Dialog";
 
+const NoScroll = createGlobalStyle`
+    body {
+        overflow: hidden !important;
+    }
+`
 const StyledDialog = styled(Dialog)`
     padding: 0;
     transition: none;
@@ -45,6 +50,7 @@ const ImageView = (props: Props) => {
                         size="100%"
                         src={props.src}
                     />
+                    <NoScroll />
                 </>
             )}
         </StyledDialog>
