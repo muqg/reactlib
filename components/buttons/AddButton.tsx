@@ -1,5 +1,5 @@
-import { COLOR_DARK_GREEN, COLOR_GREEN, COLOR_WHITE, styled } from "../styles";
-import { position } from "../styles/mixins";
+import { COLOR_DARK_GREEN, COLOR_GREEN, COLOR_WHITE, styled } from "../../styles";
+import { position } from "../../styles/mixins";
 
 const AddButton = styled.button`
     ${(_p: StyleProps) => ''}

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { COLOR_PRIMARY_DARK, css, styled } from "../styles";
-import { position } from "../styles/mixins";
+import { COLOR_PRIMARY_DARK, css, styled } from "../../styles";
+import { position } from "../../styles/mixins";
 
 
 const spanCommon = css`
@@ -123,4 +123,5 @@ class SandwichButton extends React.PureComponent<Props, State> {
 }
 
 
-export default SandwichButton
+export { SandwichButton };
+

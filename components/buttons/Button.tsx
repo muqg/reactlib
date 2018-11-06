@@ -1,4 +1,4 @@
-import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../styles";
+import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../../styles";
 
 
 const Button = styled.button`

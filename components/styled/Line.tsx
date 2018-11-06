@@ -1,4 +1,4 @@
-import { styled, COLOR_PRIMARY_LIGHT } from "../styles";
+import { styled, COLOR_PRIMARY_LIGHT } from "../../styles";
 
 
 const Line = styled.div`

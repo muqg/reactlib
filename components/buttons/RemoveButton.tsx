@@ -1,5 +1,5 @@
-import { COLOR_DARK_RED, COLOR_RED, COLOR_WHITE, styled } from "../styles";
-import { position } from "../styles/mixins";
+import { COLOR_DARK_RED, COLOR_RED, COLOR_WHITE, styled } from "../../styles";
+import { position } from "../../styles/mixins";
 
 const RemoveButton = styled.button`
     ${(_p: StyleProps) => ''}
