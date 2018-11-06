@@ -15,6 +15,7 @@ export { Line } from "./Line";
 export * from "./notificaton";
 export { OutsideAlert } from "./OutsideAlert";
 export { RemoveButton } from "./RemoveButton";
+export { Resource } from "./Resource";
 export { default as SandwichButton } from "./SandwichButton";
 export * from "./select";
 export { AspectImage } from "./styled/AspectImage";
