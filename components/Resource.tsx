@@ -6,23 +6,77 @@ import { createModelComponent } from "../utility/react";
 import { request } from "../utility/web";
 
 interface ResourceChildrenProps<T extends object> {
-    delete: (resource: T) => void
+    /**
+     * Sends request to delete the resource. Undefined if a new
+     * resource is being managed (id is null or undefined).
+     */
+    delete?: (resource: T) => void
+    /**
+     * Whether a request or an action is currently being processed.
+     */
     isWorking: boolean
+    /**
+     * Resource's modelling component.
+     */
     Model: ReturnType<typeof createModelComponent>
+    /**
+     * The resource.
+     */
     resource: T
+    /**
+     * Sends a request to save the resource or create a new one if id
+     * is null or undefined.
+     */
     save: (resource: T) => void
 }
 
 interface Props<T extends object> {
     children: (props: ResourceChildrenProps<T>) => React.ReactNode
+    /**
+     * Default data for the resource. Used when a new one is being created
+     * and also when a resource is deleted and the data should be reset.
+     */
     default: T
+    /**
+     * Text to be shown for successful deletion.
+     */
     deleteText: string
+    /**
+     * Text to be shown when an exceptional error occurs.
+     */
     exceptionText?: string
+    /**
+     * Id of the resource. Null or undefined for a new resource.
+     */
     id: string | number | null | undefined
+    /**
+     * Called before deleting a resource. May optionally return a string to
+     * indicate that an error has occured and thus cancel the deletion. The
+     * returned string will be shown as a notification.
+     */
     onDelete?: (resource: T) => string | void
+    /**
+     * Called after saving a resource. May optionall return a string to indicate
+     * that an error has occured. The returned string will be shown as a notification.
+     */
     onSave?: (resource: T) =>  string | void
+    /**
+     * Text to be shown on a successful save or creation of a resource.
+     */
     saveText: string
+    /**
+     * URL to the resource (without id appended).
+     */
     url: string
+    /**
+     * Called before saving a resource or creating a new one. Returning a string
+     * indicates that validation is not successful and the returned string will
+     * be shown as a notification.
+     *
+     * Method may alternatively be used as a "beforeSave" method to perform actions
+     * before a resource is saved as an alternative to onSave which is always called
+     * AFTER a resource is saved or created.
+     */
     validate?: (resource: T) => string | void
 }
 
@@ -162,7 +216,7 @@ class Resource<T extends object> extends React.Component<Props<T>, State<T>> {
 
     render() {
         return this.props.children({
-            delete: this.delete,
+            delete: isNullOrUndefined(this.props.id) ? undefined : this.delete,
             isWorking: this.state.isWorking,
             Model: this.model,
             resource: this.state.resource,
