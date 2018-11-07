@@ -1,3 +1,4 @@
+export { Block } from "./Block";
 export * from "./buttons";
 export { Checkbox } from "./Checkbox";
 export { default as ConfirmationDialog } from "./dialogs/ConfirmationDialog";
@@ -13,7 +14,6 @@ export { OutsideAlert } from "./OutsideAlert";
 export { Resource } from "./Resource";
 export * from "./select";
 export * from "./styled";
-export { AspectImage } from "./styled/AspectImage";
 export * from "./tabs";
 export { Timer } from "./Timer";
 export { Translate, Translation } from "./Translation";
