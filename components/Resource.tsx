@@ -32,7 +32,7 @@ interface ResourceChildrenProps<T extends object> {
     save: (resource: T) => void
 }
 
-interface Props<T extends object> {
+export interface ResourceProps<T extends object> {
     children: (props: ResourceChildrenProps<T>) => React.ReactNode
     /**
      * Default data for the resource. Used when a new one is being created
@@ -79,7 +79,7 @@ interface State<T extends object> {
     resource: T
 }
 
-class Resource<T extends object = object> extends React.Component<Props<T>, State<T>> {
+class Resource<T extends object = object> extends React.Component<ResourceProps<T>, State<T>> {
     static contextType = NotificationContext
     static defaultProps = {
         deleteText: "Deleted",
@@ -97,11 +97,11 @@ class Resource<T extends object = object> extends React.Component<Props<T>, Stat
         await this.load({} as any)
     }
 
-    async componentDidUpdate(prevProps: Props<T>) {
+    async componentDidUpdate(prevProps: ResourceProps<T>) {
         await this.load(prevProps.id)
     }
 
-    private async load(prevId: Props<T>["id"]) {
+    private async load(prevId: ResourceProps<T>["id"]) {
         if(this.props.id === prevId)
             return
 
