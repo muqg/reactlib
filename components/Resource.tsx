@@ -82,8 +82,6 @@ interface State<T extends object> {
 class Resource<T extends object = object> extends React.Component<ResourceProps<T>, State<T>> {
     static contextType = NotificationContext
     static defaultProps = {
-        deleteText: "Deleted",
-        saveText: "Saved",
         url: document.location!.href,
     }
 
