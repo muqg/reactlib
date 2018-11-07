@@ -79,7 +79,7 @@ interface State<T extends object> {
     resource: T
 }
 
-class Resource<T extends object> extends React.Component<Props<T>, State<T>> {
+class Resource<T extends object = object> extends React.Component<Props<T>, State<T>> {
     static contextType = NotificationContext
     static defaultProps = {
         deleteText: "Deleted",
