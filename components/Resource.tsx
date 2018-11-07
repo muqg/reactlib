@@ -1,14 +1,14 @@
 import * as React from "react";
 import { NotificationContext } from ".";
 import { lock, RequestException, RequestMethod } from "../utility";
-import { isNullOrUndefined, isString, isType } from "../utility/assertions";
+import { isString, isType } from "../utility/assertions";
 import { createModelComponent } from "../utility/react";
 import { request } from "../utility/web";
 
 interface ResourceChildrenProps<T extends object> {
     /**
      * Sends request to delete the resource. Undefined if a new
-     * resource is being managed (id is null or undefined).
+     * resource is being managed.
      */
     delete?: (resource: T) => void
     /**
@@ -24,8 +24,7 @@ interface ResourceChildrenProps<T extends object> {
      */
     resource: T
     /**
-     * Sends a request to save the resource or create a new one if id
-     * is null or undefined.
+     * Sends a request to save the resource or create a new one.
      */
     save: (resource: T) => void
 }
@@ -46,7 +45,7 @@ interface Props<T extends object> {
      */
     exceptionText?: string
     /**
-     * Id of the resource. Null or undefined for a new resource.
+     * Id of the resource. Falsey value for a new resource.
      */
     id: string | number | null | undefined
     /**
@@ -114,7 +113,7 @@ class Resource<T extends object> extends React.Component<Props<T>, State<T>> {
         this.work()
 
         let resource = this.props.default
-        if(!isNullOrUndefined(this.props.id)) {
+        if(this.props.id) {
             try {
                 const url = this.props.url + "/" + this.props.id
                 resource = await request<T>(RequestMethod.GET, url)
@@ -158,7 +157,7 @@ class Resource<T extends object> extends React.Component<Props<T>, State<T>> {
     })
 
     delete = lock(async () => {
-        if(isNullOrUndefined(this.props.id))
+        if(!this.props.id)
             return
 
         let {resource} = this.state
@@ -216,7 +215,7 @@ class Resource<T extends object> extends React.Component<Props<T>, State<T>> {
 
     render() {
         return this.props.children({
-            delete: isNullOrUndefined(this.props.id) ? undefined : this.delete,
+            delete: this.props.id ? this.delete : undefined,
             isWorking: this.state.isWorking,
             Model: this.model,
             resource: this.state.resource,
