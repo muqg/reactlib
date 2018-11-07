@@ -105,10 +105,12 @@ class Resource<T extends object> extends React.Component<Props<T>, State<T>> {
         if(this.props.id === prevId)
             return
 
-        this.work()
-
         let resource = this.props.default
         if(this.props.id) {
+            // Only work before fetching an existing resource
+            // to avoid an etra render for new resources.
+            this.work()
+
             try {
                 const url = this.props.url + "/" + this.props.id
                 resource = await request<T>(RequestMethod.GET, url)
