@@ -11,7 +11,7 @@ export { GlobalHotkey } from "./GlobalHotkey";
 export { ImageView } from "./ImageView";
 export * from "./notificaton";
 export { OutsideAlert } from "./OutsideAlert";
-export { Resource } from "./Resource";
+export { Resource, ResourceProps } from "./Resource";
 export * from "./select";
 export * from "./styled";
 export * from "./tabs";
