@@ -5,6 +5,9 @@ import { isString, isType } from "../utility/assertions";
 import { createModelComponent } from "../utility/react";
 import { request } from "../utility/web";
 
+
+type ResourceCallback<T extends object> = (resource: T) => string | void | Promise<string | void>
+
 interface ResourceChildrenProps<T extends object> {
     /**
      * Sends request to delete the resource. Undefined if a new
@@ -37,10 +40,6 @@ interface Props<T extends object> {
      */
     default: T
     /**
-     * Text to be shown for successful deletion.
-     */
-    deleteText: string
-    /**
      * Text to be shown when an exceptional error occurs.
      */
     exceptionText?: string
@@ -49,34 +48,30 @@ interface Props<T extends object> {
      */
     id: string | number | null | undefined
     /**
-     * Called before deleting a resource. May optionally return a string to
-     * indicate that an error has occured and thus cancel the deletion. The
-     * returned string will be shown as a notification.
+     * Called before deleting a resource. May return a string with an error
+     * message to show it as notification and cancel the process.
      */
-    onDelete?: (resource: T) => string | void
+    deleting?: ResourceCallback<T>
     /**
-     * Called after saving a resource. May optionall return a string to indicate
-     * that an error has occured. The returned string will be shown as a notification.
+     * Called after deleting a resource. May return a string to show as
+     * notification for when deletion is done.
      */
-    onSave?: (resource: T) =>  string | void
+    deleted?: ResourceCallback<T>
     /**
-     * Text to be shown on a successful save or creation of a resource.
+     * Called before saving a resource. May return a string with an error message
+     * to show it as notification and cancel the process. This makes it a perfect
+     * place for data validation.
      */
-    saveText: string
+    saving?: ResourceCallback<T>
+    /**
+     * Called after saving a resource. May return a string to show as
+     * notification for when saving is done.
+     */
+    saved?: ResourceCallback<T>
     /**
      * URL to the resource (without id appended).
      */
     url: string
-    /**
-     * Called before saving a resource or creating a new one. Returning a string
-     * indicates that validation is not successful and the returned string will
-     * be shown as a notification.
-     *
-     * Method may alternatively be used as a "beforeSave" method to perform actions
-     * before a resource is saved as an alternative to onSave which is always called
-     * AFTER a resource is saved or created.
-     */
-    validate?: (resource: T) => string | void
 }
 
 interface State<T extends object> {
@@ -128,31 +123,29 @@ class Resource<T extends object> extends React.Component<Props<T>, State<T>> {
 
     save = lock(async () => {
         let {resource} = this.state
-        const {id} = this.props
-
-        const {validate} = this.props
-        if(validate && this.error(validate(resource)))
-            return
+        const {id, saved, saving} = this.props
 
         this.work()
 
         try {
-            const method = id ? RequestMethod.PUT : RequestMethod.POST
-            const url = this.props.url + (method === RequestMethod.PUT ? "/" + id : "")
-            const payload = JSON.stringify(resource)
+            if(!saving || !this.error(await saving(resource))) {
+                const method = id ? RequestMethod.PUT : RequestMethod.POST
+                const url = this.props.url + (method === RequestMethod.PUT ? "/" + id : "")
+                const payload = JSON.stringify(resource)
 
-            const response = await request<Partial<T>>(method, url, {payload})
-            // @ts-ignore Spread types may be created only from object types.
-            resource = {...resource, ...response}
+                // @ts-ignore Remove this ignore when the one below is removed.
+                const response = await request<Partial<T>>(method, url, {payload})
+                // @ts-ignore Spread types may be created only from object types.
+                resource = {...resource, ...response}
 
-            if(this.props.onSave)
-                this.error(this.props.onSave(resource))
+                if(saved)
+                    this.error(await saved(resource))
+            }
         }
         catch(ex) {
             this.catch(ex)
         }
 
-        this.context(this.props.saveText)
         this.work(resource)
     })
 
@@ -161,24 +154,26 @@ class Resource<T extends object> extends React.Component<Props<T>, State<T>> {
             return
 
         let {resource} = this.state
+        const {deleting, deleted} = this.props
+
         this.work()
 
         try {
-            const onDelete = this.props.onDelete
-
-            if(onDelete && !this.error(await onDelete(resource))) {
+            if(!deleting || !this.error(await deleting(resource))) {
                 const url = this.props.url + "/" + this.props.id
                 const payload = JSON.stringify(resource)
                 await request(RequestMethod.DELETE, url, {payload})
 
                 resource = this.props.default
+
+                if(deleted)
+                    this.error(await deleted(resource))
             }
         }
         catch(ex) {
             this.catch(ex)
         }
 
-        this.context(this.props.deleteText)
         this.work(resource)
     })
 
