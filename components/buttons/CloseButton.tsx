@@ -1,7 +1,7 @@
 import * as React from "react";
-import { css, styled } from "../styles";
-import { COLOR_PRIMARY_DARK } from "../styles/colours";
-import { position } from "../styles/mixins";
+import { css, styled } from "../../styles";
+import { COLOR_PRIMARY_DARK } from "../../styles/colours";
+import { position } from "../../styles/mixins";
 
 
 const spanCommon = css`
@@ -74,4 +74,5 @@ const CloseButton = (props: Props & StyleProps) => {
     )
 }
 
-export default CloseButton
+export { CloseButton };
+

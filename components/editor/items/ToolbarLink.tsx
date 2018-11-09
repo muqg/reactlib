@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Input } from "../..";
 import { styled } from "../../../styles";
 import { Editor } from "../../../utility/dom";
 import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
+import { Input } from "../../styled/Input";
 import { TOOLBAR_SPRITESHEET } from "../Toolbar";
 import { ToolbarItem } from "../ToolbarItem";
 
