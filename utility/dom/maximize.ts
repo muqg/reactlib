@@ -16,10 +16,13 @@ function maximize(element: HTMLElement, height: boolean): void
 function maximize(element: HTMLElement, height: boolean, width: boolean): void
 
 function maximize(element: HTMLElement, height: boolean, width?: boolean) {
-    element.style.height = height ? element.scrollHeight + "px" : ""
+    requestAnimationFrame(() => {
+        element.style.height = height ? element.scrollHeight + "px" : ""
 
-    if(!isUndefined(width))
-        element.style.width = width ? element.scrollWidth + "px" : ""
+        if(!isUndefined(width))
+            element.style.width = width ? element.scrollWidth + "px" : ""
+    })
 }
 
 export { maximize };
+
