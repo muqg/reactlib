@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../styles";
 import { flex, position } from "../styles/mixins";
@@ -47,65 +48,59 @@ interface Props {
     everyMinute?: (secondsLeft: number, minutes: number) => void
 }
 
-interface State {
-    limit: number
-    minutes: number
-    seconds: number
-}
 
-
-class Timer extends React.PureComponent<Props, State> {
-    state: State = {
-        limit: this.props.limit,
+const Timer = React.memo((props: Props) => {
+    const initialRender = useRef(true)
+    const [time, setTime] = useState({
+        limit: props.limit,
         minutes: 0,
-        seconds: 0,
-    }
+        seconds: 0
+    })
 
-    componentDidMount() {
-        this.start()
-    }
+    useEffect(() => {
+        tick()
+    }, [time.limit])
 
-    async start() {
-        while(this.state.limit > 0) {
-            this.setState(prevState => {
-                const limit = prevState.limit - 1
-                const minutes = Math.floor(limit / 60)
-                const seconds = limit % 60
+    async function tick() {
+        if(time.limit <= 0)
+            return
 
-                if(this.props.everySecond)
-                    this.props.everySecond(seconds, minutes)
-
-                if(this.props.everyMinute && prevState.minutes > minutes)
-                    this.props.everyMinute(seconds, minutes)
-
-                return {limit, minutes, seconds}
-            })
-
+        if(!initialRender.current)
             // Ever wondered how long can a single second be...?
             await wait(1000);
-        }
+        else
+            initialRender.current = false
 
-        if(this.props.onExpire)
-            this.props.onExpire()
+
+        const limit = time.limit - 1
+        const minutes = Math.floor(limit / 60)
+        const seconds = limit % 60
+
+        if(props.everySecond)
+            props.everySecond(seconds, minutes)
+
+        if(props.everyMinute && time.minutes > minutes)
+            props.everyMinute(seconds, minutes)
+
+        setTime({limit, minutes, seconds})
+
+        if(limit === 0 && props.onExpire)
+            props.onExpire()
     }
 
-    render() {
-        const {seconds, minutes} = this.state
+    return createPortal(
+        <Container>
+            <Timepiece>
+                {padStart(time.minutes.toString(), 2)}
+            </Timepiece>
+            <Timepiece>
+                {padStart(time.seconds.toString(), 2)}
+            </Timepiece>
+        </Container>,
 
-        return createPortal(
-            <Container>
-                <Timepiece>
-                    {padStart(minutes.toString(), 2)}
-                </Timepiece>
-                <Timepiece>
-                    {padStart(seconds.toString(), 2)}
-                </Timepiece>
-            </Container>,
-
-            document.body
-        )
-    }
-}
+        document.body
+    )
+})
 
 
 export { Timer };
