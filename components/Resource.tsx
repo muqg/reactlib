@@ -179,6 +179,7 @@ class Resource<T extends object = object> extends React.Component<ResourceProps<
 
     private error(err: string | void) {
         if(isString(err)) {
+            // @ts-ignore Type context does not exist.
             this.context(err)
             return true
         }
@@ -195,6 +196,7 @@ class Resource<T extends object = object> extends React.Component<ResourceProps<
             else
                 msg = "Error"
         }
+        // @ts-ignore Type context does not exist.
         this.context(msg)
     }
 

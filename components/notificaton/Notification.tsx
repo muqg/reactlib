@@ -45,6 +45,7 @@ class Notification extends React.PureComponent<Props, State> {
         isActive: false
     }
     static contextType = NotificationContext
+    // @ts-ignore Type context does not exist.
     notify = this.context
 
     componentDidUpdate(prevProps: Props) {
