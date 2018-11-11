@@ -1,8 +1,9 @@
 import * as React from "react";
+import { useCallback, useContext, useEffect } from "react";
+import { NotificationContext } from ".";
 import { COLOR_BLACK, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
 import { position } from "../../styles/mixins";
 import { delay } from "../../utility";
-import { NotificationContext } from "./contexts";
 
 
 const NOTIFICATION_DURATION = 2_000
@@ -36,43 +37,26 @@ interface Props {
     message: string
 }
 
-interface State {
-    isActive: boolean
-}
+const Notification = React.memo(({message}: Props) => {
+    const notify = useContext(NotificationContext)
 
-class Notification extends React.PureComponent<Props, State> {
-    state: State = {
-        isActive: false
-    }
-    static contextType = NotificationContext
-    // @ts-ignore Type context does not exist.
-    notify = this.context
+    const hide = useCallback(
+        delay(() => notify(""), NOTIFICATION_DURATION),
+        [notify]
+    )
 
-    componentDidUpdate(prevProps: Props) {
-        if(prevProps.message === this.props.message)
-            return
+    useEffect(() => {
+        if(message.length)
+            hide()
+    }, [message])
 
-        if(!this.props.message.length) {
-            this.setState({isActive: false})
-        }
-        else {
-            this.setState({isActive: true})
-            this.hide()
-        }
-    }
+    return (
+        <Container active={message.length > 0}>
+            {message}
+        </Container>
+    )
+})
 
-    hide = delay(() => {
-        this.notify("")
-    }, NOTIFICATION_DURATION)
-
-    render() {
-        return (
-            <Container active={this.props.message.length > 0}>
-                {this.props.message}
-            </Container>
-        )
-    }
-}
 
 export { Notification };
 

@@ -1,30 +1,23 @@
 import * as React from "react";
-import { NotificationContext, NotificationData, NotificationDataContext, Notify } from "./contexts";
+import { useState } from "react";
 import { Notification } from "./Notification";
 
 interface Props {
+    children?: React.ReactNode
 }
+export type Notify = (message: string) => void
 
+export const NotificationContext = React.createContext<Notify>(() => {})
 
-class Notifiable extends React.Component<Props, NotificationData> {
-    state: NotificationData = {
-        message: ""
-    }
+function Notifiable(props: Props) {
+    const [message, setMessage] = useState("")
 
-    notify: Notify = (message: string) => {
-        this.setState({message})
-    }
-
-    render() {
-        return (
-            <NotificationContext.Provider value={this.notify}>
-                <NotificationDataContext.Provider value={this.state}>
-                    <Notification {...this.state} />
-                    {this.props.children}
-                </NotificationDataContext.Provider>
-            </NotificationContext.Provider>
-        )
-    }
+    return (
+        <NotificationContext.Provider value={setMessage}>
+                <Notification message={message} />
+                {props.children}
+        </NotificationContext.Provider>
+    )
 }
 
 

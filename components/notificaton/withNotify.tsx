@@ -1,5 +1,5 @@
 import * as React from "react";
-import { NotificationContext, Notify } from "./contexts";
+import { NotificationContext, Notify } from ".";
 import { getDisplayName } from "../../utility/react";
 
 
