@@ -30,7 +30,7 @@ interface List<T> {
 type InsertFilter<T> = (listItem: T, item: T) => boolean
 type RemoveFilter<T> = (listItem: T) => boolean
 
-function useList<T extends Array<V> = [], V = any>(initial: T[]): List<T> {
+function useList<T extends Array<V> = Array<V>, V = any>(initial: T[]): List<T> {
     const [items, fill] = useState(initial)
 
     return {

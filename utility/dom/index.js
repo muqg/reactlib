@@ -12,5 +12,6 @@ export { loadScript } from "./loadScript";
 export { loadStyle } from "./loadStyle";
 export { maximize } from "./maximize";
 export * from "./parseElement";
+export * from "./parseInputValue";
 export { rgbColor } from "./rgbColor";
 
