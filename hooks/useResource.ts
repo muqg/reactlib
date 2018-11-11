@@ -50,7 +50,7 @@ export interface ResourceProps<T extends object> {
 
 function useResource<T extends object>({url = document.location!.href, ...props}: ResourceProps<T>) {
     const [isWorking, setIsWorking] = useState(false)
-    const model = useModel(props.default)
+    const [modelResource, resource, setResource] = useModel(props.default)
 
     const notify = useContext(NotificationContext)
 
@@ -64,7 +64,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         else {
             // Resetting resource outside of the worker
             // wrapper skips an unnecessary render.
-            model.$set(props.default)
+            setResource(props.default)
         }
     }, [props.id])
 
@@ -72,18 +72,18 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         await _work(async () => {
             const {id, saved, saving} = props
 
-            if(saving && _error(await saving(model.$data)))
+            if(saving && _error(await saving(resource)))
                 return
 
             const method = id ? RequestMethod.PUT : RequestMethod.POST
             const requestURL = url + (method === RequestMethod.PUT ? "/" + id : "")
-            const payload = JSON.stringify(model.$data)
+            const payload = JSON.stringify(resource)
 
             // @ts-ignore Spread types may be created only from object types.
             const response = await request<Partial<T>>(method, requestURL, {payload})
 
             // @ts-ignore Spread types may be created only from object types.
-            const nextResource = {...model.$data, ...response}
+            const nextResource = {...resource, ...response}
             if(saved)
                 _error(await saved(nextResource))
             return nextResource
@@ -96,11 +96,11 @@ function useResource<T extends object>({url = document.location!.href, ...props}
 
         await _work(async () => {
             const {deleting, deleted} = props
-            if(deleting && _error(await deleting(model.$data)))
+            if(deleting && _error(await deleting(resource)))
                 return
 
             const requestURL = url + "/" + props.id
-            const payload = JSON.stringify(model.$data)
+            const payload = JSON.stringify(resource)
             await request(RequestMethod.DELETE, requestURL, {payload})
 
             const nextResource = props.default
@@ -126,7 +126,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         try {
             const resource = await worker()
             if(resource)
-                model.$set(resource)
+                setResource(resource)
         }
         catch(ex) {
             console.error(ex)
@@ -141,10 +141,10 @@ function useResource<T extends object>({url = document.location!.href, ...props}
 
     return {
         isWorking,
-        model,
+        modelResource,
         save,
 
-        data: model.$data,
+        data: resource,
         delete: del,
     }
 }

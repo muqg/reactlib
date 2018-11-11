@@ -3,17 +3,17 @@ import { ParseableInput, parseInputValue } from "../utility/dom";
 import { isObject, isType } from "../utility/assertions";
 import { cast } from "../utility/string";
 
-type Model<T extends object, K extends keyof T = keyof T> = {
+export type Model<T extends object, K extends keyof T = keyof T> = {
     [key in K]: {
         value: T[K]
         onChange: (input: ModelInput) => void
     }
 }
-type ModelInput = ParseableInput | string | boolean | number | object
+export type ModelInput = ParseableInput | string | boolean | number | object
 
-type ModelObject<T extends object> = Model<T> & { $data: T, $set: React.Dispatch<React.SetStateAction<T>> }
+export type ModelSetFunction<T extends object> = React.Dispatch<React.SetStateAction<T>>
 
-function useModel<T extends object>(init: T): Readonly<ModelObject<T>> {
+function useModel<T extends object>(init: T): [Readonly<Model<T>>, T, ModelSetFunction<T>] {
     const [data, setModel] = useState(init)
 
     // @ts-ignore Spread types may be created only from object types.
@@ -30,11 +30,7 @@ function useModel<T extends object>(init: T): Readonly<ModelObject<T>> {
         })
     }
 
-    let model  = {
-        $data: data,
-        $set: setModel
-    } as ModelObject<T>
-
+    let model = {} as Model<T>
     for(let key in init) {
         // @ts-ignore Spread types may be created only from object types.
         model[key] = {
@@ -44,7 +40,7 @@ function useModel<T extends object>(init: T): Readonly<ModelObject<T>> {
         }
     }
 
-    return model
+    return [model, data, setModel]
 }
 
 
