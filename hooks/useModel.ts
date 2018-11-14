@@ -2,23 +2,23 @@ import { useRef, useState } from "react";
 import { isNull, isObject, isType } from "../utility/assertions";
 import { ParseableInput, parseInputValue } from "../utility/dom";
 import { cast } from "../utility/string";
+import { ReactStateSetter } from "../utility/react";
 
 export type Model<T extends object, K extends keyof T = keyof T> = {
     [key in K]: {
         value: T[K]
-        onChange: (input: ModelInput) => void
+        onChange: (input: ModelInputValue) => void
     }
 }
-export type ModelInput = ParseableInput | string | boolean | number | object
-export type ModelSetFunction<T extends object> = React.Dispatch<React.SetStateAction<T>>
-type ModelReturnValue<T extends object> = [Readonly<Model<T>>, T, ModelSetFunction<T>]
+export type ModelInputValue = ParseableInput | string | boolean | number | object
+type ModelReturnValue<T extends object> = [Readonly<Model<T>>, T, ReactStateSetter<T>]
 
 function useModel<T extends object>(init: T): ModelReturnValue<T> {
     const [data, setModel] = useState(init)
     const cache = useRef<null | ModelReturnValue<T>>(null)
 
     // @ts-ignore Spread types may be created only from object types.
-    function change(name: string, input: ModelInput) {
+    function change(name: string, input: ModelInputValue) {
         cache.current = null
 
         // @ts-ignore Spread types may be created only from object types.
