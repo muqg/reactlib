@@ -15,5 +15,5 @@ export * from "./select";
 export * from "./styled";
 export * from "./tabs";
 export { Timer } from "./Timer";
-export { Translate, Translation } from "./Translation";
+export { Translate } from "./Translate";
 

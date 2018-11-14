@@ -1,4 +1,4 @@
-import { Translate } from "./Translation";
+import { Translate } from "./Translate";
 import * as React from "react";
 
 interface Props {

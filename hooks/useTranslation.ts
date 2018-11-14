@@ -1,5 +1,5 @@
 import { useCallback, useContext } from "react";
-import { Translation } from "../components";
+import { TranslationContext } from "../contexts";
 import { Dict } from "../utility";
 import { isArray, isString, isUndefined } from "../utility/assertions";
 import { pull } from "../utility/collection";
@@ -19,7 +19,7 @@ interface Options {
 }
 
 function useTranslation() {
-    const translations = useContext(Translation)
+    const translations = useContext(TranslationContext)
 
     function translate<T extends any = string>(key: string, options: Options): T {
         let result = pull(translations, key) || key
