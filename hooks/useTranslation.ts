@@ -21,13 +21,13 @@ interface Options {
 function useTranslation() {
     const translations = useContext(TranslationContext)
 
-    function translate<T extends any = string>(key: string, options: Options): T {
+    function translate<T extends any = string>(key: string, options?: Options): T {
         let result = pull(translations, key) || key
 
         if(result === key)
             console.error("No translation value found for key: " + key)
 
-        if(isString(result)) {
+        if(isString(result) && options) {
             if(options.args) {
                 if(isArray(options.args))
                     result = format(result, ...options.args)
