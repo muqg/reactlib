@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { styled } from "../../styles";
 import { flex } from "../../styles/mixins";
 import { isFunction } from "../../utility/assertions";
@@ -17,47 +18,34 @@ interface Props {
     className?: string
 }
 
-interface State {
-    index: number
-}
 
+function TabView(props: Props) {
+    const [tabIndex, setTabIndex] = useState(0)
 
-class TabView extends React.Component<Props, State> {
-    state: State = {
-        index: 0
-    }
-
-    changeIndex = (index: number) => {
-        this.setState({index})
-    }
-
-    _getTitles() {
-        return this.props.children.map(
+    function _getTitles() {
+        return props.children.map(
             c => isFunction(c.props.title) ? c.props.title() : c.props.title
         )
     }
 
-    render() {
-        return (
-            <div className={this.props.className}>
-                <TitleContainer>
-                    {this._getTitles().map((text, i) =>
-                        <TabTitleButton
-                            active={this.state.index === i}
-                            index={i}
-                            onClick={this.changeIndex}
-                        >
-                            {text}
-                        </TabTitleButton>)
-                    }
-                </TitleContainer>
+    return (
+        <div className={props.className}>
+            <TitleContainer>
+                {_getTitles().map((text, i) =>
+                    <TabTitleButton
+                        active={tabIndex === i}
+                        index={i}
+                        onClick={setTabIndex}
+                    >
+                        {text}
+                    </TabTitleButton>)
+                }
+            </TitleContainer>
 
-                {this.props.children[this.state.index]}
-            </div>
-        )
-    }
+            {props.children[tabIndex]}
+        </div>
+    )
 }
-
 
 export { TabView };
 
