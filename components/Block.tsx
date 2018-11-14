@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Translate } from ".";
+import { useTranslation } from "../hooks";
 
 
 const Container = styled.div`
@@ -31,22 +31,13 @@ interface ContainerProps {
 }
 
 
-const Block = ({translate, ...props}: Props) => {
-    if(translate && props.title) {
-        return (
-            <Translate value={props.title}>
-                {text => <BlockContent {...props} title={text} />}
-            </Translate>
-        )
-    }
-    return <BlockContent {...props} />
-}
+const Block = ({translate, as, className, title = "", children}: Props) => {
+    const getTranslated = useTranslation()
 
-const BlockContent = ({as, className, title, children}: ContainerProps) => {
     return (
         <Container className={className} as={as}>
             <Title>
-                {title}
+                {translate ? getTranslated(title) : title}
             </Title>
             {children}
         </Container>
@@ -55,3 +46,4 @@ const BlockContent = ({as, className, title, children}: ContainerProps) => {
 
 
 export { Block };
+
