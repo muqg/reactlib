@@ -1,5 +1,5 @@
-import { Translate } from "./Translate";
 import * as React from "react";
+import { Translate } from ".";
 
 interface Props {
     title: string

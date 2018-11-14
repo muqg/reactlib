@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Hotkey, isKeyPressed } from "../utility/dom";
+import { Hotkey, isKeyPressed } from "../../utility/dom";
 
 
 interface OwnProps {
