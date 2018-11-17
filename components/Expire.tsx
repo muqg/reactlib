@@ -1,4 +1,4 @@
-import * as React from "react"
+import { useEffect, useRef, useState } from "react";
 
 
 interface Props {
@@ -13,62 +13,32 @@ interface Props {
     children?: any
 }
 
-interface State {
-    isVisible: boolean
+
+function Expire(props: Props) {
+    const [visible, setVisible] = useState(true)
+    const timer = useRef<number | undefined>(undefined)
+
+    useEffect(() => {
+        const seconds = Math.max(0, props.in) * 1000
+        // @ts-ignore setTimeout returns a number.
+        timer.current = setTimeout(expire, seconds)
+
+        setVisible(true)
+
+        return () => clearTimeout(timer.current)
+    }, [props.children])
+
+    function expire() {
+        setVisible(false)
+        timer.current = undefined
+
+        if(props.then)
+            props.then()
+    }
+
+    return visible ? props.children : null
 }
 
 
-class Expire extends React.Component<Props, State> {
-    state = {
-        isVisible: true
-    }
-    timer: number = -1
+export { Expire };
 
-    componentDidMount() {
-        this.setTimer()
-    }
-
-    componentWillUnmount() {
-        this.clearTimer()
-    }
-
-    componentDidUpdate(prevProps: Props) {
-        if(prevProps.children !== this.props.children)
-            this.setTimer()
-    }
-
-    setTimer() {
-        this.clearTimer()
-        this.setState({isVisible: true})
-
-        const seconds = Math.max(0, this.props.in) * 1000
-        this.timer = setTimeout(this.expire.bind(this), seconds)
-    }
-
-    clearTimer() {
-        clearTimeout(this.timer)
-    }
-
-    expire() {
-        this.setState({isVisible: false})
-        this.timer = -1
-
-        if(this.props.then)
-            this.props.then()
-    }
-
-    render() {
-        return (
-            <>
-                {
-                    this.state.isVisible ?
-                    this.props.children :
-                    ""
-                }
-            </>
-        )
-    }
-}
-
-
-export default Expire

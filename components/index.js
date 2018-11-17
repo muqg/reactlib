@@ -5,7 +5,7 @@ export { default as ConfirmationDialog } from "./dialogs/ConfirmationDialog";
 export { Dialog, DialogProps } from "./dialogs/Dialog";
 export { DialogBox, DialogBoxProps } from "./dialogs/DialogBox";
 export * from "./editor";
-export { default as Expire } from "./Expire";
+export { Expire } from "./Expire";
 export { ImageView } from "./ImageView";
 export * from "./notificaton";
 export { OutsideAlert } from "./OutsideAlert";
