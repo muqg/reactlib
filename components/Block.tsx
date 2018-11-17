@@ -24,7 +24,7 @@ interface Props extends ContainerProps {
     translate?: boolean
 }
 interface ContainerProps {
-    as?: string
+    as?: keyof JSX.IntrinsicElements | React.ComponentType<any>
     children?: any
     className?: string
     title?: string
