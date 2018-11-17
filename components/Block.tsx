@@ -1,6 +1,6 @@
 import * as React from "react";
-import styled from "styled-components";
 import { useTranslation } from "../hooks";
+import { styled } from "../styles";
 
 
 const Container = styled.div`

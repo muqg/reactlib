@@ -1,11 +1,10 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import styled, { css } from "styled-components";
-import { isUndefined } from "util";
-import { COLOR_TRANSPARENT } from "../../styles";
-import { wait } from "../../utility";
-import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
+import { COLOR_TRANSPARENT, css, styled } from "../../styles";
 import { flex, position } from "../../styles/mixins";
+import { wait } from "../../utility";
+import { isUndefined } from "../../utility/assertions";
+import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})

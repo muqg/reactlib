@@ -1,4 +1,5 @@
-import { isObject } from "util";
+import { Dict } from "..";
+import { isObject } from "../assertions";
 
 /**
  * Returns a nested array or object element, using dot notation key access.
@@ -13,7 +14,7 @@ function pull<T = any>(col: object, key: string): T {
 
     let result: any = col || null
     for(let k of split) {
-        if(isObject(result))
+        if(isObject<Dict<any>>(result))
             result = result[k] || null
     }
 
