@@ -1,6 +1,7 @@
 import * as React from "react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useInitialRender } from "../hooks";
 import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../styles";
 import { flex, position } from "../styles/mixins";
 import { wait } from "../utility";
@@ -50,7 +51,7 @@ interface Props {
 
 
 const Timer = React.memo((props: Props) => {
-    const initialRender = useRef(true)
+    const initialRender = useInitialRender()
     const [time, setTime] = useState({
         limit: props.limit,
         minutes: 0,
@@ -65,12 +66,9 @@ const Timer = React.memo((props: Props) => {
         if(time.limit <= 0)
             return
 
-        if(!initialRender.current)
+        if(!initialRender)
             // Ever wondered how long can a single second be...?
             await wait(1000);
-        else
-            initialRender.current = false
-
 
         const limit = time.limit - 1
         const minutes = Math.floor(limit / 60)
@@ -78,14 +76,12 @@ const Timer = React.memo((props: Props) => {
 
         if(props.everySecond)
             props.everySecond(seconds, minutes)
-
         if(props.everyMinute && time.minutes > minutes)
             props.everyMinute(seconds, minutes)
-
-        setTime({limit, minutes, seconds})
-
         if(limit === 0 && props.onExpire)
             props.onExpire()
+
+        setTime({limit, minutes, seconds})
     }
 
     return createPortal(
