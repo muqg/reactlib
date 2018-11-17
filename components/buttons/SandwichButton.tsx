@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import { COLOR_PRIMARY_DARK, css, styled } from "../../styles";
 import { position } from "../../styles/mixins";
 
@@ -13,7 +14,6 @@ const spanCommon = css`
     transition: all .3s;
     width: inherit;
 `
-
 const activeStyle = css`
     > span {
         background: transparent !important;
@@ -29,7 +29,6 @@ const activeStyle = css`
         }
     }
 `
-
 const Button = styled.button`
     cursor: pointer;
     height: ${(p: StyleProps) => p.size}px;
@@ -53,7 +52,6 @@ const Button = styled.button`
 `
 
 
-
 interface StyleProps {
     color: string
     /**
@@ -74,53 +72,39 @@ interface OwnProps {
     onClick?: (isActive: boolean, e: React.MouseEvent<any>) => void
 }
 
-interface State {
-    active: boolean
-}
 type Props = OwnProps & StyleProps
 
 
-class SandwichButton extends React.PureComponent<Props, State> {
-    static defaultProps = {
-        active: false,
-        color: COLOR_PRIMARY_DARK,
-        size: 30
+const SandwichButton = React.memo(({active = false, color = COLOR_PRIMARY_DARK, size = 30, ...props}: Props) => {
+    const [isActive, setIsActive] = useState(active)
+
+    useEffect(() => {
+        // Avoids some unnecessary renders and possible infinite loops.
+        if(active !== isActive)
+            setIsActive(active)
+    }, [active])
+
+    function handleClick(event: React.MouseEvent<any>) {
+        const nextIsActive = !isActive
+        setIsActive(nextIsActive)
+
+        if(props.onClick)
+            props.onClick(nextIsActive, event)
     }
 
-    state: State = {
-        active: this.props.active
-    }
-
-    componentDidUpdate(prevProps: Props, prevState: State) {
-        if(this.props.active !== prevProps.active && this.props.active !== prevState.active)
-            this.setState({active: this.props.active})
-    }
-
-    handleClick = (event: React.MouseEvent<any>) => {
-        const active = !this.state.active
-        this.setState(prevState => {
-            return {active: !prevState.active}
-        })
-
-        if(this.props.onClick)
-            this.props.onClick(active, event)
-    }
-
-    render() {
-        return (
-            <div className={this.props.className}>
-                <Button
-                    active={this.state.active}
-                    color={this.props.color}
-                    onClick={this.handleClick}
-                    size={this.props.size}
-                >
-                    <span></span>
-                </Button>
-            </div>
-        )
-    }
-}
+    return (
+        <div className={props.className}>
+            <Button
+                active={isActive}
+                color={color}
+                onClick={handleClick}
+                size={size}
+            >
+                <span></span>
+            </Button>
+        </div>
+    )
+})
 
 
 export { SandwichButton };
