@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useModel } from ".";
+import { useModel, useLocked } from ".";
 import { NotificationContext } from "../components";
 import { RequestException, RequestMethod } from "../utility";
 import { isString, isType } from "../utility/assertions";
@@ -68,7 +68,8 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         }
     }, [props.id])
 
-    async function save() {
+    // Locking also makes this callback memoized.
+    const save = useLocked(async function save() {
         await _work(async () => {
             const {id, saved, saving} = props
 
@@ -88,9 +89,10 @@ function useResource<T extends object>({url = document.location!.href, ...props}
                 _error(await saved(nextResource))
             return nextResource
         })
-    }
+    })
 
-    async function del() {
+    // Locking also makes this callback memoized.
+    const del = useLocked(async function del() {
         if(!props.id)
             return
 
@@ -108,7 +110,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
                 _error(await deleted(nextResource))
             return nextResource
         })
-    }
+    })
 
     function _error(err: string | void) {
         if(isString(err)) {
@@ -119,6 +121,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
     }
 
     async function _work(worker: () => Promise<T | void>) {
+        // Even though callbacks are locked... better be safe than sorry.
         if(isWorking)
             return
 
