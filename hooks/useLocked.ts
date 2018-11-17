@@ -13,9 +13,10 @@ import { lock } from "../utility";
 // @ts-ignore TS2370: A rest parameter must be of an array type.
 function useLocked<A extends any[]>(func: (...args: A) => void | Promise<void>) {
     const callback = useRef(func)
+    callback.current = func
+
     // @ts-ignore TS2370: A rest parameter must be of an array type.
     const locked = useRef(lock(async (...args: A) => await callback.current(...args)))
-
     return locked.current
 }
 
