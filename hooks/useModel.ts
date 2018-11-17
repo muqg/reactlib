@@ -4,15 +4,27 @@ import { ParseableInput, parseInputValue } from "../utility/dom";
 import { cast } from "../utility/string";
 import { ReactStateSetter } from "../utility/react";
 
+/**
+ * Model object structure.
+ */
 export type Model<T extends object, K extends keyof T = keyof T> = {
     [key in K]: {
         value: T[K]
         onChange: (input: ModelInputValue) => void
     }
 }
+/**
+ * Valid model inputs values.
+ */
 export type ModelInputValue = ParseableInput | string | boolean | number | object
+
 type ModelReturnValue<T extends object> = [Readonly<Model<T>>, T, ReactStateSetter<T>]
 
+/**
+ * Creates an input model.
+ *
+ * @param init The initial model object data.
+ */
 function useModel<T extends object>(init: T): ModelReturnValue<T> {
     const [data, setModel] = useState(init)
     const cache = useRef<null | ModelReturnValue<T>>(null)
