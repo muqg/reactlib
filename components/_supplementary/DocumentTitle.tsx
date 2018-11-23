@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Translate } from ".";
+import { useTranslation } from "../../hooks";
 
 interface Props {
     title: string
@@ -8,19 +8,12 @@ interface Props {
 
 
 const DocumentTitle: React.StatelessComponent<Props> = ({title, translate}: Props) => {
+    const getText = useTranslation()
+
     if(title) {
-        if(translate) {
-            return (
-                <Translate value={title}>
-                    {text => {
-                        document.title = text
-                        return null
-                    }}
-                </Translate>
-            )
-        }
-        else
-            document.title = title
+        if(translate)
+            title = getText(title)
+        document.title = title
     }
 
     return null
