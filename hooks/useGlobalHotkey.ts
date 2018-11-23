@@ -1,25 +1,41 @@
 import { useEffect } from "react";
 import { Hotkey, isKeyPressed } from "../utility/dom";
 
+const handlers: Array<HotkeyHandlerCallback> = []
+
+type HotkeyHandlerCallback = (e: KeyboardEvent) => void
+
 /**
  * Sets up a global hotkey.
  *
- * __Note__: Hotkey will be set up anew if the handler callback changes.
- *
  * @param hotkey Hotkey data.
  * @param handle The handler callback.
- * @param allowInsideInputs Whether to allow hotkey within inputs.
+ * @param allowInsideInputs Whether to allow hotkey to be triggered from inside inputs.
  */
-function useGlobalHotkey(hotkey: Hotkey, handle: (event: KeyboardEvent) => any, allowInsideInputs?: boolean) {
+function useGlobalHotkey(hotkey: Hotkey, handle: HotkeyHandlerCallback, allowInsideInputs?: boolean) {
     useEffect(() => {
-        const handler = (event: KeyboardEvent) => {
+        if(!handlers.length)
+            window.addEventListener("keydown", handleEvents)
+
+        const handler: HotkeyHandlerCallback = (event) => {
             if(isKeyPressed(hotkey, event, allowInsideInputs))
                 handle(event)
         }
+        handlers.push(handler)
 
-        window.addEventListener("keydown", handler)
-        return () => window.removeEventListener("keydown", handler)
-    }, [handle])
+        return () => {
+            const target = handlers.find(h => h === handler)
+            if(target)
+                handlers.splice(handlers.indexOf(target), 1)
+
+            if(!handlers.length)
+                window.removeEventListener("keydown", handleEvents)
+        }
+    })
+}
+
+function handleEvents(e: KeyboardEvent) {
+    handlers.forEach(h => h(e))
 }
 
 
