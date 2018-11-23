@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { useModel, useLocked } from ".";
+import { useModel } from ".";
 import { NotificationContext } from "../components";
 import { RequestException, RequestMethod } from "../utility";
 import { isString, isType } from "../utility/assertions";
+import { call } from "../utility/function";
 import { request } from "../utility/web";
 
 type ResourceCallback<T extends object> = (resource: T) => string | void | Promise<string | void>
@@ -54,12 +55,11 @@ function useResource<T extends object>({url = document.location!.href, ...props}
 
     const notify = useContext(NotificationContext)
 
+    const resUrl = url + "/" + props.id
+
     useEffect(() => {
         if(props.id) {
-            _work(async () => {
-                const requestURL = url + "/" + props.id
-                return await request<T>(RequestMethod.GET, requestURL)
-            })
+            _work(async () => await request<T>(RequestMethod.GET, resUrl))
         }
         else {
             // Resetting resource outside of the worker
@@ -69,15 +69,13 @@ function useResource<T extends object>({url = document.location!.href, ...props}
     }, [props.id])
 
     // Locking also makes this callback memoized.
-    const save = useLocked(async function save() {
+    async function save() {
         await _work(async () => {
-            const {id, saved, saving} = props
-
-            if(saving && _error(await saving(resource)))
+            if(_error(await call(props.saving, resource)))
                 return
 
-            const method = id ? RequestMethod.PUT : RequestMethod.POST
-            const requestURL = url + (method === RequestMethod.PUT ? "/" + id : "")
+            const method = props.id ? RequestMethod.PUT : RequestMethod.POST
+            const requestURL = method === RequestMethod.PUT ? resUrl : url
             const payload = JSON.stringify(resource)
 
             // @ts-ignore Spread types may be created only from object types.
@@ -85,32 +83,29 @@ function useResource<T extends object>({url = document.location!.href, ...props}
 
             // @ts-ignore Spread types may be created only from object types.
             const nextResource = {...resource, ...response}
-            if(saved)
-                _error(await saved(nextResource))
+            _error(await call(props.saved, nextResource))
             return nextResource
         })
-    })
+    }
 
     // Locking also makes this callback memoized.
-    const del = useLocked(async function del() {
+    async function del() {
         if(!props.id)
             return
 
         await _work(async () => {
-            const {deleting, deleted} = props
-            if(deleting && _error(await deleting(resource)))
+            if(_error(await call(props.deleting, resource)))
                 return
 
-            const requestURL = url + "/" + props.id
             const payload = JSON.stringify(resource)
-            await request(RequestMethod.DELETE, requestURL, {payload})
+            await request(RequestMethod.DELETE, resUrl, {payload})
 
-            const nextResource = props.default
-            if(deleted)
-                _error(await deleted(nextResource))
+            // @ts-ignore Spread types may be created only from object types.
+            const nextResource = {...props.default}
+            _error(await call(props.deleted, nextResource))
             return nextResource
         })
-    })
+    }
 
     function _error(err: string | void) {
         if(isString(err)) {
@@ -121,7 +116,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
     }
 
     async function _work(worker: () => Promise<T | void>) {
-        // Even though callbacks are locked... better be safe than sorry.
+        // This will prevent sending duplicate requests.
         if(isWorking)
             return
 
