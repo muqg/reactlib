@@ -2,6 +2,7 @@
 import { ResourceProps, useResource } from ".";
 import { replace } from "../utility/array";
 import { call } from "../utility/function";
+import { except } from "../utility/collection";
 
 export interface ResourceObject<T extends string | number = number> {
     id: T
@@ -14,8 +15,8 @@ interface Props<T extends ResourceObject> extends ResourceProps<T> {
 
 function useResourceList<T extends ResourceObject>(props: Props<T>) {
     const [list, setList] = useState<T[]>(props.listItems)
-    const resource = useResource({
-        ...props,
+    const resource = useResource<T>({
+        ...except(props, "listItems"),
         deleted,
         saved,
     })
