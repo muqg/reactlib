@@ -7,12 +7,12 @@ import { cast } from "../utility/string";
 /**
  * Model object structure.
  */
-export type Model<T extends object, K extends keyof T = keyof T> = Required<{
+export type Model<T extends object, K extends keyof T = keyof T> = {
     [key in K]: {
         value: any
         onChange: (input: ModelInputValue) => void
     }
-}>
+}
 /**
  * Valid model inputs values.
  */
