@@ -46,7 +46,7 @@ export interface ResourceProps<T extends object> {
     /**
      * URL to the resource (without id appended).
      */
-    url: string
+    url?: string
 }
 
 function useResource<T extends object>({url = document.location!.href, ...props}: ResourceProps<T>) {
