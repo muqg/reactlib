@@ -9,7 +9,7 @@ import { ReactStateSetter } from "../utility/react";
  */
 export type Model<T extends object, K extends keyof T = keyof T> = {
     [key in K]: {
-        value: T[K]
+        value: any
         onChange: (input: ModelInputValue) => void
     }
 }

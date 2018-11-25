@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useModel } from ".";
+import { useModel, Model } from ".";
 import { NotificationContext } from "../components";
 import { RequestException, RequestMethod } from "../utility";
 import { isString, isType } from "../utility/assertions";
@@ -49,7 +49,15 @@ export interface ResourceProps<T extends object = object> {
     url?: string
 }
 
-function useResource<T extends object>({url = document.location!.href, ...props}: ResourceProps<T>) {
+export interface ResourceManager<T extends object = object> {
+    data: T
+    delete: () => Promise<void>
+    isWorking: boolean
+    model: Readonly<Model<T>>
+    save: () => Promise<void>
+}
+
+function useResource<T extends object>({url = document.location!.href, ...props}: ResourceProps<T>): ResourceManager<T> {
     const [isWorking, setIsWorking] = useState(false)
     const [modelResource, resource, setResource] = useModel(props.default)
 
@@ -139,7 +147,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
 
     return {
         isWorking,
-        modelResource,
+        model: modelResource,
         save,
 
         data: resource,
