@@ -4,6 +4,7 @@ import { styled } from "../../styles";
 import { Omit } from "../../utility";
 import { isUndefined } from "../../utility/assertions";
 import { CHAR_CODE_ENTER } from "../../utility/dom";
+import { call } from "../../utility/function";
 import { DialogBox, DialogBoxProps } from "./DialogBox";
 
 
@@ -19,7 +20,7 @@ interface OwnProps {
      * Called when dialog resolves successfully. May optionally return a boolean
      * to indicate whether the acception was successful.
      */
-    onAccept: (container: HTMLDivElement) => void | boolean
+    onAccept?: (container: HTMLDivElement) => void | boolean
     /**
      * Called whenever dialog is canceled (including when closed).
      */
@@ -41,7 +42,7 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
     const container = React.createRef<HTMLDivElement>()
 
     const accept = () => {
-        const res = props.onAccept(container.current as HTMLDivElement)
+        const res = call(props.onAccept, container.current as HTMLDivElement)
         const success = !(isUndefined(res)) ? res : true
 
         if(success && props.onClose)
