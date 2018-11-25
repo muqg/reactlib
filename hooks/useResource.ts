@@ -131,8 +131,10 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         setIsWorking(true)
         try {
             const resource = await worker()
-            if(resource)
+            if(resource) {
+                console.log("Setting resource")
                 setResource(resource)
+            }
         }
         catch(ex) {
             console.error(ex)
@@ -145,6 +147,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         setIsWorking(false)
     }
 
+    console.log(resource)
     return {
         isWorking,
         model: modelResource,
