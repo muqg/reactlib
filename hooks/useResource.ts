@@ -8,7 +8,7 @@ import { request } from "../utility/web";
 
 type ResourceCallback<T extends object> = (resource: T) => string | void | Promise<string | void>
 
-export interface ResourceProps<T extends object> {
+export interface ResourceProps<T extends object = object> {
     /**
      * Default data for the resource. Used when a new one is being created
      * and also when a resource is deleted and the data should be reset.
