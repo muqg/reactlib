@@ -132,7 +132,6 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         try {
             const resource = await worker()
             if(resource) {
-                console.log("Setting resource")
                 setModel(resource)
             }
         }
