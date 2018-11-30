@@ -8,12 +8,12 @@ export interface ResourceObject<T extends string | number = number> {
     id: T
 }
 
-interface Props<T extends ResourceObject> extends ResourceProps<T> {
+export interface ResourceListProps<T extends ResourceObject> extends ResourceProps<T> {
     listItems: T[]
 }
 
 
-function useResourceList<T extends ResourceObject>(props: Props<T>) {
+function useResourceList<T extends ResourceObject>(props: ResourceListProps<T>) {
     const [list, setList] = useState<T[]>(props.listItems)
     const resource = useResource<T>({
         ...except(props, "listItems"),
