@@ -59,7 +59,7 @@ export interface ResourceManager<T extends object = object> {
 
 function useResource<T extends object>({url = document.location!.href, ...props}: ResourceProps<T>): ResourceManager<T> {
     const [isWorking, setIsWorking] = useState(false)
-    const [model, modelData, setModel] = useModel(props.default)
+    const model = useModel(props.default)
 
     const notify = useContext(NotificationContext)
 
@@ -72,19 +72,19 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         else {
             // Resetting resource outside of the worker
             // wrapper skips an unnecessary render.
-            setModel(props.default)
+            model.$set(props.default)
         }
     }, [props.id])
 
     // Locking also makes this callback memoized.
     async function save() {
         await _work(async () => {
-            if(_error(await call(props.saving, modelData)))
+            if(_error(await call(props.saving, model.$data)))
                 return
 
             const method = props.id ? RequestMethod.PUT : RequestMethod.POST
             const requestURL = method === RequestMethod.PUT ? resUrl : url
-            const payload = JSON.stringify(modelData)
+            const payload = JSON.stringify(model.$data)
 
             // @ts-ignore Spread types may be created only from object types.
             const response = await request<Partial<T>>(method, requestURL, {payload})
@@ -102,10 +102,10 @@ function useResource<T extends object>({url = document.location!.href, ...props}
             return
 
         await _work(async () => {
-            if(_error(await call(props.deleting, modelData)))
+            if(_error(await call(props.deleting, model.$data)))
                 return
 
-            const payload = JSON.stringify(modelData)
+            const payload = JSON.stringify(model.$data)
             await request(RequestMethod.DELETE, resUrl, {payload})
 
             // @ts-ignore Spread types may be created only from object types.
@@ -132,7 +132,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         try {
             const resource = await worker()
             if(resource) {
-                setModel(resource)
+                model.$set(resource)
             }
         }
         catch(ex) {
@@ -151,7 +151,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         model: model,
         save,
 
-        data: modelData,
+        data: model.$data,
         delete: del,
     }
 }

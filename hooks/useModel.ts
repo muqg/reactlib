@@ -12,22 +12,21 @@ export type Model<T extends object, K extends keyof T = keyof T> = {
         value: any
         onChange: (input: ModelInputValue) => void
     }
-}
+} & {$data: T, $set: ReactStateSetter<Partial<T> | T>}
 /**
  * Valid model inputs values.
  */
 export type ModelInputValue = ParseableInput | string | boolean | number | object
 
-type ModelReturnValue<T extends object> = [Readonly<Model<T>>, T, ReactStateSetter<T>]
 
 /**
  * Creates an input model.
  *
  * @param init The initial model object data.
  */
-function useModel<T extends object>(init: T): ModelReturnValue<T> {
+function useModel<T extends object>(init: T): Model<T> {
     const [data, setModel] = useState(init)
-    const cache = useRef<ModelReturnValue<T> | null>(null)
+    const cache = useRef<Model<T> | null>(null)
 
     // @ts-ignore Spread types may be created only from object types.
     function change(name: string, input: ModelInputValue) {
@@ -41,25 +40,26 @@ function useModel<T extends object>(init: T): ModelReturnValue<T> {
             ...data,
             [name]: value
         })
+
+        cache.current = null
     }
 
     if(!cache.current) {
-        let model = {} as Model<T>
+        cache.current = {} as Model<T>
         for(let key in init) {
             // @ts-ignore Spread types may be created only from object types.
-            model[key] = {
+            cache.current[key] = {
                 value: data[key],
                 // @ts-ignore Spread types may be created only from object types.
                 onChange: c => change(key, c)
             }
         }
 
-        cache.current = [model, data, setModel]
-    }
-    // Mutate setModel in order to keep the object reference while not
-    // blocking updates due to providing an invalid cached setter.
-    else {
-        cache.current[2] = setModel
+        cache.current.$data = data
+        cache.current.$set = ((value: T) => {
+            setModel(value)
+            cache.current = null
+        }) as Model<T>["$set"]
     }
 
     return cache.current
