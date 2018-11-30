@@ -60,7 +60,6 @@ export interface ResourceManager<T extends object = object> {
 function useResource<T extends object>({url = document.location!.href, ...props}: ResourceProps<T>): ResourceManager<T> {
     const [isWorking, setIsWorking] = useState(false)
     const model = useModel(props.default)
-
     const notify = useContext(NotificationContext)
 
     const resUrl = url + "/" + props.id
@@ -76,7 +75,6 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         }
     }, [props.id])
 
-    // Locking also makes this callback memoized.
     async function save() {
         await _work(async () => {
             if(_error(await call(props.saving, model.$data)))
@@ -96,7 +94,6 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         })
     }
 
-    // Locking also makes this callback memoized.
     async function del() {
         if(!props.id)
             return
@@ -131,9 +128,8 @@ function useResource<T extends object>({url = document.location!.href, ...props}
         setIsWorking(true)
         try {
             const resource = await worker()
-            if(resource) {
+            if(resource)
                 model.$set(resource)
-            }
         }
         catch(ex) {
             console.error(ex)

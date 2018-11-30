@@ -27,7 +27,6 @@ function useResourceList<T extends ResourceObject>(props: Props<T>) {
 
         const found = list.find(r => r.id === res.id)
         if(found)
-            // TODO: VERIFY THAT ARGUMENTS ARE PLACED CORRECTLY
             setList(replace(list, found, res))
         else
             setList([res, ...list])
