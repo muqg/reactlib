@@ -77,12 +77,13 @@ function useResource<T extends object>({url = document.location!.href, ...props}
 
     async function save() {
         await _work(async () => {
-            if(_error(await call(props.saving, model.$data)))
+            const resource = model.$data
+            if(_error(await call(props.saving, resource)))
                 return
 
             const method = props.id ? RequestMethod.PUT : RequestMethod.POST
             const requestURL = method === RequestMethod.PUT ? resUrl : url
-            const payload = JSON.stringify(model.$data)
+            const payload = JSON.stringify(resource)
 
             // @ts-ignore Spread types may be created only from object types.
             const response = await request<Partial<T>>(method, requestURL, {payload})
