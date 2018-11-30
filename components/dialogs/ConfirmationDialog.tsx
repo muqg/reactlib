@@ -50,17 +50,15 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
     }
 
     const reject = () => {
-        if(props.onReject)
-            props.onReject(container.current as HTMLDivElement)
-        if(props.onClose)
-            props.onClose()
+        call(props.onReject, container.current as HTMLDivElement)
+        call(props.onClose)
     }
 
     const keyDown: DialogProps["onKeyDown"] = (event, dialog) => {
         if(event.keyCode === CHAR_CODE_ENTER)
             accept()
-        if(props.onKeyDown)
-            props.onKeyDown(event, dialog)
+
+        call(props.onKeyDown, event, dialog)
     }
 
     return(

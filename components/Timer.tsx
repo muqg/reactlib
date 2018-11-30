@@ -6,6 +6,7 @@ import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../styles";
 import { flex, position } from "../styles/mixins";
 import { wait } from "../utility";
 import { padStart } from "../utility/string";
+import { call } from "../utility/function";
 
 
 const Container = styled.div`
@@ -74,12 +75,11 @@ const Timer = React.memo((props: Props) => {
         const minutes = Math.floor(limit / 60)
         const seconds = limit % 60
 
-        if(props.everySecond)
-            props.everySecond(seconds, minutes)
-        if(props.everyMinute && time.minutes > minutes)
-            props.everyMinute(seconds, minutes)
-        if(limit === 0 && props.onExpire)
-            props.onExpire()
+        call(props.everySecond, seconds, minutes)
+        if(time.minutes > minutes)
+            call(props.everyMinute, seconds, minutes)
+        if(limit === 0)
+            call(props.onExpire)
 
         setTime({limit, minutes, seconds})
     }

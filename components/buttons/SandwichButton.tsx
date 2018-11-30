@@ -2,6 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { COLOR_PRIMARY_DARK, css, styled } from "../../styles";
 import { position } from "../../styles/mixins";
+import { call } from "../../utility/function";
 
 
 const spanCommon = css`
@@ -88,8 +89,7 @@ const SandwichButton = React.memo(({active = false, color = COLOR_PRIMARY_DARK, 
         const nextIsActive = !isActive
         setIsActive(nextIsActive)
 
-        if(props.onClick)
-            props.onClick(nextIsActive, event)
+        call(props.onClick, nextIsActive, event)
     }
 
     return (

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { call } from "../utility/function";
 
 
 interface Props {
@@ -32,8 +33,7 @@ function Expire(props: Props) {
         setVisible(false)
         timer.current = undefined
 
-        if(props.then)
-            props.then()
+        call(props.then)
     }
 
     return visible ? props.children : null
