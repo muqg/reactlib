@@ -91,6 +91,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
             // @ts-ignore Spread types may be created only from object types.
             const nextResource = {...resource, ...response}
             _error(await call(props.saved, nextResource))
+
             return nextResource
         })
     }
@@ -100,16 +101,17 @@ function useResource<T extends object>({url = document.location!.href, ...props}
             return
 
         await _work(async () => {
-            if(_error(await call(props.deleting, model.$data)))
+            const resource = model.$data
+            if(_error(await call(props.deleting, resource)))
                 return
 
-            const payload = JSON.stringify(model.$data)
+            const payload = JSON.stringify(resource)
             await request(RequestMethod.DELETE, resUrl, {payload})
 
+            _error(await call(props.deleted, resource))
+
             // @ts-ignore Spread types may be created only from object types.
-            const nextResource = {...props.default}
-            _error(await call(props.deleted, nextResource))
-            return nextResource
+            return {...props.default}
         })
     }
 
