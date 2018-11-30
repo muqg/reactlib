@@ -1,6 +1,8 @@
 import * as React from "react";
+import { useRef } from "react";
 import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
 import { CHAR_CODE_ENTER, Editor, isKeyPressed } from "../../utility/dom";
+import { call } from "../../utility/function";
 
 
 const Container = styled.div`
@@ -15,61 +17,50 @@ const Container = styled.div`
 interface Props {
     className?: string
     content?: string
-    contentChange?: (name: string, content: string) => void
-    name?: string
+    contentChange?: (content: string) => void
     preventNewline?: boolean
-    ref?: React.Ref<any>
-}
-
-interface State {
-    content?: Props["content"]
 }
 
 
-class EditableContainer extends React.Component<Props, State> {
-    state: State = {
-        content: this.props.content,
-    }
-    container = React.createRef<any>()
+const EditableContainer = (props: Props) => {
+    const containerRef = useRef<any>(null)
 
-    handleChange = () => {
+    function handleChange() {
         Editor.saveSelection()
 
-        const container: HTMLDivElement = this.container.current
-        if(this.props.contentChange)
-            this.props.contentChange(this.props.name || "", container.innerHTML)
+        const container = containerRef.current
+        if(container)
+            call(props.contentChange, container.innerHTML)
     }
 
-    handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
+    function handlePaste(event: React.ClipboardEvent<HTMLDivElement>) {
         event.preventDefault()
 
         const text = event.clipboardData.getData("text/plain")
         Editor.insertHTML(text)
     }
 
-    preventNewline = (event: React.KeyboardEvent) => {
+    function preventNewline(event: React.KeyboardEvent) {
         if(isKeyPressed({keyCode: CHAR_CODE_ENTER}, event, true))
             event.preventDefault()
     }
 
-    render() {
-        return (
-            <Container
-                className={this.props.className}
-                contentEditable
+    return (
+        <Container
+            className={props.className}
+            contentEditable
 
-                onBlur={this.handleChange}
-                onKeyPress={this.props.preventNewline ? this.preventNewline : undefined}
-                onInput={this.handleChange}
-                onPaste={this.handlePaste}
+            onBlur={handleChange}
+            onKeyPress={props.preventNewline ? preventNewline : undefined}
+            onInput={handleChange}
+            onPaste={handlePaste}
 
-                ref={this.container}
-                spellCheck={false}
+            ref={containerRef}
+            spellCheck={false}
 
-                dangerouslySetInnerHTML={{__html: this.state.content || ""}}
-            />
-        )
-    }
+            dangerouslySetInnerHTML={{__html: props.content || ""}}
+        />
+    )
 }
 
 
