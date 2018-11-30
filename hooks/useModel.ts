@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { isObject, isType } from "../utility/assertions";
 import { ParseableInput, parseInputValue } from "../utility/dom";
 import { ReactStateSetter } from "../utility/react";
@@ -27,6 +27,7 @@ type ModelReturnValue<T extends object> = [Readonly<Model<T>>, T, ReactStateSett
  */
 function useModel<T extends object>(init: T): ModelReturnValue<T> {
     const [data, setModel] = useState(init)
+    const cache = useRef<ModelReturnValue<T> | null>(null)
 
     // @ts-ignore Spread types may be created only from object types.
     function change(name: string, input: ModelInputValue) {
@@ -42,17 +43,26 @@ function useModel<T extends object>(init: T): ModelReturnValue<T> {
         })
     }
 
-    let model = {} as Model<T>
-    for(let key in init) {
-        // @ts-ignore Spread types may be created only from object types.
-        model[key] = {
-            value: data[key],
+    if(!cache.current) {
+        let model = {} as Model<T>
+        for(let key in init) {
             // @ts-ignore Spread types may be created only from object types.
-            onChange: c => change(key, c)
+            model[key] = {
+                value: data[key],
+                // @ts-ignore Spread types may be created only from object types.
+                onChange: c => change(key, c)
+            }
         }
+
+        cache.current = [model, data, setModel]
+    }
+    // Mutate setModel in order to keep the object reference while not
+    // blocking updates due to providing an invalid cached setter.
+    else {
+        cache.current[2] = setModel
     }
 
-    return [model, data, setModel]
+    return cache.current
 }
 
 
