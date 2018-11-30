@@ -3,5 +3,7 @@ import { initialState } from "../main";
 import { Dict } from "../utility";
 
 
-export const TranslationContext = createContext(initialState("locale") || {} as Dict<any>)
+export const TranslationContext = createContext<Dict<any>>(
+    initialState("locale") || {}
+)
 
