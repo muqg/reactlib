@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
 import { CHAR_CODE_ENTER, Editor, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
@@ -23,6 +23,9 @@ interface Props {
 
 
 const EditableContainer = (props: Props) => {
+    // Keep content as state variable in order to
+    // only initially set it based on props.
+    const [content] = useState(props.content)
     const containerRef = useRef<any>(null)
 
     function handleChange() {
@@ -58,7 +61,7 @@ const EditableContainer = (props: Props) => {
             ref={containerRef}
             spellCheck={false}
 
-            dangerouslySetInnerHTML={{__html: props.content || ""}}
+            dangerouslySetInnerHTML={{__html: content || ""}}
         />
     )
 }
