@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react";
+import { useContext } from "react";
 import { TranslationContext } from "../contexts";
 import { __translate, __TranslateOptions } from "../__internal/__translate";
 
@@ -11,12 +11,8 @@ import { __translate, __TranslateOptions } from "../__internal/__translate";
 function useTranslation(baseKey = "") {
     const translations = useContext(TranslationContext)
 
-    // TODO: Test if callback is truly cached.
-    return useCallback(
-        <T extends any = string>(key: string, options = {} as __TranslateOptions) => (
-            __translate<T>(translations, (baseKey ? `${baseKey}.${key}` : key), options)
-        ),
-        [translations, baseKey]
+    return <T extends any = string>(key: string, options = {} as __TranslateOptions) => (
+        __translate<T>(translations, (baseKey ? `${baseKey}.${key}` : key), options)
     )
 }
 
