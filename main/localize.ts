@@ -30,6 +30,7 @@ function localize(key: string, ...args: FormatArgument[]): string
 function localize(key: string, args: Dict<FormatArgument>): string
 
 function localize(key: any, ...args: any[]): any {
+    console.warn("localize is deprecated, use translation hook instead.")
     key = key ? `${LOCALIZATION_STATE_KEY}.${key}` : LOCALIZATION_STATE_KEY
     let result = initialState(key)
 
