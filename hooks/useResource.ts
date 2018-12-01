@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { useModel, Model } from ".";
+import { Model, useModel } from ".";
 import { NotificationContext } from "../components";
 import { RequestException, RequestMethod } from "../utility";
 import { isString, isType } from "../utility/assertions";
 import { call } from "../utility/function";
+import { ReactStateSetter } from "../utility/react";
 import { request } from "../utility/web";
 
 type ResourceCallback<T extends object> = (resource: T) => string | void | Promise<string | void>
@@ -21,7 +22,7 @@ export interface ResourceProps<T extends object = object> {
     /**
      * Id of the resource. Falsey value for a new resource.
      */
-    id: string | number | null | undefined
+    id?: ResourceManager["currentId"]
     /**
      * Called before deleting a resource. May return a string with an error
      * message to show it as notification and cancel the process.
@@ -50,22 +51,51 @@ export interface ResourceProps<T extends object = object> {
 }
 
 export interface ResourceManager<T extends object = object> {
+    /**
+     * The id of the currently managed resource.
+     */
+    currentId: string | number | null | undefined
+    /**
+     * Resource's data.
+     */
     data: T
+    /**
+     * Sends a request to delete the resource.
+     */
     delete: () => Promise<void>
+    /**
+     * Whether a request is being awaited for.
+     */
     isWorking: boolean
+    /**
+     * The resource model object.
+     */
     model: Readonly<Model<T>>
+    /**
+     * Sends a request to save the resource.
+     *
+     * A POST request for new resource and a PUT request for an existing one.
+     */
     save: () => Promise<void>
+    /**
+     * Sets the current id of the resource.
+     */
+    setId: ReactStateSetter<ResourceManager["currentId"]>
 }
 
-function useResource<T extends object>({url = document.location!.href, ...props}: ResourceProps<T>): ResourceManager<T> {
+
+function useResource<T extends object>(
+    {url = document.location!.href, ...props}: ResourceProps<T>
+): ResourceManager<T> {
+    const [id, setId] = useState(props.id)
     const [isWorking, setIsWorking] = useState(false)
     const model = useModel(props.default)
     const notify = useContext(NotificationContext)
 
-    const resUrl = url + "/" + props.id
+    const resUrl = url + "/" + id
 
     useEffect(() => {
-        if(props.id) {
+        if(id) {
             _work(async () => await request<T>(RequestMethod.GET, resUrl))
         }
         else {
@@ -73,7 +103,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
             // wrapper skips an unnecessary render.
             model.$set(props.default)
         }
-    }, [props.id])
+    }, [id])
 
     async function save() {
         await _work(async () => {
@@ -81,7 +111,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
             if(_error(await call(props.saving, resource)))
                 return
 
-            const method = props.id ? RequestMethod.PUT : RequestMethod.POST
+            const method = id ? RequestMethod.PUT : RequestMethod.POST
             const requestURL = method === RequestMethod.PUT ? resUrl : url
             const payload = JSON.stringify(resource)
 
@@ -97,7 +127,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
     }
 
     async function del() {
-        if(!props.id)
+        if(!id)
             return
 
         await _work(async () => {
@@ -110,6 +140,7 @@ function useResource<T extends object>({url = document.location!.href, ...props}
 
             _error(await call(props.deleted, resource))
 
+            setId(null)
             // @ts-ignore Spread types may be created only from object types.
             return {...props.default}
         })
@@ -147,11 +178,13 @@ function useResource<T extends object>({url = document.location!.href, ...props}
 
     return {
         isWorking,
-        model: model,
         save,
+        setId,
 
+        currentId: id,
         data: model.$data,
         delete: del,
+        model: model,
     }
 }
 

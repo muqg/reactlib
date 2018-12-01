@@ -1,8 +1,8 @@
 ﻿import { useState } from "react";
 import { ResourceProps, useResource } from ".";
 import { replace } from "../utility/array";
-import { call } from "../utility/function";
 import { except } from "../utility/collection";
+import { call } from "../utility/function";
 
 export interface ResourceObject<T extends string | number = number> {
     id: T
