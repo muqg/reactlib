@@ -67,4 +67,4 @@ export interface RequestException<T extends object = {}> {
 /**
  * From T omit a set of properties K.
  */
-export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
