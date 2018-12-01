@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { isObject, isType } from "../utility/assertions";
 import { ParseableInput, parseInputValue } from "../utility/dom";
 import { ReactStateSetter } from "../utility/react";
@@ -26,7 +26,6 @@ export type ModelInputValue = ParseableInput | string | boolean | number | objec
  */
 function useModel<T extends object>(init: T): Model<T> {
     const [data, setModel] = useState(init)
-    const cache = useRef<Model<T> | null>(null)
 
     // @ts-ignore Spread types may be created only from object types.
     function change(name: string, input: ModelInputValue) {
@@ -40,29 +39,24 @@ function useModel<T extends object>(init: T): Model<T> {
             ...data,
             [name]: value
         })
-
-        cache.current = null
     }
 
-    if(!cache.current) {
-        cache.current = {} as Model<T>
+    return useMemo(() => {
+        const model = {} as Model<T>
         for(let key in init) {
             // @ts-ignore Spread types may be created only from object types.
-            cache.current[key] = {
+            model[key] = {
                 value: data[key],
                 // @ts-ignore Spread types may be created only from object types.
                 onChange: c => change(key, c)
             }
         }
 
-        cache.current.$data = data
-        cache.current.$set = ((value: T) => {
-            setModel(value)
-            cache.current = null
-        }) as Model<T>["$set"]
-    }
+        model.$data = data
+        model.$set = setModel as Model<T>["$set"]
 
-    return cache.current
+        return model
+    }, [data])
 }
 
 
