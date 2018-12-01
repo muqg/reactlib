@@ -5,6 +5,7 @@ import { flex, position } from "../../styles/mixins";
 import { wait } from "../../utility";
 import { isUndefined } from "../../utility/assertions";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
+import { call } from "../../utility/function";
 
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
@@ -116,12 +117,10 @@ class Dialog extends React.PureComponent<Props, State> {
             dialog.focus()
             dialog.scrollTop = 0
 
-            if(this.props.onShow)
-                this.props.onShow(dialog)
+            call(this.props.onShow, dialog)
         }
         else if(!stateVisible && prevState.isVisible) {
-            if(this.props.onClose)
-                this.props.onClose()
+            call(this.props.onClose)
         }
     }
 
@@ -129,8 +128,7 @@ class Dialog extends React.PureComponent<Props, State> {
         this.setState(prevState => {
             const isVisible = isUndefined(visible) ? !prevState.isVisible : visible
 
-            if(this.props.visibilityChange)
-                this.props.visibilityChange(isVisible)
+            call(this.props.visibilityChange, isVisible)
 
             return {isVisible}
         })
@@ -141,8 +139,9 @@ class Dialog extends React.PureComponent<Props, State> {
             this.toggle(false)
 
         const dialog = this.dialog.current
-        if(dialog && this.props.onKeyDown)
-            this.props.onKeyDown(event, dialog)
+        if(dialog) {
+            call(this.props.onKeyDown, event, dialog)
+        }
     }
 
     render() {

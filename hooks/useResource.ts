@@ -84,7 +84,6 @@ function useResource<T extends object>(
 
     const resUrl = url + "/" + props.id
 
-    console.log("Called...")
     useEffect(() => {
         if(props.id) {
             _work(async () => await request<T>(RequestMethod.GET, resUrl))

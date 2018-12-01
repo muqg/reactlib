@@ -38,6 +38,7 @@ const ImageView = (props: Props) => {
         <StyledDialog
             className={props.className}
             isVisible
+            onKeyDown={e => e.stopPropagation()}
             onClose={props.onClose}
         >
             {(close) => (
