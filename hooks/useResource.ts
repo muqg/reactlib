@@ -57,7 +57,7 @@ export interface ResourceManager<T extends object = object> {
     /**
      * Sends a request to delete the resource.
      */
-    delete: () => Promise<void>
+    delete: () => void
     /**
      * Whether a request is being awaited for.
      */
@@ -71,7 +71,7 @@ export interface ResourceManager<T extends object = object> {
      *
      * A POST request for new resource and a PUT request for an existing one.
      */
-    save: () => Promise<void>
+    save: () => void
 }
 
 
@@ -84,6 +84,7 @@ function useResource<T extends object>(
 
     const resUrl = url + "/" + props.id
 
+    console.log("Called...")
     useEffect(() => {
         if(props.id) {
             _work(async () => await request<T>(RequestMethod.GET, resUrl))
@@ -91,12 +92,14 @@ function useResource<T extends object>(
         else {
             // Resetting resource outside of the worker
             // wrapper skips an unnecessary render.
-            model.$set(props.default)
+            // Use setTimeout to push it to the end of the execution queue
+            // and avoid race conditions with other async functions.
+            setTimeout(() => model.$set(props.default), 0)
         }
     }, [props.id])
 
-    async function save() {
-        await _work(async () => {
+    function save() {
+        _work(async () => {
             const resource = model.$data
             if(_error(await call(props.saving, resource)))
                 return
@@ -116,11 +119,11 @@ function useResource<T extends object>(
         })
     }
 
-    async function del() {
+    function del() {
         if(!props.id)
             return
 
-        await _work(async () => {
+        _work(async () => {
             const resource = model.$data
             if(_error(await call(props.deleting, resource)))
                 return
