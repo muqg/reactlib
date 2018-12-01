@@ -1,27 +1,15 @@
 ﻿import { useState } from "react";
-import { ResourceProps, useResource } from ".";
 import { replace } from "../utility/array";
-import { except } from "../utility/collection";
-import { call } from "../utility/function";
 
 export interface ResourceObject<T extends string | number = number> {
     id: T
 }
 
-export interface ResourceListProps<T extends ResourceObject> extends ResourceProps<T> {
-    listItems: T[]
-}
 
+function useResourceList<T extends ResourceObject>(listItems: T[]) {
+    const [list, setList] = useState<T[]>(listItems)
 
-function useResourceList<T extends ResourceObject>(props: ResourceListProps<T>) {
-    const [list, setList] = useState<T[]>(props.listItems)
-    const resource = useResource<T>({
-        ...except(props, "listItems"),
-        deleted,
-        saved,
-    })
-
-    async function saved(res: T) {
+    async function save(res: T) {
         if(!res.id)
             return
 
@@ -30,19 +18,17 @@ function useResourceList<T extends ResourceObject>(props: ResourceListProps<T>) 
             setList(replace(list, found, res))
         else
             setList([res, ...list])
-
-        return await call(props.saved, res)
     }
 
-    async function deleted(res: T) {
+    async function del(res: T) {
         setList(list.filter(r => r.id !== res.id))
-        return await call(props.deleted, res)
     }
 
     return {
+        delete: del,
         list,
+        save,
         setList,
-        ...resource
     }
 }
 

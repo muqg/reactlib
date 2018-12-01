@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Model, useModel } from ".";
 import { NotificationContext } from "../components";
 import { RequestException, RequestMethod } from "../utility";
@@ -21,7 +21,7 @@ export interface ResourceProps<T extends object = object> {
     /**
      * Id of the resource. Falsey value for a new resource.
      */
-    id?: ResourceManager["currentId"]
+    id: number | string | null | undefined
     /**
      * Called before deleting a resource. May return a string with an error
      * message to show it as notification and cancel the process.
@@ -51,10 +51,6 @@ export interface ResourceProps<T extends object = object> {
 
 export interface ResourceManager<T extends object = object> {
     /**
-     * The id of the currently managed resource.
-     */
-    currentId: string | number | null | undefined
-    /**
      * Resource's data.
      */
     data: T
@@ -76,25 +72,20 @@ export interface ResourceManager<T extends object = object> {
      * A POST request for new resource and a PUT request for an existing one.
      */
     save: () => Promise<void>
-    /**
-     * Sets the current id of the resource.
-     */
-    setId: (val?: ResourceManager["currentId"]) => void
 }
 
 
 function useResource<T extends object>(
     {url = document.location!.href, ...props}: ResourceProps<T>
 ): ResourceManager<T> {
-    const [id, setId] = useState(props.id)
     const [isWorking, setIsWorking] = useState(false)
     const model = useModel(props.default)
     const notify = useContext(NotificationContext)
 
-    const resUrl = url + "/" + id
+    const resUrl = url + "/" + props.id
 
     useEffect(() => {
-        if(id) {
+        if(props.id) {
             _work(async () => await request<T>(RequestMethod.GET, resUrl))
         }
         else {
@@ -102,7 +93,7 @@ function useResource<T extends object>(
             // wrapper skips an unnecessary render.
             model.$set(props.default)
         }
-    }, [id])
+    }, [props.id])
 
     async function save() {
         await _work(async () => {
@@ -110,7 +101,7 @@ function useResource<T extends object>(
             if(_error(await call(props.saving, resource)))
                 return
 
-            const method = id ? RequestMethod.PUT : RequestMethod.POST
+            const method = props.id ? RequestMethod.PUT : RequestMethod.POST
             const requestURL = method === RequestMethod.PUT ? resUrl : url
             const payload = JSON.stringify(resource)
 
@@ -126,7 +117,7 @@ function useResource<T extends object>(
     }
 
     async function del() {
-        if(!id)
+        if(!props.id)
             return
 
         await _work(async () => {
@@ -139,7 +130,6 @@ function useResource<T extends object>(
 
             _error(await call(props.deleted, resource))
 
-            setId(null)
             // @ts-ignore Spread types may be created only from object types.
             return {...props.default}
         })
@@ -178,9 +168,7 @@ function useResource<T extends object>(
     return {
         isWorking,
         save,
-        setId: useCallback((val = null) => setId(val), []),
 
-        currentId: id,
         data: model.$data,
         delete: del,
         model: model,
