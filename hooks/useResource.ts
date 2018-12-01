@@ -1,10 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Model, useModel } from ".";
 import { NotificationContext } from "../components";
 import { RequestException, RequestMethod } from "../utility";
 import { isString, isType } from "../utility/assertions";
 import { call } from "../utility/function";
-import { ReactStateSetter } from "../utility/react";
 import { request } from "../utility/web";
 
 type ResourceCallback<T extends object> = (resource: T) => string | void | Promise<string | void>
@@ -80,7 +79,7 @@ export interface ResourceManager<T extends object = object> {
     /**
      * Sets the current id of the resource.
      */
-    setId: ReactStateSetter<ResourceManager["currentId"]>
+    setId: (val?: ResourceManager["currentId"]) => void
 }
 
 
@@ -179,7 +178,7 @@ function useResource<T extends object>(
     return {
         isWorking,
         save,
-        setId,
+        setId: useCallback((val = null) => setId(val), []),
 
         currentId: id,
         data: model.$data,
