@@ -2,15 +2,18 @@ import * as React from "react";
 import { styled, css } from "../styles";
 import { Omit } from "../utility";
 
-
+const center = css`
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin: 12px auto;
+`
 const Container = styled.div`
     ${(_p: StyleProps) => ""}
 
     margin: 12px 0;
-    min-width: 285px;
-    width: 100%;
 
-    ${p => p.center && css`margin: 12px auto;`}
+    ${p => p.center && center}
     ${p => p.maxWidth && css`max-width: ${p.maxWidth}px;`}
 `
 const Title = styled.h4`
@@ -19,8 +22,7 @@ const Title = styled.h4`
 
 interface StyleProps {
     /**
-     * Attempts to center the block.
-     * Use in combination with maxWidth prop.
+     * Attempts to center the content.
      */
     center?: boolean
     /**
