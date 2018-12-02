@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Spinner } from "./Spinner";
-import { COLOR_WHITE, css, media, styled } from "../styles";
-import { Omit } from "../utility";
-import { call } from "../utility/function";
+import { Spinner } from "../Spinner";
+import { COLOR_WHITE, css, media, styled } from "../../styles";
+import { Omit } from "../../utility";
+import { call } from "../../utility/function";
 
 const spinner = <Spinner size="large" />
 
@@ -82,14 +82,13 @@ interface View extends Omit<React.HTMLProps<HTMLDivElement>, "ref" | "hidden">, 
 }
 
 
+// In the future, remove loader and loading props
+// when using react fetch API and Suspense.
 function View({children, loader, loading, ...props}: View) {
     const loadingIndicator = call(loader) || spinner
-
     return (
         <Container {...props}>
-            <React.Suspense fallback={loadingIndicator}>
-                {loading ? loadingIndicator : !props.hidden && children}
-            </React.Suspense>
+            {loading ? loadingIndicator : !props.hidden && children}
         </Container>
     )
 }

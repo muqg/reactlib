@@ -4,7 +4,7 @@ import { styled } from "../../styles";
 import { isUndefined } from "../../utility/assertions";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
-import { View } from "../View";
+import { View } from "../views/View";
 
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})

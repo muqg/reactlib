@@ -1,8 +1,8 @@
 import * as React from "react";
-import { AspectImage, CloseButton, Dialog } from ".";
-import { COLOR_BLACK, COLOR_WHITE, createGlobalStyle, styled } from "../styles";
-import { position } from "../styles/mixins";
-import { DialogProps } from "./dialogs/Dialog";
+import { AspectImage, CloseButton, Dialog } from "..";
+import { COLOR_BLACK, COLOR_WHITE, createGlobalStyle, styled } from "../../styles";
+import { position } from "../../styles/mixins";
+import { DialogProps } from "../dialogs/Dialog";
 
 const NoScroll = createGlobalStyle`
     body {
