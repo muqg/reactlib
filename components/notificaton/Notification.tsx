@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useCallback, useContext, useEffect } from "react";
-import { NotificationContext } from ".";
 import { COLOR_BLACK, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
 import { position } from "../../styles/mixins";
 import { delay } from "../../utility";
+import { NotificationContext } from "../../contexts/NotificationContext";
 
 
 const NOTIFICATION_DURATION = 2_000

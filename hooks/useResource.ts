@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Model, useModel } from ".";
-import { NotificationContext } from "../components";
+import { NotificationContext } from "../contexts";
 import { RequestException, RequestMethod } from "../utility";
 import { isString, isType } from "../utility/assertions";
 import { call } from "../utility/function";

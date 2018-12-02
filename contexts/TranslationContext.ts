@@ -7,3 +7,5 @@ export const TranslationContext = createContext<Dict<any>>(
     initialState("locale") || {}
 )
 
+TranslationContext.displayName = "Translation"
+

@@ -1,13 +1,12 @@
 import * as React from "react";
 import { useState } from "react";
+import { NotificationContext } from "../../contexts";
 import { Notification } from "./Notification";
 
 interface Props {
     children?: React.ReactNode
 }
 export type Notify = (message: string) => void
-
-export const NotificationContext = React.createContext<Notify>(() => {})
 
 function Notifiable(props: Props) {
     const [message, setMessage] = useState("")
