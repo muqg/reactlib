@@ -1,39 +1,24 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { COLOR_TRANSPARENT, css, styled } from "../../styles";
-import { flex, position } from "../../styles/mixins";
-import { wait } from "../../utility";
+import { COLOR_TRANSPARENT, styled } from "../../styles";
+import { position } from "../../styles/mixins";
 import { isUndefined } from "../../utility/assertions";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
+import { View } from "../View";
 
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
-const RENDER_WAIT_TIME = 35
 
 
-const visibleStyle = css`
-    opacity: 1;
-    transform: scale(1);
-    visibility: visible;
-`
-const Container = styled.div`
+const ContainerView = styled(View)`
     background: ${COLOR_TRANSPARENT};
-    box-sizing: border-box;
     height: 100%;
-    opacity: 0;
+    justify-content: center;
     overflow: auto;
-    padding: 60px 15px;
-    transform: scale(1.5);
-    transition: .25s;
     transition-property: opacity, transform, visibility;
-    visibility: hidden;
-    width: 100%;
     z-index: 200;
     ${position("fixed", "0", "", "", "0")}
-    ${flex("center", "center")}
-
-    ${(p: StyleProps) => p.visible && visibleStyle}
 
     &::-webkit-scrollbar {
         width: 5px;
@@ -45,10 +30,6 @@ const Container = styled.div`
     }
 `
 
-
-interface StyleProps {
-    visible?: boolean
-}
 
 interface OwnProps {
     children: (close: () => void, show: () => void) => React.ReactNode
@@ -98,7 +79,7 @@ class Dialog extends React.PureComponent<Props, State> {
     }
     dialog = React.createRef<any>()
 
-    async componentDidUpdate(prevProps: DialogProps, prevState: State) {
+    componentDidUpdate(prevProps: DialogProps, prevState: State) {
         const stateVisible = this.state.isVisible
         const propsVisible = this.props.isVisible
 
@@ -107,17 +88,12 @@ class Dialog extends React.PureComponent<Props, State> {
 
 
         const dialog = this.dialog.current
-        if(!dialog)
-            return
-
-        if(stateVisible && !prevState.isVisible) {
-            // Wait in order to allow for all elements to
-            // fully render and allow proper interactions.
-            await wait(RENDER_WAIT_TIME)
-            dialog.focus()
-            dialog.scrollTop = 0
-
-            call(this.props.onShow, dialog)
+        if(stateVisible && !prevState.isVisible && dialog) {
+            requestAnimationFrame(() => {
+                dialog.focus()
+                dialog.scrollTop = 0
+                call(this.props.onShow, dialog)
+            })
         }
         else if(!stateVisible && prevState.isVisible) {
             call(this.props.onClose)
@@ -146,17 +122,16 @@ class Dialog extends React.PureComponent<Props, State> {
 
     render() {
         return createPortal(
-            <Container
+            <ContainerView
+                center
                 className={this.props.className}
+                hidden={!this.state.isVisible}
                 ref={this.dialog}
                 onKeyDown={this.keyDown}
                 tabIndex={-1}
-                visible={this.state.isVisible}
             >
-                {this.state.isVisible &&
-                    this.props.children(() => this.toggle(false), () => this.toggle(true))
-                }
-            </Container>,
+                {this.props.children(() => this.toggle(false), () => this.toggle(true))}
+            </ContainerView>,
             document.body
         )
     }
