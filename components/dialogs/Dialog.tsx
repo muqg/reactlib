@@ -1,23 +1,26 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { styled } from "../../styles";
+import { COLOR_TRANSPARENT, styled } from "../../styles";
+import { flex, position } from "../../styles/mixins";
 import { isUndefined } from "../../utility/assertions";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
-import { View } from "../views/View";
 
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
 
-const ContainerView = styled(View)`
+const Container = styled.div`
+    background: ${COLOR_TRANSPARENT};
+    box-sizing: border-box;
+    display: none;
     height: 100%;
-    justify-content: center;
-    left: 0;
     overflow: auto;
-    position: fixed;
-    top: 0;
+    width: 100%;
     z-index: 200;
+    ${position("fixed", "0", "", "", "0")}
+
+    ${(p: StyleProps) => p.visible && flex("center", "center")}
 
     &::-webkit-scrollbar {
         width: 5px;
@@ -29,6 +32,9 @@ const ContainerView = styled(View)`
     }
 `
 
+interface StyleProps {
+    visible?: boolean
+}
 
 interface OwnProps {
     children: (close: () => void, show: () => void) => React.ReactNode
@@ -121,17 +127,17 @@ class Dialog extends React.PureComponent<Props, State> {
 
     render() {
         return createPortal(
-            <ContainerView
-                center
+            <Container
                 className={this.props.className}
-                edgeless
-                hidden={!this.state.isVisible}
                 ref={this.dialog}
                 onKeyDown={this.keyDown}
                 tabIndex={-1}
+                visible={this.state.isVisible}
             >
-                {this.props.children(() => this.toggle(false), () => this.toggle(true))}
-            </ContainerView>,
+                {this.state.isVisible &&
+                    this.props.children(() => this.toggle(false), () => this.toggle(true))
+                }
+            </Container>,
             document.body
         )
     }

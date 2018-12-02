@@ -11,10 +11,16 @@ const center = css`
 const Container = styled.div`
     ${(_p: StyleProps) => ""}
 
+    box-sizing: border-box;
     margin: 12px 0;
+    max-width: inherit;
+    position: relative;
 
     ${p => p.center && center}
-    ${p => p.maxWidth && css`max-width: ${p.maxWidth}px;`}
+    ${p => p.maxWidth && css`
+        max-width: ${p.maxWidth}px;
+        width: 100%;
+    `}
 `
 const Title = styled.h4`
     padding: 4px 0;

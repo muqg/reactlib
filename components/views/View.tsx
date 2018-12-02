@@ -6,29 +6,6 @@ import { call } from "../../utility/function";
 
 const spinner = <Spinner size="large" />
 
-const narrow = css`
-    width: 1024px;
-    ${media.desktop`
-        width: 768px;
-    `}
-    ${media.tablet`
-        width: 540px;
-    `}
-    ${media.smallTablet`
-        width: 100%;
-    `}
-`
-const center = css`
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-`
-const edge = css`
-    padding: 32px 25px;
-    ${media.tablet`
-        paddinG: 32px 10px;
-    `}
-`
 const Container = styled.div`
     ${(_p: StyleProps) => ""}
 
@@ -39,34 +16,19 @@ const Container = styled.div`
     position: relative;
     width: 100%;
 
-    ${p => p.center && center}
-    ${p => !p.edgeless && edge}
+    padding: 32px 25px;
+    ${media.tablet`
+        padding: 32px 10px;
+    `}
+
     ${p => p.hidden && css`display: none;`}
-    ${p => p.maxWidth && css`max-width: ${p => p.maxWidth}px;`}
-    ${p => p.narrow && narrow}
 `
 
 interface StyleProps {
     /**
-     * Centers the content while preserving its width.
-     */
-    center?: boolean
-    /**
-     * Disables the default margins and padding of the container.
-     */
-    edgeless?: boolean
-    /**
      * Hides the view.
      */
     hidden?: boolean
-    /**
-     * The maximum width of the container.
-     */
-    maxWidth?: number
-    /**
-     * Limits the width of the content, adapting to resolution changes.
-     */
-    narrow?: boolean
 }
 
 // Passing ref does not work for SC-4.0.3 typings.
@@ -88,7 +50,9 @@ function View({children, loader, loading, ...props}: View) {
     const loadingIndicator = call(loader) || spinner
     return (
         <Container {...props}>
-            {loading ? loadingIndicator : !props.hidden && children}
+            <React.Suspense fallback={loadingIndicator}>
+                {loading ? loadingIndicator : !props.hidden && children}
+            </React.Suspense>
         </Container>
     )
 }
