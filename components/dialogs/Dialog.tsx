@@ -1,8 +1,8 @@
 import * as React from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { COLOR_TRANSPARENT, styled } from "../../styles";
 import { flex, position } from "../../styles/mixins";
-import { isUndefined } from "../../utility/assertions";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
 
@@ -36,10 +36,6 @@ interface StyleProps {
     visible?: boolean
 }
 
-interface OwnProps {
-    children: (close: () => void, show: () => void) => React.ReactNode
-}
-
 export interface DialogProps {
     /**
      * Used for styling the outermost div container for the
@@ -71,76 +67,61 @@ export interface DialogProps {
     visibilityChange?: (isVisible: boolean) => void
 }
 
-interface State {
-    isVisible?: boolean
+interface Dialog extends DialogProps {
+    children: (close: () => void) => React.ReactNode
 }
 
-type Props = OwnProps & DialogProps
 
+function Dialog(props: Dialog) {
+    const [visible, setVisible] = useState(props.isVisible || false)
+    const dialogRef = useRef<any>(null)
 
-class Dialog extends React.PureComponent<Props, State> {
-    state: State = {
-        isVisible: this.props.isVisible
-    }
-    dialog = React.createRef<any>()
+    useEffect(() => {
+        if(visible !== props.isVisible)
+            setVisible(props.isVisible)
+    }, [props.isVisible])
 
-    componentDidUpdate(prevProps: DialogProps, prevState: State) {
-        const stateVisible = this.state.isVisible
-        const propsVisible = this.props.isVisible
+    useEffect(() => {
+        call(props.visibilityChange, visible)
 
-        if(propsVisible !== prevProps.isVisible && stateVisible !== propsVisible)
-            this.toggle(propsVisible || false)
-
-
-        const dialog = this.dialog.current
-        if(stateVisible && !prevState.isVisible && dialog) {
-            requestAnimationFrame(() => {
-                dialog.focus()
-                dialog.scrollTop = 0
-                call(this.props.onShow, dialog)
-            })
+        if(visible) {
+            const dialog = dialogRef.current
+            if(dialog) {
+                requestAnimationFrame(() => {
+                    dialog.focus()
+                    dialog.scrollTop = 0
+                    call(props.onShow, dialog)
+                })
+            }
         }
-        else if(!stateVisible && prevState.isVisible) {
-            call(this.props.onClose)
+        else {
+            call(props.onClose)
         }
-    }
+    }, [visible])
 
-    toggle(visible?: boolean) {
-        this.setState(prevState => {
-            const isVisible = isUndefined(visible) ? !prevState.isVisible : visible
-
-            call(this.props.visibilityChange, isVisible)
-
-            return {isVisible}
-        })
-    }
-
-    keyDown = (event: React.KeyboardEvent) => {
+    function keyDown(event: React.KeyboardEvent) {
         if(isKeyPressed(ESCAPE_HOTKEY, event))
-            this.toggle(false)
+            setVisible(false)
 
-        const dialog = this.dialog.current
-        if(dialog) {
-            call(this.props.onKeyDown, event, dialog)
-        }
+        const dialog = dialogRef.current
+        if(dialog)
+            call(props.onKeyDown, event, dialog)
     }
 
-    render() {
-        return createPortal(
-            <Container
-                className={this.props.className}
-                ref={this.dialog}
-                onKeyDown={this.keyDown}
-                tabIndex={-1}
-                visible={this.state.isVisible}
-            >
-                {this.state.isVisible &&
-                    this.props.children(() => this.toggle(false), () => this.toggle(true))
-                }
-            </Container>,
-            document.body
-        )
-    }
+    return createPortal(
+        <Container
+            className={props.className}
+            ref={dialogRef}
+            onKeyDown={keyDown}
+            tabIndex={-1}
+            visible={visible}
+        >
+            {visible &&
+                props.children(() => setVisible(false))
+            }
+        </Container>,
+        document.body
+    )
 }
 
 

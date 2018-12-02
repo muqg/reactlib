@@ -63,7 +63,7 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
 
     return(
         <DialogBox {...props} onKeyDown={keyDown} onClose={reject}>
-            {(close) => {
+            {close => {
                 return (
                     <div>
                         <div ref={container}>
