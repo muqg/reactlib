@@ -14,5 +14,6 @@ export { Spinner } from "./Spinner";
 export * from "./styled";
 export * from "./tabs";
 export { Timer } from "./Timer";
+export { View } from "./View";
 export * from "./_supplementary";
 
