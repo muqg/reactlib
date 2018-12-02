@@ -1,47 +1,49 @@
 import * as React from "react";
-import { Spinner } from ".";
+import { Spinner } from "./Spinner";
 import { COLOR_WHITE, css, media, styled } from "../styles";
 import { Omit } from "../utility";
 import { call } from "../utility/function";
 
 const spinner = <Spinner size="large" />
 
-const narrowStyle = css`
-    max-width: 1080px;
+const narrow = css`
+    width: 1024px;
     ${media.desktop`
-        max-width: 720px;
+        width: 768px;
     `}
     ${media.tablet`
-        max-width: 540px;
+        width: 540px;
     `}
     ${media.smallTablet`
-        max-width: 100%;
+        width: 100%;
     `}
 `
-const centerStyle = css`
+const center = css`
     align-items: center;
     display: flex;
     flex-direction: column;
+`
+const edge = css`
+    padding: 32px 25px;
+    ${media.tablet`
+        paddinG: 32px 10px;
+    `}
 `
 const Container = styled.div`
     ${(_p: StyleProps) => ""}
 
     background: ${COLOR_WHITE};
     box-sizing: border-box;
-    height: 100%;
     margin: auto;
     min-width: 285px;
-    padding: 32px 25px;
     position: relative;
     width: 100%;
 
-    ${media.tablet`
-        padding: 32px 10px;
-    `}
-
+    ${p => p.center && center}
+    ${p => !p.edgeless && edge}
     ${p => p.hidden && css`display: none;`}
-    ${p => p.narrow && narrowStyle}
-    ${p => p.center && centerStyle}
+    ${p => p.maxWidth && css`max-width: ${p => p.maxWidth}px;`}
+    ${p => p.narrow && narrow}
 `
 
 interface StyleProps {
@@ -50,9 +52,17 @@ interface StyleProps {
      */
     center?: boolean
     /**
-     * Whether the content is visible.
+     * Disables the default margins and padding of the container.
+     */
+    edgeless?: boolean
+    /**
+     * Hides the view.
      */
     hidden?: boolean
+    /**
+     * The maximum width of the container.
+     */
+    maxWidth?: number
     /**
      * Limits the width of the content, adapting to resolution changes.
      */
@@ -61,7 +71,13 @@ interface StyleProps {
 
 // Passing ref does not work for SC-4.0.3 typings.
 interface View extends Omit<React.HTMLProps<HTMLDivElement>, "ref" | "hidden">, StyleProps {
+    /**
+     * A custom placeholder to be displayed while loading.
+     */
     loader?: () => JSX.Element
+    /**
+     * Whether the view is loading content or processing a request.
+     */
     loading?: boolean
 }
 
@@ -70,11 +86,11 @@ function View({children, loader, loading, ...props}: View) {
     const loadingIndicator = call(loader) || spinner
 
     return (
-        <React.Suspense fallback={loadingIndicator}>
-            <Container {...props}>
+        <Container {...props}>
+            <React.Suspense fallback={loadingIndicator}>
                 {loading ? loadingIndicator : !props.hidden && children}
-            </Container>
-        </React.Suspense>
+            </React.Suspense>
+        </Container>
     )
 }
 
