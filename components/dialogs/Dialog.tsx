@@ -1,7 +1,6 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { COLOR_TRANSPARENT, styled } from "../../styles";
-import { position } from "../../styles/mixins";
+import { styled } from "../../styles";
 import { isUndefined } from "../../utility/assertions";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
@@ -12,13 +11,13 @@ const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
 
 const ContainerView = styled(View)`
-    background: ${COLOR_TRANSPARENT};
     height: 100%;
     justify-content: center;
+    left: 0;
     overflow: auto;
-    transition-property: opacity, transform, visibility;
+    position: fixed;
+    top: 0;
     z-index: 200;
-    ${position("fixed", "0", "", "", "0")}
 
     &::-webkit-scrollbar {
         width: 5px;
@@ -125,6 +124,7 @@ class Dialog extends React.PureComponent<Props, State> {
             <ContainerView
                 center
                 className={this.props.className}
+                edgeless
                 hidden={!this.state.isVisible}
                 ref={this.dialog}
                 onKeyDown={this.keyDown}

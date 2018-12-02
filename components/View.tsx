@@ -34,7 +34,7 @@ const Container = styled.div`
 
     background: ${COLOR_WHITE};
     box-sizing: border-box;
-    margin: auto;
+    margin: 0 auto;
     min-width: 285px;
     position: relative;
     width: 100%;

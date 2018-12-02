@@ -9,10 +9,6 @@ const NoScroll = createGlobalStyle`
         overflow: hidden !important;
     }
 `
-const StyledDialog = styled(Dialog)`
-    padding: 0;
-    transition: none;
-`
 const Back = styled.div`
     background: ${COLOR_BLACK};
     height: 100%;
@@ -35,7 +31,7 @@ const ImageView = (props: Props) => {
         return null
 
     return (
-        <StyledDialog
+        <Dialog
             className={props.className}
             isVisible
             onKeyDown={e => e.stopPropagation()}
@@ -53,7 +49,7 @@ const ImageView = (props: Props) => {
                     <NoScroll />
                 </>
             )}
-        </StyledDialog>
+        </Dialog>
     )
 }
 
