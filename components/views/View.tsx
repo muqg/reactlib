@@ -32,7 +32,7 @@ interface StyleProps {
 }
 
 // Passing ref does not work for SC-4.0.3 typings.
-interface View extends Omit<React.HTMLProps<HTMLDivElement>, "ref" | "hidden">, StyleProps {
+interface View extends Omit<React.HTMLProps<HTMLDivElement>, "ref" | "hidden" | "as">, StyleProps {
     /**
      * A custom placeholder to be displayed while loading.
      */
