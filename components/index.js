@@ -13,6 +13,7 @@ export { Spinner } from "./Spinner";
 export * from "./styled";
 export * from "./tabs";
 export { Timer } from "./Timer";
+export { Unstable } from "./Unstable";
 export * from "./views";
 export * from "./_supplementary";
 
