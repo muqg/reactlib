@@ -1,5 +1,5 @@
 
-export { useDelayed } from "./useDelayed";
+export { useDebounced } from "./useDebounced";
 export { useDocumentTitle } from "./useDocumentTitle";
 export { useGlobalHotkey } from "./useGlobalHotkey";
 export { useInitialRender } from "./useInitialRender";
