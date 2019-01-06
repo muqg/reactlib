@@ -4,17 +4,20 @@
  *
  * @param func The function to be locked.
  */
-// @ts-ignore Odd error reporting for generic array after v.3.0.1
-function lock<A extends any[]>(func: (...args: A) => Promise<void> | void) {
+// @ts-ignore TS2370: A rest parameter must be of an array type.
+function lock<A extends any[], R>(func: (...args: A) => R): (...args: A) => R | void {
     let locked = false
 
-    // @ts-ignore Odd error reporting for generic array after v.3.0.1
+    // @ts-ignore TS2370: A rest parameter must be of an array type.
     return async (...args: A) => {
-        if(!locked) {
-            locked = true
-            await func(...args)
-            locked = false
-        }
+        if(locked)
+            return
+
+        locked = true
+        const res = await func(...args)
+        locked = false
+
+        return res
     }
 }
 
