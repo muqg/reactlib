@@ -9,7 +9,9 @@ export interface ResourceObject<T extends string | number = number> {
 function useResourceList<T extends ResourceObject>(listItems: T[]) {
     const [list, setList] = useState<T[]>(listItems)
 
-    async function save(res: T) {
+    async function save(rsrc: T | Promise<T>) {
+        const res = await rsrc
+
         if(!res.id)
             return
 
@@ -20,7 +22,7 @@ function useResourceList<T extends ResourceObject>(listItems: T[]) {
             setList([res, ...list])
     }
 
-    async function del(res: T) {
+    function del(res: T) {
         setList(list.filter(r => r.id !== res.id))
     }
 

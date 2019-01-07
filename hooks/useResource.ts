@@ -6,18 +6,16 @@ import { isString, isType } from "../utility/assertions";
 import { call } from "../utility/function";
 import { request } from "../utility/web";
 
-type ResourceCallback<T extends object> = (resource: T) => string | void | Promise<string | void>
-
 export interface ResourceProps<T extends object = object> {
+    /**
+     * Called when an exception occurs both for save and delete.
+     */
+    catch?: (exception: any) => string | void | Promise<string | void>
     /**
      * Default data for the resource. Used when a new one is being created
      * and also when a resource is deleted and the data should be reset.
      */
     default: T
-    /**
-     * Text to be shown when an exceptional error occurs.
-     */
-    exceptionText?: string
     /**
      * Id of the resource. Falsey value for a new resource.
      */
@@ -26,23 +24,23 @@ export interface ResourceProps<T extends object = object> {
      * Called before deleting a resource. May return a string with an error
      * message to show it as notification and cancel the process.
      */
-    deleting?: ResourceCallback<T>
+    deleting?: (resource: T) => string | void
     /**
      * Called after deleting a resource. May return a string to show as
      * notification for when deletion is done.
      */
-    deleted?: ResourceCallback<T>
+    deleted?: (resource: T) => string | void | Promise<string | void>
     /**
      * Called before saving a resource. May return a string with an error message
      * to show it as notification and cancel the process. This makes it a perfect
      * place for data validation.
      */
-    saving?: ResourceCallback<T>
+    saving?: (resource: T) => string | void
     /**
      * Called after saving a resource. May return a string to show as
      * notification for when saving is done.
      */
-    saved?: ResourceCallback<T>
+    saved?: (resource: Promise<T>) => string | void | Promise<string | void>
     /**
      * URL to the resource (without id appended).
      */
@@ -55,7 +53,7 @@ export interface ResourceManager<T extends object = object> {
      */
     data: T
     /**
-     * Sends a request to delete the resource.
+     * Send a request to delete the resource.
      */
     delete: () => void
     /**
@@ -67,9 +65,9 @@ export interface ResourceManager<T extends object = object> {
      */
     model: Readonly<Model<T>>
     /**
-     * Sends a request to save the resource.
+     * Send a request to save the resource.
      *
-     * A POST request for new resource and a PUT request for an existing one.
+     * POST request for new resource and PUT request for an existing one.
      */
     save: () => void
 }
@@ -97,42 +95,50 @@ function useResource<T extends object>(
         }
     }, [props.id])
 
-    function save() {
-        _work(async () => {
+    async function save() {
+        await _work(async () => {
             const resource = model.$data
-            if(_error(await call(props.saving, resource)))
+            if(_error(call(props.saving, resource)))
                 return
 
             const method = props.id ? RequestMethod.PUT : RequestMethod.POST
             const requestURL = method === RequestMethod.PUT ? resUrl : url
             const payload = JSON.stringify(resource)
 
-            // @ts-ignore Spread types may be created only from object types.
-            const response = await request<Partial<T>>(method, requestURL, {payload})
+            const nextResource = (async () => {
+                // @ts-ignore Spread types may only be created from object types.
+                const response = await request<Partial<T>>(method, requestURL, {payload})
+                // @ts-ignore Spread types may only be created from object types.
+                return {...resource, ...response}
+            })()
 
-            // @ts-ignore Spread types may be created only from object types.
-            const nextResource = {...resource, ...response}
-            _error(await call(props.saved, nextResource))
+            const savedCallbackResult = call(props.saved, nextResource)
+
+            await nextResource
+            _error(await savedCallbackResult)
 
             return nextResource
         })
     }
 
-    function del() {
-        if(!props.id)
-            return
+    async function del() {
+        await _work(async () => {
+            if(!props.id)
+                return
 
-        _work(async () => {
             const resource = model.$data
-            if(_error(await call(props.deleting, resource)))
+            if(_error(call(props.deleting, resource)))
                 return
 
             const payload = JSON.stringify(resource)
-            await request(RequestMethod.DELETE, resUrl, {payload})
+            const response = request(RequestMethod.DELETE, resUrl, {payload})
 
-            _error(await call(props.deleted, resource))
+            const deletedCallbackResult = call(props.deleted, resource)
 
-            // @ts-ignore Spread types may be created only from object types.
+            await response
+            _error(await deletedCallbackResult)
+
+            // @ts-ignore Spread types may only be created from object types.
             return {...props.default}
         })
     }
@@ -150,21 +156,26 @@ function useResource<T extends object>(
         if(isWorking)
             return
 
+	let resource = model.$data
         setIsWorking(true)
         try {
-            const resource = await worker()
-            if(resource)
-                model.$set(resource)
+            const response = await worker()
+            if(response) {
+                model.$set(response)
+                resource = response
+            }
         }
         catch(ex) {
             console.error(ex)
 
-            let msg = props.exceptionText || "Error"
+            let msg = await call(props.catch, ex) || "Error"
             if(isType<RequestException>(ex, () => ex.status))
                 msg = ex.text
             notify(msg)
         }
         setIsWorking(false)
+
+        return resource
     }
 
     return {
