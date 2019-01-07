@@ -1,19 +1,19 @@
 import * as React from "react";
 import { useCallback, useContext, useEffect } from "react";
-import { COLOR_BLACK, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
+import { NotificationContext } from "../../contexts/NotificationContext";
+import { COLOR_DARK, COLOR_MAIN, COLOR_TEXT, css, styled } from "../../styles";
 import { position } from "../../styles/mixins";
 import { delay } from "../../utility";
-import { NotificationContext } from "../../contexts/NotificationContext";
 
 
 const NOTIFICATION_DURATION = 2_000
 
 const Container = styled.div`
-    background: ${COLOR_PRIMARY_LIGHT};
+    background: ${COLOR_MAIN};
     border-radius: 3px;
-    box-shadow: 0 0 9px -1px ${COLOR_PRIMARY_DARK};
+    box-shadow: 0 0 9px -1px ${COLOR_DARK};
     box-sizing: border-box;
-    color: ${COLOR_BLACK};
+    color: ${COLOR_TEXT};
     cursor: default;
     padding: 12px;
     text-align: center;

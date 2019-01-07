@@ -1,5 +1,5 @@
 import * as React from "react";
-import { COLOR_PRIMARY_DARK, COLOR_WHITE, css, styled } from "../../styles";
+import { COLOR_DARK, COLOR_BACKGROUND, css, styled } from "../../styles";
 import { position } from "../../styles/mixins";
 import { classNames } from "../../utility/dom";
 import { OutsideAlert } from "../OutsideAlert";
@@ -8,9 +8,9 @@ import SelectOption from "./SelectOption";
 const DEFAULT_HEIGHT = 25
 
 const divCommon = css`
-    background: ${COLOR_WHITE};
+    background: ${COLOR_BACKGROUND};
     border: 1px solid #dedede;
-    color: ${COLOR_PRIMARY_DARK};
+    color: ${COLOR_DARK};
     cursor: pointer;
     height: 100%;
     outline: none;

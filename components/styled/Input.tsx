@@ -1,17 +1,17 @@
-import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../../styles";
+import { COLOR_DARK, COLOR_MAIN, styled } from "../../styles";
 
 
 const Input = styled.input`
     background: transparent;
     border: none;
-    border-bottom: 2px solid ${COLOR_PRIMARY_LIGHT};
+    border-bottom: 2px solid ${COLOR_MAIN};
     outline: none;
     padding: 2px;
     transition: border .25s;
     width: ${(p: StyleProps) => p.width};
 
     &:focus {
-        border-bottom-color: ${COLOR_PRIMARY_DARK};
+        border-bottom-color: ${COLOR_DARK};
     }
 `
 Input.defaultProps = {

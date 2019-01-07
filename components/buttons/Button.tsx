@@ -1,4 +1,4 @@
-import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../../styles";
+import { COLOR_DARK, COLOR_MAIN, styled } from "../../styles";
 
 
 const Button = styled.button`
@@ -19,8 +19,8 @@ const Button = styled.button`
     }
 `
 Button.defaultProps = {
-    background: COLOR_PRIMARY_DARK,
-    color: COLOR_PRIMARY_LIGHT,
+    background: COLOR_DARK,
+    color: COLOR_MAIN,
     hoverBackground: "#aaa",
     hoverColor: "#333",
     margin: "0",

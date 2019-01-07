@@ -1,11 +1,11 @@
 import * as React from "react";
-import { COLOR_GREEN, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_WHITE, css, styled } from "../styles";
+import { COLOR_SUCCESS, COLOR_DARK, COLOR_MAIN, COLOR_BACKGROUND, css, styled } from "../styles";
 import { position } from "../styles/mixins";
 
 const BORDER_RADIUS_VALUE = "3px"
 
 const Container = styled.label`
-    border: 1px solid ${COLOR_PRIMARY_DARK};
+    border: 1px solid ${COLOR_DARK};
     border-radius: ${BORDER_RADIUS_VALUE};
     cursor: pointer;
     display: inline-block;
@@ -18,7 +18,7 @@ const Container = styled.label`
 `
 
 const Background = styled.span`
-    background: ${COLOR_PRIMARY_LIGHT};
+    background: ${COLOR_MAIN};
     border-radius: ${BORDER_RADIUS_VALUE};
     display: inline-block;
     height: 100%;
@@ -28,7 +28,7 @@ const Background = styled.span`
     ${position("relative")}
 
     &:after {
-        background: ${COLOR_WHITE};
+        background: ${COLOR_BACKGROUND};
         border-radius: ${BORDER_RADIUS_VALUE};
         content: '';
         height: 100%;
@@ -51,7 +51,7 @@ const Background = styled.span`
             }
 
             input:checked ~ & {
-                background: ${COLOR_GREEN};
+                background: ${COLOR_SUCCESS};
             }
 
             input:checked ~ &:after {

@@ -1,10 +1,10 @@
 import * as React from "react";
-import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
+import { COLOR_DARK, COLOR_MAIN, css, styled } from "../../styles";
 import { truncate } from "../../styles/mixins";
 
 
 const StyledButton = styled.button`
-    border: 1px solid ${COLOR_PRIMARY_LIGHT};
+    border: 1px solid ${COLOR_MAIN};
     box-sizing: border-box;
     padding: 4px;
     ${truncate("150px")}
@@ -16,7 +16,7 @@ const StyledButton = styled.button`
     ${p => p.active && css`
         border-bottom: none;
         border-radius: 6px 6px 0 0;
-        box-shadow: 0 -3px 4px 0 ${COLOR_PRIMARY_DARK};
+        box-shadow: 0 -3px 4px 0 ${COLOR_DARK};
         font-weight: bold;
     `}
 

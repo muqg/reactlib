@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
+import { COLOR_MAIN, styled } from "../../styles";
 import { flex, position } from "../../styles/mixins";
 
 
@@ -13,7 +13,7 @@ const ToolbarWrapper = styled.div`
     ${position("fixed", "0", "", "", "0")}
 
     > div {
-        background: ${COLOR_PRIMARY_LIGHT};
+        background: ${COLOR_MAIN};
         border-radius: 6px;
         box-shadow: 0 2px 0 0 #aaa;
         cursor: default;

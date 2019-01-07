@@ -1,10 +1,10 @@
-import { COLOR_DARK_RED, COLOR_RED, COLOR_WHITE, styled } from "../../styles";
+import { COLOR_ERROR, COLOR_BACKGROUND, styled } from "../../styles";
 import { position } from "../../styles/mixins";
 
 const RemoveButton = styled.button`
     ${(_p: StyleProps) => ''}
 
-    background: ${COLOR_RED};
+    background: ${COLOR_ERROR};
     border-radius: 50%;
     box-sizing: border-box;
     cursor: pointer;
@@ -13,11 +13,11 @@ const RemoveButton = styled.button`
     width: ${p => p.size}px;
 
     &:hover {
-        background: ${COLOR_DARK_RED}
+        background: #cc0000;
     }
 
     &:before {
-        background: ${COLOR_WHITE};
+        background: ${COLOR_BACKGROUND};
         content: '';
         height: 2px;
         transform: translate(-50%);

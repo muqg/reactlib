@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { COLOR_TRANSPARENT, styled } from "../../styles";
+import { styled } from "../../styles";
 import { flex, position } from "../../styles/mixins";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
@@ -11,7 +11,7 @@ const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
 
 const Container = styled.div`
-    background: ${COLOR_TRANSPARENT};
+    background: transparent;
     box-sizing: border-box;
     display: none;
     height: 100%;

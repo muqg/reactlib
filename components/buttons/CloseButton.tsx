@@ -1,6 +1,6 @@
 import * as React from "react";
 import { css, styled } from "../../styles";
-import { COLOR_PRIMARY_DARK } from "../../styles/colours";
+import { COLOR_DARK } from "../../styles/colours";
 import { position } from "../../styles/mixins";
 
 
@@ -37,7 +37,7 @@ const StyledButton = styled.button`
     }
 `
 StyledButton.defaultProps = {
-    color: COLOR_PRIMARY_DARK,
+    color: COLOR_DARK,
     size: 30,
     right: "5px",
     top: "5px",

@@ -1,10 +1,10 @@
-import { COLOR_DARK_GREEN, COLOR_GREEN, COLOR_WHITE, styled } from "../../styles";
+import { COLOR_SUCCESS, COLOR_BACKGROUND, styled } from "../../styles";
 import { position } from "../../styles/mixins";
 
 const AddButton = styled.button`
     ${(_p: StyleProps) => ''}
 
-    background: ${COLOR_GREEN};
+    background: ${COLOR_SUCCESS};
     border-radius: 50%;
     box-sizing: border-box;
     cursor: pointer;
@@ -13,12 +13,12 @@ const AddButton = styled.button`
     ${position("relative")}
 
     &:hover {
-        background: ${COLOR_DARK_GREEN}
+        background: #24821a;
     }
 
     &:before,
     &:after {
-        background: ${COLOR_WHITE};
+        background: ${COLOR_BACKGROUND};
         content: '';
         height: 2px;
         transform: translate(-50%);

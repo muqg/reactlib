@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { COLOR_PRIMARY_DARK, css, styled } from "../../styles";
+import { COLOR_DARK, css, styled } from "../../styles";
 import { position } from "../../styles/mixins";
 import { call } from "../../utility/function";
 
@@ -76,7 +76,7 @@ interface OwnProps {
 type Props = OwnProps & StyleProps
 
 
-const SandwichButton = React.memo(({active = false, color = COLOR_PRIMARY_DARK, size = 30, ...props}: Props) => {
+const SandwichButton = React.memo(({active = false, color = COLOR_DARK, size = 30, ...props}: Props) => {
     const [isActive, setIsActive] = useState(active)
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { findDOMNode } from "react-dom";
-import { COLOR_PRIMARY_LIGHT, COLOR_SECONDARY_LIGHT, css, styled } from "../../styles";
+import { COLOR_MAIN, COLOR_LIGHT, css, styled } from "../../styles";
 import { position, truncate } from "../../styles/mixins";
 import { isObject } from "../../utility/assertions";
 
@@ -19,7 +19,7 @@ const Container = styled.label`
     ${p => p.active && css`
         display: block;
         &:hover {
-            background: ${COLOR_SECONDARY_LIGHT}
+            background: ${COLOR_LIGHT}
         }
     `}
 
@@ -33,7 +33,7 @@ const contentCommon = css`
     ${position("relative", "0", "", "", "0")}
 
     &:hover {
-        background: ${COLOR_SECONDARY_LIGHT}
+        background: ${COLOR_LIGHT}
     }
 `
 const Content = styled.div`
@@ -47,7 +47,7 @@ const Content = styled.div`
 
         ${p => (p.active || p.multiple) && css`
             background: #f7f7f7;
-            border-bottom-color: ${COLOR_PRIMARY_LIGHT};
+            border-bottom-color: ${COLOR_MAIN};
             color: #dbaa6b;
         `}
     }

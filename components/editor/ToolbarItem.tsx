@@ -1,5 +1,5 @@
 import * as React from "react";
-import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, css, styled } from "../../styles";
+import { COLOR_DARK, COLOR_MAIN, css, styled } from "../../styles";
 
 
 const withImage = css`
@@ -14,13 +14,13 @@ const withImage = css`
 `
 const withHover = css`
     &:hover {
-        background: ${COLOR_PRIMARY_DARK};
-        color: ${COLOR_PRIMARY_LIGHT};
+        background: ${COLOR_DARK};
+        color: ${COLOR_MAIN};
     }
 `
 const Container = styled.div`
     border-radius: 2px;
-    color: ${COLOR_PRIMARY_DARK};
+    color: ${COLOR_DARK};
     height: 100%;
     line-height: 24px;
     margin: 0 2px;

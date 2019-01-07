@@ -2,17 +2,17 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useInitialRender } from "../hooks";
-import { COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, styled } from "../styles";
+import { COLOR_DARK, COLOR_MAIN, styled } from "../styles";
 import { flex, position } from "../styles/mixins";
 import { wait } from "../utility";
-import { padStart } from "../utility/string";
 import { call } from "../utility/function";
+import { padStart } from "../utility/string";
 
 
 const Container = styled.div`
-    background: ${COLOR_PRIMARY_LIGHT};
+    background: ${COLOR_MAIN};
     border-radius: 0 0 8px 8px;
-    box-shadow: 0 2px 3px ${COLOR_PRIMARY_DARK};
+    box-shadow: 0 2px 3px ${COLOR_DARK};
     transform: translateX(-50%);
     ${position("fixed", "0", "", "", "50%")}
     ${flex()}
@@ -23,7 +23,7 @@ const Timepiece = styled.div`
     padding: 6px 15px;
 
     &:first-of-type {
-        border-right: 1px solid ${COLOR_PRIMARY_DARK};
+        border-right: 1px solid ${COLOR_DARK};
     }
 `
 

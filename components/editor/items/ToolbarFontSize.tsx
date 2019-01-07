@@ -1,14 +1,14 @@
 
 import * as React from "react";
-import { COLOR_PRIMARY_LIGHT, COLOR_WHITE, styled } from "../../../styles";
+import { COLOR_MAIN, COLOR_BACKGROUND, styled } from "../../../styles";
 import { Editor } from "../../../utility/dom";
 import { asInt } from "../../../utility/string";
 import { ToolbarItem } from "../ToolbarItem";
 
 
 const StyledSelect = styled.select`
-    background: ${COLOR_WHITE};
-    border: 1px solid ${COLOR_PRIMARY_LIGHT};
+    background: ${COLOR_BACKGROUND};
+    border: 1px solid ${COLOR_MAIN};
     min-width: auto;
     max-width: 120px;
     padding: 2px;

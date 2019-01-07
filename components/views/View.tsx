@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Spinner } from "../Spinner";
-import { COLOR_WHITE, css, media, styled } from "../../styles";
+import { COLOR_BACKGROUND, css, media, styled } from "../../styles";
 import { Omit } from "../../utility";
 import { call } from "../../utility/function";
 
@@ -9,7 +9,7 @@ const spinner = <Spinner size="large" />
 const Container = styled.div`
     ${(_p: StyleProps) => ""}
 
-    background: ${COLOR_WHITE};
+    background: ${COLOR_BACKGROUND};
     box-sizing: border-box;
     margin: 0 auto;
     min-width: 285px;

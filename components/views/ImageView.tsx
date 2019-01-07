@@ -1,6 +1,6 @@
 import * as React from "react";
 import { AspectImage, CloseButton, Dialog } from "..";
-import { COLOR_BLACK, COLOR_WHITE, createGlobalStyle, styled } from "../../styles";
+import { COLOR_BACKGROUND, createGlobalStyle, styled } from "../../styles";
 import { position } from "../../styles/mixins";
 import { DialogProps } from "../dialogs/Dialog";
 
@@ -10,7 +10,7 @@ const NoScroll = createGlobalStyle`
     }
 `
 const Back = styled.div`
-    background: ${COLOR_BLACK};
+    background: black;
     height: 100%;
     opacity: .75;
     width: 100%;
@@ -40,7 +40,7 @@ const ImageView = (props: Props) => {
             {(close) => (
                 <>
                     <Back onClick={close} />
-                    <CloseButton color={COLOR_WHITE} onClick={close} />
+                    <CloseButton color={COLOR_BACKGROUND} onClick={close} />
                     <AspectImage
                         onClick={props.closeOnClick ? close : undefined}
                         size="100%"

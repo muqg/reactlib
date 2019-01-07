@@ -1,12 +1,12 @@
 import * as React from "react";
 import { useRef, useState } from "react";
-import { COLOR_PRIMARY_LIGHT, styled } from "../../styles";
+import { COLOR_MAIN, styled } from "../../styles";
 import { CHAR_CODE_ENTER, Editor, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
 
 
 const Container = styled.div`
-    border: ${COLOR_PRIMARY_LIGHT} 1px solid;
+    border: ${COLOR_MAIN} 1px solid;
     box-sizing: border-box;
     min-height: 2.7em;
     outline: none;
