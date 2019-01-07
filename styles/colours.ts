@@ -10,3 +10,7 @@ export const COLOR_RED = "#ff0033"
 export const COLOR_DARK_RED = "#cc0000"
 export const COLOR_WHITE = "#fff"
 export const COLOR_TRANSPARENT = "transparent"
+
+// 2nd generation.
+export const COLOR_BACKGROUND = "#fff"
+export const COLOR_TEXT = "#222"
