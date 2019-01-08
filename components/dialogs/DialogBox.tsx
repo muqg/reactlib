@@ -16,7 +16,6 @@ const Back = styled.div`
 const Container = styled.div`
     background: ${fadedColor(COLOR_MAIN)};
     border-radius: 3px;
-    box-sizing: border-box;
     min-height: 54px;
     max-height: 400px;
     padding: 12px;

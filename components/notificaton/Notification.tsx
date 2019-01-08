@@ -12,7 +12,6 @@ const Container = styled.div`
     background: ${COLOR_MAIN};
     border-radius: 3px;
     box-shadow: 0 0 9px -1px ${COLOR_DARK};
-    box-sizing: border-box;
     color: ${COLOR_TEXT};
     cursor: default;
     padding: 12px;

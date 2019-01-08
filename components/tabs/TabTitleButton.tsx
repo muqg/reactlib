@@ -5,7 +5,6 @@ import { truncate } from "../../styles/mixins";
 
 const StyledButton = styled.button`
     border: 1px solid ${COLOR_MAIN};
-    box-sizing: border-box;
     padding: 4px;
     ${truncate("150px")}
 

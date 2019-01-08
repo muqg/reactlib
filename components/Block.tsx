@@ -11,7 +11,6 @@ const center = css`
 const Container = styled.div`
     ${(_p: StyleProps) => ""}
 
-    box-sizing: border-box;
     margin: 12px 0;
     max-width: inherit;
     position: relative;

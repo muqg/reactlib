@@ -10,7 +10,6 @@ const Container = styled.div`
     ${(_p: StyleProps) => ""}
 
     background: ${COLOR_BACKGROUND};
-    box-sizing: border-box;
     margin: 0 auto;
     min-width: 285px;
     position: relative;

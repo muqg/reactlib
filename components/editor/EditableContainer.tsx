@@ -7,7 +7,6 @@ import { call } from "../../utility/function";
 
 const Container = styled.div`
     border: ${COLOR_MAIN} 1px solid;
-    box-sizing: border-box;
     min-height: 2.7em;
     outline: none;
     overflow: auto;

@@ -12,7 +12,6 @@ const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
 const Container = styled.div`
     background: transparent;
-    box-sizing: border-box;
     display: none;
     height: 100%;
     overflow: auto;

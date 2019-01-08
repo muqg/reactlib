@@ -37,7 +37,6 @@ const contentCommon = css`
     }
 `
 const Content = styled.div`
-    box-sizing: border-box;
     display: ${(p: StyleProps) => (p.active || p.multiple) ? "block" : "none"};
     height: 100%;
     ${truncate()}
