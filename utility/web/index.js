@@ -1,3 +1,4 @@
+export { createEndpoint, Endpoint } from "./createEndpoint";
 export { createQuery } from "./createQuery";
 export { getLocalStorageSize } from "./getLocalStorageSize";
 export { parseQuery } from "./parseQuery";
