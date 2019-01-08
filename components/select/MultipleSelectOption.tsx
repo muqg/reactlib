@@ -1,5 +1,5 @@
 import * as React from "react";
-import { COLOR_MAIN, COLOR_LIGHT, css, styled } from "../../styles";
+import { COLOR_MAIN, css, styled } from "../../styles";
 import { position, truncate } from "../../styles/mixins";
 
 
@@ -17,7 +17,7 @@ const Container = styled.label`
     ${p => p.active && css`
         display: block;
         &:hover {
-            background: ${COLOR_LIGHT}
+            background: #efefef;
         }
     `}
 
@@ -31,7 +31,7 @@ const contentCommon = css`
     ${position("relative", "0", "", "", "0")}
 
     &:hover {
-        background: ${COLOR_LIGHT}
+        background: #efefef;
     }
 `
 const Content = styled.div`

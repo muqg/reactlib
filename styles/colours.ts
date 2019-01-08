@@ -2,7 +2,7 @@ export const COLOR_DARK = "#555"
 export const COLOR_MAIN = "#ddd"
 export const COLOR_LIGHT = "#efefef"
 
-export const COLOR_ACCENT = "#039be5"
+export const COLOR_ACCENT = "#2196f3"
 export const COLOR_BACKGROUND = "#fff"
 export const COLOR_CONTRAST = "#fff"
 export const COLOR_ERROR = "#d62007"

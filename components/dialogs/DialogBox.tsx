@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CloseButton } from "..";
-import { COLOR_DARK, COLOR_MAIN, COLOR_LIGHT, styled } from "../../styles";
+import { COLOR_DARK, COLOR_MAIN, fadedColor, styled } from "../../styles";
 import { position } from "../../styles/mixins";
 import { Dialog, DialogProps } from "./Dialog";
 
@@ -14,7 +14,7 @@ const Back = styled.div`
     ${position("absolute", "0", "", "", "0")}
 `
 const Container = styled.div`
-    background: ${COLOR_LIGHT};
+    background: ${fadedColor(COLOR_MAIN)};
     border-radius: 3px;
     box-sizing: border-box;
     min-height: 54px;
