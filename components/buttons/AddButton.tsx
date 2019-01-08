@@ -1,41 +1,30 @@
-import { COLOR_SUCCESS, COLOR_BACKGROUND, styled } from "../../styles";
-import { position } from "../../styles/mixins";
+import * as React from "react";
+import { COLOR_SUCCESS } from "../../styles";
+import { Omit, Size } from "../../utility";
+import { getIconButtonDiameter, IconButton } from "./IconButton";
 
-const AddButton = styled.button`
-    ${(_p: StyleProps) => ''}
 
-    background: ${COLOR_SUCCESS};
-    border-radius: 50%;
-    box-sizing: border-box;
-    cursor: pointer;
-    height: ${p => p.size}px;
-    width: ${p => p.size}px;
-    ${position("relative")}
+// Ref is not assignable to SC 4.0.3
+function AddButton(props: Omit<React.ComponentProps<typeof IconButton>, "children" | "ref">) {
+    const size = getIconButtonDiameter(props)
+    const x1 = size / 4
+    const x2 = size - x1
+    const y = size / 2
+    const stroke = props.size && props.size > Size.Medium ? props.size : 2
 
-    &:hover {
-        background: #24821a;
-    }
-
-    &:before,
-    &:after {
-        background: ${COLOR_BACKGROUND};
-        content: '';
-        height: 2px;
-        transform: translate(-50%);
-        width: calc(${p => p.size}px / 3 + 5px);
-        ${position("absolute", "50%", "", "", "50%")}
-    }
-
-    &:after {
-        transform: translate(-50%) rotate(90deg);
-    }
-`
-AddButton.defaultProps = {
-    size: 22
-}
-
-interface StyleProps {
-    size?: number
+    return (
+        <IconButton color={COLOR_SUCCESS} {...props}>
+            <svg
+                height={size}
+                strokeWidth={stroke}
+                viewBox={`1 1 ${size} ${size}`}
+                width={size}
+            >
+                <line x1={x1} x2={x2} y1={y} y2={y} />
+                <line x1={y} x2={y} y1={x1} y2={x2} />
+            </svg>
+        </IconButton>
+    )
 }
 
 

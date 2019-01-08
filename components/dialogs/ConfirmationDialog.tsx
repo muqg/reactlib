@@ -12,6 +12,9 @@ const ButtonsContainer = styled.div`
     margin-top: 27px;
     text-align: center;
 `
+const StyledButton = styled(Button)`
+    margin: 0 6px;
+`
 
 
 interface OwnProps {
@@ -70,12 +73,12 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
                             {props.children}
                         </div>
                         <ButtonsContainer>
-                            <Button onClick={() => { accept(); close(); }} margin={"0 6px"}>
+                            <StyledButton onClick={() => { accept(); close(); }}>
                                 {textOkay}
-                            </Button>
-                            <Button onClick={() => { reject(); close(); }} margin={"0 6px"}>
+                            </StyledButton>
+                            <StyledButton onClick={() => { reject(); close(); }}>
                                 {textCancel}
-                            </Button>
+                            </StyledButton>
                         </ButtonsContainer>
                     </div>
                 )
