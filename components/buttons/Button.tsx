@@ -83,6 +83,7 @@ const Button = styled.button`
     ${p => p.variant === ButtonVariant.Text && textStyle}
 `
 Button.defaultProps = ButtonDefaultProps
+Button.displayName = "Button"
 
 
 export { Button };

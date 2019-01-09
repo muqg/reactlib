@@ -6,7 +6,7 @@ import { getIconButtonDiameter, IconButton } from "./IconButton";
 // Ref is not assignable to SC 4.0.3
 type Props = Omit<React.ComponentProps<typeof IconButton>, "children" | "ref">
 
-function RemoveButton({color = COLOR_ERROR, ...props}: Props) {
+const RemoveButton: React.ComponentType<Props> = ({color = COLOR_ERROR, ...props}) => {
     const size = getIconButtonDiameter(props)
     const x1 = size / 4
     const x2 = size - x1

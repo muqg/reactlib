@@ -51,7 +51,7 @@ const DialogBox = (props: DialogBoxProps & DialogProps) => {
                 <>
                     <Back onClick={close} />
                     <Container>
-                        <CloseButton onClick={close} size={22} />
+                        <CloseButton onClick={close} />
                         <div>
                             <Title>
                                 {props.title}
