@@ -1,31 +1,32 @@
 import * as React from "react";
 import { CloseButton } from "..";
-import { COLOR_DARK, COLOR_MAIN, fadedColor, styled } from "../../styles";
-import { position } from "../../styles/mixins";
+import { COLOR_BACKGROUND, COLOR_DARK, styled } from "../../styles";
 import { Dialog, DialogProps } from "./Dialog";
 
 
 const Back = styled.div`
     background: black;
     height: 100%;
+    left: 0;
     opacity: .5;
+    position: absolute;
+    top: 0;
     width: 100%;
     z-index: -1;
-    ${position("absolute", "0", "", "", "0")}
 `
 const Container = styled.div`
-    background: ${fadedColor(COLOR_MAIN)};
+    background: ${COLOR_BACKGROUND};
     border-radius: 3px;
     min-height: 54px;
     max-height: 400px;
     padding: 12px;
-    ${position("relative")}
+    position: relative;
     width: 300px;
 `
 const Title = styled.p`
     &:not(:empty) {
         border-bottom: 1px solid;
-        border-image: linear-gradient(to right, ${COLOR_DARK}, ${COLOR_MAIN}) 1;
+        border-image: linear-gradient(to right, ${COLOR_DARK}, ${COLOR_DARK}, ${COLOR_BACKGROUND}) 1;
         font-weight: bold;
         margin-bottom: 27px;
         overflow: hidden;
