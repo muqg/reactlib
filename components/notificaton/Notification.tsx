@@ -36,7 +36,7 @@ interface Props {
     message: string
 }
 
-const Notification = React.memo(({message}: Props) => {
+function Notification({message}: Props) {
     const notify = useContext(NotificationContext)
 
     const hide = useCallback(
@@ -54,7 +54,7 @@ const Notification = React.memo(({message}: Props) => {
             {message}
         </Container>
     )
-})
+}
 
 
 export { Notification };

@@ -76,7 +76,7 @@ interface OwnProps {
 type Props = OwnProps & StyleProps
 
 
-const SandwichButton = React.memo(({active = false, color = COLOR_DARK, size = 30, ...props}: Props) => {
+function SandwichButton({active = false, color = COLOR_DARK, size = 30, ...props}: Props) {
     const [isActive, setIsActive] = useState(active)
 
     useEffect(() => {
@@ -104,7 +104,7 @@ const SandwichButton = React.memo(({active = false, color = COLOR_DARK, size = 3
             </Button>
         </div>
     )
-})
+}
 
 
 export { SandwichButton };
