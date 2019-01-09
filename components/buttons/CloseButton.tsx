@@ -12,6 +12,7 @@ const CloseButton: typeof AddButton = styled(AddButton).attrs({
     right: 5px;
     top: 5px;
     transform: rotate(45deg);
+    z-index: 1;
 `
 CloseButton.displayName = "CloseButton"
 
