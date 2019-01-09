@@ -29,6 +29,7 @@ IconButton.defaultProps = {
     ...ButtonDefaultProps,
     size: Size.Small
 }
+IconButton.displayName = "IconButton"
 
 
 export { IconButton };
