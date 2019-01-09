@@ -3,9 +3,10 @@ import { COLOR_SUCCESS } from "../../styles";
 import { Omit, Size } from "../../utility";
 import { getIconButtonDiameter, IconButton } from "./IconButton";
 
-
 // Ref is not assignable to SC 4.0.3
-function AddButton(props: Omit<React.ComponentProps<typeof IconButton>, "children" | "ref">) {
+type Props = Omit<React.ComponentProps<typeof IconButton>, "children" | "ref">
+
+function AddButton({color = COLOR_SUCCESS, ...props}: Props) {
     const size = getIconButtonDiameter(props)
     const x1 = size / 4
     const x2 = size - x1
@@ -13,7 +14,7 @@ function AddButton(props: Omit<React.ComponentProps<typeof IconButton>, "childre
     const stroke = props.size && props.size > Size.Medium ? props.size : 2
 
     return (
-        <IconButton color={COLOR_SUCCESS} {...props}>
+        <IconButton {...props} color={color} >
             <svg
                 height={size}
                 strokeWidth={stroke}
