@@ -1,17 +1,21 @@
 import * as React from "react";
 import { styled, css } from "../styles";
-import { Omit } from "../utility";
+import { Omit, Size } from "../utility";
+
+const SIZE_FACTOR = 12
 
 const center = css`
+    ${(_p: StyleProps) => ""}
+
     align-items: center;
     display: flex;
     flex-direction: column;
-    margin: 12px auto;
+    margin: ${p => p.margin! * SIZE_FACTOR}px auto;
 `
 const Container = styled.div`
     ${(_p: StyleProps) => ""}
 
-    margin: 12px 0;
+    margin: ${p => p.margin! * SIZE_FACTOR}px 0;
     max-width: inherit;
     position: relative;
 
@@ -21,6 +25,10 @@ const Container = styled.div`
         width: 100%;
     `}
 `
+Container.defaultProps = {
+    margin: Size.Small
+}
+
 const Title = styled.h4`
     padding: 4px 0;
 `
@@ -30,6 +38,7 @@ interface StyleProps {
      * Attempts to center the content.
      */
     center?: boolean
+    margin?: Size
     /**
      * Maximum width of the block.
      */
