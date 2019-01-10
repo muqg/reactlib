@@ -17,25 +17,36 @@ const Back = styled.div`
     top: 0;
     z-index: -1;
 `
+const Header = styled.div`
+    align-items: center;
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, transparent, ${COLOR_DARK}, transparent) 1;
+    display: flex;
+    margin-bottom: 24px;
+`
+const Title = styled.p`
+    font-size: 1.1rem;
+    ${truncate("100%")}
+`
+const StyledCloseButton = styled(CloseButton)`
+    position: initial;
+    top: 0;
+    left: 0;
+`
 const Container = styled.div`
     ${(_p: ContainerStyleProps) => ""}
 
     background: ${COLOR_BACKGROUND};
+    display: flex;
+    flex-direction: column;
     max-height: 90vh;
     max-width: ${p => p.size * SIZE_FACTOR}px;
-    padding: 12px;
+    padding: 6px 12px 12px;
     position: relative;
     width: 100%;
 `
-const Title = styled.p`
-    &:not(:empty) {
-        border-bottom: 1px solid;
-        border-image: linear-gradient(to right, transparent, ${COLOR_DARK}, transparent) 1;
-        font-weight: bold;
-        margin-bottom: 27px;
-        padding-bottom: 3px;
-        ${truncate("85%")}
-    }
+const Content = styled.div`
+    overflow: auto;
 `
 
 interface ContainerStyleProps {
@@ -60,13 +71,15 @@ const DialogBox: React.ComponentType<Props> = ({size = Size.Small, className, ..
                 <>
                     <Back onClick={close} />
                     <Container size={size} className={className}>
-                        <CloseButton onClick={close} />
-                        <div>
+                        <Header>
                             <Title>
                                 {props.title}
                             </Title>
+                            <StyledCloseButton onClick={close} />
+                        </Header>
+                        <Content>
                             {props.children(close)}
-                        </div>
+                        </Content>
                     </Container>
                 </>
             }
