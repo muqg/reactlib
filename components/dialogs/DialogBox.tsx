@@ -39,10 +39,6 @@ const Container = styled.div`
     max-width: ${p => p.size * SIZE_FACTOR}px;
     padding: 0 12px 12px;
     width: 100%;
-
-    @media (orientation: landscape) {
-        max-height: 100%;
-    }
 `
 const Content = styled.div`
     overflow: auto;
