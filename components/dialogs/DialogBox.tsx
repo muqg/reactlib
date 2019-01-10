@@ -22,7 +22,8 @@ const Header = styled.div`
     border-bottom: 1px solid;
     border-image: linear-gradient(to right, transparent, ${COLOR_DARK}, transparent) 1;
     display: flex;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
+    padding: 3px 0;
 `
 const Title = styled.p`
     font-size: 1.1rem;
@@ -36,7 +37,7 @@ const Container = styled.div`
     flex-direction: column;
     max-height: 90vh;
     max-width: ${p => p.size * SIZE_FACTOR}px;
-    padding: 6px 12px 12px;
+    padding: 0 12px 12px;
     width: 100%;
 
     @media (orientation: landscape) {
