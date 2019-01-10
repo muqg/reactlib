@@ -8,7 +8,7 @@ interface StyleProps {
     size?: Size
 }
 
-export function getIconButtonDiameter(p: StyleProps) {
+function getDiameter(p: StyleProps) {
     // Default props will inject the default size
     // value and it will never be undefined.
     return (p.size || Size.Small) * 16
@@ -17,17 +17,20 @@ export function getIconButtonDiameter(p: StyleProps) {
 const IconButton = styled(Button)`
     ${(_p: StyleProps) => ""}
 
+    align-items: center;
     border-radius: 50%;
+    display: flex;
     /* Size will not be undefined due to DefaultProps */
-    font-size: ${p => getIconButtonDiameter(p) - (p.size! * FONT_DOWNSIZE_FACTOR)}px;
-    height: ${getIconButtonDiameter}px;
-    line-height: ${getIconButtonDiameter}px;
+    font-size: ${p => getDiameter(p) - (p.size! * FONT_DOWNSIZE_FACTOR)}px;
+    height: ${getDiameter}px;
+    justify-content: center;
+    line-height: ${getDiameter}px;
     padding: 0;
-    width: ${getIconButtonDiameter}px;
+    width: ${getDiameter}px;
 `
 IconButton.defaultProps = {
     ...ButtonDefaultProps,
-    size: Size.Small
+    size: Size.Medium
 }
 IconButton.displayName = "IconButton"
 

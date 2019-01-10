@@ -71,11 +71,11 @@ const Button = styled.button`
     ${(_p: StyleProps) => ''}
 
     border: 1px solid transparent;
-	border-radius: 3px;
+    border-radius: 3px;
     cursor: pointer;
     display: inline-block;
-	font-weight: bold;
-	padding: 6px 12px;
+    font-weight: bold;
+    padding: 6px 12px;
     transition: all .15s ease-in-out;
 
     ${p => p.variant === ButtonVariant.Normal && normalStyle}
