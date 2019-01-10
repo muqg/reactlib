@@ -1,8 +1,7 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { styled } from "../../styles";
-import { flex, position } from "../../styles/mixins";
+import { css, styled } from "../../styles";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
 
@@ -10,25 +9,31 @@ import { call } from "../../utility/function";
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
 
+const visibleStyle = css`
+    opacity: 1;
+    transform: scale(1);
+    visibility: visible;
+`
 const Container = styled.div`
+    align-items: center;
     background: transparent;
-    display: none;
-    height: 100%;
-    overflow: auto;
-    width: 100%;
+    bottom: 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    opacity: 0;
+    overflow: hidden;
+    position: fixed;
+    right: 0;
+    top: 0;
+    transform: scale(1.5);
+    transition: .25s;
+    transition-property: opacity, transform, visibility;
+    visibility: hidden;
     z-index: 200;
-    ${position("fixed", "0", "", "", "0")}
 
-    ${(p: StyleProps) => p.visible && flex("center", "center")}
-
-    &::-webkit-scrollbar {
-        width: 5px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: #aaa;
-        border-radius: 12px;
-    }
+    ${(p: StyleProps) => p.visible && visibleStyle}
 `
 
 interface StyleProps {
