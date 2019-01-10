@@ -4,6 +4,7 @@ export { Checkbox } from "./Checkbox";
 export { default as ConfirmationDialog } from "./dialogs/ConfirmationDialog";
 export { Dialog, DialogProps } from "./dialogs/Dialog";
 export { DialogBox, DialogBoxProps } from "./dialogs/DialogBox";
+export { Divider } from "./Divider";
 export * from "./editor";
 export { Expire } from "./Expire";
 export * from "./notificaton";
