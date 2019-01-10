@@ -1,18 +1,33 @@
-import { COLOR_DARK, styled } from "../../styles";
+import { COLOR_DARK, styled, css } from "../../styles";
 import { Size } from "../../utility";
 import { AddButton } from "./AddButton";
 import { ButtonVariant } from "./Button";
 
-const CloseButton: typeof AddButton = styled(AddButton).attrs({
+type CloseButtonType = React.ComponentType<React.ComponentProps<typeof AddButton> & StyleProps>
+
+interface StyleProps {
+    /**
+     * Enables default absolute position
+     * styling of the close button.
+     */
+    absolute?: boolean
+}
+
+const absoluteStyling = css`
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    z-index: 1;
+`
+
+const CloseButton: CloseButtonType = styled(AddButton).attrs({
     color: COLOR_DARK,
     size: Size.Medium,
     variant: ButtonVariant.Text,
 })`
-    position: absolute;
-    right: 5px;
-    top: 5px;
     transform: rotate(45deg);
-    z-index: 1;
+
+    ${(p: StyleProps) => p.absolute && absoluteStyling}
 `
 CloseButton.displayName = "CloseButton"
 

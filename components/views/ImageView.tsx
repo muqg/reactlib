@@ -40,7 +40,7 @@ const ImageView = (props: Props) => {
             {(close) => (
                 <>
                     <Back onClick={close} />
-                    <CloseButton color="#ffffff" onClick={close} />
+                    <CloseButton absolute color="#ffffff" onClick={close} />
                     <AspectImage
                         onClick={props.closeOnClick ? close : undefined}
                         size="100%"

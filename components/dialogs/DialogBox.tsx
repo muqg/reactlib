@@ -1,8 +1,8 @@
 import * as React from "react";
-import { CloseButton } from "..";
 import { COLOR_BACKGROUND, COLOR_DARK, styled } from "../../styles";
 import { truncate } from "../../styles/mixins";
 import { Size } from "../../utility";
+import { CloseButton } from "../buttons";
 import { Dialog, DialogProps } from "./Dialog";
 
 const SIZE_FACTOR = 320
@@ -27,11 +27,6 @@ const Header = styled.div`
 const Title = styled.p`
     font-size: 1.1rem;
     ${truncate("100%")}
-`
-const StyledCloseButton = styled(CloseButton)`
-    position: initial;
-    top: 0;
-    left: 0;
 `
 const Container = styled.div`
     ${(_p: ContainerStyleProps) => ""}
@@ -75,7 +70,7 @@ const DialogBox: React.ComponentType<Props> = ({size = Size.Small, className, ..
                             <Title>
                                 {props.title}
                             </Title>
-                            <StyledCloseButton onClick={close} />
+                            <CloseButton onClick={close} />
                         </Header>
                         <Content>
                             {props.children(close)}
