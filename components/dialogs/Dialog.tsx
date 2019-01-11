@@ -11,7 +11,6 @@ const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
 const visibleStyle = css`
     opacity: 1;
-    transform: scale(1);
     visibility: visible;
 `
 const Container = styled.div`
@@ -27,9 +26,7 @@ const Container = styled.div`
     position: fixed;
     right: 0;
     top: 0;
-    transform: scale(1.5);
-    transition: .25s;
-    transition-property: opacity, transform, visibility;
+    transition: all .25s ease;
     visibility: hidden;
     z-index: 200;
 
