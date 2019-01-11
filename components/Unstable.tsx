@@ -12,9 +12,9 @@ function Unstable({children}: Props) {
         return null
 
     return (
-        <React.StrictMode>
+        <>
             {children}
-        </React.StrictMode>
+        </>
     )
 }
 
