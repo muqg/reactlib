@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { COLOR_DARK, css, styled } from "../../styles";
-import { position } from "../../styles/mixins";
 import { call } from "../../utility/function";
 
 
@@ -9,9 +8,10 @@ const spanCommon = css`
     background: ${(p: StyleProps) => p.color};
     border-radius: 1px;
     content: '';
-    display: block;
+    display: inline-block;
     height: 2px;
-    ${position("absolute")}
+    left: 0;
+    position: absolute;
     transition: all .3s;
     width: inherit;
 `
@@ -30,9 +30,10 @@ const activeStyle = css`
         }
     }
 `
-const Button = styled.button`
+const StyledButton = styled.button`
     cursor: pointer;
     height: ${(p: StyleProps) => p.size}px;
+    position: relative;
     width: ${(p: StyleProps) => p.size}px;
 
     > span {
@@ -93,16 +94,15 @@ function SandwichButton({active = false, color = COLOR_DARK, size = 30, ...props
     }
 
     return (
-        <div className={props.className}>
-            <Button
-                active={isActive}
-                color={color}
-                onClick={handleClick}
-                size={size}
-            >
-                <span></span>
-            </Button>
-        </div>
+        <StyledButton
+            active={isActive}
+            className={props.className}
+            color={color}
+            onClick={handleClick}
+            size={size}
+        >
+            <span></span>
+        </StyledButton>
     )
 }
 
