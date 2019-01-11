@@ -1,5 +1,5 @@
 import * as React from "react";
-import { COLOR_BACKGROUND, COLOR_DARK, styled } from "../../styles";
+import { COLOR_BACKGROUND, COLOR_DARK, styled, css } from "../../styles";
 import { truncate } from "../../styles/mixins";
 import { Size } from "../../utility";
 import { CloseButton } from "../buttons";
@@ -35,22 +35,27 @@ const Container = styled.div`
     background: ${COLOR_BACKGROUND};
     display: flex;
     flex-direction: column;
-    max-height: 90vh;
     max-width: ${p => p.size * SIZE_FACTOR}px;
     padding: 0 12px 12px;
     width: 100%;
+
+    ${p => p.fixedHeight ? css`height: 90vh;` : css`max-height: 90vh;`}
 `
 const Content = styled.div`
     overflow: auto;
 `
 
 interface ContainerStyleProps {
+    /**
+     * Whether height should adjust based on content or
+     * always be at its maximum.
+     */
+    fixedHeight?: boolean
     size: Size
 }
 
-export interface DialogBoxProps {
+export interface DialogBoxProps extends Partial<ContainerStyleProps> {
     children: Dialog["children"]
-    size?: Size
     /**
      * Dialog's title.
      */
@@ -59,13 +64,13 @@ export interface DialogBoxProps {
 
 type Props = DialogBoxProps & DialogProps
 
-const DialogBox: React.ComponentType<Props> = ({size = Size.Small, className, ...props}) => {
+const DialogBox: React.ComponentType<Props> = ({className, fixedHeight, size = Size.Small, ...props}) => {
     return (
         <Dialog {...props}>
             {close =>
                 <>
                     <Back onClick={close} />
-                    <Container size={size} className={className}>
+                    <Container className={className} fixedHeight={fixedHeight} size={size}>
                         <Header>
                             <Title>
                                 {props.title}
