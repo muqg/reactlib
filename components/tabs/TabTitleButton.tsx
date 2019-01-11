@@ -1,30 +1,28 @@
 import * as React from "react";
-import { COLOR_DARK, COLOR_MAIN, css, styled } from "../../styles";
+import { COLOR_ACCENT, css, styled } from "../../styles";
 import { truncate } from "../../styles/mixins";
 
 
+interface StyleProps {
+    active: Props["active"]
+}
+
 const StyledButton = styled.button`
-    border: 1px solid ${COLOR_MAIN};
-    padding: 4px;
+    border-bottom: 4px solid transparent;
+    cursor: pointer;
+    margin-bottom: -1px;
+    padding: 6px;
     ${truncate("150px")}
 
-    &:not(:first-child) {
-        border-left: none;
-    }
-
     ${p => p.active && css`
-        border-bottom: none;
-        border-radius: 6px 6px 0 0;
-        box-shadow: 0 -3px 4px 0 ${COLOR_DARK};
+        border-color: ${COLOR_ACCENT};
         font-weight: bold;
     `}
 
     ${(_p: StyleProps) => ""}
 `
 
-interface StyleProps {
-    active: Props["active"]
-}
+
 interface Props {
     active?: boolean
     children: React.ReactNode
