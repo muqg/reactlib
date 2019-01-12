@@ -30,6 +30,7 @@ const ToolbarContainer = styled.div`
 
 interface Props {
     children?: any
+    className?: string
     /**
      * Custom font names to add as options.
      *
@@ -45,29 +46,21 @@ interface Props {
     imageHandler?: (file: File) => string
 }
 
-interface State {
+
+function Toolbar({children, className}: Props) {
+    return createPortal(
+        <ToolbarWrapper className={className}>
+            <div>
+                <ToolbarContainer>
+                    {children}
+                </ToolbarContainer>
+            </div>
+        </ToolbarWrapper>,
+
+        document.body
+    )
 }
 
-
-class Toolbar extends React.Component<Props, State> {
-    state = {}
-
-    render() {
-        return createPortal(
-            <ToolbarWrapper>
-                <div>
-                    <ToolbarContainer>
-
-                        {this.props.children}
-
-                    </ToolbarContainer>
-                </div>
-            </ToolbarWrapper>,
-
-            document.body
-        )
-    }
-}
 
 export { Toolbar };
 
