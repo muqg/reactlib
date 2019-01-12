@@ -47,7 +47,7 @@ interface StyleProps {
 }
 
 // Ref is not assignable to SC 4.0.3
-type Block = Omit<React.HTMLProps<HTMLDivElement>, "ref" | "as"> & StyleProps
+type Block = Omit<React.ComponentProps<typeof Container>, "ref">
 
 
 const Block = ({children, title, ...props}: Block) => {
