@@ -32,7 +32,7 @@ class ToolbarLink extends React.PureComponent<Props, State> {
         this.setState({isDialogVisible: visible})
     }
 
-    accept() {
+    accept = () => {
         const input = this.inputRef.current
         if(input) {
             const value = input.value
