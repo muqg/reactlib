@@ -6,7 +6,9 @@ import { isFunction } from "../../utility/assertions";
 import { Tab } from "./Tab";
 import { TabTitleButton } from "./TabTitleButton";
 
-
+const Container = styled.div`
+    width: 100%;
+`
 const TitleContainer = styled.div`
     border-bottom: 1px solid ${COLOR_DARK};
     ${flex()}
@@ -29,7 +31,7 @@ function TabView(props: Props) {
     }
 
     return (
-        <div className={props.className}>
+        <Container className={props.className}>
             <TitleContainer>
                 {_getTitles().map((text, i) =>
                     <TabTitleButton
@@ -44,7 +46,7 @@ function TabView(props: Props) {
             </TitleContainer>
 
             {props.children[tabIndex]}
-        </div>
+        </Container>
     )
 }
 
