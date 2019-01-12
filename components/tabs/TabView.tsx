@@ -35,6 +35,7 @@ function TabView(props: Props) {
                     <TabTitleButton
                         active={tabIndex === i}
                         index={i}
+                        key={i}
                         onClick={setTabIndex}
                     >
                         {text}
