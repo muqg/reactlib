@@ -107,6 +107,12 @@ function Dialog(props: Dialog) {
         const dialog = dialogRef.current
         if(dialog)
             call(props.onKeyDown, event, dialog)
+
+        stop(event)
+    }
+
+    function stop(e: React.KeyboardEvent) {
+        e.stopPropagation()
     }
 
     return createPortal(
@@ -114,6 +120,8 @@ function Dialog(props: Dialog) {
             className={props.className}
             ref={dialogRef}
             onKeyDown={keyDown}
+            onKeyPress={stop}
+            onKeyUp={stop}
             tabIndex={-1}
             visible={visible}
         >
