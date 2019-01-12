@@ -23,11 +23,11 @@ interface OwnProps {
      * Called when dialog resolves successfully. May optionally return a boolean
      * to indicate whether the acception was successful.
      */
-    onAccept?: (container: HTMLDivElement) => void | boolean
+    onAccept?: () => void | boolean
     /**
      * Called whenever dialog is canceled (including when closed).
      */
-    onReject?: (container: HTMLDivElement) => void
+    onReject?: () => void
 
     /**
      * Text for the cancel (reject) button.
@@ -45,7 +45,7 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
     const container = React.createRef<HTMLDivElement>()
 
     const accept = () => {
-        const res = call(props.onAccept, container.current as HTMLDivElement)
+        const res = call(props.onAccept)
         const success = !(isUndefined(res)) ? res : true
 
         if(success && props.onClose)
@@ -53,15 +53,15 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
     }
 
     const reject = () => {
-        call(props.onReject, container.current as HTMLDivElement)
+        call(props.onReject)
         call(props.onClose)
     }
 
-    const keyDown: DialogProps["onKeyDown"] = (event, dialog) => {
+    const keyDown: DialogProps["onKeyDown"] = (event) => {
         if(event.keyCode === CHAR_CODE_ENTER)
             accept()
 
-        call(props.onKeyDown, event, dialog)
+        call(props.onKeyDown, event)
     }
 
     return(

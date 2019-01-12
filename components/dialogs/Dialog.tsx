@@ -56,11 +56,11 @@ export interface DialogProps {
      *
      * - Escape key is bound by default to close the dialog.
      */
-    onKeyDown?: (e: React.KeyboardEvent, dialog: HTMLDivElement) => void
+    onKeyDown?: (e: React.KeyboardEvent) => void
     /**
      * Called when dialog is shown.
      */
-    onShow?: (dialog: HTMLDivElement) => void
+    onShow?: () => void
     /**
      * Called when dialog's visibility changes and is
      * typically used to mirror its visibility state.
@@ -91,7 +91,7 @@ function Dialog(props: Dialog) {
                 requestAnimationFrame(() => {
                     dialog.focus()
                     dialog.scrollTop = 0
-                    call(props.onShow, dialog)
+                    call(props.onShow)
                 })
             }
         }
@@ -106,7 +106,7 @@ function Dialog(props: Dialog) {
 
         const dialog = dialogRef.current
         if(dialog)
-            call(props.onKeyDown, event, dialog)
+            call(props.onKeyDown, event)
 
         stop(event)
     }

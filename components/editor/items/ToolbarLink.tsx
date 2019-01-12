@@ -26,14 +26,14 @@ class ToolbarLink extends React.PureComponent<Props, State> {
     state = {
         isDialogVisible: false
     }
-    portalTarget = document.getElementById("dialogPortal")
+    inputRef = React.createRef<any>()
 
     toggleDialog = (visible: boolean) => {
         this.setState({isDialogVisible: visible})
     }
 
-    accept(container: HTMLDivElement) {
-        const input = container.querySelector("input")
+    accept() {
+        const input = this.inputRef.current
         if(input) {
             const value = input.value
             if(!value.length)
@@ -41,14 +41,6 @@ class ToolbarLink extends React.PureComponent<Props, State> {
 
             Editor.createLink(value)
             return true
-        }
-    }
-
-    onShow(dialog: HTMLDivElement) {
-        const input = dialog.querySelector("input")
-        if(input) {
-            input.value = ""
-            input.focus()
         }
     }
 
@@ -63,12 +55,11 @@ class ToolbarLink extends React.PureComponent<Props, State> {
                 <ConfirmationDialog
                     className="tb_link"
                     isVisible={this.state.isDialogVisible}
-                    onShow={d => this.onShow(d)}
-                    onAccept={e => this.accept(e)}
+                    onAccept={this.accept}
                     visibilityChange={this.toggleDialog}
                     title="Въведи линк:"
                 >
-                    <Input placeholder="https://example.com" width="100%" />
+                    <Input placeholder="https://example.com" ref={this.inputRef} width="100%" />
                 </ConfirmationDialog>
             </StyledToolbarItem>
         )
