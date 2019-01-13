@@ -11,6 +11,7 @@ const Container = styled.div`
 `
 const TitleContainer = styled.div`
     border-bottom: 1px solid ${COLOR_DARK};
+    margin-bottom: 12px;
     ${flex()}
 `
 
