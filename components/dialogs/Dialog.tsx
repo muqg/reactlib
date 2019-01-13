@@ -11,7 +11,7 @@ const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
 const visibleStyle = css`
     opacity: 1;
-    visibility: visible;
+    z-index: 200;
 `
 const Container = styled.div`
     align-items: center;
@@ -26,9 +26,8 @@ const Container = styled.div`
     position: fixed;
     right: 0;
     top: 0;
-    transition: all .25s ease;
-    visibility: hidden;
-    z-index: 200;
+    transition: opacity .25s ease;
+    z-index: -1;
 
     ${(p: StyleProps) => p.visible && visibleStyle}
 `
@@ -86,13 +85,12 @@ function Dialog(props: Dialog) {
         call(props.visibilityChange, visible)
 
         if(visible) {
+            call(props.onShow)
+
             const dialog = dialogRef.current
             if(dialog) {
-                requestAnimationFrame(() => {
-                    dialog.focus()
-                    dialog.scrollTop = 0
-                    call(props.onShow)
-                })
+                dialog.focus()
+                dialog.scrollTop = 0
             }
         }
         else {
