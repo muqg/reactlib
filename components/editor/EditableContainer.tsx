@@ -1,16 +1,14 @@
 import * as React from "react";
 import { useRef, useState } from "react";
-import { COLOR_MAIN, styled } from "../../styles";
+import { styled } from "../../styles";
 import { CHAR_CODE_ENTER, Editor, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
+import { TextInput } from "../inputs";
 
 
-const Container = styled.div`
-    border: ${COLOR_MAIN} 1px solid;
-    min-height: 2.7em;
-    outline: none;
+const Container = styled(TextInput)`
+    height: 2.7em;
     overflow: auto;
-    padding: 5px;
 `
 
 interface Props {
@@ -49,6 +47,8 @@ const EditableContainer = (props: Props) => {
 
     return (
         <Container
+            // @ts-ignore SC "as" property issues
+            as="div"
             className={props.className}
             contentEditable
 
