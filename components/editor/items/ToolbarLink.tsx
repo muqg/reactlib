@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled } from "../../../styles";
 import { Editor } from "../../../utility/dom";
 import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
-import { Input } from "../../styled/Input";
+import { TextInput } from "../../inputs";
 import { TOOLBAR_SPRITESHEET } from "../Toolbar";
 import { ToolbarItem } from "../ToolbarItem";
 
@@ -59,7 +59,7 @@ class ToolbarLink extends React.PureComponent<Props, State> {
                     visibilityChange={this.toggleDialog}
                     title="Въведи линк:"
                 >
-                    <Input placeholder="https://example.com" ref={this.inputRef} width="100%" />
+                    <TextInput placeholder="https://example.com" ref={this.inputRef} wide />
                 </ConfirmationDialog>
             </StyledToolbarItem>
         )
