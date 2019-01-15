@@ -22,31 +22,31 @@ interface Props {
 }
 
 
-function TabView(props: Props) {
+function TabView({children, className}: Props) {
     const [tabIndex, setTabIndex] = useState(0)
 
-    function _getTitles() {
-        return props.children.map(
-            c => isFunction(c.props.title) ? c.props.title() : c.props.title
-        )
-    }
+    const titles = children.map(
+        c => !c.props.hidden && (isFunction(c.props.title) ? c.props.title() : c.props.title)
+    ).filter(c => c)
 
     return (
-        <Container className={props.className}>
-            <TitleContainer>
-                {_getTitles().map((text, i) =>
-                    <TabTitleButton
-                        active={tabIndex === i}
-                        index={i}
-                        key={i}
-                        onClick={setTabIndex}
-                    >
-                        {text}
-                    </TabTitleButton>)
-                }
-            </TitleContainer>
+        <Container className={className}>
+            {titles.length > 1 &&
+                <TitleContainer>
+                    {titles.map((text, i) =>
+                        <TabTitleButton
+                            active={tabIndex === i}
+                            index={i}
+                            key={i}
+                            onClick={setTabIndex}
+                        >
+                            {text}
+                        </TabTitleButton>)
+                    }
+                </TitleContainer>
+            }
 
-            {props.children[tabIndex]}
+            {children[tabIndex]}
         </Container>
     )
 }
