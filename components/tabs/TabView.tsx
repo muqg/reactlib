@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { styled, COLOR_DARK } from "../../styles";
-import { flex } from "../../styles/mixins";
+import { styled } from "../../styles";
 import { isFunction } from "../../utility/assertions";
 import { Tab } from "./Tab";
 import { TabTitleButton } from "./TabTitleButton";
@@ -10,9 +9,9 @@ const Container = styled.div`
     width: 100%;
 `
 const TitleContainer = styled.div`
-    border-bottom: 1px solid ${COLOR_DARK};
-    margin-bottom: 12px;
-    ${flex()}
+    display: flex;
+    justify-content: center;
+    margin-bottom: 36px;
 `
 
 

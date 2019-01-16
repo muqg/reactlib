@@ -1,25 +1,12 @@
 import * as React from "react";
-import { COLOR_ACCENT, css, styled } from "../../styles";
+import { styled } from "../../styles";
 import { truncate } from "../../styles/mixins";
+import { Button, ButtonVariant } from "../buttons";
 
 
-interface StyleProps {
-    active: Props["active"]
-}
-
-const StyledButton = styled.button`
-    border-bottom: 4px solid transparent;
-    cursor: pointer;
-    margin-bottom: -1px;
-    padding: 6px;
+const StyledButton = styled(Button)`
+    border-radius: 0;
     ${truncate("150px")}
-
-    ${p => p.active && css`
-        border-color: ${COLOR_ACCENT};
-        font-weight: bold;
-    `}
-
-    ${(_p: StyleProps) => ""}
 `
 
 
@@ -34,8 +21,9 @@ interface Props {
 const TabTitleButton = (props: Props) => {
     return (
         <StyledButton
-            active={props.active}
+            hover={!props.active}
             onClick={() => props.onClick(props.index)}
+            variant={props.active ? ButtonVariant.Normal : ButtonVariant.Outlined}
         >
             {props.children}
         </StyledButton>
