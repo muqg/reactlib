@@ -5,6 +5,7 @@ export const DefaultGlobalStyle = createGlobalStyle`
     * {
         border: none;
         box-sizing: border-box;
+        cursor: inherit;
         margin: 0;
         outline: none;
         padding: 0;
@@ -13,12 +14,9 @@ export const DefaultGlobalStyle = createGlobalStyle`
     body,
     html {
         background: ${COLOR_BACKGROUND};
+        cursor: default;
         color: ${COLOR_TEXT};
         font-family: "Helvetica", "Arial", sans-serif;
-    }
-
-    p, h1, h2, h3, h4, li, ul {
-        cursor: default;
     }
 
     ul {
@@ -27,6 +25,7 @@ export const DefaultGlobalStyle = createGlobalStyle`
 
     a {
         color: ${COLOR_TEXT};
+        cursor: pointer;
         text-decoration: none;
     }
 `
