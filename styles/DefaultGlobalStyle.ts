@@ -26,6 +26,7 @@ export const DefaultGlobalStyle = createGlobalStyle`
     }
 
     a {
+        color: ${COLOR_TEXT};
         text-decoration: none;
     }
 `
