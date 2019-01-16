@@ -19,11 +19,14 @@ const Back = styled.div`
 `
 const Header = styled.div`
     align-items: center;
-    border-bottom: 1px solid;
-    border-image: linear-gradient(to right, transparent, ${COLOR_DARK}, transparent) 1;
     display: flex;
-    margin-bottom: 18px;
     padding: 3px 0;
+
+    ${(p: {underline: boolean}) => p.underline && css`
+        border-bottom: 1px solid;
+        border-image: linear-gradient(to right, transparent, ${COLOR_DARK}, transparent) 1;
+        margin-bottom: 18px;
+    `}
 `
 const Title = styled.p`
     font-size: 1.1rem;
@@ -71,7 +74,7 @@ const DialogBox: React.ComponentType<Props> = ({className, fixedHeight, size = S
                 <>
                     <Back onClick={close} />
                     <Container className={className} fixedHeight={fixedHeight} size={size}>
-                        <Header>
+                        <Header underline={!!props.title}>
                             <Title>
                                 {props.title}
                             </Title>
