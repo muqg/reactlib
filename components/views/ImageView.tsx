@@ -1,14 +1,9 @@
 import * as React from "react";
 import { AspectImage, CloseButton, Dialog } from "..";
-import { createGlobalStyle, styled } from "../../styles";
+import { styled } from "../../styles";
 import { position } from "../../styles/mixins";
 import { DialogProps } from "../dialogs/Dialog";
 
-const NoScroll = createGlobalStyle`
-    body {
-        overflow: hidden !important;
-    }
-`
 const Back = styled.div`
     background: black;
     height: 100%;
@@ -46,7 +41,6 @@ const ImageView = (props: Props) => {
                         size="100%"
                         src={props.src}
                     />
-                    <NoScroll />
                 </>
             )}
         </Dialog>

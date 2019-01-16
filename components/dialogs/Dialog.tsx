@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { css, styled } from "../../styles";
+import { createGlobalStyle, css, styled } from "../../styles";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
 
@@ -9,9 +9,10 @@ import { call } from "../../utility/function";
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
 
-const visibleStyle = css`
-    opacity: 1;
-    z-index: 200;
+const DisabledBodyScroll = createGlobalStyle`
+    body {
+        overflow: hidden !important;
+    }
 `
 const Container = styled.div`
     align-items: center;
@@ -29,7 +30,10 @@ const Container = styled.div`
     transition: opacity .25s ease;
     z-index: -1;
 
-    ${(p: StyleProps) => p.visible && visibleStyle}
+    ${(p: StyleProps) => p.visible && css`
+        opacity: 1;
+        z-index: 200;
+    `}
 `
 
 interface StyleProps {
@@ -124,7 +128,10 @@ function Dialog(props: Dialog) {
             visible={visible}
         >
             {visible &&
-                props.children(() => setVisible(false))
+                <>
+                    {props.children(() => setVisible(false))}
+                    <DisabledBodyScroll />
+                </>
             }
         </Container>,
         document.body
