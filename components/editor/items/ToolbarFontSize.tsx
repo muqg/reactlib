@@ -22,10 +22,15 @@ interface Props {
 const ToolbarFontSize = (_props: Props) => {
     return(
         <ToolbarItem className="input" title="Font size" animateHover={false}>
-            <StyledSelect name="tb_font_size" onChange={e => setSize(e.target)} onContextMenu={onRightClick}>
+            <StyledSelect
+                defaultValue="3"
+                name="tb_font_size"
+                onChange={e => setSize(e.target)}
+                onContextMenu={onRightClick}
+            >
                 <option value="1">1</option>
                 <option value="2">2</option>
-                <option value="3" selected>3</option>
+                <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
                 <option value="6">6</option>
