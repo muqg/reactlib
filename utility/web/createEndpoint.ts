@@ -1,6 +1,5 @@
 import { request } from ".";
 import { RequestMethod } from "..";
-import { except } from "../collection";
 
 export interface Endpoint<T extends object = object> {
     all: () => Promise<T[]>
@@ -10,9 +9,8 @@ export interface Endpoint<T extends object = object> {
     save: (id: number | string, data: Partial<T>) => Promise<T>
 }
 
-// @ts-ignore A rest parameter must be of an array type.
-function createEndpoint<T extends object, E extends keyof Endpoint = keyof Endpoint>(url: string, ...exclude?: E[] = []) {
-    return except<Endpoint<T>, E>({
+function createEndpoint<T extends object>(url: string) {
+    return {
         all: () =>
             request<T[]>(RequestMethod.GET, url),
 
@@ -27,7 +25,7 @@ function createEndpoint<T extends object, E extends keyof Endpoint = keyof Endpo
 
         save: (id: number | string, data: Partial<T>) =>
             request<T>(RequestMethod.PUT, `${url}/${id}`, {payload: JSON.stringify(data)})
-    }, ...exclude)
+    }
 }
 
 
