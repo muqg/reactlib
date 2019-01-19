@@ -78,7 +78,10 @@ const DialogBox: React.ComponentType<Props> = ({className, fixedHeight, size = S
                             <Title>
                                 {props.title}
                             </Title>
-                            <CloseButton onClick={close} />
+                            {/* Close button becomes deformed due to flex parent without this wrapper. */}
+                            <div>
+                                <CloseButton onClick={close} />
+                            </div>
                         </Header>
                         <Content>
                             {props.children(close)}
