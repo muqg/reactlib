@@ -19,6 +19,7 @@ const IconButton = styled(Button)`
 
     align-items: center;
     border-radius: 50%;
+    box-sizing: content-box;
     display: flex;
     /* Size will not be undefined due to DefaultProps */
     font-size: ${p => getDiameter(p) - (p.size! * FONT_DOWNSIZE_FACTOR)}px;
