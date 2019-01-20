@@ -8,6 +8,7 @@ export { DialogBox, DialogBoxProps } from "./dialogs/DialogBox";
 export { Divider } from "./Divider";
 export * from "./editor";
 export { Expire } from "./Expire";
+export { ImageView } from "./ImageView";
 export * from "./inputs";
 export * from "./notificaton";
 export { OutsideAlert } from "./OutsideAlert";
@@ -16,6 +17,5 @@ export { Spinner } from "./Spinner";
 export * from "./tabs";
 export { Timer } from "./Timer";
 export { Unstable } from "./Unstable";
-export * from "./views";
 export * from "./_supplementary";
 
