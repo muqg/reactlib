@@ -4,7 +4,7 @@ import { COLOR_BACKGROUND, css, media, styled } from "../../styles";
 import { Omit } from "../../utility";
 import { call } from "../../utility/function";
 
-const spinner = <Spinner size="large" />
+const spinner = <Spinner />
 
 const Container = styled.div`
     ${(_p: StyleProps) => ""}
