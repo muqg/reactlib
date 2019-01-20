@@ -4,6 +4,7 @@ import { truncate } from "../../styles/mixins";
 import { Size } from "../../utility";
 import { CloseButton } from "../buttons";
 import { Dialog, DialogProps } from "./Dialog";
+import { isFunction } from "../../utility/assertions";
 
 const SIZE_FACTOR = 320
 
@@ -58,7 +59,7 @@ interface ContainerStyleProps {
 }
 
 export interface DialogBoxProps extends Partial<ContainerStyleProps> {
-    children: Dialog["children"]
+    children: React.ReactNode | Dialog["children"]
     /**
      * Dialog's title.
      */
@@ -67,7 +68,9 @@ export interface DialogBoxProps extends Partial<ContainerStyleProps> {
 
 type Props = DialogBoxProps & DialogProps
 
-const DialogBox: React.ComponentType<Props> = ({className, fixedHeight, size = Size.Small, ...props}) => {
+const DialogBox: React.ComponentType<Props> = (
+    {children, className, fixedHeight, size = Size.Small, ...props}
+) => {
     return (
         <Dialog {...props}>
             {close =>
@@ -84,7 +87,10 @@ const DialogBox: React.ComponentType<Props> = ({className, fixedHeight, size = S
                             </div>
                         </Header>
                         <Content>
-                            {props.children(close)}
+                            {isFunction<Dialog["children"]>(children)
+                                ? children(close)
+                                : children
+                            }
                         </Content>
                     </Container>
                 </>
