@@ -86,6 +86,7 @@ const Button = styled.button`
     display: inline-block;
     font-weight: bold;
     padding: 6px 12px;
+    text-align: center;
     transition: all .15s ease-in-out;
 
     ${p => p.variant === ButtonVariant.Normal && normalStyle}
