@@ -9,7 +9,6 @@ export const DefaultGlobalStyle = createGlobalStyle`
         margin: 0;
         outline: none;
         padding: 0;
-        text-align: left;
     }
 
     body,
