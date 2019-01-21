@@ -12,6 +12,7 @@ export { ImageView } from "./ImageView";
 export * from "./inputs";
 export * from "./notificaton";
 export { OutsideAlert } from "./OutsideAlert";
+export { RadialProgress } from "./RadialProgress";
 export * from "./select";
 export { Spinner } from "./Spinner";
 export * from "./tabs";
