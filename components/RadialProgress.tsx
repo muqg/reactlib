@@ -1,5 +1,5 @@
 ﻿import * as React from "react";
-import { COLOR_DARK, COLOR_SUCCESS, fadedColor, styled, COLOR_TEXT } from "../styles";
+import { COLOR_DARK, COLOR_SUCCESS, COLOR_TEXT, fadedColor, styled } from "../styles";
 import { Size } from "../utility";
 import { clamp } from "../utility/number";
 
@@ -15,13 +15,14 @@ const StyledCircle = styled.circle`
 
 
 interface Props {
+    color?: string
     size?: Size
     // Progress percentage.
     value: number
 }
 
 
-function RadialProgress({size = Size.Small, value}: Props) {
+function RadialProgress({color = COLOR_SUCCESS, size = Size.Small, value}: Props) {
     value = clamp(value, 0, 100)
 
     // Determines real size.
@@ -50,7 +51,7 @@ function RadialProgress({size = Size.Small, value}: Props) {
                 cx="50%"
                 cy="50%"
                 r={`${RADIUS_PERCENT}%`}
-                stroke={COLOR_SUCCESS}
+                stroke={color}
                 strokeDashoffset={offset}
                 strokeWidth={size + 1}
             />
