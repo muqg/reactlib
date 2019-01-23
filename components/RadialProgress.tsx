@@ -10,7 +10,8 @@ const RADIUS_PERCENT = 40
 const StyledCircle = styled.circle`
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
-    transition: stroke-dashoffset .3s;
+    transition: stroke-dashoffset .5s;
+    transition-delay: .15s;
 `
 
 
