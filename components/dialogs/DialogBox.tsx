@@ -23,7 +23,7 @@ const Header = styled.div`
     border-bottom: 1px solid;
     border-image: linear-gradient(to right, transparent, ${COLOR_DARK}, transparent) 1;
     display: flex;
-    padding: 8px 12px;
+    padding: 3px 12px;
 `
 const Title = styled.p`
     font-size: 1.1rem;
