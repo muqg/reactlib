@@ -1,4 +1,4 @@
-export const COLOR_DARK = "#555555"
+export const COLOR_DARK = "#393E41"
 export const COLOR_MAIN = "#dddddd"
 export const COLOR_LIGHT = "#efefef"
 
