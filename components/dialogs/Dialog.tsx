@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { createGlobalStyle, css, styled } from "../../styles";
 import { CHAR_CODE_ESCAPE, Hotkey, isKeyPressed } from "../../utility/dom";
 import { call } from "../../utility/function";
+import { useInitialRender } from "../../hooks";
 
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
@@ -79,10 +80,12 @@ interface Dialog extends DialogProps {
 function Dialog(props: Dialog) {
     const [visible, setVisible] = useState(props.isVisible || false)
     const dialogRef = useRef<any>(null)
+    const initialRender = useInitialRender()
 
     useEffect(() => {
-        if(visible !== props.isVisible)
+        if(visible !== props.isVisible) {
             setVisible(props.isVisible)
+        }
     }, [props.isVisible])
 
     useEffect(() => {
@@ -97,7 +100,7 @@ function Dialog(props: Dialog) {
                 dialog.scrollTop = 0
             }
         }
-        else {
+        else if(!initialRender) {
             call(props.onClose)
         }
     }, [visible])
