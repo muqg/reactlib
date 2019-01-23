@@ -8,6 +8,9 @@ import { call } from "../../utility/function";
 import { DialogBox, DialogBoxProps } from "./DialogBox";
 
 
+const Container = styled.div`
+    padding: 24px 12px;
+`
 const ButtonsContainer = styled.div`
     margin-top: 27px;
     text-align: center;
@@ -42,8 +45,6 @@ type Props = OwnProps & DialogProps & Omit<DialogBoxProps, "children">
 
 
 const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}: Props) => {
-    const container = React.createRef<HTMLDivElement>()
-
     const accept = () => {
         const res = call(props.onAccept)
         const success = !(isUndefined(res)) ? res : true
@@ -68,8 +69,8 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
         <DialogBox {...props} onKeyDown={keyDown} onClose={reject}>
             {close => {
                 return (
-                    <div>
-                        <div ref={container}>
+                    <Container>
+                        <div>
                             {props.children}
                         </div>
                         <ButtonsContainer>
@@ -80,7 +81,7 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
                                 {textCancel}
                             </StyledButton>
                         </ButtonsContainer>
-                    </div>
+                    </Container>
                 )
             }}
         </DialogBox>

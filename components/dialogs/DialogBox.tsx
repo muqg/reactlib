@@ -12,7 +12,7 @@ const Back = styled.div`
     background: black;
     bottom: 0;
     left: 0;
-    opacity: .75;
+    opacity: .6;
     position: absolute;
     right: 0;
     top: 0;
@@ -20,14 +20,10 @@ const Back = styled.div`
 `
 const Header = styled.div`
     align-items: center;
+    border-bottom: 1px solid;
+    border-image: linear-gradient(to right, transparent, ${COLOR_DARK}, transparent) 1;
     display: flex;
-    padding: 3px 0;
-
-    ${(p: {underline: boolean}) => p.underline && css`
-        border-bottom: 1px solid;
-        border-image: linear-gradient(to right, transparent, ${COLOR_DARK}, transparent) 1;
-        margin-bottom: 18px;
-    `}
+    padding: 8px 12px;
 `
 const Title = styled.p`
     font-size: 1.1rem;
@@ -40,12 +36,12 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     max-width: ${p => p.size * SIZE_FACTOR}px;
-    padding: 0 12px 12px;
     width: 100%;
 
     ${p => p.fixedHeight ? css`height: 90vh;` : css`max-height: 90vh;`}
 `
 const Content = styled.div`
+    height: 100%;
     overflow: auto;
 `
 
@@ -77,7 +73,7 @@ const DialogBox: React.ComponentType<Props> = (
                 <>
                     <Back onClick={close} />
                     <Container className={className} fixedHeight={fixedHeight} size={size}>
-                        <Header underline={!!props.title}>
+                        <Header>
                             <Title>
                                 {props.title}
                             </Title>
