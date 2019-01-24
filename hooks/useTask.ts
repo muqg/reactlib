@@ -1,0 +1,57 @@
+import { useState, useRef, useEffect, useMemo } from "react";
+
+
+interface Task<A extends any[], R> {
+    isRunning: boolean
+    // @ts-ignore TS2370: A rest parameter must be of an array type.
+    run: (...args: A) => Promise<R | void>
+}
+
+/**
+ * A task is a function that exposes a running state allowing to
+ * manage other parts of a component based on it.
+ *
+ * Notice: Typically a single task at most is meant to be used within a
+ * component. If more than one task is needed then consider a custom
+ * implementation. This is designed for the very simple, common use cases only.
+ * It may very well become obsolete once react for data fetching is available.
+ *
+ * @param func The function to be transformed into a task.
+ */
+// @ts-ignore TS2370: A rest parameter must be of an array type.
+function useTask<A extends any[], R>(func: Task<A, R>["run"]): Task<A, R> {
+    const [isRunning, setRunning] = useState(false)
+
+    const isMounted = useRef(true)
+    useEffect(() => () => { isMounted.current = false}, [])
+
+    // @ts-ignore TS2370: A rest parameter must be of an array type.
+    const run = async (...args: A) => {
+        if(isRunning)
+            return
+
+        let res
+	    try {
+            setRunning(true)
+            res = await func(...args)
+        }
+        finally {
+            /**
+             * This will prevent updates on unmounted components
+             * in case of navigation or conditional rendering
+             */
+            if(isMounted.current)
+                setRunning(false)
+        }
+
+        return res
+    }
+
+    return useMemo(
+        () => { return {isRunning, run}},
+        [isRunning, func]
+    )
+}
+
+export { useTask };
+

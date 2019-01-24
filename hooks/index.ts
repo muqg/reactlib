@@ -7,5 +7,6 @@ export { useLocked } from "./useLocked";
 export * from "./useModel";
 export * from "./useResource";
 export * from "./useResourceList";
+export { useTask } from "./useTask";
 export { useTranslation } from "./useTranslation";
 
