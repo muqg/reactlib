@@ -8,6 +8,7 @@ export { DialogBox, DialogBoxProps } from "./dialogs/DialogBox";
 export { Divider } from "./Divider";
 export * from "./editor";
 export { Expire } from "./Expire";
+export { Heading } from "./Heading";
 export { ImageView } from "./ImageView";
 export * from "./inputs";
 export * from "./notificaton";
