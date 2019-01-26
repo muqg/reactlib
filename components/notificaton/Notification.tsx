@@ -1,8 +1,7 @@
 import * as React from "react";
-import { useCallback, useContext, useEffect } from "react";
-import { NotificationContext } from "../../contexts/NotificationContext";
+import { useEffect, useState, useContext } from "react";
 import { COLOR_CONTRAST, COLOR_DARK, css, styled } from "../../styles";
-import { delay } from "../../utility";
+import { NotificationContext } from "../../contexts";
 
 
 const NOTIFICATION_DURATION = 2_000
@@ -40,22 +39,36 @@ interface Props {
 }
 
 function Notification({content}: Props) {
+    const [queue, setQueue] = useState<Array<Props["content"]>>([])
+    const [current, setCurrent] = useState<Props["content"]>("")
     const notify = useContext(NotificationContext)
 
-    const hide = useCallback(
-        delay(() => notify(""), NOTIFICATION_DURATION),
-        [notify]
-    )
-
     useEffect(() => {
-        if(content)
-            hide()
+        if(content) {
+            setQueue(queue => [content, ...queue])
+            /**
+             * Reset the prop coming from above. Since this is the only component
+             * updated by this context it should not really affect performance,
+             * although measurements have not been made.
+             */
+            notify("")
+        }
     }, [content])
 
+    useEffect(() => {
+        if(!current && queue.length) {
+            setCurrent(queue.pop())
+            setTimeout(
+                () => setCurrent(""),
+                NOTIFICATION_DURATION
+            )
+        }
+    }, [current, queue.length])
+
     return (
-        <Wrapper active={!!content}>
+        <Wrapper active={!!current}>
             <Container>
-                {content}
+                {current}
             </Container>
         </Wrapper>
     )
