@@ -14,12 +14,12 @@ const Wrapper = styled.div`
     box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12);
     left: 50%;
     position: fixed;
-    transform: translate(-50%, calc(110%));
-    transition: all .3s cubic-bezier(0, 0, 0.2, 1);
+    transform: translate3d(-50%, 110%, 0);
+    transition: all .25s cubic-bezier(0, 0, 0.2, 1);
     z-index: 1400;
 
     ${(p: StyleProps) => p.active && css`
-        transform: translateX(-50%);
+        transform: translate3d(-50%, 0, 0);
     `}
 `
 const Container = styled.div`
