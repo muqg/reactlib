@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useEffect, useState, useContext } from "react";
-import { COLOR_CONTRAST, COLOR_DARK, css, styled } from "../../styles";
+import { useContext, useEffect, useRef, useState } from "react";
 import { NotificationContext } from "../../contexts";
+import { COLOR_CONTRAST, COLOR_DARK, css, styled } from "../../styles";
 
 
 const NOTIFICATION_DURATION = 2_000
@@ -42,6 +42,7 @@ function Notification({content}: Props) {
     const [queue, setQueue] = useState<Array<Props["content"]>>([])
     const [current, setCurrent] = useState<Props["content"]>("")
     const notify = useContext(NotificationContext)
+    const timeout = useRef(-1)
 
     useEffect(() => {
         if(content) {
@@ -57,13 +58,23 @@ function Notification({content}: Props) {
 
     useEffect(() => {
         if(!current && queue.length) {
-            setCurrent(queue.pop())
-            setTimeout(
+            const [next, ...rest] = queue
+
+            setCurrent(next)
+            setQueue(rest)
+
+            timeout.current = setTimeout(
                 () => setCurrent(""),
                 NOTIFICATION_DURATION
-            )
+            ) as any
         }
     }, [current, queue.length])
+
+    /**
+     * Clear timout to prevent possible memory leaks
+     * and updates on unmounted component.
+     */
+    useEffect(() => () => clearTimeout(timeout.current), [])
 
     return (
         <Wrapper active={!!current}>
