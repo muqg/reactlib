@@ -2,9 +2,11 @@ import * as React from "react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { NotificationContext } from "../../contexts";
 import { COLOR_CONTRAST, COLOR_DARK, css, styled } from "../../styles";
+import { Omit } from "../../utility";
 
 
 const NOTIFICATION_DURATION = 2_000
+
 
 const Wrapper = styled.div`
     border-radius: 4px;
@@ -13,7 +15,7 @@ const Wrapper = styled.div`
     left: 50%;
     position: fixed;
     transform: translate(-50%, calc(110%));
-    transition: transform .3s cubic-bezier(0, 0, 0.2, 1);
+    transition: all .3s cubic-bezier(0, 0, 0.2, 1);
     z-index: 1400;
 
     ${(p: StyleProps) => p.active && css`
@@ -21,8 +23,10 @@ const Wrapper = styled.div`
     `}
 `
 const Container = styled.div`
-    background: ${COLOR_DARK};
-    color: ${COLOR_CONTRAST};
+    ${(_p: StyleProps) => ""}
+
+    background: ${p => p.background || COLOR_DARK};
+    color: ${p => p.color || COLOR_CONTRAST};
     font-size: .9rem;
     letter-spacing: 0.01071em;
     min-width: 280px;
@@ -30,45 +34,64 @@ const Container = styled.div`
     padding: 14px 18px;
 `
 
-interface StyleProps {
-    active: boolean
+interface StyleProps extends Omit<NotificationProps, "content"> {
+    active?: boolean
 }
 
-interface Props {
-    content?: string
+export interface NotificationProps {
+    /**
+     * Background color of the notification card.
+     */
+    background?: string
+    /**
+     * Foreground color of the notification card.
+     */
+    color?: string
+    /**
+     * Notification's content.
+     */
+    content?: JSX.Element | string
+    /**
+     * Duration in milliseconds.
+     */
+    duration?: number
 }
 
-function Notification({content}: Props) {
-    const [queue, setQueue] = useState<Array<Props["content"]>>([])
-    const [current, setCurrent] = useState<Props["content"]>("")
+function Notification(props: NotificationProps) {
+    const [queue, setQueue] = useState<NotificationProps[]>([])
+    const [current, setCurrent] = useState<NotificationProps>({})
     const notify = useContext(NotificationContext)
     const timeout = useRef(-1)
 
     useEffect(() => {
-        if(content) {
-            setQueue(queue => [...queue, content])
+        if(props.content) {
+            setQueue(queue => [...queue, props])
             /**
-             * Reset the prop coming from above. Since this is the only component
+             * Reset the props coming from above. Since this is the only component
              * updated by this context it should not really affect performance,
              * although measurements have not been made.
              */
             notify("")
         }
-    }, [content])
+    }, [props.content])
 
     useEffect(() => {
-        if(!current && queue.length) {
+        if(!current.content && queue.length) {
             const [next, ...rest] = queue
 
             setCurrent(next)
             setQueue(rest)
 
             timeout.current = setTimeout(
-                () => setCurrent(""),
-                NOTIFICATION_DURATION
+                /**
+                 * Resetting only content here prevents
+                 * flashing of notification's default styling.
+                 */
+                () => setCurrent(c => { return {...c, content: ""}}),
+                next.duration || NOTIFICATION_DURATION
             ) as any
         }
-    }, [current, queue.length])
+    })
 
     /**
      * Clear timeout to prevent possible memory leaks
@@ -77,9 +100,9 @@ function Notification({content}: Props) {
     useEffect(() => () => clearTimeout(timeout.current), [])
 
     return (
-        <Wrapper active={!!current}>
-            <Container>
-                {current}
+        <Wrapper active={!!current.content}>
+            <Container {...current}>
+                {current.content}
             </Container>
         </Wrapper>
     )
