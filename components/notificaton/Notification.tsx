@@ -1,31 +1,34 @@
 import * as React from "react";
 import { useCallback, useContext, useEffect } from "react";
 import { NotificationContext } from "../../contexts/NotificationContext";
-import { COLOR_DARK, COLOR_MAIN, COLOR_TEXT, css, styled } from "../../styles";
-import { position } from "../../styles/mixins";
+import { COLOR_CONTRAST, COLOR_DARK, css, styled } from "../../styles";
 import { delay } from "../../utility";
 
 
 const NOTIFICATION_DURATION = 2_000
 
-const Container = styled.div`
-    background: ${COLOR_MAIN};
-    border-radius: 3px;
-    box-shadow: 0 0 9px -1px ${COLOR_DARK};
-    color: ${COLOR_TEXT};
-    cursor: default;
-    padding: 12px;
-    text-align: center;
-    /* Y translate should account for box-shadow and bottom offset. */
-    transform: translate(-50%, calc(100% + 15px));
-    transition: transform .3s;
-    width: 250px;
-    z-index: 250;
-    ${position("fixed", "", "", "12px", "50%")}
+const Wrapper = styled.div`
+    border-radius: 4px;
+    bottom: 0;
+    box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12);
+    left: 50%;
+    position: fixed;
+    transform: translate(-50%, calc(110%));
+    transition: transform .3s cubic-bezier(0, 0, 0.2, 1);
+    z-index: 1400;
 
     ${(p: StyleProps) => p.active && css`
         transform: translateX(-50%);
     `}
+`
+const Container = styled.div`
+    background: ${COLOR_DARK};
+    color: ${COLOR_CONTRAST};
+    font-size: .9rem;
+    letter-spacing: 0.01071em;
+    min-width: 280px;
+    max-width: 420px;
+    padding: 14px 18px;
 `
 
 interface StyleProps {
@@ -33,10 +36,10 @@ interface StyleProps {
 }
 
 interface Props {
-    message: string
+    content?: string
 }
 
-function Notification({message}: Props) {
+function Notification({content}: Props) {
     const notify = useContext(NotificationContext)
 
     const hide = useCallback(
@@ -45,14 +48,16 @@ function Notification({message}: Props) {
     )
 
     useEffect(() => {
-        if(message.length)
+        if(content)
             hide()
-    }, [message])
+    }, [content])
 
     return (
-        <Container active={message.length > 0}>
-            {message}
-        </Container>
+        <Wrapper active={!!content}>
+            <Container>
+                {content}
+            </Container>
+        </Wrapper>
     )
 }
 

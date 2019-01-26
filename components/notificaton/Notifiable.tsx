@@ -6,14 +6,14 @@ import { Notification } from "./Notification";
 interface Props {
     children?: React.ReactNode
 }
-export type Notify = (message: string) => void
+export type Notify = (content: string) => void
 
 function Notifiable(props: Props) {
-    const [message, setMessage] = useState("")
+    const [content, setContent] = useState("")
 
     return (
-        <NotificationContext.Provider value={setMessage}>
-                <Notification message={message} />
+        <NotificationContext.Provider value={setContent}>
+                <Notification content={content} />
                 {props.children}
         </NotificationContext.Provider>
     )
