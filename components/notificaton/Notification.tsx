@@ -46,7 +46,7 @@ function Notification({content}: Props) {
 
     useEffect(() => {
         if(content) {
-            setQueue(queue => [content, ...queue])
+            setQueue(queue => [...queue, content])
             /**
              * Reset the prop coming from above. Since this is the only component
              * updated by this context it should not really affect performance,
@@ -71,7 +71,7 @@ function Notification({content}: Props) {
     }, [current, queue.length])
 
     /**
-     * Clear timout to prevent possible memory leaks
+     * Clear timeout to prevent possible memory leaks
      * and updates on unmounted component.
      */
     useEffect(() => () => clearTimeout(timeout.current), [])
