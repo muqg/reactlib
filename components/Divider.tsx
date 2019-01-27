@@ -19,6 +19,7 @@ const Divider = styled.div`
 Divider.defaultProps = {
     size: Size.Slim
 }
+Divider.displayName = "Divider"
 
 
 export { Divider };

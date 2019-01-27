@@ -10,3 +10,4 @@ export const AspectImage = styled.img`
     max-width: ${(p: StyleProps) => p.size};
     width: auto;
 `
+AspectImage.displayName = "AspectImage"

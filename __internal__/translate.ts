@@ -3,7 +3,7 @@ import { isArray, isString, isUndefined } from "../utility/assertions";
 import { pull } from "../utility/collection";
 import { format, FormatArgument, plural } from "../utility/string";
 
-export interface __TranslateOptions {
+export interface TranslateOptions {
     /**
      * Arguments to format the text with.
      */
@@ -16,7 +16,7 @@ export interface __TranslateOptions {
     count?: number
 }
 
-function __translate<T extends any = string>(translations: Dict<any>, key: string, options: __TranslateOptions) : T {
+function translate<T extends any = string>(translations: Dict<any>, key: string, options: TranslateOptions) : T {
     let result = pull(translations, key) || key
 
     if(result === key)
@@ -37,5 +37,5 @@ function __translate<T extends any = string>(translations: Dict<any>, key: strin
     return result
 }
 
-export { __translate };
+export { translate };
 
