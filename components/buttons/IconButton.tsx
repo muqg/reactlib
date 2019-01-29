@@ -19,6 +19,7 @@ const IconButton = styled(Button)`
 
     align-items: center;
     border-radius: 50%;
+    border-width: ${p => p.size}px;
     box-sizing: content-box;
     display: flex;
     /* Size will not be undefined due to DefaultProps */
