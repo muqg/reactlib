@@ -26,7 +26,7 @@ export const DefaultGlobalStyle = createGlobalStyle`
     }
 
     option {
-        color: unset;
+        color: initial;
     }
 
     ul {
