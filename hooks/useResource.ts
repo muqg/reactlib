@@ -164,8 +164,15 @@ function useResource<T extends object>(
                 model.$set(response)
                 resource = response
             }
+            setIsWorking(false)
         }
         catch(ex) {
+            /**
+             * Stop working before attempting to handle exception in order
+             * to allow for a complete recovery within the handler.
+             */
+            setIsWorking(false)
+
             let message = await call(props.catch, ex, resource)
             if(!message) {
                 console.error(ex)
@@ -177,7 +184,6 @@ function useResource<T extends object>(
             }
             notify(message)
         }
-        setIsWorking(false)
 
         return resource
     }
