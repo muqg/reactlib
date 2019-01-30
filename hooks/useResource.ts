@@ -156,7 +156,7 @@ function useResource<T extends object>(
         if(isWorking)
             return
 
-	let resource = model.$data
+	    let resource = model.$data
         setIsWorking(true)
         try {
             const response = await worker()
@@ -166,12 +166,16 @@ function useResource<T extends object>(
             }
         }
         catch(ex) {
-            console.error(ex)
+            let message = await call(props.catch, ex)
+            if(!message) {
+                console.error(ex)
+                message = "Error"
 
-            let msg = await call(props.catch, ex) || "Error"
-            if(isType<RequestException>(ex, () => ex.status))
-                msg = ex.text
-            notify(msg)
+                if(isType<RequestException>(ex, () => ex.status)) {
+                    message = ex.text
+                }
+            }
+            notify(message)
         }
         setIsWorking(false)
 
