@@ -1,7 +1,8 @@
 ﻿import * as React from "react";
-import { COLOR_DARK, COLOR_SUCCESS, COLOR_TEXT, fadedColor, styled } from "../styles";
+import { COLOR_DARK, COLOR_SUCCESS, COLOR_TEXT, fadedColor, styled, ThemeContext } from "../styles";
 import { Size } from "../utility";
 import { clamp } from "../utility/number";
+import { useContext } from "react";
 
 const SIZE_FACTOR = 48
 const RADIUS_PERCENT = 40
@@ -23,7 +24,10 @@ interface Props {
 }
 
 
-function RadialProgress({color = COLOR_SUCCESS, size = Size.Small, value}: Props) {
+function RadialProgress({color, size = Size.Small, value}: Props) {
+    const theme = useContext(ThemeContext)
+    color = color || theme.success || COLOR_SUCCESS
+
     value = clamp(value, 0, 100)
 
     // Determines real size.
@@ -45,7 +49,7 @@ function RadialProgress({color = COLOR_SUCCESS, size = Size.Small, value}: Props
                 cx="50%"
                 cy="50%"
                 r={`${RADIUS_PERCENT}%`}
-                stroke={fadedColor(COLOR_DARK)}
+                stroke={fadedColor(theme.main || COLOR_DARK)}
                 strokeWidth={size}
             />
             <StyledCircle
@@ -58,7 +62,7 @@ function RadialProgress({color = COLOR_SUCCESS, size = Size.Small, value}: Props
             />
             <text
                 dy=".3em"
-                fill={COLOR_TEXT}
+                fill={theme.text || COLOR_TEXT}
                 textAnchor="middle"
                 x="50%"
                 y="50%"

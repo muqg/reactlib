@@ -11,8 +11,8 @@ interface StyleProps {
 }
 
 const TextInput = styled.input`
-    border: 1px solid ${COLOR_DARK};
-    color: ${COLOR_TEXT};
+    border: 1px solid ${p => p.theme.main || COLOR_DARK};
+    color: ${p => p.theme.text || COLOR_TEXT};
     cursor: text;
     padding: 6px 9px;
     transition: all .1s ease;
@@ -20,8 +20,8 @@ const TextInput = styled.input`
     ${(p: StyleProps) => p.wide && `width: 100%;`}
 
     &:focus {
-        border-color: ${COLOR_ACCENT};
-        box-shadow: inset 0 0 4px ${COLOR_ACCENT};
+        border-color: ${p => p.theme.accent || COLOR_ACCENT};
+        box-shadow: inset 0 0 4px ${p => p.theme.accent || COLOR_ACCENT};
     }
 
     &:disabled {

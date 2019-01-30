@@ -7,7 +7,7 @@ import { TextInput } from "../inputs";
 
 
 const Container = styled(TextInput)`
-    height: 2.7em;
+    height: 4em;
     overflow: auto;
 `
 

@@ -1,12 +1,15 @@
 import * as React from "react";
-import { COLOR_SUCCESS } from "../../styles";
+import { useContext } from "react";
+import { COLOR_SUCCESS, ThemeContext } from "../../styles";
 import { Omit, Size } from "../../utility";
 import { IconButton } from "./IconButton";
 
-// Ref is not assignable to SC 4.0.3
-type Props = Omit<React.ComponentProps<typeof IconButton>, "children" | "ref">
+type Props = Omit<React.ComponentProps<typeof IconButton>, "children">
 
-const AddButton: React.ComponentType<Props> = ({color = COLOR_SUCCESS, ...props}) => {
+const AddButton: React.ComponentType<Props> = ({color, ...props}) => {
+    const theme = useContext(ThemeContext)
+    color = color || theme.success || COLOR_SUCCESS
+
     const stroke = props.size && props.size > Size.Medium ? props.size : 2
 
     return (

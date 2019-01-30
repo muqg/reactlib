@@ -1,10 +1,10 @@
 import * as React from "react";
-import { COLOR_BACKGROUND, COLOR_DARK, styled, css } from "../../styles";
+import { COLOR_BACKGROUND, COLOR_DARK, css, styled } from "../../styles";
 import { truncate } from "../../styles/mixins";
 import { Size } from "../../utility";
+import { isFunction } from "../../utility/assertions";
 import { CloseButton } from "../buttons";
 import { Dialog, DialogProps } from "./Dialog";
-import { isFunction } from "../../utility/assertions";
 
 const SIZE_FACTOR = 320
 
@@ -21,7 +21,7 @@ const Back = styled.div`
 const Header = styled.div`
     align-items: center;
     border-bottom: 1px solid;
-    border-image: linear-gradient(to right, transparent, ${COLOR_DARK}, transparent) 1;
+    border-image: linear-gradient(to right, transparent, ${p => p.theme.main || COLOR_DARK}, transparent) 1;
     display: flex;
     padding: 3px 12px;
 `
@@ -32,7 +32,7 @@ const Title = styled.p`
 const Container = styled.div`
     ${(_p: ContainerStyleProps) => ""}
 
-    background: ${COLOR_BACKGROUND};
+    background: ${p => p.theme.background || COLOR_BACKGROUND};
     display: flex;
     flex-direction: column;
     max-width: ${p => p.size * SIZE_FACTOR}px;

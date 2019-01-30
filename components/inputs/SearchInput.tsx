@@ -1,6 +1,6 @@
 import * as React from "react";
-import { styled, COLOR_TEXT } from "../../styles";
-import { Omit } from "../../utility";
+import { useContext } from "react";
+import { COLOR_TEXT, styled, ThemeContext } from "../../styles";
 import { TextInput } from "./TextInput";
 
 
@@ -15,8 +15,10 @@ const StyledSvg = styled.svg`
     transform: translateY(-50%);
 `
 
-// Ref is not assignable to SC 4.0.3
-function SearchInput({color = COLOR_TEXT, ...props}: Omit<React.ComponentProps<typeof TextInput>, "ref">) {
+function SearchInput({color, ...props}: React.ComponentProps<typeof TextInput>) {
+    const theme = useContext(ThemeContext)
+    color = color || theme.text || COLOR_TEXT
+
     return (
         <StyledLabel>
             <TextInput {...props} color={color}/>

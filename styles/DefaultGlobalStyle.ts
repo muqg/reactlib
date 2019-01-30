@@ -13,10 +13,20 @@ export const DefaultGlobalStyle = createGlobalStyle`
 
     body,
     html {
-        background: ${COLOR_BACKGROUND};
+        background: ${p => p.theme.background || COLOR_BACKGROUND};
         cursor: default;
-        color: ${COLOR_TEXT};
+        color: ${p => p.theme.text || COLOR_TEXT};
         font-family: "Helvetica", "Arial", sans-serif;
+    }
+
+    a,
+    button,
+    select {
+        color: ${p => p.theme.text || COLOR_TEXT};
+    }
+
+    option {
+        color: black;
     }
 
     ul {
@@ -24,7 +34,6 @@ export const DefaultGlobalStyle = createGlobalStyle`
     }
 
     a {
-        color: ${COLOR_TEXT};
         cursor: pointer;
         text-decoration: none;
     }

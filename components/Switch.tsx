@@ -1,41 +1,37 @@
 import * as React from "react";
-import { COLOR_SUCCESS, COLOR_DARK, COLOR_MAIN, COLOR_BACKGROUND, css, styled } from "../styles";
-import { position } from "../styles/mixins";
+import { COLOR_BACKGROUND, COLOR_SUCCESS, css, styled } from "../styles";
 
-const BORDER_RADIUS_VALUE = "3px"
 
 const Container = styled.label`
-    border: 1px solid ${COLOR_DARK};
-    border-radius: ${BORDER_RADIUS_VALUE};
     cursor: pointer;
     display: inline-block;
-    height: 19px;
-    width: 45px;
+    height: 20px;
+    width: 40px;
 
     > input {
         display: none;
     }
 `
-
 const Background = styled.span`
-    background: ${COLOR_MAIN};
-    border-radius: ${BORDER_RADIUS_VALUE};
+    background: #aaa;
+    border-radius: 10px;
     display: inline-block;
     height: 100%;
-    transition-duration: .25s;
-    transition-property: background, opacity;
+    position: relative;
+    transition: all .2s;
     width: 100%;
-    ${position("relative")}
 
     &:after {
-        background: ${COLOR_BACKGROUND};
-        border-radius: ${BORDER_RADIUS_VALUE};
+        background: ${p => p.theme.background || COLOR_BACKGROUND};
+        border-radius: 50%;
+        box-shadow: 0 0 3px ${p => p.theme.text};
         content: '';
-        height: 100%;
-        transition: .2s;
-        transition-property: left, width;
-        width: 17px;
-        ${position("absolute", "0", "", "", "0")}
+        height: 110%;
+        left: 0;
+        position: absolute;
+        top: -5%;
+        transition: all .2s;
+        width: 55%;
     }
 
     ${(p: StyleProps) =>
@@ -47,19 +43,19 @@ const Background = styled.span`
         :
         css`
             &:active:after {
-                width: 22px;
+                width: 65%;
             }
 
             input:checked ~ & {
-                background: ${COLOR_SUCCESS};
+                background: ${p => p.theme.success || COLOR_SUCCESS};
             }
 
             input:checked ~ &:after {
-                left: calc(100% - 17px); /* Subtract marker's width while NOT checked */
+                left: 45%;
             }
 
             input:checked ~ &:active:after {
-                left: calc(100% - 22px); /* Subtract marker's width while checked */
+                left: 35%;
             }
         `
     }
@@ -80,7 +76,7 @@ interface Props {
 }
 
 
-const Checkbox = (props: Props) => {
+const Switch = (props: Props) => {
     return(
         <Container className={props.className}>
             <input
@@ -93,5 +89,5 @@ const Checkbox = (props: Props) => {
 }
 
 
-export { Checkbox };
+export { Switch };
 

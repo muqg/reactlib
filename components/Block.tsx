@@ -1,6 +1,6 @@
 import * as React from "react";
-import { styled, css } from "../styles";
-import { Omit, Size } from "../utility";
+import { css, styled } from "../styles";
+import { Size } from "../utility";
 
 const MARGIN_SIZE_FACTOR = 12
 const WIDTH_SIZE_FACTOR = 320
@@ -46,11 +46,10 @@ interface StyleProps {
     width?: Size
 }
 
-// Ref is not assignable to SC 4.0.3
-type Block = Omit<React.ComponentProps<typeof Container>, "ref">
+type Props = React.ComponentProps<typeof Container>
 
 
-const Block = ({children, title, ...props}: Block) => {
+const Block = ({children, title, ...props}: Props) => {
     return (
         <Container {...props}>
             {title && <Title>{title}</Title>}

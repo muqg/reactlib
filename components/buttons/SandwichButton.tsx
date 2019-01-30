@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { COLOR_DARK, css, styled } from "../../styles";
+import { useContext, useEffect, useState } from "react";
+import { COLOR_DARK, css, styled, ThemeContext } from "../../styles";
 import { call } from "../../utility/function";
 
 
@@ -77,9 +77,11 @@ interface OwnProps {
 type Props = OwnProps & StyleProps
 
 
-function SandwichButton({active = false, color = COLOR_DARK, size = 30, ...props}: Props) {
-    const [isActive, setIsActive] = useState(active)
+function SandwichButton({active = false, color, size = 30, ...props}: Props) {
+    const theme = useContext(ThemeContext)
+    color = color || theme.main || COLOR_DARK
 
+    const [isActive, setIsActive] = useState(active)
     useEffect(() => {
         // Avoids some unnecessary renders and possible infinite loops.
         if(active !== isActive)

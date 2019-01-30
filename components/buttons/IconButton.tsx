@@ -1,21 +1,21 @@
 import { styled } from "../../styles";
 import { Size } from "../../utility";
-import { Button, ButtonDefaultProps } from "./Button";
+import { Button, ButtonDefaultProps, ButtonStyleProps } from "./Button";
 
 const FONT_DOWNSIZE_FACTOR = 4
 
-interface StyleProps {
+export interface IconButtonStyleProps extends ButtonStyleProps {
     size?: Size
 }
 
-function getDiameter(p: StyleProps) {
+function getDiameter(p: IconButtonStyleProps) {
     // Default props will inject the default size
     // value and it will never be undefined.
     return (p.size || Size.Small) * 16
 }
 
 const IconButton = styled(Button)`
-    ${(_p: StyleProps) => ""}
+    ${(_p: IconButtonStyleProps) => ""}
 
     align-items: center;
     border-radius: 50%;

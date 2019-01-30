@@ -1,4 +1,4 @@
-import { COLOR_CONTRAST, COLOR_DARK, styled, css, fadedColor } from "../../styles";
+import { COLOR_CONTRAST, COLOR_DARK, css, fadedColor, styled } from "../../styles";
 
 
 export const enum ButtonVariant {
@@ -6,7 +6,7 @@ export const enum ButtonVariant {
 }
 
 
-interface StyleProps {
+export interface ButtonStyleProps {
     color?: string
     contrastColor?: string
     /**
@@ -17,9 +17,7 @@ interface StyleProps {
 }
 
 const normalStyle = css`
-    ${(_p: StyleProps) => ''}
-
-    background: ${p => p.color};
+    background: ${(p: ButtonStyleProps) => p.color};
     color: ${p => p.contrastColor};
     fill: ${p => p.contrastColor};
     stroke: ${p => p.contrastColor};
@@ -27,7 +25,7 @@ const normalStyle = css`
     ${p => p.hover && css`
         &:hover {
             background: transparent;
-            border-color: ${p => p.color};
+            border-color: ${(p: ButtonStyleProps) => p.color};
             color: ${p => p.color};
             fill: ${p => p.color};
             stroke: ${p => p.color};
@@ -36,17 +34,15 @@ const normalStyle = css`
 `
 
 const outlinedStyle = css`
-    ${(_p: StyleProps) => ''}
-
     background: transparent;
-    border-color: ${p => p.color};
+    border-color: ${(p: ButtonStyleProps) => p.color};
     color: ${p => p.color};
     fill: ${p => p.color};
     stroke: ${p => p.color};
 
     ${p => p.hover && css`
         &:hover {
-            background: ${p => p.color};
+            background: ${(p: ButtonStyleProps) => p.color};
             color: ${p => p.contrastColor};
             fill: ${p => p.contrastColor};
             stroke: ${p => p.contrastColor};
@@ -55,39 +51,35 @@ const outlinedStyle = css`
 `
 
 const textStyle = css`
-    ${(_p: StyleProps) => ''}
-
     background: transparent;
-    color: ${p => p.color};
+    color: ${(p: ButtonStyleProps) => p.color};
     fill: ${p => p.color};
     stroke: ${p => p.color};
 
     ${p => p.hover && css`
         &:hover {
             /* color is injected via DefaultProps and is never undefined */
-            background: ${p => fadedColor(p.color!)};
+            background: ${(p: ButtonStyleProps) => fadedColor(p.color!)};
         }
     `}
 `
 
-export const ButtonDefaultProps: StyleProps = {
-    color: COLOR_DARK,
-    contrastColor: COLOR_CONTRAST,
+export const ButtonDefaultProps: ButtonStyleProps = {
     hover: true,
     variant: ButtonVariant.Normal
 }
 
-const Button = styled.button`
-    /* DefaultProps take care of missing props */
-    ${(_p: StyleProps) => ''}
-
+const Button = styled("button").attrs<ButtonStyleProps, ButtonStyleProps>(p => ({
+    color: p.color || p.theme.main || COLOR_DARK,
+    contrastColor: p.contrastColor || p.theme.contrast || COLOR_CONTRAST,
+}))`
     border: 1px solid transparent;
     cursor: pointer;
     display: inline-block;
     font-weight: bold;
     padding: 6px 12px;
     text-align: center;
-    transition: all .15s ease-in-out;
+    transition: all .1s;
 
     ${p => p.variant === ButtonVariant.Normal && normalStyle}
     ${p => p.variant === ButtonVariant.Outlined && outlinedStyle}

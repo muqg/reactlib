@@ -10,7 +10,7 @@ interface StyleProps {
 const Divider = styled.div`
     ${(_p: StyleProps) => ""}
 
-    background: ${COLOR_DARK};
+    background: ${p => p.theme.main || COLOR_DARK};
     height: 1px;
     margin: ${p => p.size! * SIZE_FACTOR}px 0;
     padding: 0 !important;

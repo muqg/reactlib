@@ -22,11 +22,12 @@ const Wrapper = styled.div`
         transform: translate3d(-50%, 0, 0);
     `}
 `
-const Container = styled.div`
-    ${(_p: StyleProps) => ""}
-
-    background: ${p => p.background || COLOR_DARK};
-    color: ${p => p.color || COLOR_CONTRAST};
+const Container = styled.div.attrs<StyleProps, StyleProps>(p => ({
+    background: p.background || p.theme.main || COLOR_DARK,
+    color: p.color || p.theme.contrast || COLOR_CONTRAST
+}))`
+    background: ${p => p.background};
+    color: ${p => p.color};
     font-size: .9rem;
     letter-spacing: 0.01071em;
     min-width: 280px;

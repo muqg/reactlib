@@ -1,7 +1,7 @@
 export { AspectImage } from "./AspectImage";
 export { Block } from "./Block";
 export * from "./buttons";
-export { Checkbox } from "./Checkbox";
+export { Switch } from "./Switch";
 export { default as ConfirmationDialog } from "./dialogs/ConfirmationDialog";
 export { Dialog, DialogProps } from "./dialogs/Dialog";
 export { DialogBox, DialogBoxProps } from "./dialogs/DialogBox";

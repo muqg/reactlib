@@ -24,7 +24,7 @@ const Heading = styled.h1`
         text-align: center;
     `}
     ${p => p.underline && css`
-        border-bottom: 1px solid ${fadedColor(COLOR_DARK)};
+        border-bottom: 1px solid ${p => fadedColor(p.theme.main || COLOR_DARK)};
     `}
 `
 Heading.defaultProps = {
