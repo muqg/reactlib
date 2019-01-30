@@ -10,7 +10,7 @@ export interface ResourceProps<T extends object = object> {
     /**
      * Called when an exception occurs both for save and delete.
      */
-    catch?: (exception: any) => string | void | Promise<string | void>
+    catch?: (exception: any, resource: T) => string | void | Promise<string | void>
     /**
      * Default data for the resource. Used when a new one is being created
      * and also when a resource is deleted and the data should be reset.
@@ -166,7 +166,7 @@ function useResource<T extends object>(
             }
         }
         catch(ex) {
-            let message = await call(props.catch, ex)
+            let message = await call(props.catch, ex, resource)
             if(!message) {
                 console.error(ex)
                 message = "Error"
