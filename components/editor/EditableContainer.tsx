@@ -47,6 +47,7 @@ const EditableContainer = (props: Props) => {
 
     return (
         <Container
+            // @ts-ignore SC "as" property issues
             as="div"
             className={props.className}
             contentEditable

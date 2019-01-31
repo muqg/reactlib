@@ -33,7 +33,9 @@ function useModel<T extends object>(
 ): Model<T> {
     const [data, setModel] = useState(init)
 
+    // @ts-ignore Spread types may be created only from object types.
     function change(name: string, input: ModelInputValue) {
+        // @ts-ignore Spread types may be created only from object types.
         let value = input
         if(isType<ParseableInput>(input, (v) => v.target || isObject(v, Element)))
             value = cast(parseInputValue(input))
@@ -41,6 +43,7 @@ function useModel<T extends object>(
         value = call(middleware, value, name) || value
 
         setModel({
+            // @ts-ignore Spread types may be created only from object types.
             ...data,
             [name]: value
         })
@@ -49,9 +52,10 @@ function useModel<T extends object>(
     return useMemo(() => {
         const model = {} as Model<T>
         for(let key in init) {
-            // @ts-ignore Unknown issue at the moment
+            // @ts-ignore Spread types may be created only from object types.
             model[key] = {
                 value: data[key],
+                // @ts-ignore Spread types may be created only from object types.
                 onChange: c => change(key, c)
             }
         }

@@ -106,7 +106,9 @@ function useResource<T extends object>(
             const payload = JSON.stringify(resource)
 
             const nextResource = (async () => {
+                // @ts-ignore Spread types may only be created from object types.
                 const response = await request<Partial<T>>(method, requestURL, {payload})
+                // @ts-ignore Spread types may only be created from object types.
                 return {...resource, ...response}
             })()
 
@@ -136,6 +138,7 @@ function useResource<T extends object>(
             await response
             _error(await deletedCallbackResult)
 
+            // @ts-ignore Spread types may only be created from object types.
             return {...props.default}
         })
     }

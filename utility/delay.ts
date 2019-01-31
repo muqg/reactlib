@@ -6,9 +6,11 @@
  *
  * @param wait Delay time in milliseconds.
  */
+// @ts-ignore Odd error reporting for generic array after v.3.0.1
 function delay<A extends any[]>(func: (...args: A) => Promise<void> | void, wait = 250) {
     let timeout: number | undefined
 
+    // @ts-ignore Odd error reporting for generic array after v.3.0.1
     return (...args: A) => {
         clearTimeout(timeout)
         timeout = setTimeout(func, wait, ...args)
