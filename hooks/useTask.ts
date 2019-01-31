@@ -3,7 +3,6 @@ import { useState, useRef, useEffect, useMemo } from "react";
 
 interface Task<R, A extends any[] = any> {
     isRunning: boolean
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     run: (...args: A) => Promise<R | void>
 }
 
@@ -18,14 +17,12 @@ interface Task<R, A extends any[] = any> {
  *
  * @param func The function to be transformed into a task.
  */
-// @ts-ignore TS2370: A rest parameter must be of an array type.
 function useTask<R, A extends any[]>(func: Task<R, A>["run"]): Task<R, A> {
     const [isRunning, setRunning] = useState(false)
 
     const isMounted = useRef(true)
     useEffect(() => () => { isMounted.current = false}, [])
 
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     const run = async (...args: A) => {
         if(isRunning)
             return

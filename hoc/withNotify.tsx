@@ -14,6 +14,7 @@ function withNotify<P extends NotificationComponentProps>(
 ) {
     const wrapper: React.FunctionComponent<Omit<P, keyof NotificationComponentProps>>= (props) => {
         const notify = useContext(NotificationContext)
+        // @ts-ignore TS2322: Type 'Pick<P, Exclude<keyof P, "notify">>...
         return <Component {...props} notify={notify} />
     }
 
