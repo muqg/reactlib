@@ -1,13 +1,13 @@
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
-import { Spinner } from ".";
+import { URL_USER_LOGIN } from "../../src/const";
+import { isRequestException } from "../../src/shared/helpers/isRequestException";
 import { NotificationContext } from "../contexts";
 import { useTranslation } from "../hooks";
 import { Dict, RequestException, RequestMethod } from "../utility";
 import { isFunction } from "../utility/assertions";
 import { request } from "../utility/web";
-import { URL_USER_LOGIN } from "../../src/const";
-import { isRequestException } from "../../src/shared/helpers/isRequestException";
+import { Spinner } from "./Spinner";
 
 
 const DefaultLoader = <Spinner />
