@@ -18,6 +18,16 @@ export interface Fetcher<T, A extends any[] = any> {
     write: (item: T, ...args: A) => void
 }
 
+/**
+ * Creates a fetcher object that works in conjunction with React.Suspense.
+ * It is meant to be used prior to the release of react-cache and should be
+ * used with caution since it may wildly differ from the expected future
+ * react version and behavior.
+ *
+ * @param fetch The fetch request.
+ * @param cache Whether to cache the request or not.
+ * - Enabled by default.
+ */
 function createFetcher<T = any, A extends any[] = any>(
     // @ts-ignore TS2370: A rest parameter must be of an array type.
     fetch: (...args: A) => Promise<T>, cache = true
@@ -37,9 +47,9 @@ function createFetcher<T = any, A extends any[] = any>(
     // @ts-ignore TS2370: A rest parameter must be of an array type.
     function read(...args: A) {
         const key = getCacheKey(...args)
-        const cacheItem = cacheStorage[key]
 
-        if(!cacheItem) {
+        if(!cacheStorage[key]) {
+            // Should prevent double requests
             if(!request) {
                 request = fetch(...args)
             }
@@ -56,12 +66,11 @@ function createFetcher<T = any, A extends any[] = any>(
             throw request
         }
 
-        const result = cacheItem
         if(!cache) {
-            removeCacheEntry(key)
+            // Will clear cache after initially retunring the entry.
+            setTimeout(() => removeCacheEntry(key))
         }
-
-        return result
+        return cacheStorage[key]
     }
 
     // @ts-ignore TS2370: A rest parameter must be of an array type.
