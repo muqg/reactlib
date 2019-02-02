@@ -1,7 +1,5 @@
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
-import { URL_USER_LOGIN } from "../../src/const";
-import { isRequestException } from "../../src/shared/helpers/isRequestException";
 import { NotificationContext } from "../contexts";
 import { useTranslation } from "../hooks";
 import { Dict, RequestException, RequestMethod } from "../utility";
@@ -77,9 +75,7 @@ function Fetcher<T extends object = object>(
             setFetch(result)
         }
         catch(ex) {
-            if(isRequestException(ex) && ex.status === 401)
-                document.location.href = URL_USER_LOGIN
-            else if(onException)
+            if(onException)
                 onException(ex)
             else {
                 console.error(ex)
