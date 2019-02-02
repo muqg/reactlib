@@ -4,6 +4,8 @@ import { AddButton } from "./AddButton";
 import { ButtonVariant } from "./Button";
 import { IconButtonStyleProps } from "./IconButton";
 
+type CloseButtonType = React.ComponentType<React.ComponentProps<typeof AddButton> & StyleProps>
+
 interface StyleProps extends IconButtonStyleProps {
     /**
      * Enables default absolute position
@@ -27,7 +29,7 @@ const CloseButton = styled(AddButton).attrs<StyleProps, StyleProps>(p => ({
     transform: rotate(45deg);
 
     ${(p: StyleProps) => p.absolute && absoluteStyling}
-`
+` as CloseButtonType
 CloseButton.displayName = "CloseButton"
 
 
