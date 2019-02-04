@@ -1,13 +1,13 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
-import { useInitialRender } from "../hooks";
+import { useInterval } from "../hooks";
 import { COLOR_CONTRAST, COLOR_DARK, styled } from "../styles";
 import { flex, position } from "../styles/mixins";
-import { wait } from "../utility";
 import { call } from "../utility/function";
 import { padStart } from "../utility/string";
 
+const OneSecond = 1_000
 
 const Container = styled.div`
     background: ${p => p.theme.main || COLOR_DARK};
@@ -31,6 +31,16 @@ const Timepiece = styled.div`
 
 interface Props {
     /**
+     * Called every second.
+     */
+    everySecond?: (secondsLeft: number, minutesLeft: number) => void
+
+    /**
+     * Called every minute.
+     */
+    everyMinute?: (secondsLeft: number, minutes: number) => void
+
+    /**
      * Time limit in seconds.
      */
     limit: number
@@ -41,48 +51,44 @@ interface Props {
     onExpire?: () => void
 
     /**
-     * Called every second.
+     * Whether the timer is running.
      */
-    everySecond?: (secondsLeft: number, minutesLeft: number) => void
-
-    /**
-     * Called every minute.
-     */
-    everyMinute?: (secondsLeft: number, minutes: number) => void
+    paused?: boolean
 }
 
 
-const Timer = React.memo((props: Props) => {
-    const initialRender = useInitialRender()
-    const [time, setTime] = useState({
-        limit: props.limit,
-        minutes: 0,
-        seconds: 0
-    })
+const Timer = React.memo(({everySecond, everyMinute, limit, onExpire, paused}: Props) => {
+    const [time, setTime] = useState(getTime(limit))
 
-    useEffect(() => {
-        tick()
-    }, [time.limit])
+    // Start (or pause) the timer.
+    useInterval(
+        tick,
+        paused ? null : OneSecond
+    )
 
-    async function tick() {
-        if(time.limit <= 0)
+    function tick() {
+        if(time.left <= 0)
             return
 
-        if(!initialRender)
-            // Ever wondered how long can a single second be...?
-            await wait(1000);
+        const nextTime = getTime(time.left)
 
-        const limit = time.limit - 1
+        call(everySecond, nextTime.seconds, nextTime.minutes)
+        if(time.minutes > nextTime.minutes) {
+            call(everyMinute, nextTime.seconds, nextTime.minutes)
+        }
+        if(nextTime.left === 0) {
+            call(onExpire)
+        }
+
+        setTime(nextTime)
+    }
+
+    function getTime(limit: number) {
+        const left = limit - 1
         const minutes = Math.floor(limit / 60)
         const seconds = limit % 60
 
-        call(props.everySecond, seconds, minutes)
-        if(time.minutes > minutes)
-            call(props.everyMinute, seconds, minutes)
-        if(limit === 0)
-            call(props.onExpire)
-
-        setTime({limit, minutes, seconds})
+        return {left, minutes, seconds}
     }
 
     return createPortal(
