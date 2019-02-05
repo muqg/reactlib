@@ -1,13 +1,13 @@
 import { combineReducers, createStore } from "redux";
-import { INITIAL_STATE } from "./const";
 import { isEmpty } from "../utility/collection";
+import { initialState } from "./initialState";
 
 /**
  * Redux universal store builder class.
  */
 class ReduxFactory {
     reducers: object = {}
-    state: object = {...INITIAL_STATE}
+    state: object = {...initialState("")}
 
     /**
      * Adds object state elements to store.
@@ -40,6 +40,5 @@ class ReduxFactory {
 }
 
 const redux = new ReduxFactory()
-export {
-    redux as ReduxFactory
-}
+export { redux as ReduxFactory };
+
