@@ -33,6 +33,7 @@ function createFetcher<T = any, A extends any[] = any>(
     fetch: (...args: A) => Promise<T>, cache = true
 ): Fetcher<T, A> {
     let cacheStorage: Dict<T> = {}
+    let errorStorage: Dict<any> = {}
     let request: Promise<T> | null = null
 
     // @ts-ignore TS2370: A rest parameter must be of an array type.
@@ -42,13 +43,14 @@ function createFetcher<T = any, A extends any[] = any>(
 
     function removeCacheEntry(key: string) {
         delete cacheStorage[key]
+        delete errorStorage[key]
     }
 
     // @ts-ignore TS2370: A rest parameter must be of an array type.
     function read(...args: A) {
         const key = getCacheKey(...args)
 
-        if(!cacheStorage[key]) {
+        if(!cacheStorage[key] && !errorStorage[key]) {
             // Should prevent double requests
             if(!request) {
                 request = fetch(...args)
@@ -58,6 +60,9 @@ function createFetcher<T = any, A extends any[] = any>(
                 try {
                     cacheStorage[key] = await request
                 }
+                catch(ex) {
+                    errorStorage[key] = ex
+                }
                 finally {
                     request = null
                 }
@@ -66,11 +71,17 @@ function createFetcher<T = any, A extends any[] = any>(
             throw request
         }
 
-        if(!cache) {
-            // Will clear cache after initially retunring the entry.
-            setTimeout(() => removeCacheEntry(key))
+        if(errorStorage[key]) {
+            // Allow error to be caught by an ErrorBoundary.
+            throw errorStorage[key]
         }
-        return cacheStorage[key]
+        else {
+            if(!cache) {
+                // Will clear cache after initially retunring the entry.
+                setTimeout(() => removeCacheEntry(key))
+            }
+            return cacheStorage[key]
+        }
     }
 
     // @ts-ignore TS2370: A rest parameter must be of an array type.

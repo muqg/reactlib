@@ -40,6 +40,7 @@ function baseRequest(method: RequestMethod, url: string, options: RequestInit) {
             }
 
             if(!response.ok) {
+                // TODO: make it throw the response instead of this object below
                 throw {
                     body: responseBody,
                     status: response.status,
