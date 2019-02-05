@@ -21,11 +21,11 @@ type Props = OwnProps & Hotkey
 
 class GlobalHotkey extends React.Component<Props> {
     componentDidMount() {
-        window.addEventListener("keydown", this.handle)
+        document.addEventListener("keydown", this.handle)
     }
 
     componentWillUnmount() {
-        window.removeEventListener("keydown", this.handle)
+        document.removeEventListener("keydown", this.handle)
     }
 
     handle = (event: KeyboardEvent) => {
