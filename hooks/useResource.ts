@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { Model, useModel } from ".";
 import { NotificationContext } from "../contexts";
-import { RequestException, RequestMethod } from "../utility";
-import { isString, isType } from "../utility/assertions";
+import { RequestMethod } from "../utility";
+import { isString } from "../utility/assertions";
 import { call } from "../utility/function";
 import { request } from "../utility/web";
 
@@ -103,11 +103,10 @@ function useResource<T extends object>(
 
             const method = props.id ? RequestMethod.PUT : RequestMethod.POST
             const requestURL = method === RequestMethod.PUT ? resUrl : url
-            const payload = JSON.stringify(resource)
 
             const nextResource = (async () => {
                 // @ts-ignore Spread types may only be created from object types.
-                const response = await request<Partial<T>>(method, requestURL, {payload})
+                const response = await request<Partial<T>>(method, requestURL, resource)
                 // @ts-ignore Spread types may only be created from object types.
                 return {...resource, ...response}
             })()
@@ -130,8 +129,7 @@ function useResource<T extends object>(
             if(_error(call(props.deleting, resource)))
                 return
 
-            const payload = JSON.stringify(resource)
-            const response = request(RequestMethod.DELETE, resUrl, {payload})
+            const response = request(RequestMethod.DELETE, resUrl, resource)
 
             const deletedCallbackResult = call(props.deleted, resource)
 
@@ -173,15 +171,7 @@ function useResource<T extends object>(
              */
             setIsWorking(false)
 
-            let message = await call(props.catch, ex, resource)
-            if(!message) {
-                console.error(ex)
-                message = "Error"
-
-                if(isType<RequestException>(ex, () => ex.status)) {
-                    message = ex.text
-                }
-            }
+            let message = await call(props.catch, ex, resource) || "Error"
             notify(message)
         }
 

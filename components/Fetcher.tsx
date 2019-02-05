@@ -2,7 +2,7 @@ import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 import { NotificationContext } from "../contexts";
 import { useTranslation } from "../hooks";
-import { Dict, RequestException, RequestMethod } from "../utility";
+import { Dict, RequestMethod } from "../utility";
 import { isFunction } from "../utility/assertions";
 import { request } from "../utility/web";
 import { Spinner } from "./Spinner";
@@ -31,7 +31,7 @@ export interface FetcherProps<T> {
     /**
      * Called when an exception occurs.
      */
-    onException?: (ex: RequestException) => void
+    onException?: (ex: any) => void
     /**
      * The url to fetch from.
      */

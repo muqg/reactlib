@@ -15,7 +15,7 @@ function createEndpoint<T extends object>(url: string) {
             request<T[]>(RequestMethod.GET, url),
 
         create: (data: T) =>
-            request<T>(RequestMethod.POST, url, {payload: JSON.stringify(data)}),
+            request<T>(RequestMethod.POST, url, data),
 
         delete: async (id: number | string) =>
             { await request(RequestMethod.DELETE, `${url}/${id}`) },
@@ -24,7 +24,7 @@ function createEndpoint<T extends object>(url: string) {
             request<T>(RequestMethod.GET, `${url}/${id}`),
 
         save: (id: number | string, data: Partial<T>) =>
-            request<T>(RequestMethod.PUT, `${url}/${id}`, {payload: JSON.stringify(data)})
+            request<T>(RequestMethod.PUT, `${url}/${id}`, data)
     }
 }
 

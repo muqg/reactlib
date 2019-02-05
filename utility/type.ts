@@ -55,16 +55,6 @@ export interface NamedKey<T = string> {
 }
 
 /**
- * Error thrown by library's request functions.
- */
-export interface RequestException<T extends object = {}> {
-    body: T
-    status: number
-    statusText: string
-    text: string
-}
-
-/**
  * From T omit a set of properties K.
  */
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
