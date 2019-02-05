@@ -50,38 +50,38 @@ function createFetcher<T = any, A extends any[] = any>(
     function read(...args: A) {
         const key = getCacheKey(...args)
 
-        if(!cacheStorage[key] && !errorStorage[key]) {
+        const error = errorStorage[key]
+        if(error) {
+            // Allow error to be caught by an ErrorBoundary.
+            throw error
+        }
+
+        if(!cacheStorage[key]) {
             // Should prevent double requests
             if(!request) {
-                request = fetch(...args)
-            }
+                request = fetch(...args);
 
-            (async () => {
-                try {
-                    cacheStorage[key] = await request
-                }
-                catch(ex) {
-                    errorStorage[key] = ex
-                }
-                finally {
-                    request = null
-                }
-            })()
+                (async () => {
+                    try {
+                        cacheStorage[key] = await request
+                    }
+                    catch(ex) {
+                        errorStorage[key] = ex
+                    }
+                    finally {
+                        request = null
+                    }
+                })()
+            }
 
             throw request
         }
 
-        if(errorStorage[key]) {
-            // Allow error to be caught by an ErrorBoundary.
-            throw errorStorage[key]
+        if(!cache) {
+            // Will clear cache after initially retunring the entry.
+            setTimeout(() => removeCacheEntry(key))
         }
-        else {
-            if(!cache) {
-                // Will clear cache after initially retunring the entry.
-                setTimeout(() => removeCacheEntry(key))
-            }
-            return cacheStorage[key]
-        }
+        return cacheStorage[key]
     }
 
     // @ts-ignore TS2370: A rest parameter must be of an array type.
