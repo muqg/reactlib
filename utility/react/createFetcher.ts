@@ -1,21 +1,46 @@
 import { Dict } from "..";
 
+declare function requestIdleCallback(cb: () => void): void
+
 export interface Fetcher<T, A extends any[] = any> {
     /**
-     * Invalidates the cached result of a fetch request.
+     * Clears the resource from cache.
      */
     // @ts-ignore TS2370: A rest parameter must be of an array type.
-    clear: (...args: A) => void
+    clear: (...input: A) => void
     /**
-     * Reads the fetched request result.
+     * Prefetches the resource in idle time
+     * and prepares it for later use.
      */
     // @ts-ignore TS2370: A rest parameter must be of an array type.
-    read: (...args: A) => T
+    prefetch: (...input: A) => void
     /**
-     * Overwrites a cache entry
+     * Preloads the resource in parallel in order to
+     * prepare it for use as soon as possible.
      */
     // @ts-ignore TS2370: A rest parameter must be of an array type.
-    write: (item: T, ...args: A) => void
+    preload: (...input: A) => void
+    /**
+     * Reads the resource from cache or through the given fetch callback.
+     */
+    // @ts-ignore TS2370: A rest parameter must be of an array type.
+    read: (...input: A) => T
+    /**
+     * Writes a value to cache, overwriting the existing entry.
+     */
+    // @ts-ignore TS2370: A rest parameter must be of an array type.
+    write: (value: T, ...input: A) => void
+}
+
+const enum Status {
+    Error,
+    Pending,
+    Resolved
+}
+
+interface Resource<T = any> {
+    status: Status
+    value: T | Promise<T> | number
 }
 
 /**
@@ -24,84 +49,110 @@ export interface Fetcher<T, A extends any[] = any> {
  * used with caution since it may wildly differ from the expected future
  * react version and behavior.
  *
- * @param fetch The fetch request.
+ * @param fetch A valid fetcher callback.
  * @param cache Whether to cache the request or not.
  * - Enabled by default.
  */
-function createFetcher<T = any, A extends any[] = any>(
+export function createFetcher<T = any, A extends any[] = any>(
     // @ts-ignore TS2370: A rest parameter must be of an array type.
-    fetch: (...args: A) => Promise<T>, cache = true
+    fetch: (...input: A) => Promise<T>
 ): Fetcher<T, A> {
-    let cacheStorage: Dict<T> = {}
-    let errorStorage: Dict<any> = {}
-    let request: Promise<T> | null = null
+    let storage: Dict<Resource | undefined> = {}
+
 
     // @ts-ignore TS2370: A rest parameter must be of an array type.
-    function getCacheKey(...args: A) {
-        return JSON.stringify(args)
-    }
-
-    function removeCacheEntry(key: string) {
-        delete cacheStorage[key]
-        delete errorStorage[key]
-    }
-
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
-    function read(...args: A) {
-        const key = getCacheKey(...args)
-
-        const error = errorStorage[key]
-        if(error) {
-            // Allow error to be caught by an ErrorBoundary.
-            throw error
+    function read(...input: A) {
+        const resource = accessResource(...input)
+        if(resource.status === Status.Pending || resource.status === Status.Error) {
+            throw resource.value
         }
+        else {
+            return resource.value
+        }
+    }
 
-        if(!cacheStorage[key]) {
-            // Should prevent double requests
-            if(!request) {
-                request = fetch(...args);
+    // @ts-ignore TS2370: A rest parameter must be of an array type.
+    function prefetch(...input: A) {
+        if(requestIdleCallback) {
+            // @ts-ignore
+            requestIdleCallback(() => accessResource(...input))
+        }
+        else {
+            setTimeout(() => accessResource(...input))
+        }
+    }
 
-                (async () => {
-                    try {
-                        cacheStorage[key] = await request
-                    }
-                    catch(ex) {
-                        errorStorage[key] = ex
-                    }
-                    finally {
-                        request = null
-                    }
-                })()
+    // @ts-ignore TS2370: A rest parameter must be of an array type.
+    function preload(...input: A) {
+        accessResource(...input)
+    }
+
+    // @ts-ignore TS2370: A rest parameter must be of an array type.
+    function accessResource(...input: A): Resource {
+        const key = getCacheKey(...input)
+        const resource = storage[key]
+        if(resource) {
+            return resource
+        }
+        else {
+            const request = fetch(...input)
+            const newResource: Resource = {
+                status: Status.Pending,
+                value: request
             }
+            storage[key] = newResource
 
-            throw request
-        }
+            request.then(
+                value => {
+                    if(newResource.status === Status.Pending) {
+                        newResource.status = Status.Resolved
+                        newResource.value = value
+                    }
+                },
+                error => {
+                    if(newResource.status === Status.Pending) {
+                        newResource.status = Status.Error
+                        newResource.value = error
+                    }
+                }
+            )
 
-        if(!cache) {
-            // Will clear cache after initially retunring the entry.
-            setTimeout(() => removeCacheEntry(key))
+            return newResource
         }
-        return cacheStorage[key]
     }
 
     // @ts-ignore TS2370: A rest parameter must be of an array type.
-    function clear(...args: A) {
-        const key = getCacheKey(...args)
-        removeCacheEntry(key)
+    function write(value: T, ...input: A) {
+        const key = getCacheKey(...input)
+        let resource = storage[key]
+        if(resource) {
+            resource.value = value
+        }
+        else {
+            resource = {
+                status: Status.Resolved,
+                value: value
+            }
+        }
     }
 
     // @ts-ignore TS2370: A rest parameter must be of an array type.
-    function write(item: T, ...args: A) {
-        const key = getCacheKey(...args)
-        cacheStorage[key] = item
+    function clear(...input: A) {
+        const key = getCacheKey(...input)
+        delete storage[key]
+    }
+
+    // @ts-ignore TS2370: A rest parameter must be of an array type.
+    function getCacheKey(...input: A) {
+        return JSON.stringify(input)
     }
 
     return {
         clear,
+        prefetch,
+        preload,
         read,
         write
     }
 }
-
-export { createFetcher };
 
