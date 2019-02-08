@@ -5,6 +5,7 @@ import { Toolbar } from "./Toolbar";
 
 interface Props {
     children?: any
+    className?: string
     /**
      * Custom font names to add as options.
      *
@@ -21,9 +22,9 @@ interface Props {
 }
 
 
-const DefaultToolbar = (props: Props) => {
+const DefaultToolbar = ({children, fonts, imageHandler, ...props}: Props) => {
     return(
-        <Toolbar>
+        <Toolbar {...props}>
             <ToolbarBold />
             <ToolbarItalic />
             <ToolbarUnderline />
@@ -31,7 +32,7 @@ const DefaultToolbar = (props: Props) => {
             <ToolbarSuperscript />
             <ToolbarSubscript />
             <ToolbarColour />
-            <ToolbarFontName customFonts={props.fonts} />
+            <ToolbarFontName customFonts={fonts} />
             <ToolbarFontSize />
             <ToolbarAlignLeft />
             <ToolbarAlignCenter />
@@ -42,12 +43,12 @@ const DefaultToolbar = (props: Props) => {
             <ToolbarIndent />
             <ToolbarOutdent />
             <ToolbarLink />
-            { props.imageHandler ?
-                <ToolbarImage handler={props.imageHandler} />
+            {imageHandler ?
+                <ToolbarImage handler={imageHandler} />
                 : ""
             }
 
-            {props.children}
+            {children}
 
         </Toolbar>
     )
