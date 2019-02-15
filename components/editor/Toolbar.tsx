@@ -9,7 +9,7 @@ export const TOOLBAR_SPRITESHEET = "/img/toolbar.png"
 const ToolbarWrapper = styled.div`
     text-align: center;
     width: 100%;
-    z-index: 110;
+    z-index: 1000;
     ${position("fixed", "0", "", "", "0")}
 
     > div {
