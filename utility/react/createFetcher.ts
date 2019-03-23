@@ -6,29 +6,24 @@ export interface Fetcher<T, A extends any[] = any> {
     /**
      * Clears the resource from cache.
      */
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     clear: (...input: A) => void
     /**
      * Prefetches the resource in idle time
      * and prepares it for later use.
      */
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     prefetch: (...input: A) => void
     /**
      * Preloads the resource in parallel in order to
      * prepare it for use as soon as possible.
      */
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     preload: (...input: A) => void
     /**
      * Reads the resource from cache or through the given fetch callback.
      */
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     read: (...input: A) => T
     /**
      * Writes a value to cache, overwriting the existing entry.
      */
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     write: (value: T, ...input: A) => void
 }
 
@@ -54,13 +49,11 @@ interface Resource<T = any> {
  * - Enabled by default.
  */
 export function createFetcher<T = any, A extends any[] = any>(
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     fetch: (...input: A) => Promise<T>
 ): Fetcher<T, A> {
     let storage: Dict<Resource | undefined> = {}
 
 
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     function read(...input: A) {
         const resource = accessResource(...input)
         if(resource.status === Status.Pending || resource.status === Status.Error) {
@@ -71,10 +64,8 @@ export function createFetcher<T = any, A extends any[] = any>(
         }
     }
 
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     function prefetch(...input: A) {
         if(requestIdleCallback) {
-            // @ts-ignore
             requestIdleCallback(() => accessResource(...input))
         }
         else {
@@ -82,12 +73,10 @@ export function createFetcher<T = any, A extends any[] = any>(
         }
     }
 
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     function preload(...input: A) {
         accessResource(...input)
     }
 
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     function accessResource(...input: A): Resource {
         const key = getCacheKey(...input)
         const resource = storage[key]
@@ -121,7 +110,6 @@ export function createFetcher<T = any, A extends any[] = any>(
         }
     }
 
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     function write(value: T, ...input: A) {
         const key = getCacheKey(...input)
         let resource = storage[key]
@@ -136,13 +124,11 @@ export function createFetcher<T = any, A extends any[] = any>(
         }
     }
 
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     function clear(...input: A) {
         const key = getCacheKey(...input)
         delete storage[key]
     }
 
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     function getCacheKey(...input: A) {
         return JSON.stringify(input)
     }

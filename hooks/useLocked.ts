@@ -7,11 +7,9 @@
  *
  * @param func The callback function to be locked.
  */
-// @ts-ignore TS2370: A rest parameter must be of an array type.
 function useLocked<A extends any[], R>(func: (...args: A) => R): (...args: A) => Promise<R | void> {
     const locked = useRef(false)
 
-    // @ts-ignore TS2370: A rest parameter must be of an array type.
     return async (...args: A) => {
         if(locked.current)
             return

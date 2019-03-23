@@ -19,7 +19,7 @@ function withFetcher(options: Omit<FetcherProps<any>, "children">) {
         return (props) => (
             <Fetcher {...options}>
                 {fetch =>
-                    // @ts-ignore TS2322: Type 'Pick<P, Exclude<keyof P, "fetch">>...
+                    // @ts-ignore Correct but not compatible with expected return type.
                     <Component {...props} fetch={fetch} />
                 }
             </Fetcher>

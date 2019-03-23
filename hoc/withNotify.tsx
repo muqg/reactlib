@@ -12,8 +12,9 @@ export interface NotificationComponentProps {
 function withNotify<P extends NotificationComponentProps>(
     Component: React.ComponentType<P>
 ) {
-    const wrapper: React.FunctionComponent<Omit<P, keyof NotificationComponentProps>>= (props) => {
+    const wrapper: React.FunctionComponent<Omit<P, keyof NotificationComponentProps>> = (props) => {
         const notify = useContext(NotificationContext)
+        // @ts-ignore Correct but not compatible with expected return type.
         return <Component {...props} notify={notify} />
     }
 
