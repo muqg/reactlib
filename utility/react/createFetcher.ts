@@ -1,6 +1,7 @@
 import { Dict } from "..";
 
-declare function requestIdleCallback(cb: () => void): void
+// @ts-ignore Ignore undefined function on window object
+const requestIdleCallback: ((cb: () => void) => void) | undefined = window.requestIdleCallback
 
 export interface Fetcher<T, A extends any[] = any> {
     /**
