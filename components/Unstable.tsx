@@ -1,6 +1,5 @@
 import * as React from "react";
 
-const REACT_DEV_MODE = "_self" in React.createElement("i")
 
 interface Props {
     children: React.ReactNode
@@ -8,14 +7,15 @@ interface Props {
 
 
 function Unstable({children}: Props) {
-    if(!REACT_DEV_MODE)
-        return null
+    if(__DEV__) {
+        return (
+            <>
+                {children}
+            </>
+        )
+    }
 
-    return (
-        <>
-            {children}
-        </>
-    )
+    return null
 }
 
 
