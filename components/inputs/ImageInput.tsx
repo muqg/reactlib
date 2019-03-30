@@ -1,88 +1,170 @@
-import * as React from "react";
-import { useEffect, useRef, useState } from "react";
-import { AspectImage, Block, Button, ImageView } from "../../../lub/components";
-import { styled } from "../../../lub/styles";
-import { isString } from "../../../lub/utility/assertions";
+import * as React from "react"
+import {useEffect, useMemo, useState} from "react"
+import {
+    AspectImage,
+    Block,
+    Button,
+    ImageView,
+    RemoveButton,
+    ConfirmationDialog,
+} from "../../../lub/components"
+import {styled} from "../../../lub/styles"
+import {isString} from "../../../lub/utility/assertions"
+import {Size} from "../../utility"
+import {call} from "../../utility/function"
 
-
+const PreviewContainer = styled.div`
+    display: inline-block;
+    position: relative;
+`
 const Preview = styled(AspectImage)`
     display: inline-block;
     margin: 6px;
     vertical-align: middle;
 `
+const StyledRemoveButton = styled(RemoveButton)`
+    position: absolute;
+    right: 0;
+    top: 0;
+`
 
+type ConfirmationComponentProps = Pick<
+    React.ComponentProps<typeof ConfirmationDialog>,
+    "onAccept" | "onClose" | "isVisible"
+>
 interface OwnProps {
+    /**
+     * A dialog to confirm the removal.
+     * - It is recomended that a ConfirmationDialog is used.
+     * - The component is passed `onAccept`, `onClose` and `isVisible` props.
+     */
+    confirmationComponent?: React.ComponentType<ConfirmationComponentProps>
+    /**
+     * Whether image can be changed or not.
+     */
+    isChangeable?: boolean
+    /**
+     * Called when image removal is requested.
+     */
+    onRemove?: () => void
+    /**
+     * Image source.
+     */
     src?: string
 }
 type Props = OwnProps & {innerRef?: React.Ref<any>}
 
-
 function ImageInput(props: Props) {
-    const [showLarge, setShowLarge] = useState(false)
-    const [preview, setPreview] = useState<string | undefined>(props.src)
-    const fileReader = useRef(new FileReader())
+    if (__DEV__) {
+        useEffect(() => {
+            if (!props.onRemove && props.confirmationComponent) {
+                console.warn(
+                    "`confirmationComponent` prop serves no purpose" +
+                        "without the complementary `onRemove` prop"
+                )
+            }
+        }, [])
+    }
 
-    useEffect(() => {
-        const reader = fileReader.current
+    const [showLarge, setShowLarge] = useState(false)
+    const [isConfirming, setIsConfirming] = useState(false)
+    const [preview, setPreview] = useState<string | undefined>(props.src)
+
+    const fileReader = useMemo(() => {
+        const reader = new FileReader()
 
         reader.onloadend = () => {
-            if(isString(reader.result)) {
-                setPreview(reader.result)
+            const result = reader.result
+            if (isString(result)) {
+                setPreview(result)
             }
         }
+
+        return reader
     }, [])
 
     useEffect(() => setPreview(props.src), [props.src])
 
     function change(e: React.ChangeEvent<HTMLInputElement>) {
-        if(e.target.files) {
+        if (e.target.files) {
             const file = e.target.files[0]
-            if(file) {
-                fileReader.current.readAsDataURL(e.target.files[0])
-            }
-            else {
+            if (file) {
+                fileReader.readAsDataURL(e.target.files[0])
+            } else {
                 setPreview(props.src)
             }
         }
     }
 
+    function remove(e: React.SyntheticEvent) {
+        e.stopPropagation()
+
+        // TODO: only remove if no new file is selected.
+        // Otherwise set preview back to props.src
+        // Remember that this will not reset the input element though since it
+        // is reset only when props.src changes. Resetting it when preview
+        // changes does not work since preview changes once a file is selected
+        // and hence will reset the input incorrectly.
+        call(props.onRemove)
+    }
+
+    const ConfirmationComponent = props.confirmationComponent
     return (
         <Block title="Изображение (снимка)">
-            <label>
-                <input
-                    accept=".png,.jpg,.jpeg"
-                    hidden
-                    name="img"
-                    onChange={change}
-                    ref={props.innerRef}
-                    type="file"
-                />
-                <Button as="span">
-                    Избор
-                </Button>
-            </label>
+            {props.isChangeable && (
+                <label>
+                    <input
+                        accept=".png,.jpg,.jpeg"
+                        hidden
+                        key={props.src}
+                        name="img"
+                        onChange={change}
+                        ref={props.innerRef}
+                        type="file"
+                    />
+                    <Button as="span">Избор</Button>
+                </label>
+            )}
 
-            {preview &&
-                <Preview
-                    onClick={() => setShowLarge(true)}
-                    src={preview}
-                    size="160px"
+            {preview && (
+                <PreviewContainer>
+                    <Preview
+                        onClick={() => setShowLarge(true)}
+                        src={preview}
+                        size="160px"
+                    />
+                    {props.onRemove && (
+                        <StyledRemoveButton
+                            hover={false}
+                            onClick={
+                                ConfirmationComponent
+                                    ? () => setIsConfirming(true)
+                                    : remove
+                            }
+                            size={Size.Slim}
+                        />
+                    )}
+                </PreviewContainer>
+            )}
+            {ConfirmationComponent && props.onRemove && (
+                <ConfirmationComponent
+                    isVisible={isConfirming}
+                    onAccept={props.onRemove}
+                    onClose={() => setIsConfirming(false)}
                 />
-            }
-            {showLarge &&
+            )}
+            {showLarge && (
                 <ImageView
                     closeOnClick
                     onClose={() => setShowLarge(false)}
                     src={preview}
                 />
-            }
+            )}
         </Block>
     )
 }
 
-
-const image = React.forwardRef<HTMLInputElement, OwnProps>(
-    (props, ref) => <ImageInput {...props} innerRef={ref} />
-)
-export { image as ImageInput };
-
+const image = React.forwardRef<HTMLInputElement, OwnProps>((props, ref) => (
+    <ImageInput {...props} innerRef={ref} />
+))
+export {image as ImageInput}
