@@ -1,5 +1,5 @@
-export { createModelComponent } from "./createModelComponent";
-export { getDisplayName } from "./getDisplayName";
-export * from "./types";
 export * from "./createFetcher"
-
+export {createModelComponent} from "./createModelComponent"
+export {getDisplayName} from "./getDisplayName"
+export {isComponentType} from "./isComponentType"
+export * from "./types"
