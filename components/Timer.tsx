@@ -5,7 +5,6 @@ import { useInterval } from "../hooks";
 import { COLOR_CONTRAST, COLOR_DARK, styled } from "../styles";
 import { flex, position } from "../styles/mixins";
 import { call } from "../utility/function";
-import { padStart } from "../utility/string";
 
 const OneSecond = 1_000
 
@@ -91,13 +90,15 @@ const Timer = React.memo(({everySecond, everyMinute, limit, onExpire, paused}: P
         return {left, minutes, seconds}
     }
 
+    const minutes = time.minutes.toString()
+    const seconds = time.seconds.toString()
     return createPortal(
         <Container>
             <Timepiece>
-                {padStart(time.minutes.toString(), 2)}
+                {minutes.padStart(2, "0")}
             </Timepiece>
             <Timepiece>
-                {padStart(time.seconds.toString(), 2)}
+                {seconds.padStart(2, "0")}
             </Timepiece>
         </Container>,
 

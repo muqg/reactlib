@@ -9,7 +9,6 @@ export * from "./isEmail";
 export { isNumeric } from "./isNumeric";
 export * from "./isPhone";
 export { lowerFirst } from "./lowerFirst";
-export { padStart } from "./padStart";
 export { plural } from "./plural";
 export { randomId } from "./randomId";
 export { truncate } from "./truncate";
