@@ -7,7 +7,10 @@ import { localize } from "./localize";
  * @param levelKey The key to the localization level.
  */
 function localizeLevel(levelKey: string): typeof localize {
-    console.warn("localizeLevel is deprecated, use translation hook instead.")
+    if (__DEV__) {
+        console.warn("`localizeLevel` is deprecated. Consider using translation hook instead.")
+    }
+
     if(levelKey.endsWith("."))
         levelKey = levelKey.substring(0, levelKey.length - 1)
 

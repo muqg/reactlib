@@ -31,6 +31,10 @@ interface InjectedModelProps {
  * @param options Model options.
  */
 function createModelComponent(component: React.Component, key = "", {model, ...options}: CreateModelComponentOptions = {}): React.SFC<Props> {
+    if (__DEV__) {
+        console.warn("`createModelComponent` is deprecated. Consider using useModel hook instead.")
+    }
+
     if(!model)
         model = createModel(component, key, options)
 
