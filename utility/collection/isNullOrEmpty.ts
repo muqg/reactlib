@@ -1,5 +1,5 @@
-import { isNullOrUndefined } from "../assertions";
-import { isEmpty } from "./isEmpty";
+import {isNullOrUndefined} from "../assertions"
+import {isEmpty} from "./isEmpty"
 
 /**
  * Tells whether an object or array is null, undefined or empty.
@@ -9,5 +9,4 @@ function isNullOrEmpty(col: object | null | undefined): boolean {
     return isNullOrUndefined(col) || isEmpty(col)
 }
 
-export { isNullOrEmpty };
-
+export {isNullOrEmpty}

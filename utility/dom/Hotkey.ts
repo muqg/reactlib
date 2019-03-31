@@ -1,4 +1,4 @@
-import { clean } from "../collection";
+import {clean} from "../collection"
 
 export class Hotkey {
     /**
@@ -31,7 +31,7 @@ export class Hotkey {
     shift? = false
 
     constructor(data?: Hotkey) {
-        if(data) {
+        if (data) {
             Object.assign(this, clean(data))
         }
     }

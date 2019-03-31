@@ -1,19 +1,16 @@
-import { css } from ".";
-import { Dict } from "../utility";
+import {css} from "."
+import {Dict} from "../utility"
 
 interface Orientation extends Dict<any> {
     landscape: typeof css
     portrait: typeof css
 }
 
-const orientations = [
-    'portrait',
-    'landscape'
-]
+const orientations = ["portrait", "landscape"]
 
 const orientation = {} as Orientation
 
-for(let o of orientations) {
+for (let o of orientations) {
     orientation[o] = (...args: any[]) => {
         const [first, ...rest] = args
         return css`
@@ -24,5 +21,4 @@ for(let o of orientations) {
     }
 }
 
-export { orientation };
-
+export {orientation}

@@ -1,4 +1,4 @@
-import { clamp } from "../number";
+import {clamp} from "../number"
 
 /**
  * Converts an RGB color to its hexadecimal representation.
@@ -11,5 +11,8 @@ export function hexColor(red: number, green: number, blue: number) {
     green = clamp(green, 0, 255)
     blue = clamp(blue, 0, 255)
 
-    return "#" + ((1 << 24) + (red << 16) + (green << 8) + blue).toString(16).slice(1);
+    return (
+        "#" +
+        ((1 << 24) + (red << 16) + (green << 8) + blue).toString(16).slice(1)
+    )
 }

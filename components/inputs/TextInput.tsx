@@ -1,4 +1,4 @@
-import { styled, COLOR_TEXT, COLOR_DARK, COLOR_ACCENT } from "../../styles";
+import {styled, COLOR_TEXT, COLOR_DARK, COLOR_ACCENT} from "../../styles"
 
 interface StyleProps {
     type?: "number" | "password" | "text"
@@ -15,7 +15,7 @@ const TextInput = styled.input`
     color: ${p => p.theme.text || COLOR_TEXT};
     cursor: text;
     padding: 6px 9px;
-    transition: all .1s ease;
+    transition: all 0.1s ease;
 
     ${(p: StyleProps) => p.wide && `width: 100%;`}
 
@@ -30,5 +30,4 @@ const TextInput = styled.input`
 `
 TextInput.displayName = "TextInput"
 
-export { TextInput };
-
+export {TextInput}

@@ -1,10 +1,12 @@
-import { COLOR_DARK, css, styled } from "../../styles";
-import { Size } from "../../utility";
-import { AddButton } from "./AddButton";
-import { ButtonVariant } from "./Button";
-import { IconButtonStyleProps } from "./IconButton";
+import {COLOR_DARK, css, styled} from "../../styles"
+import {Size} from "../../utility"
+import {AddButton} from "./AddButton"
+import {ButtonVariant} from "./Button"
+import {IconButtonStyleProps} from "./IconButton"
 
-type CloseButtonType = React.ComponentType<React.ComponentProps<typeof AddButton> & StyleProps>
+type CloseButtonType = React.ComponentType<
+    React.ComponentProps<typeof AddButton> & StyleProps
+>
 
 interface StyleProps extends IconButtonStyleProps {
     /**
@@ -32,6 +34,4 @@ const CloseButton = styled(AddButton).attrs<StyleProps, StyleProps>(p => ({
 ` as CloseButtonType
 CloseButton.displayName = "CloseButton"
 
-
-export { CloseButton };
-
+export {CloseButton}

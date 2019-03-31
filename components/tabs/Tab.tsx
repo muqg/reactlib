@@ -1,5 +1,4 @@
-import * as React from "react";
-
+import * as React from "react"
 
 interface Tab {
     children?: React.ReactNode
@@ -15,13 +14,7 @@ interface Tab {
 }
 
 const Tab: React.FunctionComponent<Tab> = (props: Tab) => {
-    return (
-        <div className={props.className}>
-            {props.children}
-        </div>
-    )
+    return <div className={props.className}>{props.children}</div>
 }
 
-
-export { Tab };
-
+export {Tab}

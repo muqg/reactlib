@@ -5,5 +5,4 @@ function logInfo(...args: any) {
     console.log("[INFO]", ...args)
 }
 
-export { logInfo };
-
+export {logInfo}

@@ -1,4 +1,4 @@
-import { localize } from "./localize";
+import {localize} from "./localize"
 
 /**
  * Returns a localize function that returns entries relative to a key level that
@@ -8,10 +8,12 @@ import { localize } from "./localize";
  */
 function localizeLevel(levelKey: string): typeof localize {
     if (__DEV__) {
-        console.warn("`localizeLevel` is deprecated. Consider using translation hook instead.")
+        console.warn(
+            "`localizeLevel` is deprecated. Consider using translation hook instead."
+        )
     }
 
-    if(levelKey.endsWith("."))
+    if (levelKey.endsWith("."))
         levelKey = levelKey.substring(0, levelKey.length - 1)
 
     return (key: any, defaultValue = key, ...args: any[]): any => {
@@ -20,4 +22,4 @@ function localizeLevel(levelKey: string): typeof localize {
     }
 }
 
-export { localizeLevel }
+export {localizeLevel}

@@ -5,8 +5,17 @@
  * @param max Maximum value.
  */
 export function clamp(val: number, min: number, max: number) {
-    if(min > max)
-	    [max, min] = [min, max]
+    if (__DEV__) {
+        if (min > max) {
+            console.error(
+                "The `min` argument given for the function `clamp` is greater" +
+                    "than the given `max` argument"
+            )
+        }
+    }
+
+    if (min > max) {
+        ;[max, min] = [min, max]
+    }
     return Math.min(Math.max(val, min), max)
 }
-

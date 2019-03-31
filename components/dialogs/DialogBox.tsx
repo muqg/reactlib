@@ -1,10 +1,10 @@
-import * as React from "react";
-import { COLOR_BACKGROUND, COLOR_DARK, css, styled } from "../../styles";
-import { truncate } from "../../styles/mixins";
-import { Size } from "../../utility";
-import { isFunction } from "../../utility/assertions";
-import { CloseButton } from "../buttons";
-import { Dialog, DialogProps } from "./Dialog";
+import * as React from "react"
+import {COLOR_BACKGROUND, COLOR_DARK, css, styled} from "../../styles"
+import {truncate} from "../../styles/mixins"
+import {Size} from "../../utility"
+import {isFunction} from "../../utility/assertions"
+import {CloseButton} from "../buttons"
+import {Dialog, DialogProps} from "./Dialog"
 
 const SIZE_FACTOR = 320
 
@@ -12,7 +12,7 @@ const Back = styled.div`
     background: black;
     bottom: 0;
     left: 0;
-    opacity: .6;
+    opacity: 0.6;
     position: absolute;
     right: 0;
     top: 0;
@@ -21,7 +21,13 @@ const Back = styled.div`
 const Header = styled.div`
     align-items: center;
     border-bottom: 1px solid;
-    border-image: linear-gradient(to right, transparent, ${p => p.theme.main || COLOR_DARK}, transparent) 1;
+    border-image: linear-gradient(
+            to right,
+            transparent,
+            ${p => p.theme.main || COLOR_DARK},
+            transparent
+        )
+        1;
     display: flex;
     padding: 3px 12px;
 `
@@ -38,7 +44,14 @@ const Container = styled.div`
     max-width: ${p => p.size * SIZE_FACTOR}px;
     width: 100%;
 
-    ${p => p.fixedHeight ? css`height: 90vh;` : css`max-height: 90vh;`}
+    ${p =>
+        p.fixedHeight
+            ? css`
+                  height: 90vh;
+              `
+            : css`
+                  max-height: 90vh;
+              `}
 `
 const Content = styled.div`
     height: 100%;
@@ -64,19 +77,25 @@ export interface DialogBoxProps extends Partial<ContainerStyleProps> {
 
 type Props = DialogBoxProps & DialogProps
 
-const DialogBox: React.ComponentType<Props> = (
-    {children, className, fixedHeight, size = Size.Small, ...props}
-) => {
+const DialogBox: React.ComponentType<Props> = ({
+    children,
+    className,
+    fixedHeight,
+    size = Size.Small,
+    ...props
+}) => {
     return (
         <Dialog {...props}>
-            {close =>
+            {close => (
                 <>
                     <Back onClick={close} />
-                    <Container className={className} fixedHeight={fixedHeight} size={size}>
+                    <Container
+                        className={className}
+                        fixedHeight={fixedHeight}
+                        size={size}
+                    >
                         <Header>
-                            <Title>
-                                {props.title}
-                            </Title>
+                            <Title>{props.title}</Title>
                             {/* Close button becomes deformed due to flex parent without this wrapper. */}
                             <div>
                                 <CloseButton onClick={close} />
@@ -85,16 +104,13 @@ const DialogBox: React.ComponentType<Props> = (
                         <Content>
                             {isFunction<Dialog["children"]>(children)
                                 ? children(close)
-                                : children
-                            }
+                                : children}
                         </Content>
                     </Container>
                 </>
-            }
+            )}
         </Dialog>
     )
 }
 
-
-export { DialogBox };
-
+export {DialogBox}

@@ -4,10 +4,19 @@
  */
 function asFloat(str: string) {
     const res = parseFloat(str)
-    return isNaN(res) ? 0 : res
+    const nan = isNaN(res)
+
+    if (__DEV__) {
+        if (nan) {
+            console.warn(`
+                asFloat function received a string argument that cannot be
+                parsed as a valid number and will instead return 0. There is
+                probably an error in your code's expected input.
+            `)
+        }
+    }
+
+    return nan ? 0 : res
 }
 
-
-export {
-    asFloat
-}
+export {asFloat}

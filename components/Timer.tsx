@@ -1,10 +1,10 @@
-import * as React from "react";
-import { useState } from "react";
-import { createPortal } from "react-dom";
-import { useInterval } from "../hooks";
-import { COLOR_CONTRAST, COLOR_DARK, styled } from "../styles";
-import { flex, position } from "../styles/mixins";
-import { call } from "../utility/function";
+import * as React from "react"
+import {useState} from "react"
+import {createPortal} from "react-dom"
+import {useInterval} from "../hooks"
+import {COLOR_CONTRAST, COLOR_DARK, styled} from "../styles"
+import {flex, position} from "../styles/mixins"
+import {call} from "../utility/function"
 
 const OneSecond = 1_000
 
@@ -26,7 +26,6 @@ const Timepiece = styled.div`
         border-right: 1px solid ${p => p.theme.contrast || COLOR_CONTRAST};
     }
 `
-
 
 interface Props {
     /**
@@ -55,57 +54,48 @@ interface Props {
     paused?: boolean
 }
 
+const Timer = React.memo(
+    ({everySecond, everyMinute, limit, onExpire, paused}: Props) => {
+        const [time, setTime] = useState(getTime(limit))
 
-const Timer = React.memo(({everySecond, everyMinute, limit, onExpire, paused}: Props) => {
-    const [time, setTime] = useState(getTime(limit))
+        // Start (or pause) the timer.
+        useInterval(tick, paused ? null : OneSecond)
 
-    // Start (or pause) the timer.
-    useInterval(
-        tick,
-        paused ? null : OneSecond
-    )
+        function tick() {
+            if (time.left <= 0) return
 
-    function tick() {
-        if(time.left <= 0)
-            return
+            const nextTime = getTime(time.left)
 
-        const nextTime = getTime(time.left)
+            call(everySecond, nextTime.seconds, nextTime.minutes)
+            if (time.minutes > nextTime.minutes) {
+                call(everyMinute, nextTime.seconds, nextTime.minutes)
+            }
+            if (nextTime.left === 0) {
+                call(onExpire)
+            }
 
-        call(everySecond, nextTime.seconds, nextTime.minutes)
-        if(time.minutes > nextTime.minutes) {
-            call(everyMinute, nextTime.seconds, nextTime.minutes)
+            setTime(nextTime)
         }
-        if(nextTime.left === 0) {
-            call(onExpire)
+
+        function getTime(limit: number) {
+            const left = limit - 1
+            const minutes = Math.floor(limit / 60)
+            const seconds = limit % 60
+
+            return {left, minutes, seconds}
         }
 
-        setTime(nextTime)
+        const minutes = time.minutes.toString()
+        const seconds = time.seconds.toString()
+        return createPortal(
+            <Container>
+                <Timepiece>{minutes.padStart(2, "0")}</Timepiece>
+                <Timepiece>{seconds.padStart(2, "0")}</Timepiece>
+            </Container>,
+
+            document.body
+        )
     }
+)
 
-    function getTime(limit: number) {
-        const left = limit - 1
-        const minutes = Math.floor(limit / 60)
-        const seconds = limit % 60
-
-        return {left, minutes, seconds}
-    }
-
-    const minutes = time.minutes.toString()
-    const seconds = time.seconds.toString()
-    return createPortal(
-        <Container>
-            <Timepiece>
-                {minutes.padStart(2, "0")}
-            </Timepiece>
-            <Timepiece>
-                {seconds.padStart(2, "0")}
-            </Timepiece>
-        </Container>,
-
-        document.body
-    )
-})
-
-
-export { Timer };
-
+export {Timer}

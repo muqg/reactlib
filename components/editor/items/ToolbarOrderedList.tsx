@@ -1,21 +1,17 @@
-import * as React from "react";
-import { Editor } from "../../../utility/dom";
-import { ToolbarItem } from "../ToolbarItem";
-import { TOOLBAR_SPRITESHEET } from "../Toolbar";
-import { styled } from "../../../styles";
-
+import * as React from "react"
+import {Editor} from "../../../utility/dom"
+import {ToolbarItem} from "../ToolbarItem"
+import {TOOLBAR_SPRITESHEET} from "../Toolbar"
+import {styled} from "../../../styles"
 
 const StyledToolbarItem = styled(ToolbarItem)`
     background-position-x: -168px;
 `
 
-
-interface Props {
-}
-
+interface Props {}
 
 const ToolbarOrderedList = (_props: Props) => {
-    return(
+    return (
         <StyledToolbarItem
             onClick={Editor.orderedList}
             title="Ordered list"
@@ -24,5 +20,4 @@ const ToolbarOrderedList = (_props: Props) => {
     )
 }
 
-
-export { ToolbarOrderedList };
+export {ToolbarOrderedList}

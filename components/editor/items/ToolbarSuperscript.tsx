@@ -1,18 +1,12 @@
-import * as React from "react";
-import { Editor } from "../../../utility/dom";
-import { ToolbarItem } from "../ToolbarItem";
+import * as React from "react"
+import {Editor} from "../../../utility/dom"
+import {ToolbarItem} from "../ToolbarItem"
 
-
-interface Props {
-}
-
+interface Props {}
 
 const ToolbarSuperscript = (_props: Props) => {
-    return(
-        <ToolbarItem
-            onClick={Editor.superscript}
-            title="Superscript"
-        >
+    return (
+        <ToolbarItem onClick={Editor.superscript} title="Superscript">
             <p>
                 x<sup>2</sup>
             </p>
@@ -20,5 +14,4 @@ const ToolbarSuperscript = (_props: Props) => {
     )
 }
 
-
-export { ToolbarSuperscript };
+export {ToolbarSuperscript}

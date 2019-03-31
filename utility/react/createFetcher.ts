@@ -1,7 +1,8 @@
-import { Dict } from "..";
+import {Dict} from ".."
 
-// @ts-ignore Ignore undefined function on window object
-const requestIdleCallback: ((cb: () => void) => void) | undefined = window.requestIdleCallback
+const requestIdleCallback: ((cb: () => void) => void) | undefined =
+    // @ts-ignore Ignore undefined function on window object
+    window.requestIdleCallback
 
 export interface Fetcher<T, A extends any[] = any> {
     /**
@@ -31,7 +32,7 @@ export interface Fetcher<T, A extends any[] = any> {
 const enum Status {
     Error,
     Pending,
-    Resolved
+    Resolved,
 }
 
 interface Resource<T = any> {
@@ -54,22 +55,22 @@ export function createFetcher<T = any, A extends any[] = any>(
 ): Fetcher<T, A> {
     let storage: Dict<Resource | undefined> = {}
 
-
     function read(...input: A) {
         const resource = accessResource(...input)
-        if(resource.status === Status.Pending || resource.status === Status.Error) {
+        if (
+            resource.status === Status.Pending ||
+            resource.status === Status.Error
+        ) {
             throw resource.value
-        }
-        else {
+        } else {
             return resource.value
         }
     }
 
     function prefetch(...input: A) {
-        if(requestIdleCallback) {
+        if (requestIdleCallback) {
             requestIdleCallback(() => accessResource(...input))
-        }
-        else {
+        } else {
             setTimeout(() => accessResource(...input))
         }
     }
@@ -81,26 +82,25 @@ export function createFetcher<T = any, A extends any[] = any>(
     function accessResource(...input: A): Resource {
         const key = getCacheKey(...input)
         const resource = storage[key]
-        if(resource) {
+        if (resource) {
             return resource
-        }
-        else {
+        } else {
             const request = fetch(...input)
             const newResource: Resource = {
                 status: Status.Pending,
-                value: request
+                value: request,
             }
             storage[key] = newResource
 
             request.then(
                 value => {
-                    if(newResource.status === Status.Pending) {
+                    if (newResource.status === Status.Pending) {
                         newResource.status = Status.Resolved
                         newResource.value = value
                     }
                 },
                 error => {
-                    if(newResource.status === Status.Pending) {
+                    if (newResource.status === Status.Pending) {
                         newResource.status = Status.Error
                         newResource.value = error
                     }
@@ -114,13 +114,12 @@ export function createFetcher<T = any, A extends any[] = any>(
     function write(value: T, ...input: A) {
         const key = getCacheKey(...input)
         let resource = storage[key]
-        if(resource) {
+        if (resource) {
             resource.value = value
-        }
-        else {
+        } else {
             resource = {
                 status: Status.Resolved,
-                value: value
+                value: value,
             }
         }
     }
@@ -139,7 +138,6 @@ export function createFetcher<T = any, A extends any[] = any>(
         prefetch,
         preload,
         read,
-        write
+        write,
     }
 }
-

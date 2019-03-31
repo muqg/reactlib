@@ -1,8 +1,7 @@
 import * as React from "react"
-import {ToolbarItem} from "../ToolbarItem";
-import { Editor } from "../../../utility/dom";
-import { TOOLBAR_SPRITESHEET } from "../Toolbar";
-
+import {ToolbarItem} from "../ToolbarItem"
+import {Editor} from "../../../utility/dom"
+import {TOOLBAR_SPRITESHEET} from "../Toolbar"
 
 interface Props {
     /**
@@ -11,9 +10,8 @@ interface Props {
     handler: (file: File) => string
 }
 
-
 const ToolbarImage = (props: Props) => {
-    return(
+    return (
         <ToolbarItem title="Insert image" backgroundImage={TOOLBAR_SPRITESHEET}>
             <label>
                 {/* TODO: Lib | Implement datatype. */}
@@ -28,14 +26,16 @@ const ToolbarImage = (props: Props) => {
     )
 }
 
-function onChange(event: React.ChangeEvent<HTMLInputElement>, handleImage: Props["handler"]) {
+function onChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+    handleImage: Props["handler"]
+) {
     const target = event.target as HTMLInputElement
-    if(target.files) {
+    if (target.files) {
         const file = target.files[0]
 
         Editor.insertImage(handleImage(file))
     }
 }
-
 
 export {ToolbarImage}

@@ -1,12 +1,21 @@
-import { AlignItemsProperty, FlexDirectionProperty, FlexWrapProperty, JustifyContentProperty, PositionProperty } from "csstype";
-import { css } from ".";
+import {
+    AlignItemsProperty,
+    FlexDirectionProperty,
+    FlexWrapProperty,
+    JustifyContentProperty,
+    PositionProperty,
+} from "csstype"
+import {css} from "."
 
 export function truncate(width?: string) {
     return css`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        ${width && css`width: ${width};`}
+        ${width &&
+            css`
+                width: ${width};
+            `}
     `
 }
 
@@ -14,7 +23,7 @@ export function flex(
     horizontal?: JustifyContentProperty | null,
     vertical?: AlignItemsProperty | null,
     direction?: FlexDirectionProperty | null,
-    wrap?: FlexWrapProperty | null,
+    wrap?: FlexWrapProperty | null
 ) {
     return css`
         ${vertical && `align-items: ${vertical};`}
@@ -25,7 +34,13 @@ export function flex(
     `
 }
 
-export function position(pos: PositionProperty, top?: string, right?: string, bottom?: string, left?: string) {
+export function position(
+    pos: PositionProperty,
+    top?: string,
+    right?: string,
+    bottom?: string,
+    left?: string
+) {
     return css`
         position: ${pos};
         ${top && `top: ${top};`}

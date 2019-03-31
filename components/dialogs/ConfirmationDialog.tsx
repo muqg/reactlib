@@ -1,12 +1,11 @@
-import * as React from "react";
-import { Button, DialogProps } from "..";
-import { styled } from "../../styles";
-import { Omit } from "../../utility";
-import { isUndefined } from "../../utility/assertions";
-import { CHAR_CODE_ENTER } from "../../utility/dom";
-import { call } from "../../utility/function";
-import { DialogBox, DialogBoxProps } from "./DialogBox";
-
+import * as React from "react"
+import {Button, DialogProps} from ".."
+import {styled} from "../../styles"
+import {Omit} from "../../utility"
+import {isUndefined} from "../../utility/assertions"
+import {CHAR_CODE_ENTER} from "../../utility/dom"
+import {call} from "../../utility/function"
+import {DialogBox, DialogBoxProps} from "./DialogBox"
 
 const Container = styled.div`
     padding: 24px 12px;
@@ -18,7 +17,6 @@ const ButtonsContainer = styled.div`
 const StyledButton = styled(Button)`
     margin: 0 6px;
 `
-
 
 interface OwnProps {
     children?: React.ReactNode
@@ -43,14 +41,16 @@ interface OwnProps {
 }
 type Props = OwnProps & DialogProps & Omit<DialogBoxProps, "children">
 
-
-const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}: Props) => {
+const ConfirmationDialog = ({
+    textCancel = "Cancel",
+    textOkay = "Okay",
+    ...props
+}: Props) => {
     const accept = () => {
         const res = call(props.onAccept)
-        const success = !(isUndefined(res)) ? res : true
+        const success = !isUndefined(res) ? res : true
 
-        if(success && props.onClose)
-            props.onClose()
+        if (success && props.onClose) props.onClose()
     }
 
     const reject = () => {
@@ -58,26 +58,33 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
         call(props.onClose)
     }
 
-    const keyDown: DialogProps["onKeyDown"] = (event) => {
-        if(event.keyCode === CHAR_CODE_ENTER)
-            accept()
+    const keyDown: DialogProps["onKeyDown"] = event => {
+        if (event.keyCode === CHAR_CODE_ENTER) accept()
 
         call(props.onKeyDown, event)
     }
 
-    return(
+    return (
         <DialogBox {...props} onKeyDown={keyDown} onClose={reject}>
             {close => {
                 return (
                     <Container>
-                        <div>
-                            {props.children}
-                        </div>
+                        <div>{props.children}</div>
                         <ButtonsContainer>
-                            <StyledButton onClick={() => { accept(); close(); }}>
+                            <StyledButton
+                                onClick={() => {
+                                    accept()
+                                    close()
+                                }}
+                            >
                                 {textOkay}
                             </StyledButton>
-                            <StyledButton onClick={() => { reject(); close(); }}>
+                            <StyledButton
+                                onClick={() => {
+                                    reject()
+                                    close()
+                                }}
+                            >
                                 {textCancel}
                             </StyledButton>
                         </ButtonsContainer>
@@ -87,6 +94,5 @@ const ConfirmationDialog = ({textCancel = "Cancel", textOkay = "Okay", ...props}
         </DialogBox>
     )
 }
-
 
 export default ConfirmationDialog

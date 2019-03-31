@@ -1,6 +1,6 @@
-import { combineReducers, createStore } from "redux";
-import { isEmpty } from "../utility/collection";
-import { initialState } from "./initialState";
+import {combineReducers, createStore} from "redux"
+import {isEmpty} from "../utility/collection"
+import {initialState} from "./initialState"
 
 /**
  * Redux universal store builder class.
@@ -29,8 +29,8 @@ class ReduxFactory {
      * Returns a new store object, using the class' reducers and state.
      */
     getStore() {
-        if(isEmpty(this.reducers))
-            throw("Cannot create a store when there are no reducers.")
+        if (isEmpty(this.reducers))
+            throw "Cannot create a store when there are no reducers."
         const store = createStore(combineReducers(this.reducers), this.state)
 
         // Reset Redux factory before returning the store.
@@ -40,5 +40,4 @@ class ReduxFactory {
 }
 
 const redux = new ReduxFactory()
-export { redux as ReduxFactory };
-
+export {redux as ReduxFactory}

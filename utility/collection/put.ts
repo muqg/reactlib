@@ -1,6 +1,5 @@
-import { pull } from ".";
-import { isArray, isObject } from "../assertions";
-
+import {pull} from "."
+import {isArray, isObject} from "../assertions"
 
 /**
  * Creates an object with an __item__ placed at the provided __key__.
@@ -27,21 +26,24 @@ function put(key: string, item: any, pool: object = {}) {
     const splitKey = key.split(".").filter(k => k)
 
     let result: any = item
-    for(let i = splitKey.length - 1; i >= 0; i--) {
+    for (let i = splitKey.length - 1; i >= 0; i--) {
         const currentKey = splitKey[i]
         const poolItem = pull(pool, splitKey.join(".")) || {}
 
         // If both items are objects then combine them. Otherwise result overwrites the poolItem.
-        if((isObject(result) && !isArray(result)) && (isObject(poolItem) && !isArray(poolItem)))
+        if (
+            isObject(result) &&
+            !isArray(result) &&
+            (isObject(poolItem) && !isArray(poolItem))
+        )
             result = {...poolItem, ...result}
 
         result = {
-            [currentKey]: result
+            [currentKey]: result,
         }
         splitKey.pop()
     }
     return isObject(pool) && !isArray(pool) ? {...pool, ...result} : {...result}
 }
 
-export { put };
-
+export {put}

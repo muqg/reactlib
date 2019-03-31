@@ -1,13 +1,13 @@
-import * as React from "react";
-import { AspectImage, CloseButton, Dialog } from ".";
-import { styled } from "../styles";
-import { position } from "../styles/mixins";
-import { DialogProps } from "./dialogs/Dialog";
+import * as React from "react"
+import {AspectImage, CloseButton, Dialog} from "."
+import {styled} from "../styles"
+import {position} from "../styles/mixins"
+import {DialogProps} from "./dialogs/Dialog"
 
 const Back = styled.div`
     background: black;
     height: 100%;
-    opacity: .75;
+    opacity: 0.75;
     width: 100%;
     z-index: -1;
     ${position("absolute", "0", "", "", "0")}
@@ -20,10 +20,8 @@ interface Props {
     src?: string
 }
 
-
 const ImageView = (props: Props) => {
-    if(!props.src)
-        return null
+    if (!props.src) return null
 
     return (
         <Dialog
@@ -32,7 +30,7 @@ const ImageView = (props: Props) => {
             onKeyDown={e => e.stopPropagation()}
             onClose={props.onClose}
         >
-            {(close) => (
+            {close => (
                 <>
                     <Back onClick={close} />
                     <CloseButton absolute color="#ffffff" onClick={close} />
@@ -47,6 +45,4 @@ const ImageView = (props: Props) => {
     )
 }
 
-
-export { ImageView };
-
+export {ImageView}

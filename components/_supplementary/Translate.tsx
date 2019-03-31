@@ -1,6 +1,6 @@
-import { useContext } from "react";
-import { TranslationContext } from "../../contexts";
-import { translate, TranslateOptions } from "../../__internal__/translate";
+import {useContext} from "react"
+import {TranslationContext} from "../../contexts"
+import {translate, TranslateOptions} from "../../__internal__/translate"
 
 interface Props<T> extends TranslateOptions {
     /**
@@ -14,11 +14,12 @@ interface Props<T> extends TranslateOptions {
     value: string
 }
 
-
-export const Translate = <T extends any = string>({children, value, ...options}: Props<T>) => {
+export const Translate = <T extends any = string>({
+    children,
+    value,
+    ...options
+}: Props<T>) => {
     const translations = useContext(TranslationContext)
-
     const result = translate<T>(translations, value, options)
-
     return children ? children(result) : result
 }

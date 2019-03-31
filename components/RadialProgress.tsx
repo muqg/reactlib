@@ -1,20 +1,25 @@
-﻿import * as React from "react";
-import { COLOR_DARK, COLOR_SUCCESS, COLOR_TEXT, fadedColor, styled, ThemeContext } from "../styles";
-import { Size } from "../utility";
-import { clamp } from "../utility/number";
-import { useContext } from "react";
+﻿import * as React from "react"
+import {
+    COLOR_DARK,
+    COLOR_SUCCESS,
+    COLOR_TEXT,
+    fadedColor,
+    styled,
+    ThemeContext,
+} from "../styles"
+import {Size} from "../utility"
+import {clamp} from "../utility/number"
+import {useContext} from "react"
 
 const SIZE_FACTOR = 48
 const RADIUS_PERCENT = 40
 
-
 const StyledCircle = styled.circle`
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
-    transition: stroke-dashoffset .5s;
-    transition-delay: .15s;
+    transition: stroke-dashoffset 0.5s;
+    transition-delay: 0.15s;
 `
-
 
 interface Props {
     color?: string
@@ -22,7 +27,6 @@ interface Props {
     // Progress percentage.
     value: number
 }
-
 
 function RadialProgress({color, size = Size.Small, value}: Props) {
     const theme = useContext(ThemeContext)
@@ -32,9 +36,9 @@ function RadialProgress({color, size = Size.Small, value}: Props) {
 
     // Determines real size.
     const containerSize = size * SIZE_FACTOR
-    const radius = containerSize * RADIUS_PERCENT / 100
+    const radius = (containerSize * RADIUS_PERCENT) / 100
     const circumference = radius * 2 * Math.PI
-    const offset = circumference - (circumference * value / 100)
+    const offset = circumference - (circumference * value) / 100
 
     return (
         <svg
@@ -73,6 +77,4 @@ function RadialProgress({color, size = Size.Small, value}: Props) {
     )
 }
 
-
-export { RadialProgress };
-
+export {RadialProgress}

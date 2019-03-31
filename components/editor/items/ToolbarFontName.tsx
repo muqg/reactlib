@@ -1,8 +1,7 @@
 import * as React from "react"
-import { ToolbarItem } from "../ToolbarItem";
-import { Editor } from "../../../utility/dom";
-import { styled } from "../../../styles";
-
+import {ToolbarItem} from "../ToolbarItem"
+import {Editor} from "../../../utility/dom"
+import {styled} from "../../../styles"
 
 const FONT_NAMES = [
     "Arial",
@@ -20,15 +19,13 @@ const StyledSelect = styled.select`
     max-width: 120px;
 `
 
-
 interface Props {
     customFonts?: string[]
 }
 
-
 const ToolbarFontName = (props: Props) => {
     const fonts = [...FONT_NAMES, ...(props.customFonts || [])]
-    return(
+    return (
         <ToolbarItem className="input" title="Font name" animateHover={false}>
             <StyledSelect
                 name="tb_font_name"
@@ -45,11 +42,9 @@ const ToolbarFontName = (props: Props) => {
     )
 }
 
-
 function onRightClick(event: React.MouseEvent<HTMLSelectElement>) {
     event.preventDefault()
     Editor.fontName((event.target as HTMLSelectElement).value)
 }
-
 
 export {ToolbarFontName}

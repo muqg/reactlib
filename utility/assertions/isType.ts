@@ -8,4 +8,4 @@ function isType<T>(value: any, assertion: (value: any) => boolean): value is T {
     return assertion(value)
 }
 
-export { isType }
+export {isType}

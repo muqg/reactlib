@@ -1,7 +1,7 @@
-import { put } from "../collection";
-import { cast } from "../string";
-import { ParseableChange, parseElement } from "./parseElement";
-
+import {put} from "../collection"
+import {cast} from "../string"
+import {ParseableInput} from "./parseInputValue"
+import {parseElement} from "./parseElement"
 
 export interface CreateModelOptions {
     /**
@@ -11,7 +11,6 @@ export interface CreateModelOptions {
     cast?: boolean
 }
 
-
 /**
  * Creates a function modelling changes to a nested key of a component's state.
  *
@@ -19,13 +18,17 @@ export interface CreateModelOptions {
  * @param key A nested state model key using "dot notation".
  * @param options Model options.
  */
-function createModel(component: React.Component, key = "", options: CreateModelOptions = {}) {
+function createModel(
+    component: React.Component,
+    key = "",
+    options: CreateModelOptions = {}
+) {
     options = {
         cast: true,
-        ...options
+        ...options,
     }
 
-    return (change: ParseableChange | string, changeVal?: string) => {
+    return (change: ParseableInput | string, changeVal?: string) => {
         const parsed = parseElement(change, changeVal)
 
         const name = parsed.name
@@ -35,10 +38,9 @@ function createModel(component: React.Component, key = "", options: CreateModelO
 
         return {
             name,
-            value
+            value,
         }
     }
 }
 
-export { createModel };
-
+export {createModel}

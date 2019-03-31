@@ -1,14 +1,12 @@
-import * as React from "react";
-import { Dict } from "../utility";
-import { isObject } from "../utility/assertions";
-import { ParseableElement, parseElement } from "../utility/dom";
-import { getDisplayName } from "../utility/react";
-
+import * as React from "react"
+import {Dict} from "../utility"
+import {isObject} from "../utility/assertions"
+import {ParseableElement, parseElement} from "../utility/dom"
+import {getDisplayName} from "../utility/react"
 
 export interface ModelProps<MD extends object = ModelData> {
     readonly model: Model<MD>
 }
-
 
 export interface Model<MD extends object = ModelData> {
     /**
@@ -16,7 +14,7 @@ export interface Model<MD extends object = ModelData> {
      *
      * - The form control must have a name and a value attribute.
      */
-    change(changed: ModelChange): {name: string, value: ModelDataType}
+    change(changed: ModelChange): {name: string; value: ModelDataType}
 
     /**
      * Adds one or more name/value pairs to model's data.
@@ -55,7 +53,6 @@ export type ModelChangeElement = ParseableElement
 export type ModelChangeEvent = React.SyntheticEvent<ModelChangeElement>
 export type ModelChange = ModelChangeEvent | ModelChangeElement
 
-
 /**
  * Enhances a component with model serialization. See ModelProps for more info.
  * @param WrappedComponent The component to be wrapped.
@@ -63,9 +60,8 @@ export type ModelChange = ModelChangeEvent | ModelChangeElement
 function model<OP extends {}, MD extends object = ModelData>(
     WrappedComponent: React.ComponentType<OP & ModelProps<MD>>
 ): React.ComponentType<OP> {
-
     return class extends React.Component<OP, ModelData> {
-        static displayName = getDisplayName('Model', WrappedComponent)
+        static displayName = getDisplayName("Model", WrappedComponent)
 
         state = {} as ModelData
         baseData = {} as ModelData
@@ -75,7 +71,9 @@ function model<OP extends {}, MD extends object = ModelData>(
             super(props)
 
             if (__DEV__) {
-                console.warn("`model` HOC is deprecated. Consider using model hook instead.")
+                console.warn(
+                    "`model` HOC is deprecated. Consider using model hook instead."
+                )
             }
         }
 
@@ -84,11 +82,13 @@ function model<OP extends {}, MD extends object = ModelData>(
         }
 
         change = (changed: ModelChange) => {
-            const element = isObject(changed, Element) ? changed : changed.target as ModelChangeElement
+            const element = isObject(changed, Element)
+                ? changed
+                : (changed.target as ModelChangeElement)
             const parsed = parseElement(element)
 
             this.value({
-                [parsed.name]: parsed.value
+                [parsed.name]: parsed.value,
             })
 
             return {...parsed}
@@ -102,7 +102,7 @@ function model<OP extends {}, MD extends object = ModelData>(
         }
 
         reset = (data: ModelData = {}, merge: boolean = false) => {
-            if(data)
+            if (data)
                 this.baseData = merge ? {...this.baseData, ...data} : {...data}
 
             this.setState(prevState => {
@@ -123,27 +123,29 @@ function model<OP extends {}, MD extends object = ModelData>(
 
         _checkChange = (current: ModelData, incoming: ModelData) => {
             // Avoid checking multiple times on batch calls if already marked as changed.
-            if(!this._changed)
-                this._changed = !Object.keys(incoming).every(k => incoming[k] === current[k])
+            if (!this._changed)
+                this._changed = !Object.keys(incoming).every(
+                    k => incoming[k] === current[k]
+                )
         }
 
         render() {
-             return (
+            return (
                 <WrappedComponent
                     {...this.props}
-                    model={{
-                        data: this.state,
-                        change: this.change,
-                        value: this.value,
-                        reset: this.reset,
-                        hasChanged: this.hasChanged
-                    } as Model<MD>}
+                    model={
+                        {
+                            data: this.state,
+                            change: this.change,
+                            value: this.value,
+                            reset: this.reset,
+                            hasChanged: this.hasChanged,
+                        } as Model<MD>
+                    }
                 />
-             )
+            )
         }
     }
 }
 
-
-export { model };
-
+export {model}

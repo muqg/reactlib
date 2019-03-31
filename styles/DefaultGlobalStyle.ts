@@ -1,5 +1,5 @@
-import { COLOR_BACKGROUND, COLOR_TEXT } from "./colours";
-import { createGlobalStyle } from "./styled-components";
+import {COLOR_BACKGROUND, COLOR_TEXT} from "./colours"
+import {createGlobalStyle} from "./styled-components"
 
 export const DefaultGlobalStyle = createGlobalStyle`
     * {
@@ -38,4 +38,3 @@ export const DefaultGlobalStyle = createGlobalStyle`
         text-decoration: none;
     }
 `
-

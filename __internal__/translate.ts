@@ -1,7 +1,7 @@
-import { Dict } from "../utility";
-import { isArray, isString, isUndefined } from "../utility/assertions";
-import { pull } from "../utility/collection";
-import { format, FormatArgument, plural } from "../utility/string";
+import {Dict} from "../utility"
+import {isArray, isString, isUndefined} from "../utility/assertions"
+import {pull} from "../utility/collection"
+import {format, FormatArgument, plural} from "../utility/string"
 
 export interface TranslateOptions {
     /**
@@ -16,26 +16,32 @@ export interface TranslateOptions {
     count?: number
 }
 
-function translate<T extends any = string>(translations: Dict<any>, key: string, options: TranslateOptions) : T {
+function translate<T extends any = string>(
+    translations: Dict<any>,
+    key: string,
+    options: TranslateOptions
+): T {
     let result = pull(translations, key) || key
 
-    if(result === key)
+    if (result === key) {
         console.error("No translation value found for key: " + key)
+    }
 
-    if(isString(result) && options) {
-        if(options.args) {
-            if(isArray(options.args))
+    if (isString(result) && options) {
+        if (options.args) {
+            if (isArray(options.args)) {
                 result = format(result, ...options.args)
-            else
+            } else {
                 result = format(result, options.args)
+            }
         }
 
-        if(!isUndefined(options.count))
+        if (!isUndefined(options.count)) {
             result = plural(result, options.count)
+        }
     }
 
     return result
 }
 
-export { translate };
-
+export {translate}

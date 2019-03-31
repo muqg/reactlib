@@ -1,6 +1,5 @@
-import * as React from "react";
-import { COLOR_BACKGROUND, COLOR_SUCCESS, css, styled } from "../styles";
-
+import * as React from "react"
+import {COLOR_BACKGROUND, COLOR_SUCCESS, css, styled} from "../styles"
 
 const Container = styled.label`
     cursor: pointer;
@@ -18,50 +17,45 @@ const Background = styled.span`
     display: inline-block;
     height: 100%;
     position: relative;
-    transition: all .2s;
+    transition: all 0.2s;
     width: 100%;
 
     &:after {
         background: ${p => p.theme.background || COLOR_BACKGROUND};
         border-radius: 50%;
         box-shadow: 0 0 3px ${p => p.theme.text};
-        content: '';
+        content: "";
         height: 110%;
         left: 0;
         position: absolute;
         top: -5%;
-        transition: all .2s;
+        transition: all 0.2s;
         width: 55%;
     }
 
     ${(p: StyleProps) =>
         p.disabled
-        ?
-        css`
-            opacity: .3;
-        `
-        :
-        css`
-            &:active:after {
-                width: 65%;
-            }
+            ? css`
+                  opacity: 0.3;
+              `
+            : css`
+                  &:active:after {
+                      width: 65%;
+                  }
 
-            input:checked ~ & {
-                background: ${p => p.theme.success || COLOR_SUCCESS};
-            }
+                  input:checked ~ & {
+                      background: ${p => p.theme.success || COLOR_SUCCESS};
+                  }
 
-            input:checked ~ &:after {
-                left: 45%;
-            }
+                  input:checked ~ &:after {
+                      left: 45%;
+                  }
 
-            input:checked ~ &:active:after {
-                left: 35%;
-            }
-        `
-    }
-
+                  input:checked ~ &:active:after {
+                      left: 35%;
+                  }
+              `}
 `
-
 
 interface StyleProps {
     disabled?: boolean
@@ -75,19 +69,13 @@ interface Props {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-
 const Switch = (props: Props) => {
-    return(
+    return (
         <Container className={props.className}>
-            <input
-                {...props}
-                type="checkbox"
-            />
+            <input {...props} type="checkbox" />
             <Background />
         </Container>
     )
 }
 
-
-export { Switch };
-
+export {Switch}

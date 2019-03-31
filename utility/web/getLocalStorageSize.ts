@@ -10,8 +10,7 @@ function getLocalStorageSize() {
         ""
     )
 
-    return content ? 3 + ((content.length * 16) / (8 * 1024)) : 0;
+    return content ? 3 + (content.length * 16) / (8 * 1024) : 0
 }
 
-export { getLocalStorageSize };
-
+export {getLocalStorageSize}

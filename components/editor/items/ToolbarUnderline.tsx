@@ -1,19 +1,15 @@
-import * as React from "react";
-import {ToolbarItem} from "../ToolbarItem";
-import { Editor } from "../../../utility/dom";
+import * as React from "react"
+import {ToolbarItem} from "../ToolbarItem"
+import {Editor} from "../../../utility/dom"
 
-
-interface Props {
-}
-
+interface Props {}
 
 const ToolbarUnderline = (_props: Props) => {
-    return(
+    return (
         <ToolbarItem onClick={Editor.underline} title="Underline">
             <u>U</u>
         </ToolbarItem>
     )
 }
-
 
 export {ToolbarUnderline}

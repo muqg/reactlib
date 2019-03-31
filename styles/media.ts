@@ -1,5 +1,5 @@
-import { Dict } from "../utility";
-import { css } from "./styled-components";
+import {Dict} from "../utility"
+import {css} from "./styled-components"
 
 interface Media extends Dict<any> {
     /**
@@ -34,7 +34,7 @@ const widths: Dict<number> = {
     tablet: 961,
     smallTablet: 641,
     mobile: 481,
-    smallMobile: 321
+    smallMobile: 321,
 }
 
 const media = {} as Media
@@ -50,4 +50,4 @@ Object.entries(widths).forEach(([key, value]) => {
     }
 })
 
-export { media };
+export {media}

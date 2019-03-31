@@ -1,12 +1,10 @@
-import { clamp } from "../number";
-import { capitalize } from "../string";
-import { Dict } from "../type";
-
+import {clamp} from "../number"
+import {capitalize} from "../string"
+import {Dict} from "../type"
 
 type AlignPosition = "left" | "right" | "center" | "full"
 type FontSize = 1 | 2 | 3 | 4 | 5 | 6 | 7
 type HeadingSize = 1 | 2 | 3 | 4 | 5 | 6
-
 
 /**
  * TODO: Lib | Implement Editor.getSelectionStyle()
@@ -30,7 +28,6 @@ export interface SelectionStyle extends Dict<string | boolean> {
     lineHeight: string
 }
 
-
 // TODO: Lib | Implement fontSize to receive px input and set text's size
 // in em such as f(em = px / 16).
 
@@ -40,7 +37,7 @@ class Editor {
     private lastSelectionRange: Range | null = null
 
     constructor() {
-        this.exec("defaultParagraphSeparator", "p");
+        this.exec("defaultParagraphSeparator", "p")
     }
 
     /**
@@ -78,16 +75,19 @@ class Editor {
      * @param newValue The new value to compare against.
      * @param attrName The name of the attribute to be modified and checked.
      */
-    private modifyFontValue(command: string, newValue: string, attrName: string) {
+    private modifyFontValue(
+        command: string,
+        newValue: string,
+        attrName: string
+    ) {
         const currentValue = this.val(command)
-        if(newValue !== currentValue) {
+        if (newValue !== currentValue) {
             this.exec(command, newValue)
-        }
-        else {
+        } else {
             const fontElement = this.getSelectedNode() as HTMLFontElement
-            if(fontElement.nodeName === "FONT") {
+            if (fontElement.nodeName === "FONT") {
                 fontElement.removeAttribute(attrName)
-                if(!fontElement.attributes.length)
+                if (!fontElement.attributes.length)
                     this.unwrapNodeText(fontElement)
             }
         }
@@ -104,7 +104,8 @@ class Editor {
      * Returns the node that contains the current selection.
      */
     getSelectedNode() {
-        return window.getSelection().getRangeAt(0).startContainer.parentNode as Node
+        return window.getSelection().getRangeAt(0).startContainer
+            .parentNode as Node
     }
 
     /**
@@ -112,8 +113,8 @@ class Editor {
      * - __NOTE__: Selection should be saved before calling a styling method.
      */
     saveSelection(): void {
-        const selection = window.getSelection();
-        this.lastSelectionRange = selection.getRangeAt(0);
+        const selection = window.getSelection()
+        this.lastSelectionRange = selection.getRangeAt(0)
     }
 
     /**
@@ -121,16 +122,13 @@ class Editor {
      * - Method is automatically called before executing any styling method.
      */
     restoreSelection(): void {
-        if(!this.lastSelectionRange)
-            return
+        if (!this.lastSelectionRange) return
 
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(this.lastSelectionRange);
+        const selection = window.getSelection()
+        selection.removeAllRanges()
+        selection.addRange(this.lastSelectionRange)
         this.lastSelectionRange = null
     }
-
-
 
     // ===========================
     // Command wrappers start here.
@@ -163,10 +161,8 @@ class Editor {
     createLink = (url: string = "#") => {
         const container = this.getSelectedNode() as HTMLElement
         const isLink = container.nodeName === "A"
-        if(!isLink)
-            this.exec("createLink", url)
-        else
-            this.unwrapNodeText(container)
+        if (!isLink) this.exec("createLink", url)
+        else this.unwrapNodeText(container)
     }
 
     /**
@@ -314,7 +310,5 @@ class Editor {
     }
 }
 
-
 const editor = new Editor()
-export { editor as Editor, };
-
+export {editor as Editor}

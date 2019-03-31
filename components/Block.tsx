@@ -1,6 +1,6 @@
-import * as React from "react";
-import { css, styled } from "../styles";
-import { Size } from "../utility";
+import * as React from "react"
+import {css, styled} from "../styles"
+import {Size} from "../utility"
 
 const MARGIN_SIZE_FACTOR = 12
 const WIDTH_SIZE_FACTOR = 320
@@ -21,13 +21,15 @@ const Container = styled.div`
     position: relative;
 
     ${p => p.center && center}
-    ${p => p.width && css`
-        max-width: ${p.width * WIDTH_SIZE_FACTOR}px;
-        width: 100%;
-    `}
+    ${p =>
+        p.width &&
+        css`
+            max-width: ${p.width * WIDTH_SIZE_FACTOR}px;
+            width: 100%;
+        `}
 `
 Container.defaultProps = {
-    margin: Size.Small
+    margin: Size.Small,
 }
 
 const Title = styled.h4`
@@ -48,7 +50,6 @@ interface StyleProps {
 
 type Props = React.ComponentProps<typeof Container>
 
-
 const Block = ({children, title, ...props}: Props) => {
     return (
         <Container {...props}>
@@ -58,6 +59,4 @@ const Block = ({children, title, ...props}: Props) => {
     )
 }
 
-
-export { Block };
-
+export {Block}

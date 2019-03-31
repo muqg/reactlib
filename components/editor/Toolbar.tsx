@@ -1,8 +1,7 @@
-import * as React from "react";
-import { createPortal } from "react-dom";
-import { COLOR_MAIN, styled } from "../../styles";
-import { flex, position } from "../../styles/mixins";
-
+import * as React from "react"
+import {createPortal} from "react-dom"
+import {COLOR_MAIN, styled} from "../../styles"
+import {flex, position} from "../../styles/mixins"
 
 export const TOOLBAR_SPRITESHEET = "/img/toolbar.png"
 
@@ -27,7 +26,6 @@ const ToolbarContainer = styled.div`
     ${flex("center", null, "row", "wrap")}
 `
 
-
 interface Props {
     children?: any
     className?: string
@@ -46,14 +44,11 @@ interface Props {
     imageHandler?: (file: File) => string
 }
 
-
 function Toolbar({children, className}: Props) {
     return createPortal(
         <ToolbarWrapper className={className}>
             <div>
-                <ToolbarContainer>
-                    {children}
-                </ToolbarContainer>
+                <ToolbarContainer>{children}</ToolbarContainer>
             </div>
         </ToolbarWrapper>,
 
@@ -61,6 +56,4 @@ function Toolbar({children, className}: Props) {
     )
 }
 
-
-export { Toolbar };
-
+export {Toolbar}

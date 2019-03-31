@@ -1,18 +1,17 @@
-import * as React from "react";
-import { useContext, useEffect, useState } from "react";
-import { COLOR_DARK, css, styled, ThemeContext } from "../../styles";
-import { call } from "../../utility/function";
-
+import * as React from "react"
+import {useContext, useEffect, useState} from "react"
+import {COLOR_DARK, css, styled, ThemeContext} from "../../styles"
+import {call} from "../../utility/function"
 
 const spanCommon = css`
     background: ${(p: StyleProps) => p.color};
     border-radius: 1px;
-    content: '';
+    content: "";
     display: inline-block;
     height: 2px;
     left: 0;
     position: absolute;
-    transition: all .3s;
+    transition: all 0.3s;
     width: inherit;
 `
 const activeStyle = css`
@@ -53,7 +52,6 @@ const StyledButton = styled.button`
     ${p => p.active && activeStyle}
 `
 
-
 interface StyleProps {
     color: string
     /**
@@ -76,7 +74,6 @@ interface OwnProps {
 
 type Props = OwnProps & StyleProps
 
-
 function SandwichButton({active = false, color, size = 30, ...props}: Props) {
     const theme = useContext(ThemeContext)
     color = color || theme.main || COLOR_DARK
@@ -84,8 +81,7 @@ function SandwichButton({active = false, color, size = 30, ...props}: Props) {
     const [isActive, setIsActive] = useState(active)
     useEffect(() => {
         // Avoids some unnecessary renders and possible infinite loops.
-        if(active !== isActive)
-            setIsActive(active)
+        if (active !== isActive) setIsActive(active)
     }, [active])
 
     function handleClick(event: React.MouseEvent<any>) {
@@ -103,11 +99,9 @@ function SandwichButton({active = false, color, size = 30, ...props}: Props) {
             onClick={handleClick}
             size={size}
         >
-            <span></span>
+            <span />
         </StyledButton>
     )
 }
 
-
-export { SandwichButton };
-
+export {SandwichButton}

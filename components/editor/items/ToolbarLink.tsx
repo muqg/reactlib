@@ -1,30 +1,26 @@
-import * as React from "react";
-import { styled } from "../../../styles";
-import { Editor } from "../../../utility/dom";
-import ConfirmationDialog from "../../dialogs/ConfirmationDialog";
-import { TextInput } from "../../inputs";
-import { TOOLBAR_SPRITESHEET } from "../Toolbar";
-import { ToolbarItem } from "../ToolbarItem";
-
+import * as React from "react"
+import {styled} from "../../../styles"
+import {Editor} from "../../../utility/dom"
+import ConfirmationDialog from "../../dialogs/ConfirmationDialog"
+import {TextInput} from "../../inputs"
+import {TOOLBAR_SPRITESHEET} from "../Toolbar"
+import {ToolbarItem} from "../ToolbarItem"
 
 const StyledToolbarItem = styled(ToolbarItem)`
     background-position-x: -144px;
 `
 
-
-interface Props {
-}
+interface Props {}
 interface State {
     isDialogVisible: boolean
 }
-
 
 /**
  * TODO: Lib | Allow link to be removed with right click.
  */
 class ToolbarLink extends React.PureComponent<Props, State> {
     state = {
-        isDialogVisible: false
+        isDialogVisible: false,
     }
     inputRef = React.createRef<any>()
 
@@ -34,10 +30,9 @@ class ToolbarLink extends React.PureComponent<Props, State> {
 
     accept = () => {
         const input = this.inputRef.current
-        if(input) {
+        if (input) {
             const value = input.value
-            if(!value.length)
-                return false
+            if (!value.length) return false
 
             Editor.createLink(value)
             return true
@@ -59,13 +54,15 @@ class ToolbarLink extends React.PureComponent<Props, State> {
                     visibilityChange={this.toggleDialog}
                     title="Въведи линк:"
                 >
-                    <TextInput placeholder="https://example.com" ref={this.inputRef} wide />
+                    <TextInput
+                        placeholder="https://example.com"
+                        ref={this.inputRef}
+                        wide
+                    />
                 </ConfirmationDialog>
             </StyledToolbarItem>
         )
     }
 }
 
-
-export { ToolbarLink };
-
+export {ToolbarLink}

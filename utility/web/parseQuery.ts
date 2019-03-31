@@ -5,13 +5,11 @@
 export function parseQuery(query: string): object {
     query = query.replace("?", "")
 
-    if(!query)
-        return {}
+    if (!query) return {}
 
     // Replace '&' and '=' with "," and ":" respectively.
-    const replacedQuery = query.replace(/&/g, '","').replace(/=/g,'":"')
-    return JSON.parse(
-        '{"' + replacedQuery + '"}',
-        (key, value) => key === "" ? value : decodeURIComponent(value)
+    const replacedQuery = query.replace(/&/g, '","').replace(/=/g, '":"')
+    return JSON.parse('{"' + replacedQuery + '"}', (key, value) =>
+        key === "" ? value : decodeURIComponent(value)
     )
 }

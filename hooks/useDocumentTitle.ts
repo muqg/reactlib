@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import {useEffect} from "react"
 
 /**
  * Sets the document title to the given one. On unmount it
@@ -11,10 +11,10 @@ function useDocumentTitle(title: string) {
         const prevTitle = document.title
         document.title = title
 
-        return () => {document.title = prevTitle}
+        return () => {
+            document.title = prevTitle
+        }
     }, [title])
 }
 
-
-export { useDocumentTitle };
-
+export {useDocumentTitle}

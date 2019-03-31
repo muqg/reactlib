@@ -1,6 +1,5 @@
-import * as React from "react";
-import { COLOR_DARK, COLOR_MAIN, css, styled } from "../../styles";
-
+import * as React from "react"
+import {COLOR_DARK, COLOR_MAIN, css, styled} from "../../styles"
 
 const withImage = css`
     background: url('${(p: Props) => p.backgroundImage}') no-repeat;
@@ -25,21 +24,20 @@ const Container = styled.div`
     line-height: 24px;
     margin: 0 2px;
     min-width: 24px;
-    transition-duration: .1s;
+    transition-duration: 0.1s;
     transition-property: background, color, transform;
 
     ${(p: Props) => p.backgroundImage && withImage}
 
-    ${p => (p.animateHover && !p.backgroundImage) && withHover}
+    ${p => p.animateHover && !p.backgroundImage && withHover}
 
     &:active {
-        transform: translate(1px)
+        transform: translate(1px);
     }
 `
 Container.defaultProps = {
-    animateHover: true
+    animateHover: true,
 }
-
 
 interface Props {
     animateHover?: boolean
@@ -50,9 +48,8 @@ interface Props {
     title?: string
 }
 
-
 const ToolbarItem = (props: Props) => {
-    return(
+    return (
         <Container
             className={props.className}
             onClick={props.onClick}
@@ -65,6 +62,4 @@ const ToolbarItem = (props: Props) => {
     )
 }
 
-
-export { ToolbarItem };
-
+export {ToolbarItem}

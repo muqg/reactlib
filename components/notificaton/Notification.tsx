@@ -1,34 +1,36 @@
-import * as React from "react";
-import { useContext, useEffect, useRef, useState } from "react";
-import { NotificationContext } from "../../contexts";
-import { COLOR_CONTRAST, COLOR_DARK, css, styled } from "../../styles";
-import { Omit } from "../../utility";
-
+import * as React from "react"
+import {useContext, useEffect, useRef, useState} from "react"
+import {NotificationContext} from "../../contexts"
+import {COLOR_CONTRAST, COLOR_DARK, css, styled} from "../../styles"
+import {Omit} from "../../utility"
 
 const NOTIFICATION_DURATION = 2_000
-
 
 const Wrapper = styled.div`
     border-radius: 4px;
     bottom: 0;
-    box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12);
+    box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+        0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+        0px 1px 18px 0px rgba(0, 0, 0, 0.12);
     left: 50%;
     position: fixed;
     transform: translate(-50%, 110%);
-    transition: all .25s cubic-bezier(0, 0, 0.2, 1);
+    transition: all 0.25s cubic-bezier(0, 0, 0.2, 1);
     z-index: 1400;
 
-    ${(p: StyleProps) => p.active && css`
-        transform: translate(-50%, 0);
-    `}
+    ${(p: StyleProps) =>
+        p.active &&
+        css`
+            transform: translate(-50%, 0);
+        `}
 `
 const Container = styled.div.attrs<StyleProps, StyleProps>(p => ({
     background: p.background || p.theme.main || COLOR_DARK,
-    color: p.color || p.theme.contrast || COLOR_CONTRAST
+    color: p.color || p.theme.contrast || COLOR_CONTRAST,
 }))`
     background: ${p => p.background};
     color: ${p => p.color};
-    font-size: .9rem;
+    font-size: 0.9rem;
     letter-spacing: 0.01071em;
     min-width: 280px;
     max-width: 420px;
@@ -65,7 +67,7 @@ function Notification(props: NotificationProps) {
     const timeout = useRef(-1)
 
     useEffect(() => {
-        if(props.content) {
+        if (props.content) {
             setQueue(queue => [...queue, props])
             /**
              * Reset the props coming from above. Since this is the only component
@@ -77,7 +79,7 @@ function Notification(props: NotificationProps) {
     }, [props.content])
 
     useEffect(() => {
-        if(!current.content && queue.length) {
+        if (!current.content && queue.length) {
             const [next, ...rest] = queue
 
             setCurrent(next)
@@ -88,7 +90,10 @@ function Notification(props: NotificationProps) {
                  * Resetting only content here prevents
                  * flashing of notification's default styling.
                  */
-                () => setCurrent(c => { return {...c, content: ""}}),
+                () =>
+                    setCurrent(c => {
+                        return {...c, content: ""}
+                    }),
                 next.duration || NOTIFICATION_DURATION
             ) as any
         }
@@ -102,13 +107,9 @@ function Notification(props: NotificationProps) {
 
     return (
         <Wrapper active={!!current.content}>
-            <Container {...current}>
-                {current.content}
-            </Container>
+            <Container {...current}>{current.content}</Container>
         </Wrapper>
     )
 }
 
-
-export { Notification };
-
+export {Notification}

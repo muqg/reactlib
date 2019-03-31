@@ -1,5 +1,5 @@
-import { initialState } from ".";
-import { def } from "../utility/assertions";
+import {initialState} from "."
+import {def} from "../utility/assertions"
 
 const CONFIG_STATE_KEY = "config"
 
@@ -22,7 +22,10 @@ function config(key: string, defaultString: string): string
  * @param key Key to the config array, using dot notation
  * @param defaultArray Default value to use if array is not found at this key.
  */
-function config<T extends Array<any> = Array<any>>(key: string, defaultArray: Array<any>): T
+function config<T extends Array<any> = Array<any>>(
+    key: string,
+    defaultArray: Array<any>
+): T
 /**
  * Returns a boolean configuration value or throws an error if the found value is
  * not of this type or is missing.
@@ -43,7 +46,10 @@ function config(key: string, defaultNumber: number): number
  * @param key Key to the config object, using dot notation
  * @param defaultObject Default value to use if object is not found at this key.
  */
-function config<T extends object = object>(key: string, defaultBoolean: object): T
+function config<T extends object = object>(
+    key: string,
+    defaultBoolean: object
+): T
 
 function config(key: any, defaultValue: any = ""): any {
     key = key ? `${CONFIG_STATE_KEY}.${key}` : CONFIG_STATE_KEY
@@ -51,10 +57,8 @@ function config(key: any, defaultValue: any = ""): any {
 
     // Configuration value is either not of the searched type
     // or is missing and should be applied with a fix.
-    if(result === defaultValue)
-        throw "Config error for key: " + key
+    if (result === defaultValue) throw "Config error for key: " + key
     return result
 }
 
-export { config };
-
+export {config}

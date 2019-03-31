@@ -1,3 +1,2 @@
-export { Tab } from "./Tab";
-export { TabView } from "./TabView";
-
+export {Tab} from "./Tab"
+export {TabView} from "./TabView"

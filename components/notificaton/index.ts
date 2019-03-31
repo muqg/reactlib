@@ -1,1 +1,1 @@
-export { Notifiable, Notify } from "./Notifiable";
+export {Notifiable, Notify} from "./Notifiable"

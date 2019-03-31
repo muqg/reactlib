@@ -1,5 +1,5 @@
-import { request } from ".";
-import { RequestMethod } from "..";
+import {request} from "."
+import {RequestMethod} from ".."
 
 export interface Endpoint<T extends object = object> {
     all: () => Promise<T[]>
@@ -11,23 +11,20 @@ export interface Endpoint<T extends object = object> {
 
 function createEndpoint<T extends object>(url: string) {
     return {
-        all: () =>
-            request<T[]>(RequestMethod.GET, url),
+        all: () => request<T[]>(RequestMethod.GET, url),
 
-        create: (data: T) =>
-            request<T>(RequestMethod.POST, url, data),
+        create: (data: T) => request<T>(RequestMethod.POST, url, data),
 
-        delete: async (id: number | string) =>
-            { await request(RequestMethod.DELETE, `${url}/${id}`) },
+        delete: async (id: number | string) => {
+            await request(RequestMethod.DELETE, `${url}/${id}`)
+        },
 
         get: (id: number | string) =>
             request<T>(RequestMethod.GET, `${url}/${id}`),
 
         save: (id: number | string, data: Partial<T>) =>
-            request<T>(RequestMethod.PUT, `${url}/${id}`, data)
+            request<T>(RequestMethod.PUT, `${url}/${id}`, data),
     }
 }
 
-
-export { createEndpoint };
-
+export {createEndpoint}

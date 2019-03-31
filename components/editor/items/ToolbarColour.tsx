@@ -1,30 +1,26 @@
-import * as React from "react";
-import { Color } from "../../../utility";
-import { Editor, rgbColor } from "../../../utility/dom";
-import {ToolbarItem} from "../ToolbarItem";
-import { styled } from "../../../styles";
-
+import * as React from "react"
+import {Color} from "../../../utility"
+import {Editor, rgbColor} from "../../../utility/dom"
+import {ToolbarItem} from "../ToolbarItem"
+import {styled} from "../../../styles"
 
 const StyledInput = styled.input`
     border: none;
     width: 24px;
 `
 
-
-interface Props {
-}
+interface Props {}
 interface State {
     color: Color
 }
-
 
 class ToolbarColour extends React.PureComponent<Props, State> {
     state = {
         color: {
             red: 0,
             green: 0,
-            blue: 0
-        } as Color
+            blue: 0,
+        } as Color,
     }
 
     // TODO: Lib | Implement to be Word-like color select.
@@ -45,8 +41,8 @@ class ToolbarColour extends React.PureComponent<Props, State> {
             <ToolbarItem className="color" title="Font colour">
                 <StyledInput
                     type="color"
-                    onChange={(e) => this.colorChange(e) }
-                    onContextMenu={(e) => {
+                    onChange={e => this.colorChange(e)}
+                    onContextMenu={e => {
                         e.preventDefault()
                         this.setTextColor(this.state.color)
                     }}
@@ -55,6 +51,5 @@ class ToolbarColour extends React.PureComponent<Props, State> {
         )
     }
 }
-
 
 export {ToolbarColour}

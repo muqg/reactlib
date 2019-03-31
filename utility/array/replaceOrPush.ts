@@ -1,4 +1,4 @@
-import { _replaceValue } from "./_replaceValue";
+import {_replaceValue} from "./_replaceValue"
 
 /**
  * Attempts to replace an array entry that meets a search condition with the
@@ -9,14 +9,16 @@ import { _replaceValue } from "./_replaceValue";
  * @param value The replacement/pushed value.
  */
 
-function replaceOrPush<T>(arr: Array<T>, search: (el: T) => boolean, value: T): Array<T> {
+function replaceOrPush<T>(
+    arr: Array<T>,
+    search: (el: T) => boolean,
+    value: T
+): Array<T> {
     arr = [...arr]
 
-    if(!_replaceValue(arr, search, value))
-        arr.push(value)
+    if (!_replaceValue(arr, search, value)) arr.push(value)
 
     return arr
 }
 
-
-export { replaceOrPush };
+export {replaceOrPush}

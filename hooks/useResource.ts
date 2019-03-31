@@ -1,16 +1,19 @@
-import { useContext, useEffect, useState } from "react";
-import { Model, useModel } from ".";
-import { NotificationContext } from "../contexts";
-import { RequestMethod } from "../utility";
-import { isString } from "../utility/assertions";
-import { call } from "../utility/function";
-import { request } from "../utility/web";
+import {useContext, useEffect, useState} from "react"
+import {Model, useModel} from "."
+import {NotificationContext} from "../contexts"
+import {RequestMethod} from "../utility"
+import {isString} from "../utility/assertions"
+import {call} from "../utility/function"
+import {request} from "../utility/web"
 
 export interface ResourceProps<T extends object = object> {
     /**
      * Called when an exception occurs both for save and delete.
      */
-    catch?: (exception: any, resource: T) => string | void | Promise<string | void>
+    catch?: (
+        exception: any,
+        resource: T
+    ) => string | void | Promise<string | void>
     /**
      * Default data for the resource. Used when a new one is being created
      * and also when a resource is deleted and the data should be reset.
@@ -72,10 +75,10 @@ export interface ResourceManager<T extends object = object> {
     save: () => void
 }
 
-
-function useResource<T extends object>(
-    {url = document.location!.href, ...props}: ResourceProps<T>
-): ResourceManager<T> {
+function useResource<T extends object>({
+    url = document.location!.href,
+    ...props
+}: ResourceProps<T>): ResourceManager<T> {
     const [isWorking, setIsWorking] = useState(false)
     const model = useModel(props.default)
     const notify = useContext(NotificationContext)
@@ -83,10 +86,9 @@ function useResource<T extends object>(
     const resUrl = url + "/" + props.id
 
     useEffect(() => {
-        if(props.id) {
+        if (props.id) {
             _work(async () => await request<T>(RequestMethod.GET, resUrl))
-        }
-        else {
+        } else {
             // Resetting resource outside of the worker
             // wrapper skips an unnecessary render.
             // Use setTimeout to push it to the end of the execution queue
@@ -98,14 +100,17 @@ function useResource<T extends object>(
     async function save() {
         await _work(async () => {
             const resource = model.$data
-            if(_error(call(props.saving, resource)))
-                return
+            if (_error(call(props.saving, resource))) return
 
             const method = props.id ? RequestMethod.PUT : RequestMethod.POST
             const requestURL = method === RequestMethod.PUT ? resUrl : url
 
             const nextResource = (async () => {
-                const response = await request<Partial<T>>(method, requestURL, resource)
+                const response = await request<Partial<T>>(
+                    method,
+                    requestURL,
+                    resource
+                )
                 return {...resource, ...response}
             })()
 
@@ -120,12 +125,10 @@ function useResource<T extends object>(
 
     async function del() {
         await _work(async () => {
-            if(!props.id)
-                return
+            if (!props.id) return
 
             const resource = model.$data
-            if(_error(call(props.deleting, resource)))
-                return
+            if (_error(call(props.deleting, resource))) return
 
             const response = request(RequestMethod.DELETE, resUrl, resource)
 
@@ -139,7 +142,7 @@ function useResource<T extends object>(
     }
 
     function _error(err: string | void) {
-        if(isString(err)) {
+        if (isString(err)) {
             notify(err)
             return true
         }
@@ -148,27 +151,25 @@ function useResource<T extends object>(
 
     async function _work(worker: () => Promise<T | void>) {
         // This will prevent sending duplicate requests.
-        if(isWorking)
-            return
+        if (isWorking) return
 
-	    let resource = model.$data
+        let resource = model.$data
         setIsWorking(true)
         try {
             const response = await worker()
-            if(response) {
+            if (response) {
                 model.$set(response)
                 resource = response
             }
             setIsWorking(false)
-        }
-        catch(ex) {
+        } catch (ex) {
             /**
              * Stop working before attempting to handle exception in order
              * to allow for a complete recovery within the handler.
              */
             setIsWorking(false)
 
-            let message = await call(props.catch, ex, resource) || "Error"
+            let message = (await call(props.catch, ex, resource)) || "Error"
             notify(message)
         }
 
@@ -185,6 +186,4 @@ function useResource<T extends object>(
     }
 }
 
-
-export { useResource };
-
+export {useResource}

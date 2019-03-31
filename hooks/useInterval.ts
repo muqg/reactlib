@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from "react"
 
 /**
  * Sets up an interval that executes the most recently supplied callback.
@@ -28,5 +28,4 @@ function useInterval(callback: () => any, delay: number | null) {
     }, [delay])
 }
 
-export { useInterval };
-
+export {useInterval}

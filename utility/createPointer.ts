@@ -1,4 +1,4 @@
-import { Pointer } from "./type";
+import {Pointer} from "./type"
 
 type PointerReader<T> = () => T
 type PointerWriter<T> = (v: T) => void
@@ -15,13 +15,21 @@ function createPointer<T>(value: T): Pointer<T>
  * @param reader callback to read the value.
  * @param writer Callback to write the value.
  */
-function createPointer<T>(reader: PointerReader<T>, writer: PointerWriter<T>): Pointer<T>
+function createPointer<T>(
+    reader: PointerReader<T>,
+    writer: PointerWriter<T>
+): Pointer<T>
 
-function createPointer<T>(reader: PointerReader<T> | T, writer?: PointerWriter<T>): Pointer<T> {
+function createPointer<T>(
+    reader: PointerReader<T> | T,
+    writer?: PointerWriter<T>
+): Pointer<T> {
     let value = reader
 
-    const read: PointerReader<T> = writer ? reader as PointerReader<T> : () => value as T
-    const write: PointerWriter<T> = writer ? writer : (val) => value = val
+    const read: PointerReader<T> = writer
+        ? (reader as PointerReader<T>)
+        : () => value as T
+    const write: PointerWriter<T> = writer ? writer : val => (value = val)
 
     return {
         get value() {
@@ -29,9 +37,8 @@ function createPointer<T>(reader: PointerReader<T> | T, writer?: PointerWriter<T
         },
         set value(val: T) {
             write(val)
-        }
+        },
     }
 }
 
-
-export { createPointer }
+export {createPointer}

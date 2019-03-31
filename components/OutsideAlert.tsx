@@ -1,7 +1,6 @@
-import * as React from "react";
-import { Dict } from "../utility";
-import { except, len, only } from "../utility/collection";
-
+import * as React from "react"
+import {Dict} from "../utility"
+import {except, len, only} from "../utility/collection"
 
 interface Alert {
     /**
@@ -27,7 +26,7 @@ type Props = Alert
  */
 class OutsideAlert extends React.Component<Props> {
     static defaultProps: Partial<Alert> = {
-        enabled: true
+        enabled: true,
     }
     static alerts: Dict<Alert> = {}
     static nextIndex = 0
@@ -36,7 +35,7 @@ class OutsideAlert extends React.Component<Props> {
     index = OutsideAlert.nextIndex++
 
     componentDidMount() {
-        if(!len(OutsideAlert.alerts))
+        if (!len(OutsideAlert.alerts))
             document.addEventListener("mouseup", this.triggerAlerts)
 
         this._update()
@@ -49,37 +48,34 @@ class OutsideAlert extends React.Component<Props> {
     componentWillUnmount() {
         OutsideAlert.alerts = except(OutsideAlert.alerts, this.index.toString())
 
-        if(!len(OutsideAlert.alerts))
+        if (!len(OutsideAlert.alerts))
             document.removeEventListener("mouseup", this.triggerAlerts)
     }
 
     _update() {
         OutsideAlert.alerts[this.index] = {
             container: this.props.container || this.container.current,
-            ...only(this.props, "enabled", "trigger")
+            ...only(this.props, "enabled", "trigger"),
         } as Alert
     }
 
     triggerAlerts = (event: MouseEvent) => {
         const target = event.target as HTMLElement
         Object.values(OutsideAlert.alerts).forEach(alert => {
-            if(alert.enabled && alert.container && !alert.container.contains(target))
+            if (
+                alert.enabled &&
+                alert.container &&
+                !alert.container.contains(target)
+            )
                 alert.trigger()
         })
     }
 
     render() {
-        if(this.props.container)
-            return this.props.children
+        if (this.props.container) return this.props.children
 
-        return (
-            <div ref={this.container}>
-                {this.props.children}
-            </div>
-        )
+        return <div ref={this.container}>{this.props.children}</div>
     }
 }
 
-
-export { OutsideAlert };
-
+export {OutsideAlert}

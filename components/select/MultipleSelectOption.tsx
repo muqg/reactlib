@@ -1,7 +1,6 @@
-import * as React from "react";
-import { COLOR_MAIN, css, styled } from "../../styles";
-import { position, truncate } from "../../styles/mixins";
-
+import * as React from "react"
+import {COLOR_MAIN, css, styled} from "../../styles"
+import {position, truncate} from "../../styles/mixins"
 
 const Container = styled.label`
     border-bottom: 1px solid transparent;
@@ -14,12 +13,14 @@ const Container = styled.label`
     ${position("relative")}
     transition: background .3s ease;
 
-    ${p => p.active && css`
-        display: block;
-        &:hover {
-            background: #efefef;
-        }
-    `}
+    ${p =>
+        p.active &&
+        css`
+            display: block;
+            &:hover {
+                background: #efefef;
+            }
+        `}
 
     input {
         display: none;
@@ -35,18 +36,20 @@ const contentCommon = css`
     }
 `
 const Content = styled.div`
-    display: ${(p: StyleProps) => (p.active || p.multiple) ? "block" : "none"};
+    display: ${(p: StyleProps) => (p.active || p.multiple ? "block" : "none")};
     height: 100%;
     ${truncate()}
 
     input:checked ~ & {
         ${p => !p.active && contentCommon}
 
-        ${p => (p.active || p.multiple) && css`
-            background: #f7f7f7;
-            border-bottom-color: ${COLOR_MAIN};
-            color: #dbaa6b;
-        `}
+        ${p =>
+            (p.active || p.multiple) &&
+            css`
+                background: #f7f7f7;
+                border-bottom-color: ${COLOR_MAIN};
+                color: #dbaa6b;
+            `}
     }
 `
 
@@ -82,7 +85,6 @@ interface Props {
     onClick?: () => void
 }
 
-
 class MultipleSelectOption extends React.PureComponent<Props & StyleProps> {
     render() {
         return (
@@ -110,6 +112,5 @@ class MultipleSelectOption extends React.PureComponent<Props & StyleProps> {
         )
     }
 }
-
 
 export default MultipleSelectOption

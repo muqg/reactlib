@@ -6,7 +6,10 @@
  *
  * @param wait Delay time in milliseconds.
  */
-function delay<A extends any[]>(func: (...args: A) => Promise<void> | void, wait = 250) {
+function delay<A extends any[]>(
+    func: (...args: A) => Promise<void> | void,
+    wait = 250
+) {
     let timeout: number | undefined
 
     return (...args: A) => {
@@ -15,4 +18,4 @@ function delay<A extends any[]>(func: (...args: A) => Promise<void> | void, wait
     }
 }
 
-export { delay };
+export {delay}

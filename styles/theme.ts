@@ -1,4 +1,13 @@
-import { COLOR_ACCENT, COLOR_BACKGROUND, COLOR_CONTRAST, COLOR_DARK, COLOR_ERROR, COLOR_SUCCESS, COLOR_TEXT, COLOR_WARNING } from "./colours";
+import {
+    COLOR_ACCENT,
+    COLOR_BACKGROUND,
+    COLOR_CONTRAST,
+    COLOR_DARK,
+    COLOR_ERROR,
+    COLOR_SUCCESS,
+    COLOR_TEXT,
+    COLOR_WARNING,
+} from "./colours"
 
 export const defaultColorTheme = {
     /**

@@ -1,6 +1,6 @@
-import { styled } from "../../styles";
-import { Size } from "../../utility";
-import { Button, ButtonDefaultProps, ButtonStyleProps } from "./Button";
+import {styled} from "../../styles"
+import {Size} from "../../utility"
+import {Button, ButtonDefaultProps, ButtonStyleProps} from "./Button"
 
 const FONT_DOWNSIZE_FACTOR = 4
 
@@ -23,7 +23,7 @@ const IconButton = styled(Button)`
     box-sizing: content-box;
     display: flex;
     /* Size will not be undefined due to DefaultProps */
-    font-size: ${p => getDiameter(p) - (p.size! * FONT_DOWNSIZE_FACTOR)}px;
+    font-size: ${p => getDiameter(p) - p.size! * FONT_DOWNSIZE_FACTOR}px;
     height: ${getDiameter}px;
     justify-content: center;
     line-height: ${getDiameter}px;
@@ -32,10 +32,8 @@ const IconButton = styled(Button)`
 `
 IconButton.defaultProps = {
     ...ButtonDefaultProps,
-    size: Size.Medium
+    size: Size.Medium,
 }
 IconButton.displayName = "IconButton"
 
-
-export { IconButton };
-
+export {IconButton}

@@ -1,4 +1,4 @@
-import { _replaceValue } from "./_replaceValue";
+import {_replaceValue} from "./_replaceValue"
 
 /**
  * Replaces an array entry that is equal to the provided search element with the
@@ -16,9 +16,17 @@ function replace<T>(arr: Array<T>, search: T, value: T): Array<T>
  * @param value Replacement value.
  * @param search Condition to replace on.
  */
-function replace<T>(arr: Array<T>, search: (el: T) => boolean, value: T): Array<T>
+function replace<T>(
+    arr: Array<T>,
+    search: (el: T) => boolean,
+    value: T
+): Array<T>
 
-function replace<T>(arr: Array<T>, search: ((el: T) => boolean) | T, value: T): Array<T> {
+function replace<T>(
+    arr: Array<T>,
+    search: ((el: T) => boolean) | T,
+    value: T
+): Array<T> {
     arr = [...arr]
 
     _replaceValue(arr, search, value)
@@ -26,4 +34,4 @@ function replace<T>(arr: Array<T>, search: ((el: T) => boolean) | T, value: T): 
     return arr
 }
 
-export { replace };
+export {replace}

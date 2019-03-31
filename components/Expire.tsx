@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { call } from "../utility/function";
-
+import {useEffect, useRef, useState} from "react"
+import {call} from "../utility/function"
 
 interface Props {
     /**
@@ -13,7 +12,6 @@ interface Props {
     then?: () => void
     children?: any
 }
-
 
 function Expire(props: Props) {
     const [visible, setVisible] = useState(true)
@@ -38,6 +36,4 @@ function Expire(props: Props) {
     return visible ? props.children : null
 }
 
-
-export { Expire };
-
+export {Expire}

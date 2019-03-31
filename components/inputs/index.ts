@@ -1,5 +1,3 @@
-
-export { SearchInput } from "./SearchInput";
-export { TextArea } from "./TextArea";
-export { TextInput } from "./TextInput";
-
+export {SearchInput} from "./SearchInput"
+export {TextArea} from "./TextArea"
+export {TextInput} from "./TextInput"

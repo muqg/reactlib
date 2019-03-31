@@ -1,6 +1,6 @@
-import { Dict, Omit } from "..";
-import { RequestMethod } from "../enums";
-import { baseRequest } from "./baseRequest";
+import {Dict, Omit} from ".."
+import {RequestMethod} from "../enums"
+import {baseRequest} from "./baseRequest"
 
 export type UploadOptions = Omit<RequestInit, "body" | "method">
 
@@ -16,17 +16,21 @@ export type UploadOptions = Omit<RequestInit, "body" | "method">
  *
  * @returns Returns JSON if the response is in valid format or text otherwise.
  */
-function upload<T = any>(url: string, file: File, body: Dict<string> = {}, options: UploadOptions = {}): Promise<T> {
+function upload<T = any>(
+    url: string,
+    file: File,
+    body: Dict<string> = {},
+    options: UploadOptions = {}
+): Promise<T> {
     const fd = new FormData()
-    Object.entries<string>(body)
-        .map(([key, value]) => fd.append(key, value))
+    Object.entries<string>(body).map(([key, value]) => fd.append(key, value))
     fd.append("file", file)
 
     return baseRequest(url, {
         ...options,
         body: fd,
-        method: RequestMethod.POST
+        method: RequestMethod.POST,
     })
 }
 
-export { upload };
+export {upload}

@@ -1,4 +1,4 @@
-import { len } from "./len";
+import {len} from "./len"
 
 /**
  * Tells whether an object or array is empty.
@@ -8,5 +8,4 @@ function isEmpty(col: object): boolean {
     return len(col) === 0
 }
 
-export { isEmpty };
-
+export {isEmpty}

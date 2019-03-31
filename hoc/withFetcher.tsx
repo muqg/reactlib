@@ -1,7 +1,6 @@
-import * as React from "react";
-import { Fetcher, FetcherProps } from "../components";
-import { Omit } from "../utility";
-
+import * as React from "react"
+import {Fetcher, FetcherProps} from "../components"
+import {Omit} from "../utility"
 
 export interface FetcherComponentProps<T extends object> {
     /**
@@ -10,24 +9,19 @@ export interface FetcherComponentProps<T extends object> {
     fetch: T
 }
 
-
 function withFetcher(options: Omit<FetcherProps<any>, "children">) {
     return <P extends FetcherComponentProps<any>>(
         Component: React.ComponentType<P>
     ): React.FunctionComponent<Omit<P, keyof FetcherComponentProps<any>>> => {
-
-        return (props) => (
+        return props => (
             <Fetcher {...options}>
-                {fetch =>
+                {fetch => (
                     // @ts-ignore Correct but not compatible with expected return type.
                     <Component {...props} fetch={fetch} />
-                }
+                )}
             </Fetcher>
         )
-
     }
 }
 
-
-export { withFetcher };
-
+export {withFetcher}

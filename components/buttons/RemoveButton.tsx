@@ -1,8 +1,8 @@
-import * as React from "react";
-import { useContext } from "react";
-import { COLOR_ERROR, ThemeContext } from "../../styles";
-import { Omit, Size } from "../../utility";
-import { IconButton } from "./IconButton";
+import * as React from "react"
+import {useContext} from "react"
+import {COLOR_ERROR, ThemeContext} from "../../styles"
+import {Omit, Size} from "../../utility"
+import {IconButton} from "./IconButton"
 
 type Props = Omit<React.ComponentProps<typeof IconButton>, "children">
 
@@ -13,7 +13,7 @@ const RemoveButton = ({color, ...props}: Props) => {
     const stroke = props.size && props.size > Size.Medium ? props.size : 2
 
     return (
-        <IconButton {...props} color={color} >
+        <IconButton {...props} color={color}>
             <svg height="50%" strokeWidth={stroke} width="50%">
                 <line x1="0" x2="100%" y1="50%" y2="50%" />
             </svg>
@@ -21,6 +21,4 @@ const RemoveButton = ({color, ...props}: Props) => {
     )
 }
 
-
-export { RemoveButton };
-
+export {RemoveButton}

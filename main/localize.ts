@@ -1,8 +1,8 @@
-import { initialState } from ".";
-import { isString } from "../utility/assertions";
-import { format, asInt, plural } from "../utility/string";
-import { FormatArgument } from "../utility/string/format";
-import { Dict } from "../utility";
+import {initialState} from "."
+import {isString} from "../utility/assertions"
+import {format, asInt, plural} from "../utility/string"
+import {FormatArgument} from "../utility/string/format"
+import {Dict} from "../utility"
 
 const LOCALIZATION_STATE_KEY = "locale"
 
@@ -31,24 +31,25 @@ function localize(key: string, args: Dict<FormatArgument>): string
 
 function localize(key: any, ...args: any[]): any {
     if (__DEV__) {
-        console.warn("`localize` is deprecated. Consider using translation hook instead.")
+        console.warn(
+            "`localize` is deprecated. Consider using translation hook instead."
+        )
     }
 
     key = key ? `${LOCALIZATION_STATE_KEY}.${key}` : LOCALIZATION_STATE_KEY
     let result = initialState(key)
 
-    if(isString(result)) {
+    if (isString(result)) {
         const firstArg = args[0]
         let pluralCount = -1
-        if(isString(firstArg) && firstArg.startsWith("|"))
+        if (isString(firstArg) && firstArg.startsWith("|"))
             pluralCount = asInt(args.shift().substring(1))
 
         result = format(result, ...args)
-        if(pluralCount >= 0)
-            result = plural(result, pluralCount)
+        if (pluralCount >= 0) result = plural(result, pluralCount)
     }
 
     return result
 }
 
-export { localize };
+export {localize}

@@ -7,9 +7,9 @@ const PLURALIZATION_PATTERN = /([\S]+)\|([\S]+)/gi
  * @param count The pluralization count.
  */
 function plural(str: string, count: number) {
-    return str.replace(PLURALIZATION_PATTERN,
-        (_m, singular, plural) => count === 1 ? singular : plural
+    return str.replace(PLURALIZATION_PATTERN, (_m, singular, plural) =>
+        count === 1 ? singular : plural
     )
 }
 
-export { plural };
+export {plural}

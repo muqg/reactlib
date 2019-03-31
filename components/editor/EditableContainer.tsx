@@ -1,10 +1,9 @@
-import * as React from "react";
-import { useRef, useState } from "react";
-import { styled } from "../../styles";
-import { CHAR_CODE_ENTER, Editor, isKeyPressed } from "../../utility/dom";
-import { call } from "../../utility/function";
-import { TextInput } from "../inputs";
-
+import * as React from "react"
+import {useRef, useState} from "react"
+import {styled} from "../../styles"
+import {CHAR_CODE_ENTER, Editor, isKeyPressed} from "../../utility/dom"
+import {call} from "../../utility/function"
+import {TextInput} from "../inputs"
 
 const Container = styled(TextInput)`
     height: 4em;
@@ -18,7 +17,6 @@ interface Props {
     preventNewline?: boolean
 }
 
-
 const EditableContainer = (props: Props) => {
     // Keep content as state variable in order to
     // only initially set it based on props.
@@ -29,8 +27,7 @@ const EditableContainer = (props: Props) => {
         Editor.saveSelection()
 
         const container = containerRef.current
-        if(container)
-            call(props.contentChange, container.innerHTML)
+        if (container) call(props.contentChange, container.innerHTML)
     }
 
     function handlePaste(event: React.ClipboardEvent<HTMLDivElement>) {
@@ -41,7 +38,7 @@ const EditableContainer = (props: Props) => {
     }
 
     function preventNewline(event: React.KeyboardEvent) {
-        if(isKeyPressed({keyCode: CHAR_CODE_ENTER}, event, true))
+        if (isKeyPressed({keyCode: CHAR_CODE_ENTER}, event, true))
             event.preventDefault()
     }
 
@@ -50,20 +47,15 @@ const EditableContainer = (props: Props) => {
             as="div"
             className={props.className}
             contentEditable
-
             onBlur={handleChange}
             onKeyPress={props.preventNewline ? preventNewline : undefined}
             onInput={handleChange}
             onPaste={handlePaste}
-
             ref={containerRef}
             spellCheck={false}
-
             dangerouslySetInnerHTML={{__html: content || ""}}
         />
     )
 }
 
-
-export { EditableContainer };
-
+export {EditableContainer}

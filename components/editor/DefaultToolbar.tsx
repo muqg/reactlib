@@ -1,7 +1,26 @@
-import * as React from "react";
-import { ToolbarAlignCenter, ToolbarAlignFull, ToolbarAlignLeft, ToolbarAlignRight, ToolbarBold, ToolbarColour, ToolbarFontName, ToolbarFontSize, ToolbarImage, ToolbarIndent, ToolbarItalic, ToolbarLink, ToolbarOrderedList, ToolbarOutdent, ToolbarStrikethrough, ToolbarSubscript, ToolbarSuperscript, ToolbarUnderline, ToolbarUnorderedList } from "..";
-import { Toolbar } from "./Toolbar";
-
+import * as React from "react"
+import {
+    ToolbarAlignCenter,
+    ToolbarAlignFull,
+    ToolbarAlignLeft,
+    ToolbarAlignRight,
+    ToolbarBold,
+    ToolbarColour,
+    ToolbarFontName,
+    ToolbarFontSize,
+    ToolbarImage,
+    ToolbarIndent,
+    ToolbarItalic,
+    ToolbarLink,
+    ToolbarOrderedList,
+    ToolbarOutdent,
+    ToolbarStrikethrough,
+    ToolbarSubscript,
+    ToolbarSuperscript,
+    ToolbarUnderline,
+    ToolbarUnorderedList,
+} from ".."
+import {Toolbar} from "./Toolbar"
 
 interface Props {
     children?: any
@@ -21,9 +40,8 @@ interface Props {
     imageHandler?: (file: File) => string
 }
 
-
 const DefaultToolbar = ({children, fonts, imageHandler, ...props}: Props) => {
-    return(
+    return (
         <Toolbar {...props}>
             <ToolbarBold />
             <ToolbarItalic />
@@ -43,17 +61,11 @@ const DefaultToolbar = ({children, fonts, imageHandler, ...props}: Props) => {
             <ToolbarIndent />
             <ToolbarOutdent />
             <ToolbarLink />
-            {imageHandler ?
-                <ToolbarImage handler={imageHandler} />
-                : ""
-            }
+            {imageHandler ? <ToolbarImage handler={imageHandler} /> : ""}
 
             {children}
-
         </Toolbar>
     )
 }
 
-
-export { DefaultToolbar };
-
+export {DefaultToolbar}

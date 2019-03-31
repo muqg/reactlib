@@ -10,8 +10,4 @@ export const COLOR_TEXT = "#222222"
 export const COLOR_WARNING = "#ffa000"
 
 // Keep this export until themeing is finished and COLOR_MAIN is used properly.
-export {
-    COLOR_MAIN as COLOR_DARK,
-    COLOR_MAIN_OBSOLETE as COLOR_MAIN
-};
-
+export {COLOR_MAIN as COLOR_DARK, COLOR_MAIN_OBSOLETE as COLOR_MAIN}

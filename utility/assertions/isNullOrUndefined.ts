@@ -1,4 +1,4 @@
-import { isNull, isUndefined } from ".";
+import {isNull, isUndefined} from "."
 
 /**
  * Checks whether a value is null or undefined.
@@ -8,5 +8,4 @@ function isNullOrUndefined(val: any): val is null | undefined {
     return isNull(val) || isUndefined(val)
 }
 
-export { isNullOrUndefined };
-
+export {isNullOrUndefined}

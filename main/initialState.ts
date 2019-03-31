@@ -1,4 +1,4 @@
-import { pull } from "../utility/collection";
+import {pull} from "../utility/collection"
 
 const initialStateDataObject = (() => {
     const stateElement = document.querySelector("#initial_state")
@@ -14,5 +14,4 @@ function initialState<T = any>(key: any): T {
     return result
 }
 
-export { initialState };
-
+export {initialState}

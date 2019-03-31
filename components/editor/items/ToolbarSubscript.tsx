@@ -1,18 +1,12 @@
-import * as React from "react";
-import { Editor } from "../../../utility/dom";
-import { ToolbarItem } from "../ToolbarItem";
+import * as React from "react"
+import {Editor} from "../../../utility/dom"
+import {ToolbarItem} from "../ToolbarItem"
 
-
-interface Props {
-}
-
+interface Props {}
 
 const ToolbarSubscript = (_props: Props) => {
-    return(
-        <ToolbarItem
-            onClick={Editor.subscript}
-            title="Subscript"
-        >
+    return (
+        <ToolbarItem onClick={Editor.subscript} title="Subscript">
             <p>
                 x<sub>2</sub>
             </p>
@@ -20,5 +14,4 @@ const ToolbarSubscript = (_props: Props) => {
     )
 }
 
-
-export { ToolbarSubscript };
+export {ToolbarSubscript}

@@ -23,4 +23,3 @@ export const enum Size {
     Huge = 6,
     Giant = 8,
 }
-

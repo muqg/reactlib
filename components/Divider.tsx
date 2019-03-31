@@ -1,5 +1,5 @@
-import { COLOR_DARK, styled } from "../styles";
-import { Size } from "../utility";
+import {COLOR_DARK, styled} from "../styles"
+import {Size} from "../utility"
 
 const SIZE_FACTOR = 12
 
@@ -17,10 +17,8 @@ const Divider = styled.div`
     width: 100%;
 `
 Divider.defaultProps = {
-    size: Size.Slim
+    size: Size.Slim,
 }
 Divider.displayName = "Divider"
 
-
-export { Divider };
-
+export {Divider}

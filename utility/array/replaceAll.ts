@@ -1,4 +1,4 @@
-import { _replaceValue } from "./_replaceValue";
+import {_replaceValue} from "./_replaceValue"
 
 /**
  * Replaces all occurences of an element with the provided value.
@@ -16,12 +16,20 @@ function replaceAll<T>(arr: Array<T>, search: T, value: T): Array<T>
  * @param value Replacement value.
  * @param search Condition to replace on.
  */
-function replaceAll<T>(arr: Array<T>, search: (el: T) => boolean, value: T): Array<T>
+function replaceAll<T>(
+    arr: Array<T>,
+    search: (el: T) => boolean,
+    value: T
+): Array<T>
 
-function replaceAll<T>(arr: Array<T>, search: ((el: T) => boolean) | T, value: T): Array<T> {
+function replaceAll<T>(
+    arr: Array<T>,
+    search: ((el: T) => boolean) | T,
+    value: T
+): Array<T> {
     arr = [...arr]
 
-    while(_replaceValue(arr, search, value)) {
+    while (_replaceValue(arr, search, value)) {
         /*
          * _replaceValue handles it all. Loop is just to
          * make it replace until it finds no match.
@@ -31,4 +39,4 @@ function replaceAll<T>(arr: Array<T>, search: ((el: T) => boolean) | T, value: T
     return arr
 }
 
-export { replaceAll };
+export {replaceAll}

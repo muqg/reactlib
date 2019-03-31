@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
-
+import {useState, useRef, useEffect, useMemo} from "react"
 
 interface Task<R, A extends any[] = any> {
     isRunning: boolean
@@ -21,34 +20,34 @@ function useTask<R, A extends any[]>(func: Task<R, A>["run"]): Task<R, A> {
     const [isRunning, setRunning] = useState(false)
 
     const isMounted = useRef(true)
-    useEffect(() => () => { isMounted.current = false}, [])
+    useEffect(
+        () => () => {
+            isMounted.current = false
+        },
+        []
+    )
 
     const run = async (...args: A) => {
-        if(isRunning)
-            return
+        if (isRunning) return
 
         let res
-	    try {
+        try {
             setRunning(true)
             res = await func(...args)
-        }
-        finally {
+        } finally {
             /**
              * This will prevent updates on unmounted components
              * in case of navigation or conditional rendering
              */
-            if(isMounted.current)
-                setRunning(false)
+            if (isMounted.current) setRunning(false)
         }
 
         return res
     }
 
-    return useMemo(
-        () => { return {isRunning, run}},
-        [isRunning, func]
-    )
+    return useMemo(() => {
+        return {isRunning, run}
+    }, [isRunning, func])
 }
 
-export { useTask };
-
+export {useTask}

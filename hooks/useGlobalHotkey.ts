@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Hotkey, isKeyPressed } from "../utility/dom";
+import {useEffect} from "react"
+import {Hotkey, isKeyPressed} from "../utility/dom"
 
 /**
  * Sets up a global hotkey.
@@ -8,10 +8,14 @@ import { Hotkey, isKeyPressed } from "../utility/dom";
  * @param handle The handler callback.
  * @param allowInsideInputs Whether to allow hotkey to be triggered from inside inputs.
  */
-function useGlobalHotkey(hotkey: Hotkey, handle: (e: KeyboardEvent) => void, allowInsideInputs?: boolean) {
+function useGlobalHotkey(
+    hotkey: Hotkey,
+    handle: (e: KeyboardEvent) => void,
+    allowInsideInputs?: boolean
+) {
     useEffect(() => {
         function handler(event: KeyboardEvent) {
-            if(isKeyPressed(hotkey, event, allowInsideInputs)) {
+            if (isKeyPressed(hotkey, event, allowInsideInputs)) {
                 handle(event)
             }
         }
@@ -21,6 +25,4 @@ function useGlobalHotkey(hotkey: Hotkey, handle: (e: KeyboardEvent) => void, all
     })
 }
 
-
-export { useGlobalHotkey };
-
+export {useGlobalHotkey}

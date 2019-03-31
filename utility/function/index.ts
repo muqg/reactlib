@@ -1,2 +1,1 @@
-export { call } from "./call";
-
+export {call} from "./call"

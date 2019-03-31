@@ -1,6 +1,5 @@
-import * as React from "react";
-import { Hotkey, isKeyPressed } from "../../utility/dom";
-
+import * as React from "react"
+import {Hotkey, isKeyPressed} from "../../utility/dom"
 
 interface OwnProps {
     /**
@@ -18,7 +17,6 @@ interface OwnProps {
 
 type Props = OwnProps & Hotkey
 
-
 class GlobalHotkey extends React.Component<Props> {
     componentDidMount() {
         document.addEventListener("keydown", this.handle)
@@ -30,12 +28,18 @@ class GlobalHotkey extends React.Component<Props> {
 
     handle = (event: KeyboardEvent) => {
         const hotkey = new Hotkey(
-            (({code, eventKey, keyCode, alt, ctrl, meta, shift}: Hotkey) =>
-                    ({code, eventKey, keyCode, alt, ctrl, meta, shift})
-            )(this.props),
+            (({code, eventKey, keyCode, alt, ctrl, meta, shift}: Hotkey) => ({
+                code,
+                eventKey,
+                keyCode,
+                alt,
+                ctrl,
+                meta,
+                shift,
+            }))(this.props)
         )
 
-        if(isKeyPressed(hotkey, event, this.props.allowInsideInputs))
+        if (isKeyPressed(hotkey, event, this.props.allowInsideInputs))
             this.props.handler(event)
     }
 
@@ -44,6 +48,4 @@ class GlobalHotkey extends React.Component<Props> {
     }
 }
 
-
-export { GlobalHotkey };
-
+export {GlobalHotkey}

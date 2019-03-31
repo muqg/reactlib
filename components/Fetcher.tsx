@@ -1,12 +1,11 @@
-import * as React from "react";
-import { useContext, useEffect, useState } from "react";
-import { NotificationContext } from "../contexts";
-import { useTranslation } from "../hooks";
-import { Dict, RequestMethod } from "../utility";
-import { isFunction } from "../utility/assertions";
-import { request } from "../utility/web";
-import { Spinner } from "./Spinner";
-
+import * as React from "react"
+import {useContext, useEffect, useState} from "react"
+import {NotificationContext} from "../contexts"
+import {useTranslation} from "../hooks"
+import {Dict, RequestMethod} from "../utility"
+import {isFunction} from "../utility/assertions"
+import {request} from "../utility/web"
+import {Spinner} from "./Spinner"
 
 const DefaultLoader = <Spinner />
 const cacheStorage: Dict<any> = {}
@@ -14,7 +13,6 @@ const cacheStorage: Dict<any> = {}
 export function invalidateFetchCache(key: string) {
     delete cacheStorage[key]
 }
-
 
 export interface FetcherProps<T> {
     /**
@@ -38,14 +36,18 @@ export interface FetcherProps<T> {
     source: string | (() => Promise<T>)
 }
 
-function Fetcher<T extends object = object>(
-    {cache, children, loader = DefaultLoader, onException, source}: FetcherProps<T>
-) {
+function Fetcher<T extends object = object>({
+    cache,
+    children,
+    loader = DefaultLoader,
+    onException,
+    source,
+}: FetcherProps<T>) {
     /**
      * Initializing fetch from cache will prevent an
      * unnecessary render and loader flashing.
      */
-    const cachedFetch = cache && cacheStorage[cache] || null
+    const cachedFetch = (cache && cacheStorage[cache]) || null
     const [fetch, setFetch] = useState<T | null>(cachedFetch)
 
     const notify = useContext(NotificationContext)
@@ -57,26 +59,21 @@ function Fetcher<T extends object = object>(
 
     async function fetchData() {
         // Skip fetching if data was preloaded from cache
-        if(fetch)
-            return
+        if (fetch) return
 
         try {
             let result: T
-            if(isFunction(source)) {
+            if (isFunction(source)) {
                 result = await source()
-            }
-            else {
+            } else {
                 result = await request<T>(RequestMethod.GET, source)
             }
 
-            if(cache)
-                cacheStorage[cache] = result
+            if (cache) cacheStorage[cache] = result
 
             setFetch(result)
-        }
-        catch(ex) {
-            if(onException)
-                onException(ex)
+        } catch (ex) {
+            if (onException) onException(ex)
             else {
                 console.error(ex)
                 notify(translate("error"))
@@ -87,6 +84,4 @@ function Fetcher<T extends object = object>(
     return fetch ? children(fetch) : loader
 }
 
-
-export { Fetcher };
-
+export {Fetcher}

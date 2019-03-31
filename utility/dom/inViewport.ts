@@ -18,16 +18,14 @@ function inViewport(element: Element, offset = 0) {
         top: rect.top - window.innerHeight - offset,
         bottom: rect.bottom + offset,
         left: rect.left - window.innerWidth - offset,
-        right: rect.right + offset
+        right: rect.right + offset,
     }
 
     return (
-        (viewport.top <= 0 && viewport.bottom >= 0)
-        &&
+        viewport.top <= 0 &&
+        viewport.bottom >= 0 &&
         (viewport.left <= 0 && viewport.right >= 0)
     )
 }
 
-export {
-    inViewport
-}
+export {inViewport}

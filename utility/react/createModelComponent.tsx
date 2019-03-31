@@ -1,8 +1,7 @@
-import * as React from "react";
-import { isFunction } from "../assertions";
-import { pull } from "../collection";
-import { createModel } from "../dom/createModel";
-
+import * as React from "react"
+import {isFunction} from "../assertions"
+import {pull} from "../collection"
+import {createModel} from "../dom/createModel"
 
 interface Props {
     children: JSX.Element | ((props: InjectedModelProps) => JSX.Element)
@@ -22,7 +21,6 @@ interface InjectedModelProps {
     value: string | number | boolean
 }
 
-
 /**
  * Creates a higher-order component that injects modelling props to its child
  * component and thus models its changes to a state key.
@@ -30,27 +28,36 @@ interface InjectedModelProps {
  * @param key A nested state key using "dot notation".
  * @param options Model options.
  */
-function createModelComponent(component: React.Component, key = "", {model, ...options}: CreateModelComponentOptions = {}): React.SFC<Props> {
+function createModelComponent(
+    component: React.Component,
+    key = "",
+    {model, ...options}: CreateModelComponentOptions = {}
+): React.SFC<Props> {
     if (__DEV__) {
-        console.warn("`createModelComponent` is deprecated. Consider using useModel hook instead.")
+        console.warn(
+            "`createModelComponent` is deprecated. Consider using useModel hook instead."
+        )
     }
 
-    if(!model)
-        model = createModel(component, key, options)
+    if (!model) model = createModel(component, key, options)
 
     return function Model({name = "", ...props}: Props) {
         const injectedProps: InjectedModelProps = {
             name,
             onChange: model!,
-            value: name ? pull(component.state, key ? `${key}.${name}` : name) : ""
+            value: name
+                ? pull(component.state, key ? `${key}.${name}` : name)
+                : "",
         }
 
-        if(isFunction<(props: InjectedModelProps) => JSX.Element>(props.children))
+        if (
+            isFunction<(props: InjectedModelProps) => JSX.Element>(
+                props.children
+            )
+        )
             return props.children(injectedProps)
         return React.cloneElement(props.children, injectedProps)
     }
 }
 
-
-export { createModelComponent };
-
+export {createModelComponent}

@@ -1,4 +1,4 @@
-﻿import { useRef } from "react";
+﻿import {useRef} from "react"
 
 /**
  * Locks a function by allowing it to only be called once at a time. Once called
@@ -7,12 +7,13 @@
  *
  * @param func The callback function to be locked.
  */
-function useLocked<A extends any[], R>(func: (...args: A) => R): (...args: A) => Promise<R | void> {
+function useLocked<A extends any[], R>(
+    func: (...args: A) => R
+): (...args: A) => Promise<R | void> {
     const locked = useRef(false)
 
     return async (...args: A) => {
-        if(locked.current)
-            return
+        if (locked.current) return
 
         locked.current = true
         const res = await func(...args)
@@ -22,5 +23,4 @@ function useLocked<A extends any[], R>(func: (...args: A) => R): (...args: A) =>
     }
 }
 
-export { useLocked };
-
+export {useLocked}

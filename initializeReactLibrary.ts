@@ -5,14 +5,12 @@
 export function initializeReactLibrary() {
     try {
         // Attempt to call possibly undefined dev flag.
-        __DEV__;
-    }
-    catch {
+        __DEV__
+    } catch {
         let value: boolean | undefined = undefined
         try {
             value = process.env.NODE_ENV === "development"
-        }
-        catch {
+        } catch {
             // No need to take any action. This only prevents a crash when process
             // is undefined or does not have the expected object structure.
         }

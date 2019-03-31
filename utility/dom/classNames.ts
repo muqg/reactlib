@@ -1,6 +1,5 @@
-﻿import { isArray, isNumber, isObject, isString } from "../assertions";
-import { Dict } from "../type";
-
+﻿import {isArray, isNumber, isObject, isString} from "../assertions"
+import {Dict} from "../type"
 
 /**
  * Builds a dom element class name string.
@@ -13,13 +12,12 @@ export function classNames(...classArgs: any[]): string {
     const classes: Dict<boolean> = {}
 
     classArgs.forEach(arg => {
-        if(!arg) return
+        if (!arg) return
 
-        if(isString(arg) || isNumber(arg)) {
+        if (isString(arg) || isNumber(arg)) {
             classes[arg] = true
-        }
-        else if(isObject<Dict<boolean>>(arg) && !isArray(arg)) {
-            for(let cls in arg) {
+        } else if (isObject<Dict<boolean>>(arg) && !isArray(arg)) {
+            for (let cls in arg) {
                 // Always prefers the TRUE value, i.e. class is applied
                 // if at least one of the duplicate values is TRUE.
                 classes[cls] = arg[cls] || classes[cls]
@@ -27,5 +25,7 @@ export function classNames(...classArgs: any[]): string {
         }
     })
 
-    return Object.keys(classes).filter(k => classes[k]).join(" ")
+    return Object.keys(classes)
+        .filter(k => classes[k])
+        .join(" ")
 }

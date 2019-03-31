@@ -1,5 +1,5 @@
 import * as React from "react"
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import {styled} from "../../styles"
 import {isFunction} from "../../utility/assertions"
 import {Tab} from "./Tab"
@@ -24,13 +24,15 @@ function TabView({children, className}: Props) {
     const [tabIndex, setTabIndex] = useState(0)
 
     if (__DEV__) {
-        children.forEach((child, index) => {
-            if (!isComponentType(child, Tab)) {
-                console.error(
-                    `TabView's child ${index + 1} is not of Tab type.`
-                )
-            }
-        })
+        useEffect(() => {
+            children.forEach((child, index) => {
+                if (!isComponentType(child, Tab)) {
+                    console.error(
+                        `TabView's child ${index + 1} is not of Tab type.`
+                    )
+                }
+            })
+        }, [])
     }
 
     const titles = children
