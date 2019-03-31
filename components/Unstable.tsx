@@ -6,7 +6,7 @@ interface Props {
 
 function Unstable({children}: Props) {
     if (__DEV__) {
-        return <>{children}</>
+        return <React.StrictMode>{children}</React.StrictMode>
     }
 
     return null
