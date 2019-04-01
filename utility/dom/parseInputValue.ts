@@ -56,7 +56,7 @@ function parseInputValue(input: ParseableInput): string {
             .join(",")
     }
 
-    return value
+    return value.trim()
 }
 
 export {parseInputValue}
