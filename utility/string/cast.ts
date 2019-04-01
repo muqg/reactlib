@@ -1,5 +1,3 @@
-import {asFloat, asInt} from "."
-
 /**
  * Casts (parses) a string to a boolean, integer or float if it represents one.
  * @param str The string to cast.
@@ -10,7 +8,7 @@ function cast<T extends string | number | boolean>(str: string) {
     if (res.length) {
         // @ts-ignore isNaN works perfectly fine with strings.
         if (!isNaN(res)) {
-            res = res.indexOf(".") >= 0 ? asFloat(res) : asInt(res)
+            res = Number(res)
         } else if (res === "true") {
             res = true
         } else if (res === "false") {
