@@ -58,3 +58,26 @@ export interface NamedKey<T = string> {
  * From T omit a set of properties K.
  */
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
+/**
+ * Represents all valid JSON-serializable values.
+ */
+export type Serializable =
+    | string
+    | number
+    | object
+    | Array<any>
+    | boolean
+    | null
+
+/**
+ * Represents a basic dictionary type.
+ */
+export type Dictionary<K extends object, V = K[keyof K]> = {[key in keyof K]: V}
+
+/**
+ * Represents a basic list type. Currently it is an alternative to Dict.
+ */
+export interface List<V> {
+    [key: string]: V
+}
