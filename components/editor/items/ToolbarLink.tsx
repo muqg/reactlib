@@ -1,4 +1,6 @@
 import * as React from "react"
+import {useState} from "react"
+import {useModel} from "../../../hooks"
 import {styled} from "../../../styles"
 import {Editor} from "../../../utility/dom"
 import ConfirmationDialog from "../../dialogs/ConfirmationDialog"
@@ -10,59 +12,46 @@ const StyledToolbarItem = styled(ToolbarItem)`
     background-position-x: -144px;
 `
 
-interface Props {}
-interface State {
-    isDialogVisible: boolean
-}
-
 /**
  * TODO: Lib | Allow link to be removed with right click.
  */
-class ToolbarLink extends React.PureComponent<Props, State> {
-    state = {
-        isDialogVisible: false,
-    }
-    inputRef = React.createRef<any>()
+function ToolbarLink() {
+    const [dialog, setDialog] = useState(false)
+    const model = useModel<{input: string}>(() => ({
+        input: "",
+    }))
 
-    toggleDialog = (visible: boolean) => {
-        this.setState({isDialogVisible: visible})
-    }
-
-    accept = () => {
-        const input = this.inputRef.current
-        if (input) {
-            const value = input.value
-            if (!value.length) return false
-
+    const accept = () => {
+        const value = model.input.value
+        if (value.length) {
             Editor.createLink(value)
             return true
         }
     }
 
-    render() {
-        return (
-            <StyledToolbarItem
-                className="link tb_img"
-                title="Hyperlink"
-                onClick={() => this.toggleDialog(true)}
-                backgroundImage={TOOLBAR_SPRITESHEET}
-            >
+    return (
+        <StyledToolbarItem
+            className="link tb_img"
+            title="Hyperlink"
+            onClick={() => setDialog(true)}
+            backgroundImage={TOOLBAR_SPRITESHEET}
+        >
+            {dialog && (
                 <ConfirmationDialog
                     className="tb_link"
-                    isVisible={this.state.isDialogVisible}
-                    onAccept={this.accept}
-                    visibilityChange={this.toggleDialog}
+                    onAccept={accept}
+                    onClose={() => setDialog(false)}
                     title="Въведи линк:"
                 >
                     <TextInput
+                        {...model.input}
                         placeholder="https://example.com"
-                        ref={this.inputRef}
                         wide
                     />
                 </ConfirmationDialog>
-            </StyledToolbarItem>
-        )
-    }
+            )}
+        </StyledToolbarItem>
+    )
 }
 
 export {ToolbarLink}

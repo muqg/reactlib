@@ -1,10 +1,9 @@
 import * as React from "react"
-import {useEffect, useRef, useState} from "react"
+import {useEffect, useRef} from "react"
 import {createPortal} from "react-dom"
-import {createGlobalStyle, css, styled} from "../../styles"
+import {createGlobalStyle, styled} from "../../styles"
 import {CHAR_CODE_ESCAPE, Hotkey, isKeyPressed} from "../../utility/dom"
 import {call} from "../../utility/function"
-import {useInitialRender} from "../../hooks"
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
@@ -21,25 +20,12 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     left: 0;
-    opacity: 0;
     overflow: hidden;
     position: fixed;
     right: 0;
     top: 0;
-    transition: opacity 0.25s ease;
-    z-index: -1;
-
-    ${(p: StyleProps) =>
-        p.visible &&
-        css`
-            opacity: 1;
-            z-index: 200;
-        `}
+    z-index: 200;
 `
-
-interface StyleProps {
-    visible?: boolean
-}
 
 export interface DialogProps {
     /**
@@ -48,13 +34,9 @@ export interface DialogProps {
      */
     className?: string
     /**
-     * Whether the dialog is currently visible or not.
-     */
-    isVisible: boolean
-    /**
      * Called when dialog is closed.
      */
-    onClose?: () => void
+    onClose: () => void
     /**
      * Called any time a key is pressed down.
      *
@@ -65,51 +47,32 @@ export interface DialogProps {
      * Called when dialog is shown.
      */
     onShow?: () => void
-    /**
-     * Called when dialog's visibility changes and is
-     * typically used to mirror its visibility state.
-     */
-    visibilityChange?: (isVisible: boolean) => void
 }
 
 interface Dialog extends DialogProps {
     children: (close: () => void) => React.ReactNode
 }
 
-function Dialog(props: Dialog) {
-    const [visible, setVisible] = useState(props.isVisible || false)
+function Dialog({onClose, onKeyDown, onShow, ...props}: Dialog) {
     const dialogRef = useRef<any>(null)
-    const initialRender = useInitialRender()
 
     useEffect(() => {
-        if (visible !== props.isVisible) {
-            setVisible(props.isVisible)
-        }
-    }, [props.isVisible])
-
-    useEffect(() => {
-        call(props.visibilityChange, visible)
-
-        if (visible) {
-            call(props.onShow)
-
-            const dialog = dialogRef.current
-            if (dialog) {
-                dialog.focus()
-                dialog.scrollTop = 0
-            }
-        } else if (!initialRender) {
-            call(props.onClose)
-        }
-    }, [visible])
-
-    function keyDown(event: React.KeyboardEvent) {
-        if (isKeyPressed(ESCAPE_HOTKEY, event)) setVisible(false)
+        call(onShow)
 
         const dialog = dialogRef.current
-        if (dialog) call(props.onKeyDown, event)
+        if (dialog) {
+            dialog.focus()
+            dialog.scrollTop = 0
+        }
+    }, [onClose, onShow])
 
+    function keyDown(event: React.KeyboardEvent) {
         stop(event)
+
+        if (isKeyPressed(ESCAPE_HOTKEY, event)) {
+            call(onClose)
+        }
+        call(onKeyDown, event)
     }
 
     function stop(e: React.KeyboardEvent) {
@@ -124,14 +87,9 @@ function Dialog(props: Dialog) {
             onKeyPress={stop}
             onKeyUp={stop}
             tabIndex={-1}
-            visible={visible}
         >
-            {visible && (
-                <>
-                    {props.children(() => setVisible(false))}
-                    <DisabledBodyScroll />
-                </>
-            )}
+            {props.children(onClose)}
+            <DisabledBodyScroll />
         </Container>,
         document.body
     )
