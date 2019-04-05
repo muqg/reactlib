@@ -1,15 +1,21 @@
 import {useReducer} from "react"
-import {Dictionary, List, Omit, Serializable} from "../utility"
-import {isObject, isType} from "../utility/assertions"
+import {Dictionary, List, Omit, Serializable, ValidationError} from "../utility"
+import {isObject} from "../utility/assertions"
 import {except, len} from "../utility/collection"
-import {ParseableInput, parseInputValue} from "../utility/dom"
+import {ParseableInput} from "../utility/dom"
 import {call} from "../utility/function"
-import {isSyntheticEvent} from "../utility/react"
-import {cast} from "../utility/string"
+import {
+    modelChangeAction,
+    modelHookReducer,
+    modelValidateAction,
+} from "../__internal__/modelHookReducer"
 
-export type ModelError = string | undefined | void
 export type ModelInput = ParseableInput | Serializable
-export type ModelValues<T extends object = object> = Dictionary<T, T[keyof T]>
+export type ModelValueList<T extends object = object> = Dictionary<
+    T,
+    T[keyof T]
+>
+export type ModelUtils = List<Omit<ModelElement<any>, "value">>
 
 export interface ModelElement<T extends object = object> {
     /**
@@ -20,11 +26,17 @@ export interface ModelElement<T extends object = object> {
      */
     parse?(input: any | undefined, prev: any): Serializable
     value?: T[keyof T]
-    validate?(value: any, modelValues: ModelValues<T>): ModelError
+    validate?(value: any, modelValues: ModelValueList<T>): ValidationError
 }
 
 export interface ModelEntry {
-    error?: ModelError
+    /**
+     * Errors should not be accessed directly for vlidation via this property,
+     * since it may not be in sync with the current value. Use the model's special
+     * $errors method instead.
+     */
+    error?: ValidationError
+    onBlur: () => void
     onChange: (input: ModelInput) => void
     value: any
 }
@@ -42,13 +54,14 @@ export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
      */
     $data(): T
     /**
-     * Returns a list of model errors.
+     * Returns a list of model errors. Note that this function performs
+     * a fresh validation in place and may  therefore be expensive.
      */
-    $errors(): Dictionary<T, ModelError>
+    $errors(): Dictionary<T, ValidationError>
     /**
      * Returns the first error from the model's error list.
      */
-    $firstError(): ModelError
+    $firstError(): ValidationError
     /**
      * Resets the values for the given names to their initial values.
      * If no names are given then all model values are reset.
@@ -56,105 +69,37 @@ export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
     $reset(...names: Array<keyof T>): void
 }
 
-interface State {
-    model: Model<any>
-    utils: List<Omit<ModelElement<any>, "value">>
-}
-
-function reducer(state: State, values: ModelValues<any>) {
-    // Bail out of rendering if there are no values to update.
-    if (!len(values)) {
-        return state
-    }
-
-    const {utils} = state
-    const model = {...state.model}
-    for (const name in values) {
-        const entry = model[name]
-        const {parse} = utils[name]
-
-        let value = values[name]
-        if (parse) {
-            value = parse(value, entry.value)
-        } else if (
-            isType<ParseableInput>(
-                value,
-                v => isSyntheticEvent(v) || v instanceof Element
-            )
-        ) {
-            value = cast(parseInputValue(value))
-        }
-
-        entry.value = value
-
-        if (__DEV__) {
-            if (!(name in model)) {
-                console.error(
-                    "Attempting to update a model value for name which was" +
-                        "not part of the initial structure. There is a typo in" +
-                        "your code or you forgot to include a model entry with" +
-                        `name ${name}.`
-                )
-            }
-
-            if (name.startsWith("$")) {
-                console.error(
-                    "The model should not contain entries with names starting with" +
-                        "a dollar sign $, which is used to designate special model" +
-                        "properties and may therefore lead to unexpected behaviour."
-                )
-            }
-        }
-    }
-
-    // Validate newest values only after assigning all of them
-    // to the model object in order to provide the most recent
-    // version of model data to each validator.
-    validateModelValues(model, values, utils)
-
-    return {model, utils}
-}
-
 function useModel<T extends object>(
     initialElements: () => Partial<
         Dictionary<T, string | boolean | number | null | ModelElement<T>>
     >
 ): Model<T> {
-    const [state, dispatch] = useReducer(reducer, {}, initialize)
+    const [state, dispatch] = useReducer(modelHookReducer, {}, initialize)
 
     function initialize() {
         const elements = initialElements()
 
-        const utils: State["utils"] = {}
+        const utils: ModelUtils = {}
         const model = {
-            $change(values: ModelValues<any>) {
-                dispatch(persistent(values))
+            $change(values: ModelValueList<any>) {
+                dispatch(modelChangeAction(values))
             },
             $data() {
                 const values: any = {}
-                for (const name in this) {
-                    const entry = this[name]
-                    if (name.startsWith("$")) {
-                        continue
-                    }
-
-                    values[name] = entry.value
+                for (const name in utils) {
+                    values[name] = this[name].value
                 }
                 return values
             },
             $errors() {
-                // Refresh validity of all values in case that any
-                // of them depends on the value of another one.
-                validateModelValues(this, this.$data(), utils)
-
+                const data = this.$data()
                 const errors: any = {}
-                for (const name in this) {
+                for (const name in utils) {
                     const entry = this[name]
-                    if (name.startsWith("$") || !entry.error) {
-                        continue
+                    const err = call(utils[name].validate, entry.value, data)
+                    if (err) {
+                        errors[name] = err
                     }
-
-                    errors[name] = entry.error
                 }
                 return errors
             },
@@ -171,41 +116,45 @@ function useModel<T extends object>(
                         : current
                 })
 
-                dispatch(persistent(values))
+                dispatch(modelChangeAction(values))
+                dispatch(modelValidateAction())
             },
-        } as State["model"]
+        } as Model<any>
 
         for (const name in elements) {
-            const current = elements[name]
-            let value: any = current
+            const currentElement = elements[name]
+            let initialValue: any = currentElement
             let util = {}
 
-            if (isObject<ModelElement>(current)) {
-                value = current.value
-                util = except(current, "value")
+            if (isObject<ModelElement>(currentElement)) {
+                initialValue = currentElement.value
+                util = except(currentElement, "value")
 
                 // Run custom parser initially in order to
                 // allow it to initialize the value.
-                if (current.parse) {
-                    value = current.parse(undefined, value)
+                if (currentElement.parse) {
+                    initialValue = currentElement.parse(undefined, initialValue)
 
                     if (__DEV__) {
-                        console.warn(
-                            "The initial call to a model parser returned undefined." +
-                                "You have probably forgot to check for the initial" +
-                                "undefined input value or returned nothing."
-                        )
+                        if (initialValue === undefined) {
+                            console.warn(
+                                `The initial call to a model parser with name [${name}] ` +
+                                    "returned undefined. You have probably forgot to " +
+                                    "check for the initial undefined input value or " +
+                                    "returned nothing."
+                            )
+                        }
                     }
                 }
 
                 if (__DEV__) {
                     const supportedProps = ["parse", "validate", "value"]
-                    for (const key in current) {
+                    for (const key in currentElement) {
                         if (!supportedProps.includes(key)) {
                             console.error(
-                                "Model received an object or array which contains" +
-                                    "an unsupported property ${key}. If you are trying" +
-                                    "to model an object or array value then pass it" +
+                                "Model received an object or array which contains " +
+                                    "an unsupported property ${key}. If you are trying " +
+                                    "to model an object or array value then pass it " +
                                     "as a value property of a ModelElement."
                             )
                         }
@@ -215,41 +164,16 @@ function useModel<T extends object>(
 
             utils[name] = util
             model[name] = {
-                onChange: v => dispatch(persistent({[name]: v})),
-                value,
+                onBlur: () => dispatch(modelValidateAction()),
+                onChange: v => dispatch(modelChangeAction({[name]: v})),
+                value: initialValue,
             } as ModelEntry
         }
 
-        validateModelValues(model, elements, utils)
-
-        return {model, utils}
+        return {model, utils, hasChanged: true}
     }
 
     return state.model
-}
-
-function validateModelValues(
-    model: Model<any>,
-    values: ModelValues,
-    utils: State["utils"]
-) {
-    const data = model.$data()
-    for (const name in values) {
-        const entry = model[name]
-        entry.error = call(utils[name].validate, entry.value, data)
-    }
-}
-
-/**
- * This function should be called on any values, before dispatching them.
- * It aims to prevent issues when dispatch is called asynchronously, after
- * an input event has been cleaned up.
- */
-function persistent(values: ModelValues<any>) {
-    Object.values(values).forEach(v => {
-        isSyntheticEvent(v) && v.persist()
-    })
-    return values
 }
 
 export {useModel}
