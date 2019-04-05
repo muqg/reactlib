@@ -1,5 +1,5 @@
-import {useContext, useEffect, useState} from "react"
-import {Model, useModel} from "."
+import {useContext, useState} from "react"
+import {Model} from "."
 import {NotificationContext} from "../contexts"
 import {RequestMethod} from "../utility"
 import {isString} from "../utility/assertions"
@@ -15,11 +15,6 @@ export interface ResourceProps<T extends object = object> {
         resource: T
     ) => string | void | Promise<string | void>
     /**
-     * Default data for the resource. Used when a new one is being created
-     * and also when a resource is deleted and the data should be reset.
-     */
-    default: T
-    /**
      * Id of the resource. Falsey value for a new resource.
      */
     id: number | string | null | undefined
@@ -33,6 +28,10 @@ export interface ResourceProps<T extends object = object> {
      * notification for when deletion is done.
      */
     deleted?: (resource: T) => string | void | Promise<string | void>
+    /**
+     * A resource model to be used.
+     */
+    model: Model<T>
     /**
      * Called before saving a resource. May return a string with an error message
      * to show it as notification and cancel the process. This makes it a perfect
@@ -76,30 +75,18 @@ export interface ResourceManager<T extends object = object> {
 }
 
 function useResource<T extends object>({
-    url = document.location!.href,
+    model,
+    url = document.location.href,
     ...props
 }: ResourceProps<T>): ResourceManager<T> {
     const [isWorking, setIsWorking] = useState(false)
-    const model = useModel(props.default)
     const notify = useContext(NotificationContext)
 
     const resUrl = url + "/" + props.id
 
-    useEffect(() => {
-        if (props.id) {
-            _work(async () => await request<T>(RequestMethod.GET, resUrl))
-        } else {
-            // Resetting resource outside of the worker
-            // wrapper skips an unnecessary render.
-            // Use setTimeout to push it to the end of the execution queue
-            // and avoid race conditions with other async functions.
-            setTimeout(() => model.$set(props.default), 0)
-        }
-    }, [props.id])
-
     async function save() {
         await _work(async () => {
-            const resource = model.$data
+            const resource = model.$data()
             if (_error(call(props.saving, resource))) return
 
             const method = props.id ? RequestMethod.PUT : RequestMethod.POST
@@ -127,7 +114,7 @@ function useResource<T extends object>({
         await _work(async () => {
             if (!props.id) return
 
-            const resource = model.$data
+            const resource = model.$data()
             if (_error(call(props.deleting, resource))) return
 
             const response = request(RequestMethod.DELETE, resUrl, resource)
@@ -136,8 +123,6 @@ function useResource<T extends object>({
 
             await response
             _error(await deletedCallbackResult)
-
-            return {...props.default}
         })
     }
 
@@ -153,12 +138,18 @@ function useResource<T extends object>({
         // This will prevent sending duplicate requests.
         if (isWorking) return
 
-        let resource = model.$data
+        const error = model.$firstError()
+        if (error) {
+            notify(error)
+            return
+        }
+
+        let resource = model.$data()
         setIsWorking(true)
         try {
             const response = await worker()
             if (response) {
-                model.$set(response)
+                model.$change(response)
                 resource = response
             }
             setIsWorking(false)
@@ -172,15 +163,13 @@ function useResource<T extends object>({
             let message = (await call(props.catch, ex, resource)) || "Error"
             notify(message)
         }
-
-        return resource
     }
 
     return {
         isWorking,
         save,
 
-        data: model.$data,
+        data: model.$data(),
         delete: del,
         model: model,
     }
