@@ -7,6 +7,10 @@ import {CHAR_CODE_ENTER} from "../../utility/dom"
 import {call} from "../../utility/function"
 import {DialogBox, DialogBoxProps} from "./DialogBox"
 
+const StyledDialogBox = styled(DialogBox)`
+    /* 100 more than Dialog */
+    z-index: 300;
+`
 const Container = styled.div`
     padding: 24px 12px;
 `
@@ -50,7 +54,9 @@ const ConfirmationDialog = ({
         const res = call(props.onAccept)
         const success = !isUndefined(res) ? res : true
 
-        if (success && props.onClose) props.onClose()
+        if (success) {
+            call(props.onClose)
+        }
     }
 
     const reject = () => {
@@ -59,39 +65,39 @@ const ConfirmationDialog = ({
     }
 
     const keyDown: DialogProps["onKeyDown"] = event => {
-        if (event.keyCode === CHAR_CODE_ENTER) accept()
+        if (event.keyCode === CHAR_CODE_ENTER) {
+            accept()
+        }
 
         call(props.onKeyDown, event)
     }
 
     return (
-        <DialogBox {...props} onKeyDown={keyDown} onClose={reject}>
-            {close => {
-                return (
-                    <Container>
-                        <div>{props.children}</div>
-                        <ButtonsContainer>
-                            <StyledButton
-                                onClick={() => {
-                                    accept()
-                                    close()
-                                }}
-                            >
-                                {textOkay}
-                            </StyledButton>
-                            <StyledButton
-                                onClick={() => {
-                                    reject()
-                                    close()
-                                }}
-                            >
-                                {textCancel}
-                            </StyledButton>
-                        </ButtonsContainer>
-                    </Container>
-                )
-            }}
-        </DialogBox>
+        <StyledDialogBox {...props} onKeyDown={keyDown} onClose={reject}>
+            {close => (
+                <Container>
+                    <div>{props.children}</div>
+                    <ButtonsContainer>
+                        <StyledButton
+                            onClick={() => {
+                                accept()
+                                close()
+                            }}
+                        >
+                            {textOkay}
+                        </StyledButton>
+                        <StyledButton
+                            onClick={() => {
+                                reject()
+                                close()
+                            }}
+                        >
+                            {textCancel}
+                        </StyledButton>
+                    </ButtonsContainer>
+                </Container>
+            )}
+        </StyledDialogBox>
     )
 }
 

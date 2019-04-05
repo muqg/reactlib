@@ -4,9 +4,9 @@ import {
     AspectImage,
     Block,
     Button,
+    ConfirmationDialog,
     ImageView,
     RemoveButton,
-    ConfirmationDialog,
 } from "../../../lub/components"
 import {styled} from "../../../lub/styles"
 import {isString} from "../../../lub/utility/assertions"
@@ -30,13 +30,13 @@ const StyledRemoveButton = styled(RemoveButton)`
 
 type ConfirmationComponentProps = Pick<
     React.ComponentProps<typeof ConfirmationDialog>,
-    "onAccept" | "onClose" | "isVisible"
+    "onAccept" | "onClose"
 >
 interface OwnProps {
     /**
      * A dialog to confirm the removal.
      * - It is recomended that a ConfirmationDialog is used.
-     * - The component is passed `onAccept`, `onClose` and `isVisible` props.
+     * - The component is passed `onAccept` and `onClose`.
      */
     confirmationComponent?: React.ComponentType<ConfirmationComponentProps>
     /**
@@ -146,9 +146,8 @@ function ImageInput(props: Props) {
                     )}
                 </PreviewContainer>
             )}
-            {ConfirmationComponent && props.onRemove && (
+            {ConfirmationComponent && props.onRemove && isConfirming && (
                 <ConfirmationComponent
-                    isVisible={isConfirming}
                     onAccept={props.onRemove}
                     onClose={() => setIsConfirming(false)}
                 />
