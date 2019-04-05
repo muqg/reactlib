@@ -1,53 +1,99 @@
-import {useState, useRef, useEffect, useMemo} from "react"
+import {useEffect, useRef, useState} from "react"
+import {call} from "../utility/function"
 
-interface Task<R, A extends any[] = any> {
+interface Task<R = any, A extends any[] = any> {
+    /**
+     * Attempts to cancel the currently running task function.
+     * - Only works for generator task functions and which may
+     * allow cancellation by yielding their execution.
+     * - Task will automatically cancel and clean itself up on unmount.
+     */
+    cancel: () => void
+    /**
+     * Whether the task function is currently running.
+     */
     isRunning: boolean
-    run: (...args: A) => Promise<R | void>
+    /**
+     * Runs the task function.
+     */
+    run: (...args: A) => Promise<R> | null
 }
 
+type TaskFunction<R, A extends any[]> = (
+    ...args: A
+) => Promise<R | void> | IterableIterator<R> | AsyncIterableIterator<R>
+
 /**
- * A task is a function that exposes a running state allowing to
- * manage other parts of a component based on it.
+ * A task function runs asynchronously and exposes additional functionality.
  *
  * Notice: Typically a single task at most is meant to be used within a
  * component. If more than one task is needed then consider a custom
  * implementation. This is designed for the very simple, common use cases only.
  * It may very well become obsolete once react for data fetching is available.
- *
- * @param func The function to be transformed into a task.
  */
-function useTask<R, A extends any[]>(func: Task<R, A>["run"]): Task<R, A> {
-    const [isRunning, setRunning] = useState(false)
+function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
+    const [task, setTask] = useState<ReturnType<Task["run"]>>(null)
 
-    const isMounted = useRef(true)
+    const cancelled = useRef(false)
     useEffect(
         () => () => {
-            isMounted.current = false
+            cancelled.current = true
         },
         []
     )
 
-    const run = async (...args: A) => {
-        if (isRunning) return
-
-        let res
+    function run(...args: A) {
         try {
-            setRunning(true)
-            res = await func(...args)
-        } finally {
-            /**
-             * This will prevent updates on unmounted components
-             * in case of navigation or conditional rendering
-             */
-            if (isMounted.current) setRunning(false)
+            if (!task) {
+                setTask(
+                    (async () => {
+                        cancelled.current = false
+
+                        const res = func(...args) as any
+                        if (
+                            typeof res[Symbol.iterator] === "function" ||
+                            typeof res[Symbol.asyncIterator] === "function"
+                        ) {
+                            const task = res as IterableIterator<R>
+                            while (true) {
+                                const {done, value} = await task.next()
+                                if (cancelled.current || done) {
+                                    call(task.return)
+                                    cancel()
+
+                                    // Should return null instead of yielded value
+                                    // when cancelled and only ever return the real
+                                    // return value when the generator is done.
+                                    return done ? value : null
+                                }
+                            }
+                        } else {
+                            cancel()
+                            return res
+                        }
+                    })()
+                )
+            }
+        } catch (ex) {
+            cancel()
+            throw ex
         }
 
-        return res
+        return task
     }
 
-    return useMemo(() => {
-        return {isRunning, run}
-    }, [isRunning, func])
+    function cancel() {
+        if (!cancelled.current) {
+            setTask(null)
+        }
+        cancelled.current = true
+    }
+
+    return {
+        cancel,
+        isRunning: !!task,
+        run,
+    }
 }
 
 export {useTask}
