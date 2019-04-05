@@ -1,10 +1,11 @@
-import {useContext, useState} from "react"
+import {useContext} from "react"
 import {Model} from "."
 import {NotificationContext} from "../contexts"
 import {RequestMethod} from "../utility"
 import {isString} from "../utility/assertions"
 import {call} from "../utility/function"
 import {request} from "../utility/web"
+import {useTask} from "./useTask"
 
 export interface ResourceProps<T extends object = object> {
     /**
@@ -79,51 +80,52 @@ function useResource<T extends object>({
     url = document.location.href,
     ...props
 }: ResourceProps<T>): ResourceManager<T> {
-    const [isWorking, setIsWorking] = useState(false)
     const notify = useContext(NotificationContext)
 
     const resUrl = url + "/" + props.id
 
     async function save() {
-        await _work(async () => {
-            const resource = model.$data()
-            if (_error(call(props.saving, resource))) return
+        const resource = model.$data()
+        if (_error(call(props.saving, resource))) {
+            return
+        }
 
-            const method = props.id ? RequestMethod.PUT : RequestMethod.POST
-            const requestURL = method === RequestMethod.PUT ? resUrl : url
+        const method = props.id ? RequestMethod.PUT : RequestMethod.POST
+        const requestURL = method === RequestMethod.PUT ? resUrl : url
 
-            const nextResource = (async () => {
-                const response = await request<Partial<T>>(
-                    method,
-                    requestURL,
-                    resource
-                )
-                return {...resource, ...response}
-            })()
+        const nextResource = (async () => {
+            const response = await request<Partial<T>>(
+                method,
+                requestURL,
+                resource
+            )
+            return {...resource, ...response}
+        })()
 
-            const savedCallbackResult = call(props.saved, nextResource)
+        const savedCallbackResult = call(props.saved, nextResource)
 
-            await nextResource
-            _error(await savedCallbackResult)
+        await nextResource
+        _error(await savedCallbackResult)
 
-            return nextResource
-        })
+        return nextResource
     }
 
     async function del() {
-        await _work(async () => {
-            if (!props.id) return
+        if (!props.id) {
+            return
+        }
 
-            const resource = model.$data()
-            if (_error(call(props.deleting, resource))) return
+        const resource = model.$data()
+        if (_error(call(props.deleting, resource))) {
+            return
+        }
 
-            const response = request(RequestMethod.DELETE, resUrl, resource)
+        const response = request(RequestMethod.DELETE, resUrl, resource)
 
-            const deletedCallbackResult = call(props.deleted, resource)
+        const deletedCallbackResult = call(props.deleted, resource)
 
-            await response
-            _error(await deletedCallbackResult)
-        })
+        await response
+        _error(await deletedCallbackResult)
     }
 
     function _error(err: string | void) {
@@ -134,10 +136,9 @@ function useResource<T extends object>({
         return false
     }
 
-    async function _work(worker: () => Promise<T | void>) {
-        // This will prevent sending duplicate requests.
-        if (isWorking) return
-
+    const workerTask = useTask(async function*(
+        worker: () => Promise<T | void>
+    ) {
         const error = model.$firstError()
         if (error) {
             notify(error)
@@ -145,33 +146,32 @@ function useResource<T extends object>({
         }
 
         let resource = model.$data()
-        setIsWorking(true)
         try {
             const response = await worker()
+
+            yield
             if (response) {
                 model.$change(response)
-                resource = response
             }
-            setIsWorking(false)
         } catch (ex) {
-            /**
-             * Stop working before attempting to handle exception in order
-             * to allow for a complete recovery within the handler.
-             */
-            setIsWorking(false)
+            setTimeout(async () => {
+                let message = (await call(props.catch, ex, resource)) || "Error"
+                notify(message)
+            })
 
-            let message = (await call(props.catch, ex, resource)) || "Error"
-            notify(message)
+            if (__DEV__) {
+                console.error(ex)
+            }
         }
-    }
+    })
 
     return {
-        isWorking,
-        save,
+        model,
 
+        isWorking: workerTask.isRunning,
+        save: () => workerTask.run(save),
         data: model.$data(),
-        delete: del,
-        model: model,
+        delete: () => workerTask.run(del),
     }
 }
 
