@@ -1,6 +1,3 @@
-import * as React from "react"
-import {useState} from "react"
-import {ModelError} from "../../hooks"
 import {
     COLOR_ACCENT,
     COLOR_DARK,
@@ -8,11 +5,10 @@ import {
     COLOR_TEXT,
     styled,
 } from "../../styles"
-import {Omit} from "../../utility"
-import {call} from "../../utility/function"
+import {ValidationError} from "../../utility"
 
 interface StyleProps {
-    hasError?: boolean
+    error?: ValidationError
     type?: "number" | "password" | "text"
     /**
      * Whether to attempt to fill the container's width.
@@ -22,10 +18,10 @@ interface StyleProps {
     wide?: boolean
 }
 
-const StyledInput = styled.input`
+const TextInput = styled.input`
     border: 1px solid
         ${p =>
-            p.hasError
+            p.error
                 ? p.theme.error || COLOR_ERROR
                 : p.theme.main || COLOR_DARK};
     color: ${p => p.theme.text || COLOR_TEXT};
@@ -45,23 +41,5 @@ const StyledInput = styled.input`
         cursor: default;
     }
 `
-
-interface OwnProps {
-    error?: ModelError
-}
-
-type Props = OwnProps &
-    Omit<React.ComponentProps<typeof StyledInput>, "hasError">
-
-function TextInput({error, onBlur, ...props}: Props) {
-    const [hasError, setHasError] = useState(false)
-
-    function checkForError(e: React.FocusEvent<HTMLInputElement>) {
-        call(onBlur, e)
-        setHasError(!!error)
-    }
-
-    return <StyledInput {...props} hasError={hasError} onBlur={checkForError} />
-}
 
 export {TextInput}
