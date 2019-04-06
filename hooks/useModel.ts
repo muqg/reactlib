@@ -111,13 +111,15 @@ function useModel<T extends object>(
             },
             $reset(...names: string[]) {
                 const nameList = len(names) ? names : Object.keys(elements)
-                const values = nameList.map(name => {
+                const values: any = {}
+
+                for (const name of nameList) {
                     // @ts-ignore Element implicitly has an 'any' type... (7017)
                     const current = elements[name]
-                    return isObject<ModelElement>(current)
+                    values[name] = isObject<ModelElement>(current)
                         ? current.value
                         : current
-                })
+                }
 
                 dispatch(modelChangeAction(values))
                 dispatch(modelValidateAction())
