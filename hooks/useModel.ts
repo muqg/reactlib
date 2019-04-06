@@ -167,6 +167,16 @@ function useModel<T extends object>(
                 }
             }
 
+            if (__DEV__) {
+                if (name.startsWith("$")) {
+                    console.error(
+                        "The model should not contain entries with names starting with " +
+                            "a dollar sign $, which is used to designate special model " +
+                            "properties and may therefore lead to unexpected behaviour."
+                    )
+                }
+            }
+
             utils[name] = util
             model[name] = {
                 onBlur: () => dispatch(modelValidateAction()),

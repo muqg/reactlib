@@ -59,14 +59,6 @@ export function modelHookReducer(state: State, action: Actions): State {
                                 `name ${name}.`
                         )
                     }
-
-                    if (name.startsWith("$")) {
-                        console.error(
-                            "The model should not contain entries with names starting with " +
-                                "a dollar sign $, which is used to designate special model " +
-                                "properties and may therefore lead to unexpected behaviour."
-                        )
-                    }
                 }
             }
 
