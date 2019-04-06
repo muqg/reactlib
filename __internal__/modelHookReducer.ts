@@ -17,6 +17,9 @@ type Actions =
     | Action<ModelValueList<any>, "change">
     | Action<undefined, "validate">
 
+/**
+ * This is the reducer for useModel hook.
+ */
 export function modelHookReducer(state: State, action: Actions): State {
     const {utils} = state
 
@@ -97,13 +100,10 @@ export function modelHookReducer(state: State, action: Actions): State {
 }
 
 export function modelChangeAction(values: ModelValueList<any>) {
-    /**
-     * This aims to prevent issues when dispatch is called asynchronously, after
-     * an input event has been cleaned up, by persisting any input synthetic events.
-     */
-    Object.values(values).forEach(v => {
-        isSyntheticEvent(v) && v.persist()
-    })
+    // This aims to prevent issues when dispatch is called asynchronously, after
+    // an input event has been cleaned up, by persisting any input synthetic events.
+    Object.values(values).forEach(v => isSyntheticEvent(v) && v.persist())
+
     return createAction("change", values)
 }
 

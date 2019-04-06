@@ -160,14 +160,11 @@ function useResource<T extends object>({
             const resource = model.$data()
             const catchCb = props.catch
 
+            console.error(ex)
             setTimeout(async () => {
                 let message = (await call(catchCb, ex, resource)) || "Error"
                 notify(message)
             })
-
-            if (__DEV__) {
-                console.error(ex)
-            }
         }
     })
 

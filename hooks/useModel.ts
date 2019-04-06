@@ -54,12 +54,15 @@ export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
      */
     $data(): T
     /**
-     * Returns a list of model errors. Note that this function performs
-     * a fresh validation in place and may  therefore be expensive.
+     * Returns a list of model errors. Note that this method performs
+     * a fresh validation in place and may therefore be expensive and
+     * avoid being called repeatedly.
      */
     $errors(): Dictionary<T, ValidationError>
     /**
-     * Returns the first error from the model's error list.
+     * Returns the first error from the model's error list. This method calls
+     * $errors() method internally and may therefore be expensive and void
+     * being called repeatedly.
      */
     $firstError(): ValidationError
     /**
