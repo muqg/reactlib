@@ -74,7 +74,7 @@ export function modelHookReducer(state: State, action: Actions): State {
             const data = model.$data()
 
             for (const name in utils) {
-                const entry = model[name]
+                const entry = {...model[name]}
                 entry.error = call(
                     utils[name].validate,
                     model[name].value,
