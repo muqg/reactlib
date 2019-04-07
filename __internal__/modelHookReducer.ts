@@ -33,7 +33,7 @@ export function modelHookReducer(state: State, action: Actions): State {
 
             const model = {...state.model}
             for (const name in values) {
-                const entry = model[name]
+                const entry = {...model[name]}
                 const {parse} = utils[name]
 
                 let value = values[name]
@@ -49,6 +49,7 @@ export function modelHookReducer(state: State, action: Actions): State {
                 }
 
                 entry.value = value
+                model[name] = entry
 
                 if (__DEV__) {
                     if (!(name in model)) {
@@ -73,11 +74,13 @@ export function modelHookReducer(state: State, action: Actions): State {
             const data = model.$data()
 
             for (const name in utils) {
-                model[name].error = call(
+                const entry = model[name]
+                entry.error = call(
                     utils[name].validate,
                     model[name].value,
                     data
                 )
+                model[name] = entry
             }
 
             return {model, utils, hasChanged: false}
