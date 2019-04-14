@@ -183,7 +183,9 @@ function useModel<T extends object>(
             model[name] = {
                 onBlur: () => dispatch(modelValidateAction()),
                 onChange: v => dispatch(modelChangeAction({[name]: v})),
-                value: initialValue,
+                // Allowing undefined values plays badly with the way that React
+                // determines whether an input is controlled or uncontrolled.
+                value: initialValue === undefined ? "" : initialValue,
             } as ModelEntry
         }
 
