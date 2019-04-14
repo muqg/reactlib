@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from "react"
 import {call} from "../utility/function"
+import {isFunction} from "../utility/assertions"
 
 interface Task<R = any, A extends any[] = any> {
     /**
@@ -51,8 +52,8 @@ function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
 
                         const result = func(...args) as any
                         if (
-                            typeof result[Symbol.iterator] === "function" ||
-                            typeof result[Symbol.asyncIterator] === "function"
+                            isFunction(result[Symbol.iterator]) ||
+                            isFunction(result[Symbol.asyncIterator])
                         ) {
                             const generator = result as IterableIterator<R>
                             while (true) {
