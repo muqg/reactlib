@@ -116,9 +116,11 @@ function useModel<T extends object>(
                 for (const name of nameList) {
                     // @ts-ignore Element implicitly has an 'any' type... (7017)
                     const current = elements[name]
-                    values[name] = isObject<ModelElement>(current)
+                    const value = isObject<ModelElement>(current)
                         ? current.value
                         : current
+
+                    values[name] = value === undefined ? "" : value
                 }
 
                 dispatch(modelChangeAction(values))
