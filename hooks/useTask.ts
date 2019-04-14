@@ -25,12 +25,8 @@ type TaskFunction<R, A extends any[]> = (
 ) => Promise<R | void> | IterableIterator<R> | AsyncIterableIterator<R>
 
 /**
- * A task function runs asynchronously and exposes additional functionality.
- *
- * Notice: Typically a single task at most is meant to be used within a
- * component. If more than one task is needed then consider a custom
- * implementation. This is designed for the very simple, common use cases only.
- * It may very well become obsolete once react for data fetching is available.
+ * A task function runs asynchronously and exposes additional functionality,
+ * such as running status and cancellation.
  */
 function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
     const [task, setTask] = useState<ReturnType<Task["run"]>>(null)
