@@ -41,5 +41,6 @@ const TextInput = styled.input`
         cursor: default;
     }
 `
+TextInput.displayName = "TextInput"
 
 export {TextInput}
