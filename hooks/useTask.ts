@@ -49,16 +49,16 @@ function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
                     (async () => {
                         cancelled.current = false
 
-                        const res = func(...args) as any
+                        const result = func(...args) as any
                         if (
-                            typeof res[Symbol.iterator] === "function" ||
-                            typeof res[Symbol.asyncIterator] === "function"
+                            typeof result[Symbol.iterator] === "function" ||
+                            typeof result[Symbol.asyncIterator] === "function"
                         ) {
-                            const task = res as IterableIterator<R>
+                            const generator = result as IterableIterator<R>
                             while (true) {
-                                const {done, value} = await task.next()
+                                const {done, value} = await generator.next()
                                 if (cancelled.current || done) {
-                                    call(task.return)
+                                    call(generator.return)
                                     cancel()
 
                                     // Should return null instead of yielded value
@@ -69,7 +69,7 @@ function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
                             }
                         } else {
                             cancel()
-                            return res
+                            return result
                         }
                     })()
                 )
