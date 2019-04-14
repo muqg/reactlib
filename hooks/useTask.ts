@@ -50,12 +50,12 @@ function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
                     (async () => {
                         cancelled.current = false
 
-                        const result = func(...args) as any
+                        const currentTask = func(...args) as any
                         if (
-                            isFunction(result[Symbol.iterator]) ||
-                            isFunction(result[Symbol.asyncIterator])
+                            isFunction(currentTask[Symbol.iterator]) ||
+                            isFunction(currentTask[Symbol.asyncIterator])
                         ) {
-                            const generator = result as IterableIterator<R>
+                            const generator = currentTask as IterableIterator<R>
                             while (true) {
                                 const {done, value} = await generator.next()
                                 if (cancelled.current || done) {
@@ -69,8 +69,11 @@ function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
                                 }
                             }
                         } else {
+                            // Don't forget to let current async task
+                            // function complete before running cancellation.
+                            await currentTask
                             cancel()
-                            return result
+                            return currentTask
                         }
                     })()
                 )
@@ -84,9 +87,10 @@ function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
     }
 
     function cancel() {
-        if (!cancelled.current) {
-            setTask(null)
+        if (cancelled.current) {
+            return
         }
+        setTask(null)
         cancelled.current = true
     }
 
