@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react"
-import {call} from "../utility/function"
 import {isFunction} from "../utility/assertions"
+import {call} from "../utility/function"
 
 interface Task<R = any, A extends any[] = any> {
     /**

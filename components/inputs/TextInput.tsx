@@ -22,7 +22,7 @@ const TextInput = styled.input`
     border: 1px solid
         ${p =>
             p.error
-                ? p.theme.error || COLOR_ERROR
+                ? `${p.theme.error || COLOR_ERROR} !important` // Should override any other border color.
                 : p.theme.main || COLOR_DARK};
     color: ${p => p.theme.text || COLOR_TEXT};
     cursor: text;
