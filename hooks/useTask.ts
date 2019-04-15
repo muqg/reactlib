@@ -40,10 +40,10 @@ function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
     )
 
     function run(...args: A) {
-        try {
-            if (!task) {
-                setTask(
-                    (async () => {
+        if (!task) {
+            setTask(
+                (async () => {
+                    try {
                         cancelled.current = false
 
                         const currentTask = func(...args) as any
@@ -71,12 +71,12 @@ function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
                             cancel()
                             return currentTask
                         }
-                    })()
-                )
-            }
-        } catch (ex) {
-            cancel()
-            throw ex
+                    } catch (ex) {
+                        cancel()
+                        throw ex
+                    }
+                })()
+            )
         }
 
         return task
