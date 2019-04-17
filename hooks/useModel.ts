@@ -25,7 +25,15 @@ export interface ModelElement<T extends object = object> {
      * @param prev The previous value.
      */
     parse?(input: any | undefined, prev: any): Serializable
+    /**
+     * Undefined values are transformed into empty strings.
+     */
     value?: T[keyof T]
+    /**
+     * Validates a model entry's value.
+     * @param value Current value.
+     * @param modelValues List of model's most recent values.
+     */
     validate?(value: any, modelValues: ModelValueList<T>): ValidationError
 }
 
@@ -36,8 +44,17 @@ export interface ModelEntry {
      * $errors method instead.
      */
     error?: ValidationError
+    /**
+     * Performs validation of model's data.
+     */
     onBlur: () => void
+    /**
+     * Changes a model entry's value.
+     */
     onChange: (input: ModelInput) => void
+    /**
+     * Model entry's current value.
+     */
     value: any
 }
 
