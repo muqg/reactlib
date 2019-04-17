@@ -1,6 +1,14 @@
-import {styled, COLOR_TEXT, COLOR_DARK, COLOR_ACCENT} from "../../styles"
+import {
+    COLOR_ACCENT,
+    COLOR_DARK,
+    COLOR_ERROR,
+    COLOR_TEXT,
+    styled,
+} from "../../styles"
+import {ValidationError} from "../../utility"
 
 interface StyleProps {
+    error?: ValidationError
     type?: "number" | "password" | "text"
     /**
      * Whether to attempt to fill the container's width.
@@ -11,9 +19,14 @@ interface StyleProps {
 }
 
 const TextInput = styled.input`
-    border: 1px solid ${p => p.theme.main || COLOR_DARK};
+    border: 1px solid
+        ${p =>
+            p.error
+                ? `${p.theme.error || COLOR_ERROR} !important` // Should override any other border color.
+                : p.theme.main || COLOR_DARK};
     color: ${p => p.theme.text || COLOR_TEXT};
     cursor: text;
+    min-width: 250px;
     padding: 6px 9px;
     transition: all 0.1s ease;
 

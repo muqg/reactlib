@@ -1,67 +1,215 @@
-import {useMemo, useState} from "react"
-import {isObject, isType} from "../utility/assertions"
-import {ParseableInput, parseInputValue} from "../utility/dom"
-import {ReactStateSetter} from "../utility/react"
-import {cast} from "../utility/string"
+import {useReducer} from "react"
+import {Dictionary, List, Omit, Serializable, ValidationError} from "../utility"
+import {isObject} from "../utility/assertions"
+import {except, len} from "../utility/collection"
+import {ParseableInput} from "../utility/dom"
 import {call} from "../utility/function"
+import {
+    modelChangeAction,
+    modelHookReducer,
+    modelValidateAction,
+} from "../__internal__/modelHookReducer"
 
-/**
- * Model object structure.
- */
-export type Model<T extends object, K extends keyof T = keyof T> = {
-    [key in K]: {
-        value: any
-        onChange: (input: ModelInputValue) => void
-    }
-} & {$data: T; $set: ReactStateSetter<Partial<T> | T>}
-/**
- * Valid model inputs values.
- */
-export type ModelInputValue = ParseableInput | ModelPrimitive
-type ModelPrimitive = string | boolean | number | object
+export type ModelInput = ParseableInput | Serializable
+export type ModelValueList<T extends object = object> = Dictionary<
+    T,
+    T[keyof T]
+>
+export type ModelUtils = List<Omit<ModelElement<any>, "value">>
 
-/**
- * Creates an input model.
- *
- * @param init The initial model object data.
- * @param middleware A function that is called right before updating the model.
- * This allows for final custom manipulations on the value.
- */
+export interface ModelElement<T extends object = object> {
+    /**
+     * A custom parser for when value changes.
+     * @param input Current input value. Note that parser is called initially
+     * with input value as undefined.
+     * @param prev The previous value.
+     */
+    parse?(input: any | undefined, prev: any): Serializable
+    /**
+     * Undefined values are transformed into empty strings.
+     */
+    value?: T[keyof T]
+    /**
+     * Validates a model entry's value.
+     * @param value Current value.
+     * @param modelValues List of model's most recent values.
+     */
+    validate?(value: any, modelValues: ModelValueList<T>): ValidationError
+}
+
+export interface ModelEntry {
+    /**
+     * Errors should not be accessed directly for vlidation via this property,
+     * since it may not be in sync with the current value. Use the model's special
+     * $errors method instead.
+     */
+    error?: ValidationError
+    /**
+     * Performs validation of model's data.
+     */
+    onBlur: () => void
+    /**
+     * Changes a model entry's value.
+     */
+    onChange: (input: ModelInput) => void
+    /**
+     * Model entry's current value.
+     */
+    value: any
+}
+
+// Note that all special model props should start with a dollar sign.
+export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
+    /**
+     * Changes the values of multiple model entries at once.
+     * @param values A list of the model names to update and their new values as
+     * key/value pairs, respectively.
+     */
+    $change(values: Partial<T>): void
+    /**
+     * Returns the modeled data as a list of key/value pairs.
+     */
+    $data(): T
+    /**
+     * Returns a list of model errors. Note that this method performs
+     * a fresh validation in place and may therefore be expensive and
+     * avoid being called repeatedly.
+     */
+    $errors(): Dictionary<T, ValidationError>
+    /**
+     * Returns the first error from the model's error list. This method calls
+     * $errors() method internally and may therefore be expensive and void
+     * being called repeatedly.
+     */
+    $firstError(): ValidationError
+    /**
+     * Resets the values for the given names to their initial values.
+     * If no names are given then all model values are reset.
+     */
+    $reset(...names: Array<keyof T>): void
+}
+
 function useModel<T extends object>(
-    init: T,
-    middleware?: (val: ModelPrimitive, name: string) => ModelPrimitive | void
+    initialElements: () => Partial<
+        Dictionary<T, string | boolean | number | null | ModelElement<T>>
+    >
 ): Model<T> {
-    const [data, setModel] = useState(init)
+    const [state, dispatch] = useReducer(modelHookReducer, {}, initialize)
 
-    function change(name: string, input: ModelInputValue) {
-        let value = input
-        if (
-            isType<ParseableInput>(input, v => v.target || isObject(v, Element))
-        )
-            value = cast(parseInputValue(input))
+    function initialize() {
+        const elements = initialElements()
 
-        value = call(middleware, value, name) || value
+        const utils: ModelUtils = {}
+        const model = {
+            $change(values: ModelValueList<any>) {
+                dispatch(modelChangeAction(values))
+            },
+            $data() {
+                const values: any = {}
+                for (const name in utils) {
+                    values[name] = this[name].value
+                }
+                return values
+            },
+            $errors() {
+                const data = this.$data()
+                const errors: any = {}
+                for (const name in utils) {
+                    const entry = this[name]
+                    const err = call(utils[name].validate, entry.value, data)
+                    if (err) {
+                        errors[name] = err
+                    }
+                }
+                return errors
+            },
+            $firstError() {
+                return Object.values(this.$errors())[0]
+            },
+            $reset(...names: string[]) {
+                const nameList = len(names) ? names : Object.keys(elements)
+                const values: any = {}
 
-        setModel({
-            ...data,
-            [name]: value,
-        })
-    }
+                for (const name of nameList) {
+                    // @ts-ignore Element implicitly has an 'any' type... (7017)
+                    const current = elements[name]
+                    const value = isObject<ModelElement>(current)
+                        ? current.value
+                        : current
 
-    return useMemo(() => {
-        const model = {} as Model<any>
-        for (let key in init) {
-            model[key] = {
-                value: data[key],
-                onChange: c => change(key, c),
+                    values[name] = value === undefined ? "" : value
+                }
+
+                dispatch(modelChangeAction(values))
+                dispatch(modelValidateAction())
+            },
+        } as Model<any>
+
+        for (const name in elements) {
+            const currentElement = elements[name]
+            let initialValue: any = currentElement
+            let util = {}
+
+            if (isObject<ModelElement>(currentElement)) {
+                initialValue = currentElement.value
+                util = except(currentElement, "value")
+
+                // Run custom parser initially in order to
+                // allow it to initialize the value.
+                if (currentElement.parse) {
+                    initialValue = currentElement.parse(undefined, initialValue)
+
+                    if (__DEV__) {
+                        if (initialValue === undefined) {
+                            console.error(
+                                `The initial call to a model parser with name [${name}] ` +
+                                    "returned undefined. You have probably forgot to " +
+                                    "check for the initial undefined input value or " +
+                                    "returned nothing."
+                            )
+                        }
+                    }
+                }
+
+                if (__DEV__) {
+                    const supportedProps = ["parse", "validate", "value"]
+                    for (const key in currentElement) {
+                        if (!supportedProps.includes(key)) {
+                            console.error(
+                                "Model received an object or array which contains " +
+                                    `an unsupported property ${key}. If you are trying ` +
+                                    "to model an object or array value then pass it " +
+                                    "as a value property of a ModelElement."
+                            )
+                        }
+                    }
+                }
             }
+
+            if (__DEV__) {
+                if (name.startsWith("$")) {
+                    console.warn(
+                        "The model should not contain entries with names starting with " +
+                            "a dollar sign $, which is used to designate special model " +
+                            "properties and may therefore lead to unexpected behaviour."
+                    )
+                }
+            }
+
+            utils[name] = util
+            model[name] = {
+                onBlur: () => dispatch(modelValidateAction()),
+                onChange: v => dispatch(modelChangeAction({[name]: v})),
+                // Allowing undefined values plays badly with the way that React
+                // determines whether an input is controlled or uncontrolled.
+                value: initialValue === undefined ? "" : initialValue,
+            } as ModelEntry
         }
 
-        model.$data = data
-        model.$set = setModel as Model<T>["$set"]
+        return {model, utils, hasChanged: true}
+    }
 
-        return model
-    }, [data])
+    return state.model
 }
 
 export {useModel}

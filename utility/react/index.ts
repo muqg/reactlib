@@ -1,5 +1,7 @@
+export * from "./createAction"
 export * from "./createFetcher"
 export {createModelComponent} from "./createModelComponent"
 export {getDisplayName} from "./getDisplayName"
 export {isComponentType} from "./isComponentType"
+export {isSyntheticEvent} from "./isSyntheticEvent"
 export * from "./types"

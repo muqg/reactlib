@@ -21,12 +21,13 @@ interface Props {
 }
 
 const ImageView = (props: Props) => {
-    if (!props.src) return null
+    if (!props.src) {
+        return null
+    }
 
     return (
         <Dialog
             className={props.className}
-            isVisible
             onKeyDown={e => e.stopPropagation()}
             onClose={props.onClose}
         >

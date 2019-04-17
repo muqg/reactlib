@@ -1,10 +1,11 @@
-import {useContext, useEffect, useState} from "react"
-import {Model, useModel} from "."
+import {useContext} from "react"
+import {Model} from "."
 import {NotificationContext} from "../contexts"
-import {RequestMethod} from "../utility"
+import {RequestMethod, ValidationError} from "../utility"
 import {isString} from "../utility/assertions"
 import {call} from "../utility/function"
 import {request} from "../utility/web"
+import {useTask} from "./useTask"
 
 export interface ResourceProps<T extends object = object> {
     /**
@@ -15,11 +16,6 @@ export interface ResourceProps<T extends object = object> {
         resource: T
     ) => string | void | Promise<string | void>
     /**
-     * Default data for the resource. Used when a new one is being created
-     * and also when a resource is deleted and the data should be reset.
-     */
-    default: T
-    /**
      * Id of the resource. Falsey value for a new resource.
      */
     id: number | string | null | undefined
@@ -27,23 +23,27 @@ export interface ResourceProps<T extends object = object> {
      * Called before deleting a resource. May return a string with an error
      * message to show it as notification and cancel the process.
      */
-    deleting?: (resource: T) => string | void
+    deleting?: (resource: T) => ValidationError
     /**
      * Called after deleting a resource. May return a string to show as
      * notification for when deletion is done.
      */
-    deleted?: (resource: T) => string | void | Promise<string | void>
+    deleted?: (resource: T) => ValidationError | Promise<ValidationError>
+    /**
+     * A resource model to be used.
+     */
+    model: Model<T>
     /**
      * Called before saving a resource. May return a string with an error message
      * to show it as notification and cancel the process. This makes it a perfect
      * place for data validation.
      */
-    saving?: (resource: T) => string | void
+    saving?: (resource: T) => ValidationError
     /**
      * Called after saving a resource. May return a string to show as
      * notification for when saving is done.
      */
-    saved?: (resource: Promise<T>) => string | void | Promise<string | void>
+    saved?: (resource: Promise<T>) => ValidationError | Promise<ValidationError>
     /**
      * URL to the resource (without id appended).
      */
@@ -76,31 +76,20 @@ export interface ResourceManager<T extends object = object> {
 }
 
 function useResource<T extends object>({
-    url = document.location!.href,
+    model,
+    url = document.location.href,
     ...props
 }: ResourceProps<T>): ResourceManager<T> {
-    const [isWorking, setIsWorking] = useState(false)
-    const model = useModel(props.default)
     const notify = useContext(NotificationContext)
 
     const resUrl = url + "/" + props.id
 
-    useEffect(() => {
-        if (props.id) {
-            _work(async () => await request<T>(RequestMethod.GET, resUrl))
-        } else {
-            // Resetting resource outside of the worker
-            // wrapper skips an unnecessary render.
-            // Use setTimeout to push it to the end of the execution queue
-            // and avoid race conditions with other async functions.
-            setTimeout(() => model.$set(props.default), 0)
-        }
-    }, [props.id])
-
-    async function save() {
-        await _work(async () => {
-            const resource = model.$data
-            if (_error(call(props.saving, resource))) return
+    function save() {
+        return workerTask.run(async () => {
+            const resource = model.$data()
+            if (_checkForError(call(props.saving, resource))) {
+                return
+            }
 
             const method = props.id ? RequestMethod.PUT : RequestMethod.POST
             const requestURL = method === RequestMethod.PUT ? resUrl : url
@@ -117,31 +106,33 @@ function useResource<T extends object>({
             const savedCallbackResult = call(props.saved, nextResource)
 
             await nextResource
-            _error(await savedCallbackResult)
+            _checkForError(await savedCallbackResult)
 
             return nextResource
         })
     }
 
-    async function del() {
-        await _work(async () => {
-            if (!props.id) return
+    function del() {
+        return workerTask.run(async () => {
+            if (!props.id) {
+                return
+            }
 
-            const resource = model.$data
-            if (_error(call(props.deleting, resource))) return
+            const resource = model.$data()
+            if (_checkForError(call(props.deleting, resource))) {
+                return
+            }
 
             const response = request(RequestMethod.DELETE, resUrl, resource)
 
             const deletedCallbackResult = call(props.deleted, resource)
 
             await response
-            _error(await deletedCallbackResult)
-
-            return {...props.default}
+            _checkForError(await deletedCallbackResult)
         })
     }
 
-    function _error(err: string | void) {
+    function _checkForError(err: ValidationError) {
         if (isString(err)) {
             notify(err)
             return true
@@ -149,40 +140,41 @@ function useResource<T extends object>({
         return false
     }
 
-    async function _work(worker: () => Promise<T | void>) {
-        // This will prevent sending duplicate requests.
-        if (isWorking) return
-
-        let resource = model.$data
-        setIsWorking(true)
-        try {
-            const response = await worker()
-            if (response) {
-                model.$set(response)
-                resource = response
-            }
-            setIsWorking(false)
-        } catch (ex) {
-            /**
-             * Stop working before attempting to handle exception in order
-             * to allow for a complete recovery within the handler.
-             */
-            setIsWorking(false)
-
-            let message = (await call(props.catch, ex, resource)) || "Error"
-            notify(message)
+    const workerTask = useTask(async function*(
+        worker: () => Promise<T | void>
+    ) {
+        const error = model.$firstError()
+        if (error) {
+            notify(error)
+            return
         }
 
-        return resource
-    }
+        try {
+            const response = await worker()
+
+            yield
+            if (response) {
+                model.$change(response)
+            }
+        } catch (ex) {
+            const resource = model.$data()
+            const catchCb = props.catch
+
+            console.error(ex)
+            setTimeout(async () => {
+                let message = (await call(catchCb, ex, resource)) || "Error"
+                notify(message)
+            })
+        }
+    })
 
     return {
-        isWorking,
-        save,
+        model,
 
-        data: model.$data,
+        isWorking: workerTask.isRunning,
+        save: save,
+        data: model.$data(),
         delete: del,
-        model: model,
     }
 }
 
