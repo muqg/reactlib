@@ -5,6 +5,7 @@ import {Size} from "../../utility"
 import {isFunction} from "../../utility/assertions"
 import {CloseButton} from "../buttons"
 import {Dialog, DialogProps} from "./Dialog"
+import {useDocumentTitle} from "../../hooks"
 
 const SIZE_FACTOR = 320
 
@@ -84,6 +85,8 @@ const DialogBox: React.ComponentType<Props> = ({
     size = Size.Small,
     ...props
 }) => {
+    useDocumentTitle(props.title || document.title)
+
     return (
         <Dialog {...props}>
             {close => (
