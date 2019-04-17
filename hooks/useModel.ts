@@ -161,7 +161,7 @@ function useModel<T extends object>(
 
                     if (__DEV__) {
                         if (initialValue === undefined) {
-                            console.warn(
+                            console.error(
                                 `The initial call to a model parser with name [${name}] ` +
                                     "returned undefined. You have probably forgot to " +
                                     "check for the initial undefined input value or " +
@@ -177,7 +177,7 @@ function useModel<T extends object>(
                         if (!supportedProps.includes(key)) {
                             console.error(
                                 "Model received an object or array which contains " +
-                                    "an unsupported property ${key}. If you are trying " +
+                                    `an unsupported property ${key}. If you are trying ` +
                                     "to model an object or array value then pass it " +
                                     "as a value property of a ModelElement."
                             )
@@ -188,7 +188,7 @@ function useModel<T extends object>(
 
             if (__DEV__) {
                 if (name.startsWith("$")) {
-                    console.error(
+                    console.warn(
                         "The model should not contain entries with names starting with " +
                             "a dollar sign $, which is used to designate special model " +
                             "properties and may therefore lead to unexpected behaviour."
