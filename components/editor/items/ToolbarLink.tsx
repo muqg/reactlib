@@ -23,10 +23,12 @@ function ToolbarLink() {
 
     const accept = () => {
         const value = model.input.value
-        if (value.length) {
-            Editor.createLink(value)
-            return true
+        if (!value.length) {
+            return false
         }
+
+        Editor.createLink(value)
+        model.$reset()
     }
 
     return (
@@ -41,7 +43,7 @@ function ToolbarLink() {
                     className="tb_link"
                     onAccept={accept}
                     onClose={() => setDialog(false)}
-                    title="Въведи линк:"
+                    title="Въведи адрес:"
                 >
                     <TextInput
                         {...model.input}

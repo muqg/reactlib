@@ -74,29 +74,13 @@ const ConfirmationDialog = ({
 
     return (
         <StyledDialogBox {...props} onKeyDown={keyDown} onClose={reject}>
-            {close => (
-                <Container>
-                    <div>{props.children}</div>
-                    <ButtonsContainer>
-                        <StyledButton
-                            onClick={() => {
-                                accept()
-                                close()
-                            }}
-                        >
-                            {textOkay}
-                        </StyledButton>
-                        <StyledButton
-                            onClick={() => {
-                                reject()
-                                close()
-                            }}
-                        >
-                            {textCancel}
-                        </StyledButton>
-                    </ButtonsContainer>
-                </Container>
-            )}
+            <Container>
+                <div>{props.children}</div>
+                <ButtonsContainer>
+                    <StyledButton onClick={accept}>{textOkay}</StyledButton>
+                    <StyledButton onClick={reject}>{textCancel}</StyledButton>
+                </ButtonsContainer>
+            </Container>
         </StyledDialogBox>
     )
 }

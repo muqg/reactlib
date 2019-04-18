@@ -67,7 +67,7 @@ function Dialog({onClose, onKeyDown, onShow, ...props}: Dialog) {
     }, [onClose, onShow])
 
     function keyDown(event: React.KeyboardEvent) {
-        stop(event)
+        stopEvent(event)
 
         if (isKeyPressed(ESCAPE_HOTKEY, event)) {
             call(onClose)
@@ -75,7 +75,7 @@ function Dialog({onClose, onKeyDown, onShow, ...props}: Dialog) {
         call(onKeyDown, event)
     }
 
-    function stop(e: React.KeyboardEvent) {
+    function stopEvent(e: React.SyntheticEvent) {
         e.stopPropagation()
     }
 
@@ -84,8 +84,9 @@ function Dialog({onClose, onKeyDown, onShow, ...props}: Dialog) {
             className={props.className}
             ref={dialogRef}
             onKeyDown={keyDown}
-            onKeyPress={stop}
-            onKeyUp={stop}
+            onKeyPress={stopEvent}
+            onKeyUp={stopEvent}
+            onClick={stopEvent}
             tabIndex={-1}
         >
             {props.children(onClose)}
