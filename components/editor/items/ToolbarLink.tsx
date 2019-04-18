@@ -1,6 +1,5 @@
 import * as React from "react"
-import {useState} from "react"
-import {useModel} from "../../../hooks"
+import {useRef, useState} from "react"
 import {styled} from "../../../styles"
 import {Editor} from "../../../utility/dom"
 import ConfirmationDialog from "../../dialogs/ConfirmationDialog"
@@ -17,18 +16,16 @@ const StyledToolbarItem = styled(ToolbarItem)`
  */
 function ToolbarLink() {
     const [dialog, setDialog] = useState(false)
-    const model = useModel<{input: string}>(() => ({
-        input: "",
-    }))
+    // Does not work with useModel hook for some reason.
+    const inputElement = useRef<HTMLInputElement>()
 
     const accept = () => {
-        const value = model.input.value
-        if (!value.length) {
+        const input = inputElement.current
+        if (!input || !input.value) {
             return false
         }
 
-        Editor.createLink(value)
-        model.$reset()
+        Editor.createLink(input.value)
     }
 
     return (
@@ -46,8 +43,8 @@ function ToolbarLink() {
                     title="Въведи адрес:"
                 >
                     <TextInput
-                        {...model.input}
                         placeholder="https://example.com"
+                        ref={inputElement as any}
                         wide
                     />
                 </ConfirmationDialog>
