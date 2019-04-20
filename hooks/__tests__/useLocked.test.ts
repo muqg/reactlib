@@ -2,14 +2,14 @@ import {renderHook} from "react-hooks-testing-library"
 import {wait} from "../../utility"
 import {useLocked} from "../useLocked"
 
-describe("Hook useLocked", () => {
+describe("Locked hook", () => {
     it("does not allow function to be called again while the first call is still running", async () => {
-        let run = 0
+        const fn = jest.fn()
         const {result: locked} = renderHook(() =>
             useLocked(async () => {
                 // Wait long enough to allow a second call to happen
                 await wait(100)
-                run += 1
+                fn()
             })
         )
 
@@ -19,6 +19,6 @@ describe("Hook useLocked", () => {
         await firstCall
         await secondCall
 
-        expect(run).toBe(1)
+        expect(fn).toHaveBeenCalledTimes(1)
     })
 })

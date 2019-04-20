@@ -3,41 +3,28 @@ import {cleanup, fireEvent, render} from "react-testing-library"
 import {DialogBox} from "../DialogBox"
 
 describe("DialogBox component", () => {
-    afterEach(cleanup)
+    let closeFn: jest.Mock
+    let dialog: Element
+
+    beforeEach(() => {
+        cleanup()
+
+        closeFn = jest.fn()
+        dialog = render(<DialogBox children={null} onClose={closeFn} />)
+            .baseElement.children[1]
+    })
 
     it("closes when background is clicked", () => {
-        let closed = false
-        const {baseElement} = render(
-            <DialogBox
-                children={null}
-                onClose={() => {
-                    closed = true
-                }}
-            />
-        )
-        const dialog = baseElement.children[1]
         const background = dialog.getElementsByTagName("div")[0]
-
         fireEvent.click(background)
 
-        expect(closed).toBeTruthy()
+        expect(closeFn).toHaveBeenCalled()
     })
 
     it("closes when close button is clicked", () => {
-        let closed = false
-        const {baseElement} = render(
-            <DialogBox
-                children={null}
-                onClose={() => {
-                    closed = true
-                }}
-            />
-        )
-        const dialog = baseElement.children[1]
         const closeButton = dialog.getElementsByTagName("button")[0]
-
         fireEvent.click(closeButton)
 
-        expect(closed).toBeTruthy()
+        expect(closeFn).toHaveBeenCalled()
     })
 })

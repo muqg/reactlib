@@ -1,70 +1,49 @@
 import * as React from "react"
-import {cleanup, fireEvent, render} from "react-testing-library"
+import {cleanup, fireEvent, render, RenderResult} from "react-testing-library"
 import {CHAR_CODE_ENTER} from "../../../utility/dom"
 import ConfirmationDialog from "../ConfirmationDialog"
 
 describe("ConfirmationDialog component", () => {
-    afterEach(cleanup)
+    let getByText: RenderResult["getByText"]
+    let closeFn: jest.Mock
+    let canAccept: boolean
+
+    beforeEach(() => {
+        cleanup()
+
+        closeFn = jest.fn()
+        canAccept = true
+        getByText = render(
+            <ConfirmationDialog onClose={closeFn} onAccept={() => canAccept}>
+                <span>inner_element</span>
+            </ConfirmationDialog>
+        ).getByText
+    })
 
     it("closes when reject button is clicked", () => {
-        let closed = false
-        const {getByText} = render(
-            <ConfirmationDialog
-                onClose={() => {
-                    closed = true
-                }}
-            />
-        )
-
         fireEvent.click(getByText("Cancel"))
 
-        expect(closed).toBeTruthy()
+        expect(closeFn).toHaveBeenCalled()
     })
 
     it("closes when accepted", () => {
-        let closed = false
-        const {getByText} = render(
-            <ConfirmationDialog
-                onClose={() => {
-                    closed = true
-                }}
-            />
-        )
-
         fireEvent.click(getByText("Okay"))
 
-        expect(closed).toBeTruthy()
+        expect(closeFn).toHaveBeenCalled()
     })
 
     it("is accepted when Enter key is pressed down", () => {
-        let closed = false
-        const {baseElement} = render(
-            <ConfirmationDialog
-                onClose={() => {
-                    closed = true
-                }}
-            />
-        )
+        fireEvent.keyDown(getByText("inner_element"), {
+            keyCode: CHAR_CODE_ENTER,
+        })
 
-        const dialog = baseElement.children[1]
-        fireEvent.keyDown(dialog, {keyCode: CHAR_CODE_ENTER})
-
-        expect(closed).toBeTruthy()
+        expect(closeFn).toHaveBeenCalled()
     })
 
-    it("does not close if accepted callback returns false", () => {
-        let closed = false
-        const {getByText} = render(
-            <ConfirmationDialog
-                onClose={() => {
-                    closed = true
-                }}
-                onAccept={() => false}
-            />
-        )
-
+    it("does not close if accept callback returns false", () => {
+        canAccept = false
         fireEvent.click(getByText("Okay"))
 
-        expect(closed).toBeFalsy()
+        expect(closeFn).not.toHaveBeenCalled()
     })
 })
