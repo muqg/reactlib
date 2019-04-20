@@ -23,8 +23,10 @@ function translate<T extends any = string>(
 ): T {
     let result = pull(translations, key) || key
 
-    if (result === key) {
-        console.error("No translation value found for key: " + key)
+    if (__DEV__) {
+        if (result === key) {
+            console.error("No translation value found for key: " + key)
+        }
     }
 
     if (isString(result) && options) {
