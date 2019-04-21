@@ -45,6 +45,10 @@ export interface ModelEntry {
      */
     error?: ValidationError
     /**
+     * Model entry's name.
+     */
+    name: string
+    /**
      * Performs validation of model's data.
      */
     onBlur: () => void
@@ -198,6 +202,7 @@ function useModel<T extends object>(
 
             utils[name] = util
             model[name] = {
+                name,
                 onBlur: () => dispatch(modelValidateAction()),
                 onChange: v => dispatch(modelChangeAction({[name]: v})),
                 // Allowing undefined values plays badly with the way that React
