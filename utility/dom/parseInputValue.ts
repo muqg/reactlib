@@ -40,13 +40,9 @@ function parseInputValue(input: ParseableInput): string {
     }
     // Parse checkbox and radio button.
     else if (
-        isType<HTMLInputElement>(
-            element,
-            () => element.type === "checkbox" || element.type === "radio"
-        )
+        isType<HTMLInputElement>(element, () => element.type === "checkbox")
     ) {
-        if (value && value !== "on") value = element.checked ? value : ""
-        else value = element.checked ? "true" : "false"
+        value = element.checked ? "true" : "false"
     }
     // Parse multiple selects.
     else if (isObject(element, HTMLSelectElement) && element.multiple) {
