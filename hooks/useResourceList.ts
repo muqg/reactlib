@@ -8,6 +8,13 @@ export interface ResourceObject<T extends string | number = number> {
 function useResourceList<T extends ResourceObject>(listItems: T[]) {
     const [list, setList] = useState<T[]>(listItems)
 
+    if (__DEV__) {
+        console.warn(
+            "ResourceList hook is deprecated. " +
+                "Use Reducer hook in combination with resourceListReducer instead."
+        )
+    }
+
     async function save(rsrc: T | Promise<T>) {
         const res = await rsrc
 
