@@ -1,7 +1,7 @@
 import * as React from "react"
 import {renderHook} from "react-hooks-testing-library"
 import {act, cleanup, fireEvent, render} from "react-testing-library"
-import {useModel} from "../useModel"
+import {useModel, Model} from "../useModel"
 
 /**
  * Names of model methods that should force an update on owner component
@@ -137,8 +137,26 @@ describe("Model hook", () => {
         expect(parent.current.bound.value).toMatchObject({id: "asd", test: 100})
     })
 
+    it("provides the most recent model values to the binder", () => {
+        const structure = {test: 10}
+        const {result: model} = renderHook(() =>
+            useModel<typeof structure>(
+                () => ({
+                    test: 10,
+                }),
+                binder
+            )
+        )
+
+        act(() => model.current.test.onChange("asd"))
+
+        function binder(model: Model<typeof structure>) {
+            expect(model.test.value).toBe("asd")
+        }
+    })
+
     it.each(modelUpdateMethods)(
-        "updates owner component when $method is called",
+        "updates owner component when %s is called",
         method => {
             const counter = jest.fn()
             const dom = render(<MockModelComponent updateCounter={counter} />)
@@ -152,7 +170,7 @@ describe("Model hook", () => {
     )
 
     it.each(modelUpdateMethods)(
-        "skips update on owner component when binder is present and $method is called",
+        "skips update on owner component when binder is present and %s is called",
         method => {
             const childCounter = jest.fn()
             const parentCounter = jest.fn()
