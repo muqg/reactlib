@@ -126,8 +126,13 @@ export function useModel<T extends object>(
 
     if (isEmpty(state.current)) {
         const dispatch = (action: ModelAction) => {
-            state.current = reducer(state.current, action)
+            const nextState = reducer(state.current, action)
+            // Bail out similarly to how useReducer would do it.
+            if (nextState === state.current) {
+                return
+            }
 
+            state.current = nextState
             if (binder) {
                 // Skip update and let the binder do all the hard work.
                 binder(state.current.model)

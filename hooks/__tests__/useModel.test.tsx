@@ -103,6 +103,17 @@ describe("Model hook", () => {
         expect(model.current.validated.error).toBe("error")
     })
 
+    it("bails out of validation update if model values have not changed since last validation", () => {
+        const counter = jest.fn()
+        const dom = render(<MockModelComponent updateCounter={counter} />)
+        const button = dom.getByText("onBlur")
+
+        fireEvent.click(button)
+        fireEvent.click(button)
+
+        expect(counter).toHaveBeenCalledTimes(2)
+    })
+
     it("does not mutate its entries when updating", () => {
         const entryBeforeUpdate = model.current.parsed
         act(() => model.current.parsed.onChange(5))
