@@ -106,6 +106,18 @@ export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
     $reset(...names: Array<keyof T>): void
 }
 
+export interface ModelOptions<T extends object = object> {
+    /**
+     * A binder function which is called whenever the model should update. If it
+     * is present, then the model will not update its owner component, and instead
+     * pass the model instance to the binder and let it decide when and how to update.
+     *
+     * This is useful when model model instances from children have
+     * to be mirrored (chained) to a value of a parent model.
+     */
+    bind?: (model: Model<T>) => void
+}
+
 /**
  * A model instance maps form and other values to a predefined object structure.
  * @param initialElements Initial model structure.
@@ -121,7 +133,7 @@ export function useModel<T extends object>(
     initialElements: () => Partial<
         Dictionary<T, string | boolean | number | null | ModelElement<T>>
     >,
-    binder?: (model: Model<T>) => void
+    options: ModelOptions<T> = {} as ModelOptions<T>
 ): Model<T> {
     const forceUpdate = useForceUpdate()
     const state = useRef({} as ModelState)
@@ -135,9 +147,9 @@ export function useModel<T extends object>(
             }
 
             state.current = nextState
-            if (binder) {
+            if (options.bind) {
                 // Skip update and let the binder do all the hard work.
-                binder(state.current.model)
+                options.bind(state.current.model)
             } else {
                 forceUpdate()
             }

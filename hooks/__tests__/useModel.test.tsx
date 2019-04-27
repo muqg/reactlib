@@ -1,7 +1,7 @@
 import * as React from "react"
 import {renderHook} from "react-hooks-testing-library"
 import {act, cleanup, fireEvent, render} from "react-testing-library"
-import {Model, useModel} from "../useModel"
+import {Model, useModel, ModelOptions} from "../useModel"
 
 /**
  * Names of model methods that should force an update on owner component
@@ -27,12 +27,12 @@ const modelHook = () => {
 
 const MockModelComponent = ({
     updateCounter,
-    binder,
+    bind,
 }: {
     updateCounter: jest.Mock
-    binder?: (val: any) => void
+    bind?: ModelOptions<any>["bind"]
 }) => {
-    const model = useModel(() => ({test: ""}), binder)
+    const model = useModel(() => ({test: ""}), {bind})
     updateCounter()
 
     return (
@@ -140,13 +140,13 @@ describe("Model hook", () => {
                 () => ({
                     test: 10,
                 }),
-                binder
+                {bind}
             )
         )
 
         act(() => model.current.test.onChange("asd"))
 
-        function binder(model: Model<typeof structure>) {
+        function bind(model: Model<typeof structure>) {
             expect(model.test.value).toBe("asd")
         }
     })
@@ -182,7 +182,7 @@ describe("Model hook", () => {
                 return (
                     <MockModelComponent
                         updateCounter={childCounter}
-                        binder={model.childData.onChange}
+                        bind={model.childData.onChange}
                     />
                 )
             }
@@ -215,7 +215,7 @@ describe("Model hook", () => {
                             validate: () => "error",
                         },
                     }),
-                    parentModel.current.nested.onChange
+                    {bind: parentModel.current.nested.onChange}
                 )
             )
 
@@ -248,7 +248,7 @@ describe("Model hook", () => {
                             validate: () => "error",
                         },
                     }),
-                    parentModel.current.nested.onChange
+                    {bind: parentModel.current.nested.onChange}
                 )
             )
             act(() => {
@@ -276,7 +276,7 @@ describe("Model hook", () => {
                         id: "",
                         name: "",
                     }),
-                    parentModel.current.nested.onChange
+                    {bind: parentModel.current.nested.onChange}
                 )
             )
 
@@ -305,7 +305,7 @@ describe("Model hook", () => {
                         id: "",
                         name: "",
                     }),
-                    parentModel.current.nested.onChange
+                    {bind: parentModel.current.nested.onChange}
                 )
             )
 
