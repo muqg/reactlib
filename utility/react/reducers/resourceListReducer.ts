@@ -1,5 +1,5 @@
 import {ResourceObject} from "../../../hooks"
-import {replace, replaceOrPush} from "../../array"
+import {replace, replaceOrPush, replaceOrPrepend} from "../../array"
 import {
     resourceListRemoveAction,
     resourceListSaveAction,
@@ -32,11 +32,16 @@ function resourceListReducer<T extends ResourceObject = ResourceObject>(
     const actionType = action.type
     switch (action.type) {
         case "save": {
-            return replaceOrPush(
-                list,
-                e => e.id === action.value.id,
-                action.value
-            )
+            const resource = action.value
+            if (action.options.mode === "prepend") {
+                return replaceOrPrepend(
+                    list,
+                    e => e.id === resource.id,
+                    resource
+                )
+            } else {
+                return replaceOrPush(list, e => e.id === resource.id, resource)
+            }
         }
         case "update": {
             const current = list.find(e => e.id === action.value.id)

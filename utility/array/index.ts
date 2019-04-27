@@ -1,4 +1,5 @@
 export {replace} from "./replace"
 export {replaceAll} from "./replaceAll"
+export {replaceOrPrepend} from "./replaceOrPrepend"
 export {replaceOrPush} from "./replaceOrPush"
 export {shuffle} from "./shuffle"
