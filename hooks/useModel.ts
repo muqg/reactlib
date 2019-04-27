@@ -3,7 +3,6 @@ import {Dictionary, List, Omit, Serializable, ValidationError} from "../utility"
 import {isObject, isType} from "../utility/assertions"
 import {except, isEmpty, len} from "../utility/collection"
 import {ParseableInput, parseInputValue} from "../utility/dom"
-import {call} from "../utility/function"
 import {Action, createAction, isSyntheticEvent} from "../utility/react"
 import {cast} from "../utility/string"
 import {useForceUpdate} from "./useForceUpdate"
@@ -153,7 +152,11 @@ export function useModel<T extends object>(
             $data() {
                 const values: any = {}
                 for (const name in utils) {
-                    values[name] = this[name].value
+                    const currentValue = this[name].value
+                    // Retrieve data of nested models instead of the model itself.
+                    values[name] = isModelObject(currentValue)
+                        ? currentValue.$data()
+                        : currentValue
                 }
                 return values
             },
@@ -175,20 +178,25 @@ export function useModel<T extends object>(
                 return Object.values(this.$errors())[0]
             },
             $reset(...names: string[]) {
-                const nameList = len(names) ? names : Object.keys(elements)
-                const values: any = {}
+                const resetNames = len(names) ? names : Object.keys(elements)
+                const initialValues: any = {}
 
-                for (const name of nameList) {
-                    // @ts-ignore Element implicitly has an 'any' type... (7017)
-                    const current = elements[name]
-                    const value = isObject<ModelElement>(current)
-                        ? current.value
-                        : current
+                for (const name of resetNames) {
+                    // Reset bound model instead of resetting to the initial value.
+                    if (isModelObject(this[name].value)) {
+                        this[name].value.$reset()
+                    } else {
+                        // @ts-ignore Element implicitly has an 'any' type... (7017)
+                        const current = elements[name]
+                        let value = isObject<ModelElement>(current)
+                            ? current.value
+                            : current
 
-                    values[name] = value === undefined ? "" : value
+                        initialValues[name] = value === undefined ? "" : value
+                    }
                 }
 
-                dispatch(modelChangeAction(values))
+                dispatch(modelChangeAction(initialValues))
                 dispatch(modelValidateAction())
             },
         } as Model<any>
@@ -293,8 +301,6 @@ function reducer(state: ModelState, action: ModelAction): ModelState {
                     )
                 ) {
                     value = cast(parseInputValue(value))
-                } else if (isModelObject(value)) {
-                    value = value.$data()
                 }
 
                 entry.value = value
@@ -327,12 +333,19 @@ function reducer(state: ModelState, action: ModelAction): ModelState {
             const data = model.$data()
 
             for (const name in utils) {
-                const entry = {...model[name]}
-                entry.error = call(
-                    utils[name].validate,
-                    model[name].value,
-                    data
-                )
+                const entry: ModelEntry = {
+                    ...model[name],
+                    error: null,
+                }
+
+                const {validate} = utils[name]
+                const {value} = model[name]
+                if (validate) {
+                    entry.error = validate(value, data)
+                } else if (isModelObject(value)) {
+                    entry.error = value.$firstError()
+                }
+
                 model[name] = entry
             }
 

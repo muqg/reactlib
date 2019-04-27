@@ -133,26 +133,6 @@ describe("Model hook", () => {
         expect(entryBeforeValidation).not.toBe(model.current.validated)
     })
 
-    it("parses input argument of type Model as model.$data() when no custom parser is present", () => {
-        const {result: parent} = renderHook(() =>
-            useModel(() => ({
-                bound: "",
-            }))
-        )
-        const {result: child} = renderHook(() =>
-            useModel<{id: string; test: number}>(
-                () => ({
-                    id: "asd",
-                    test: 10,
-                }),
-                parent.current.bound.onChange
-            )
-        )
-        act(() => child.current.test.onChange(100))
-
-        expect(parent.current.bound.value).toMatchObject({id: "asd", test: 100})
-    })
-
     it("provides the most recent model values to the binder", () => {
         const structure = {test: 10}
         const {result: model} = renderHook(() =>
@@ -216,4 +196,122 @@ describe("Model hook", () => {
             expect(childCounter).toHaveBeenCalledTimes(2)
         }
     )
+
+    describe("Nested modelling", () => {
+        it("validates nested models when validating", () => {
+            const {result: parentModel} = renderHook(() =>
+                useModel(() => ({
+                    errorValue: {
+                        validate: () => "error",
+                    },
+                    nested: {},
+                }))
+            )
+            const {result: nestedModel} = renderHook(() =>
+                useModel(
+                    () => ({
+                        id: {
+                            value: "test",
+                            validate: () => "error",
+                        },
+                    }),
+                    parentModel.current.nested.onChange
+                )
+            )
+
+            act(() => {
+                nestedModel.current.$change({id: "asd"})
+                expect(parentModel.current.$errors()).toEqual({
+                    errorValue: "error",
+                    nested: "error",
+                })
+            })
+        })
+
+        it("uses custom validator when present instead of validating nested models", () => {
+            const {result: parentModel} = renderHook(() =>
+                useModel(() => ({
+                    errorValue: {
+                        validate: () => "error",
+                    },
+                    nested: {
+                        value: {},
+                        validate: () => "custom_error",
+                    },
+                }))
+            )
+            const {result: nestedModel} = renderHook(() =>
+                useModel(
+                    () => ({
+                        id: {
+                            value: "test",
+                            validate: () => "error",
+                        },
+                    }),
+                    parentModel.current.nested.onChange
+                )
+            )
+            act(() => {
+                nestedModel.current.$change({id: "asd"})
+                expect(parentModel.current.$errors()).toEqual({
+                    errorValue: "error",
+                    nested: "custom_error",
+                })
+            })
+        })
+
+        it("resets nested models when resetting", () => {
+            const initialData = {id: "", name: ""}
+            const {result: parentModel} = renderHook(() =>
+                useModel(() => ({
+                    nested: {
+                        value: {},
+                        validate: () => "custom_error",
+                    },
+                }))
+            )
+            const {result: nestedModel} = renderHook(() =>
+                useModel(
+                    () => ({
+                        id: "",
+                        name: "",
+                    }),
+                    parentModel.current.nested.onChange
+                )
+            )
+
+            const changeData = {id: 1, name: "test"}
+            act(() => nestedModel.current.$change(changeData))
+            expect(parentModel.current.nested.value.$data()).toEqual(changeData)
+
+            act(() => parentModel.current.$reset())
+            expect(parentModel.current.nested.value.$data()).toEqual(
+                initialData
+            )
+        })
+
+        it("serializes nested models using their model.$data method", () => {
+            const {result: parentModel} = renderHook(() =>
+                useModel<{nested: object}>(() => ({
+                    nested: {
+                        value: {},
+                        validate: () => "custom_error",
+                    },
+                }))
+            )
+            const {result: nestedModel} = renderHook(() =>
+                useModel(
+                    () => ({
+                        id: "",
+                        name: "",
+                    }),
+                    parentModel.current.nested.onChange
+                )
+            )
+
+            const changeData = {id: 1, name: "test"}
+            act(() => nestedModel.current.$change(changeData))
+            expect(parentModel.current.$data().nested).toEqual(changeData)
+        })
+    })
 })

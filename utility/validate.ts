@@ -1,7 +1,7 @@
 import {call} from "./function"
 import {Dictionary} from "./type"
 
-export type ValidationError = string | undefined | void
+export type ValidationError = string | undefined | void | null
 
 /**
  * Validates an object of values.
