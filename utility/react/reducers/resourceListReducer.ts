@@ -1,5 +1,5 @@
-import {ResourceObject} from "../../../hooks"
-import {replace, replaceOrPush, replaceOrPrepend} from "../../array"
+import {ResourceObject} from "../.."
+import {replace, replaceOrPrepend, replaceOrPush} from "../../array"
 import {
     resourceListRemoveAction,
     resourceListSaveAction,

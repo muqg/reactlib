@@ -81,3 +81,7 @@ export type Dictionary<K extends object, V = K[keyof K]> = {[key in keyof K]: V}
 export interface List<V> {
     [key: string]: V
 }
+
+export interface ResourceObject<T extends string | number = number> {
+    id: T
+}

@@ -1,4 +1,4 @@
-import {ResourceObject} from "../../../hooks"
+import {ResourceObject} from "../.."
 import {createAction} from "../createAction"
 
 /**
