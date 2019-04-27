@@ -86,15 +86,18 @@ export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
      */
     $data(): T
     /**
-     * Returns a list of model errors. Note that this method performs
-     * a fresh validation in place and may therefore be expensive and
-     * avoid being called repeatedly.
+     * Returns a list of model errors.
+     *
+     * It re-validates the model, if a value has changed, and thus forces a
+     * re-render. Only returns a list of the errors, if no value has changed
+     * since the last validation.
      */
     $errors(): Dictionary<T, ValidationError>
     /**
-     * Returns the first error from the model's error list. This method calls
-     * $errors() method internally and may therefore be expensive and void
-     * being called repeatedly.
+     * Returns the first error from the model's error list.
+     *
+     * It calls the model.$errors() method internally.
+     * Refer to it for more information.
      */
     $firstError(): ValidationError
     /**
@@ -155,13 +158,15 @@ export function useModel<T extends object>(
                 return values
             },
             $errors() {
-                const data = this.$data()
+                dispatch(modelValidateAction())
+
                 const errors: any = {}
                 for (const name in utils) {
-                    const entry = this[name]
-                    const err = call(utils[name].validate, entry.value, data)
-                    if (err) {
-                        errors[name] = err
+                    // Access the newly updated errors from state since `this`
+                    // instance may lo longer be the most recent one.
+                    const currentError = state.current.model[name].error
+                    if (currentError) {
+                        errors[name] = currentError
                     }
                 }
                 return errors

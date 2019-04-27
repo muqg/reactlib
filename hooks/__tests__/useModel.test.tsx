@@ -1,7 +1,7 @@
 import * as React from "react"
 import {renderHook} from "react-hooks-testing-library"
 import {act, cleanup, fireEvent, render} from "react-testing-library"
-import {useModel, Model} from "../useModel"
+import {Model, useModel} from "../useModel"
 
 /**
  * Names of model methods that should force an update on owner component
@@ -53,7 +53,7 @@ describe("Model hook", () => {
         model = renderHook(modelHook).result
     })
 
-    it("replaces undefined values with empty strings initially", () => {
+    it("replaces undefined values with empty strings on initialization", () => {
         expect(model.current.undef.value).toBe("")
         expect(model.current.validated.value).toBe(true)
     })
@@ -67,7 +67,7 @@ describe("Model hook", () => {
         expect(model.current.undef.value).toBe("")
     })
 
-    it("calls custom parsers initially", () => {
+    it("calls custom parsers on initialization", () => {
         expect(model.current.parsed.value).toBe(10)
     })
 
@@ -86,12 +86,17 @@ describe("Model hook", () => {
         expect(model.current.parsed.value).toBe(10)
     })
 
-    it("does not validate values initially", () => {
+    it("does not validate values on initialization", () => {
         expect(model.current.validated.error).toBeUndefined()
     })
 
-    it("validates values when accessing the error list", () => {
+    it("validates values when accessing the error list and a value has been changed", () => {
+        act(() => {
+            model.current.$errors()
+        })
+
         expect(model.current.$errors().validated).toBe("error")
+        expect(model.current.validated.error).toBe("error")
     })
 
     it("validates values on element blur", () => {
