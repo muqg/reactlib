@@ -4,8 +4,8 @@ import {truncate} from "../../styles/mixins"
 import {Size} from "../../utility"
 import {isFunction} from "../../utility/assertions"
 import {CloseButton} from "../buttons"
+import {DocumentTitle} from "../DocumentTitle"
 import {Dialog, DialogProps} from "./Dialog"
-import {useDocumentTitle} from "../../hooks"
 
 const SIZE_FACTOR = 320
 
@@ -83,14 +83,14 @@ const DialogBox: React.ComponentType<Props> = ({
     className,
     fixedHeight,
     size = Size.Small,
+    title,
     ...props
 }) => {
-    useDocumentTitle(props.title || document.title)
-
     return (
         <Dialog {...props}>
             {close => (
                 <>
+                    {title && <DocumentTitle title={title} />}
                     <Back onClick={close} />
                     <Container
                         className={className}
@@ -98,7 +98,7 @@ const DialogBox: React.ComponentType<Props> = ({
                         size={size}
                     >
                         <Header>
-                            <Title>{props.title}</Title>
+                            <Title>{title}</Title>
                             {/* Close button becomes deformed due to flex parent without this wrapper. */}
                             <div>
                                 <CloseButton onClick={close} />

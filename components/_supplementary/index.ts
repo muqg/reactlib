@@ -7,6 +7,5 @@
 |
 */
 
-export {DocumentTitle} from "./DocumentTitle"
 export {GlobalHotkey} from "./GlobalHotkey"
 export {Translate} from "./Translate"
