@@ -1,13 +1,12 @@
 import * as React from "react"
-import {useContext} from "react"
-import {COLOR_SUCCESS, ThemeContext} from "../../styles"
+import {COLOR_SUCCESS, useTheme} from "../../styles"
 import {Omit, Size} from "../../utility"
 import {IconButton} from "./IconButton"
 
 type Props = Omit<React.ComponentProps<typeof IconButton>, "children">
 
 const AddButton: React.ComponentType<Props> = ({color, ...props}) => {
-    const theme = useContext(ThemeContext)
+    const theme = useTheme()
     color = color || theme.success || COLOR_SUCCESS
 
     const stroke = props.size && props.size > Size.Medium ? props.size : 2

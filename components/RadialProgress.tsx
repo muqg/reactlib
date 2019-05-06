@@ -5,11 +5,10 @@ import {
     COLOR_TEXT,
     fadedColor,
     styled,
-    ThemeContext,
+    useTheme,
 } from "../styles"
 import {Size} from "../utility"
 import {clamp} from "../utility/number"
-import {useContext} from "react"
 
 const SIZE_FACTOR = 48
 const RADIUS_PERCENT = 40
@@ -29,7 +28,7 @@ interface Props {
 }
 
 function RadialProgress({color, size = Size.Small, value}: Props) {
-    const theme = useContext(ThemeContext)
+    const theme = useTheme()
     color = color || theme.success || COLOR_SUCCESS
 
     value = clamp(value, 0, 100)

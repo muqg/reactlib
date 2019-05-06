@@ -1,3 +1,4 @@
+import {useContext} from "react"
 import * as styledComponents from "styled-components"
 import {ThemedStyledComponentsModule} from "styled-components"
 import {ThemeInterface} from "./theme"
@@ -13,4 +14,16 @@ const {
     any
 >) as ThemedStyledComponentsModule<ThemeInterface>
 
-export {styled, css, createGlobalStyle, keyframes, ThemeContext, ThemeProvider}
+function useTheme() {
+    return useContext(ThemeContext)
+}
+
+export {
+    styled,
+    css,
+    createGlobalStyle,
+    keyframes,
+    ThemeContext,
+    ThemeProvider,
+    useTheme,
+}

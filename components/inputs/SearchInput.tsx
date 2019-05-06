@@ -1,6 +1,5 @@
 import * as React from "react"
-import {useContext} from "react"
-import {COLOR_TEXT, styled, ThemeContext} from "../../styles"
+import {COLOR_TEXT, styled, useTheme} from "../../styles"
 import {TextInput} from "./TextInput"
 
 const StyledLabel = styled.label`
@@ -18,7 +17,7 @@ function SearchInput({
     color,
     ...props
 }: React.ComponentProps<typeof TextInput>) {
-    const theme = useContext(ThemeContext)
+    const theme = useTheme()
     color = color || theme.text || COLOR_TEXT
 
     return (

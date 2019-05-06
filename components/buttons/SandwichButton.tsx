@@ -1,6 +1,6 @@
 import * as React from "react"
-import {useContext, useEffect, useState} from "react"
-import {COLOR_DARK, css, styled, ThemeContext} from "../../styles"
+import {useEffect, useState} from "react"
+import {COLOR_DARK, css, styled, useTheme} from "../../styles"
 import {call} from "../../utility/function"
 
 const spanCommon = css`
@@ -75,7 +75,7 @@ interface OwnProps {
 type Props = OwnProps & StyleProps
 
 function SandwichButton({active = false, color, size = 30, ...props}: Props) {
-    const theme = useContext(ThemeContext)
+    const theme = useTheme()
     color = color || theme.main || COLOR_DARK
 
     const [isActive, setIsActive] = useState(active)
