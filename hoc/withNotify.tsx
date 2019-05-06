@@ -1,7 +1,6 @@
 import * as React from "react"
-import {useContext} from "react"
 import {Notify} from "../components/notificaton"
-import {NotificationContext} from "../contexts"
+import {useNotify} from "../hooks"
 import {Omit} from "../utility"
 import {getDisplayName} from "../utility/react"
 
@@ -15,7 +14,7 @@ function withNotify<P extends NotificationComponentProps>(
     const wrapper: React.FunctionComponent<
         Omit<P, keyof NotificationComponentProps>
     > = props => {
-        const notify = useContext(NotificationContext)
+        const notify = useNotify()
         // @ts-ignore Correct but not compatible with expected return type.
         return <Component {...props} notify={notify} />
     }

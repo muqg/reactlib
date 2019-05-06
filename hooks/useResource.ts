@@ -1,10 +1,9 @@
-import {useContext} from "react"
 import {Model} from "."
-import {NotificationContext} from "../contexts"
 import {RequestMethod, ValidationError} from "../utility"
 import {isString} from "../utility/assertions"
 import {call} from "../utility/function"
 import {request} from "../utility/web"
+import {useNotify} from "./useNotify"
 import {useTask} from "./useTask"
 
 export interface ResourceProps<T extends object = object> {
@@ -80,7 +79,7 @@ function useResource<T extends object>({
     url = document.location.href,
     ...props
 }: ResourceProps<T>): ResourceManager<T> {
-    const notify = useContext(NotificationContext)
+    const notify = useNotify()
 
     const resUrl = url + "/" + props.id
 

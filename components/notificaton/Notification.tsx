@@ -1,6 +1,6 @@
 import * as React from "react"
-import {useContext, useEffect, useRef, useState} from "react"
-import {NotificationContext} from "../../contexts"
+import {useEffect, useRef, useState} from "react"
+import {useNotify} from "../../hooks"
 import {COLOR_CONTRAST, COLOR_DARK, css, styled} from "../../styles"
 import {Omit} from "../../utility"
 
@@ -63,7 +63,7 @@ export interface NotificationProps {
 function Notification(props: NotificationProps) {
     const [queue, setQueue] = useState<NotificationProps[]>([])
     const [current, setCurrent] = useState<NotificationProps>({})
-    const notify = useContext(NotificationContext)
+    const notify = useNotify()
     const timeout = useRef(-1)
 
     useEffect(() => {

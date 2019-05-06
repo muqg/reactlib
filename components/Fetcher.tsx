@@ -1,7 +1,6 @@
 import * as React from "react"
-import {useContext, useEffect, useState} from "react"
-import {NotificationContext} from "../contexts"
-import {useTranslation} from "../hooks"
+import {useEffect, useState} from "react"
+import {useNotify, useTranslation} from "../hooks"
 import {Dict, RequestMethod} from "../utility"
 import {isFunction} from "../utility/assertions"
 import {request} from "../utility/web"
@@ -50,7 +49,7 @@ function Fetcher<T extends object = object>({
     const cachedFetch = (cache && cacheStorage[cache]) || null
     const [fetch, setFetch] = useState<T | null>(cachedFetch)
 
-    const notify = useContext(NotificationContext)
+    const notify = useNotify()
     const translate = useTranslation()
 
     useEffect(() => {
