@@ -82,7 +82,6 @@ const Button = styled("button").attrs<ButtonStyleProps, ButtonStyleProps>(
     })
 )`
     border: 1px solid transparent;
-    cursor: pointer;
     display: inline-block;
     font-weight: bold;
     padding: 6px 12px;

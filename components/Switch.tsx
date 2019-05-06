@@ -2,7 +2,6 @@ import * as React from "react"
 import {COLOR_BACKGROUND, COLOR_SUCCESS, css, styled} from "../styles"
 
 const Container = styled.label`
-    cursor: pointer;
     display: inline-block;
     height: 20px;
     width: 40px;
