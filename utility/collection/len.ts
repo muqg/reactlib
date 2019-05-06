@@ -3,7 +3,7 @@
  * @param col The collection.
  */
 function len(col: object): number {
-    return Object.keys(col).length
+  return Object.keys(col).length
 }
 
 export {len}

@@ -24,8 +24,8 @@ function def<T extends () => any>(value: any, defaultFunction: T): T
  * @param defaultValue The default value.
  */
 function def<T extends (...values: any[]) => any>(
-    value: any,
-    defaultFunction: T
+  value: any,
+  defaultFunction: T,
 ): T
 /**
  * Returns the provided value if it is a valid number or the default one instead.
@@ -47,35 +47,35 @@ function def(value: any, defaultObject: object): object
 function def(value: any, defaultString: string): string
 
 function def(value: any, defaultValue: any) {
-    if (!assert.isNull(value) && !assert.isUndefined(value)) {
-        let isDefaultType = false
+  if (!assert.isNull(value) && !assert.isUndefined(value)) {
+    let isDefaultType = false
 
-        let assertion = value.constructor.name
-        if (!("is" + assertion in assert)) assertion = typeof value
+    let assertion = value.constructor.name
+    if (!("is" + assertion in assert)) assertion = typeof value
 
-        switch (assertion.toLowerCase()) {
-            case "array":
-                isDefaultType = assert.isArray(value)
-                break
-            case "boolean":
-                isDefaultType = assert.isBoolean(value)
-                break
-            case "function":
-                isDefaultType = assert.isFunction(value)
-                break
-            case "number":
-                isDefaultType = assert.isNumber(value)
-                break
-            case "object":
-                isDefaultType = assert.isObject(value)
-                break
-            case "string":
-                isDefaultType = assert.isString(value)
-                break
-        }
-        if (isDefaultType) return value
+    switch (assertion.toLowerCase()) {
+      case "array":
+        isDefaultType = assert.isArray(value)
+        break
+      case "boolean":
+        isDefaultType = assert.isBoolean(value)
+        break
+      case "function":
+        isDefaultType = assert.isFunction(value)
+        break
+      case "number":
+        isDefaultType = assert.isNumber(value)
+        break
+      case "object":
+        isDefaultType = assert.isObject(value)
+        break
+      case "string":
+        isDefaultType = assert.isString(value)
+        break
     }
-    return defaultValue
+    if (isDefaultType) return value
+  }
+  return defaultValue
 }
 
 export {def}

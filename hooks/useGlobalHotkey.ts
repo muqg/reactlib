@@ -9,20 +9,20 @@ import {Hotkey, isKeyPressed} from "../utility/dom"
  * @param allowInsideInputs Whether to allow hotkey to be triggered from inside inputs.
  */
 function useGlobalHotkey(
-    hotkey: Hotkey,
-    handle: (e: KeyboardEvent) => void,
-    allowInsideInputs?: boolean
+  hotkey: Hotkey,
+  handle: (e: KeyboardEvent) => void,
+  allowInsideInputs?: boolean,
 ) {
-    useEffect(() => {
-        function handler(event: KeyboardEvent) {
-            if (isKeyPressed(hotkey, event, allowInsideInputs)) {
-                handle(event)
-            }
-        }
+  useEffect(() => {
+    function handler(event: KeyboardEvent) {
+      if (isKeyPressed(hotkey, event, allowInsideInputs)) {
+        handle(event)
+      }
+    }
 
-        document.addEventListener("keydown", handler)
-        return () => document.removeEventListener("keydown", handler)
-    })
+    document.addEventListener("keydown", handler)
+    return () => document.removeEventListener("keydown", handler)
+  })
 }
 
 export {useGlobalHotkey}

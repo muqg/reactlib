@@ -5,7 +5,7 @@ import {len} from "./len"
  * @param col The collection to be tested.
  */
 function isEmpty(col: object): boolean {
-    return len(col) === 0
+  return len(col) === 0
 }
 
 export {isEmpty}

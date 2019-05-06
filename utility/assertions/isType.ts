@@ -5,7 +5,7 @@
  * for the target generic type.
  */
 function isType<T>(value: any, assertion: (value: any) => boolean): value is T {
-    return assertion(value)
+  return assertion(value)
 }
 
 export {isType}

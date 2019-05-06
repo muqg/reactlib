@@ -5,19 +5,19 @@ import {ToolbarItem} from "../ToolbarItem"
 import {styled} from "../../../styles"
 
 const StyledToolbarItem = styled(ToolbarItem)`
-    background-position-x: -72px;
+  background-position-x: -72px;
 `
 
 interface Props {}
 
 const ToolbarAlignRight = (_props: Props) => {
-    return (
-        <StyledToolbarItem
-            onClick={() => Editor.align("right")}
-            title={"Align right"}
-            backgroundImage={TOOLBAR_SPRITESHEET}
-        />
-    )
+  return (
+    <StyledToolbarItem
+      onClick={() => Editor.align("right")}
+      title={"Align right"}
+      backgroundImage={TOOLBAR_SPRITESHEET}
+    />
+  )
 }
 
 export {ToolbarAlignRight}

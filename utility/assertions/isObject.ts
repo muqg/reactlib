@@ -17,13 +17,13 @@ function isObject<T extends object>(value: any): value is T
  * @param value The value to be checked.
  */
 function isObject<T extends object>(
-    value: any,
-    constructor: new () => T
+  value: any,
+  constructor: new () => T,
 ): value is T
 
 function isObject(value: any, constructor?: new () => {}) {
-    if (constructor) return value instanceof constructor
-    else return typeof value === "object" && !isNull(value)
+  if (constructor) return value instanceof constructor
+  else return typeof value === "object" && !isNull(value)
 }
 
 export {isObject}

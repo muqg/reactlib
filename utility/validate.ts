@@ -9,22 +9,22 @@ export type ValidationError = string | undefined | void | null
  * @param validators A map of value validator functions.
  */
 function validate<T extends object>(
-    values: T,
-    validators: Partial<
-        Dictionary<T, (value: any, values: T) => ValidationError>
-    >
+  values: T,
+  validators: Partial<
+    Dictionary<T, (value: any, values: T) => ValidationError>
+  >,
 ): Partial<Dictionary<T, ValidationError>> {
-    const errors: Partial<Dictionary<T, ValidationError>> = {}
-    for (const name in values) {
-        if (name in validators) {
-            const res = call(validators[name], values[name], values)
-            if (res) {
-                errors[name] = res
-            }
-        }
+  const errors: Partial<Dictionary<T, ValidationError>> = {}
+  for (const name in values) {
+    if (name in validators) {
+      const res = call(validators[name], values[name], values)
+      if (res) {
+        errors[name] = res
+      }
     }
+  }
 
-    return errors
+  return errors
 }
 
 export {validate}

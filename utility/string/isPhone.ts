@@ -13,5 +13,5 @@ export const PHONE_PATTERN = /^\+?([\(](\d|\s)+[\)])?(\d|\s|[-])+$/
  * @param input The input string to be tested.
  */
 export function isPhone(input: string) {
-    return PHONE_PATTERN.test(input)
+  return PHONE_PATTERN.test(input)
 }

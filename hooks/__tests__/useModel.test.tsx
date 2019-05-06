@@ -10,308 +10,306 @@ import {Model, useModel, ModelOptions} from "../useModel"
 const modelUpdateMethods = ["onChange", "onBlur", "$change", "$reset"]
 
 const modelHook = () => {
-    return useModel(() => ({
-        undef: undefined,
-        parsed: {
-            value: 0,
-            parse: (input: number) => (input || 1) * 10,
-        },
-        validated: {
-            value: true,
-            validate: () => {
-                return "error"
-            },
-        },
-    }))
+  return useModel(() => ({
+    undef: undefined,
+    parsed: {
+      value: 0,
+      parse: (input: number) => (input || 1) * 10,
+    },
+    validated: {
+      value: true,
+      validate: () => {
+        return "error"
+      },
+    },
+  }))
 }
 
 const MockModelComponent = ({
-    updateCounter,
-    bind,
+  updateCounter,
+  bind,
 }: {
-    updateCounter: jest.Mock
-    bind?: ModelOptions<any>["bind"]
+  updateCounter: jest.Mock
+  bind?: ModelOptions<any>["bind"]
 }) => {
-    const model = useModel(() => ({test: ""}), {bind})
-    updateCounter()
+  const model = useModel(() => ({test: ""}), {bind})
+  updateCounter()
 
-    return (
-        <>
-            <button onClick={() => model.test.onChange("asd")}>onChange</button>
-            <button onClick={model.test.onBlur}>onBlur</button>
-            <button onClick={() => model.$change({test: 2})}>$change</button>
-            <button onClick={() => model.$reset()}>$reset</button>
-        </>
-    )
+  return (
+    <>
+      <button onClick={() => model.test.onChange("asd")}>onChange</button>
+      <button onClick={model.test.onBlur}>onBlur</button>
+      <button onClick={() => model.$change({test: 2})}>$change</button>
+      <button onClick={() => model.$reset()}>$reset</button>
+    </>
+  )
 }
 
 describe("Model hook", () => {
-    let model = renderHook(modelHook).result
+  let model = renderHook(modelHook).result
 
-    beforeEach(() => {
-        cleanup()
-        model = renderHook(modelHook).result
+  beforeEach(() => {
+    cleanup()
+    model = renderHook(modelHook).result
+  })
+
+  it("replaces undefined values with empty strings on initialization", () => {
+    expect(model.current.undef.value).toBe("")
+    expect(model.current.validated.value).toBe(true)
+  })
+
+  it("replaces undefined values with empty strings on reset", () => {
+    act(() => {
+      model.current.undef.onChange(1)
+      model.current.$reset()
     })
 
-    it("replaces undefined values with empty strings on initialization", () => {
-        expect(model.current.undef.value).toBe("")
-        expect(model.current.validated.value).toBe(true)
+    expect(model.current.undef.value).toBe("")
+  })
+
+  it("calls custom parsers on initialization", () => {
+    expect(model.current.parsed.value).toBe(10)
+  })
+
+  it("calls custom parsers on update", () => {
+    act(() => model.current.parsed.onChange(5))
+
+    expect(model.current.parsed.value).toBe(50)
+  })
+
+  it("calls custom parsers on reset", () => {
+    act(() => {
+      model.current.parsed.onChange(2)
+      model.current.$reset()
     })
 
-    it("replaces undefined values with empty strings on reset", () => {
-        act(() => {
-            model.current.undef.onChange(1)
-            model.current.$reset()
-        })
+    expect(model.current.parsed.value).toBe(10)
+  })
 
-        expect(model.current.undef.value).toBe("")
+  it("does not validate values on initialization", () => {
+    expect(model.current.validated.error).toBeUndefined()
+  })
+
+  it("validates values when accessing the error list and a value has been changed", () => {
+    act(() => {
+      model.current.$errors()
     })
 
-    it("calls custom parsers on initialization", () => {
-        expect(model.current.parsed.value).toBe(10)
-    })
+    expect(model.current.$errors().validated).toBe("error")
+    expect(model.current.validated.error).toBe("error")
+  })
 
-    it("calls custom parsers on update", () => {
-        act(() => model.current.parsed.onChange(5))
+  it("validates values on element blur", () => {
+    const {getByTestId} = render(
+      <input {...model.current.validated} data-testid="input" />,
+    )
+    fireEvent.blur(getByTestId("input"))
 
-        expect(model.current.parsed.value).toBe(50)
-    })
+    expect(model.current.validated.error).toBe("error")
+  })
 
-    it("calls custom parsers on reset", () => {
-        act(() => {
-            model.current.parsed.onChange(2)
-            model.current.$reset()
-        })
+  it("bails out of validation update if model values have not changed since last validation", () => {
+    const counter = jest.fn()
+    const dom = render(<MockModelComponent updateCounter={counter} />)
+    const button = dom.getByText("onBlur")
 
-        expect(model.current.parsed.value).toBe(10)
-    })
+    fireEvent.click(button)
+    fireEvent.click(button)
 
-    it("does not validate values on initialization", () => {
-        expect(model.current.validated.error).toBeUndefined()
-    })
+    expect(counter).toHaveBeenCalledTimes(2)
+  })
 
-    it("validates values when accessing the error list and a value has been changed", () => {
-        act(() => {
-            model.current.$errors()
-        })
+  it("does not mutate its entries when updating", () => {
+    const entryBeforeUpdate = model.current.parsed
+    act(() => model.current.parsed.onChange(5))
 
-        expect(model.current.$errors().validated).toBe("error")
-        expect(model.current.validated.error).toBe("error")
-    })
+    expect(entryBeforeUpdate).not.toBe(model.current.parsed)
+  })
 
-    it("validates values on element blur", () => {
-        const {getByTestId} = render(
-            <input {...model.current.validated} data-testid="input" />
-        )
-        fireEvent.blur(getByTestId("input"))
+  it("does not mutate its entries when validating", () => {
+    const entryBeforeValidation = model.current.validated
+    act(() => model.current.validated.onBlur())
 
-        expect(model.current.validated.error).toBe("error")
-    })
+    expect(entryBeforeValidation).not.toBe(model.current.validated)
+  })
 
-    it("bails out of validation update if model values have not changed since last validation", () => {
-        const counter = jest.fn()
-        const dom = render(<MockModelComponent updateCounter={counter} />)
-        const button = dom.getByText("onBlur")
-
-        fireEvent.click(button)
-        fireEvent.click(button)
-
-        expect(counter).toHaveBeenCalledTimes(2)
-    })
-
-    it("does not mutate its entries when updating", () => {
-        const entryBeforeUpdate = model.current.parsed
-        act(() => model.current.parsed.onChange(5))
-
-        expect(entryBeforeUpdate).not.toBe(model.current.parsed)
-    })
-
-    it("does not mutate its entries when validating", () => {
-        const entryBeforeValidation = model.current.validated
-        act(() => model.current.validated.onBlur())
-
-        expect(entryBeforeValidation).not.toBe(model.current.validated)
-    })
-
-    it("provides the most recent model values to the binder", () => {
-        const structure = {test: 10}
-        const {result: model} = renderHook(() =>
-            useModel<typeof structure>(
-                () => ({
-                    test: 10,
-                }),
-                {bind}
-            )
-        )
-
-        act(() => model.current.test.onChange("asd"))
-
-        function bind(model: Model<typeof structure>) {
-            expect(model.test.value).toBe("asd")
-        }
-    })
-
-    it.each(modelUpdateMethods)(
-        "updates owner component when %s is called",
-        method => {
-            const counter = jest.fn()
-            const dom = render(<MockModelComponent updateCounter={counter} />)
-
-            act(() => {
-                fireEvent.click(dom.getByText(method))
-            })
-
-            expect(counter).toHaveBeenCalledTimes(2)
-        }
+  it("provides the most recent model values to the binder", () => {
+    const structure = {test: 10}
+    const {result: model} = renderHook(() =>
+      useModel<typeof structure>(
+        () => ({
+          test: 10,
+        }),
+        {bind},
+      ),
     )
 
-    it.each(modelUpdateMethods)(
-        "skips update on owner component when binder is present and %s is called",
-        method => {
-            const childCounter = jest.fn()
-            const parentCounter = jest.fn()
-            const Parent = () => {
-                const model = useModel(() => ({
-                    childData: {
-                        value: {},
-                    },
-                }))
+    act(() => model.current.test.onChange("asd"))
 
-                parentCounter()
+    function bind(model: Model<typeof structure>) {
+      expect(model.test.value).toBe("asd")
+    }
+  })
 
-                return (
-                    <MockModelComponent
-                        updateCounter={childCounter}
-                        bind={model.childData.onChange}
-                    />
-                )
-            }
-            const dom = render(<Parent />)
+  it.each(modelUpdateMethods)(
+    "updates owner component when %s is called",
+    method => {
+      const counter = jest.fn()
+      const dom = render(<MockModelComponent updateCounter={counter} />)
 
-            act(() => {
-                fireEvent.click(dom.getByText(method))
-            })
+      act(() => {
+        fireEvent.click(dom.getByText(method))
+      })
 
-            expect(parentCounter).toHaveBeenCalledTimes(2)
-            expect(childCounter).toHaveBeenCalledTimes(2)
-        }
-    )
+      expect(counter).toHaveBeenCalledTimes(2)
+    },
+  )
 
-    describe("Nested modelling", () => {
-        it("validates nested models when validating", () => {
-            const {result: parentModel} = renderHook(() =>
-                useModel(() => ({
-                    errorValue: {
-                        validate: () => "error",
-                    },
-                    nested: {},
-                }))
-            )
-            const {result: nestedModel} = renderHook(() =>
-                useModel(
-                    () => ({
-                        id: {
-                            value: "test",
-                            validate: () => "error",
-                        },
-                    }),
-                    {bind: parentModel.current.nested.onChange}
-                )
-            )
+  it.each(modelUpdateMethods)(
+    "skips update on owner component when binder is present and %s is called",
+    method => {
+      const childCounter = jest.fn()
+      const parentCounter = jest.fn()
+      const Parent = () => {
+        const model = useModel(() => ({
+          childData: {
+            value: {},
+          },
+        }))
 
-            act(() => {
-                nestedModel.current.$change({id: "asd"})
-                expect(parentModel.current.$errors()).toEqual({
-                    errorValue: "error",
-                    nested: "error",
-                })
-            })
+        parentCounter()
+
+        return (
+          <MockModelComponent
+            updateCounter={childCounter}
+            bind={model.childData.onChange}
+          />
+        )
+      }
+      const dom = render(<Parent />)
+
+      act(() => {
+        fireEvent.click(dom.getByText(method))
+      })
+
+      expect(parentCounter).toHaveBeenCalledTimes(2)
+      expect(childCounter).toHaveBeenCalledTimes(2)
+    },
+  )
+
+  describe("Nested modelling", () => {
+    it("validates nested models when validating", () => {
+      const {result: parentModel} = renderHook(() =>
+        useModel(() => ({
+          errorValue: {
+            validate: () => "error",
+          },
+          nested: {},
+        })),
+      )
+      const {result: nestedModel} = renderHook(() =>
+        useModel(
+          () => ({
+            id: {
+              value: "test",
+              validate: () => "error",
+            },
+          }),
+          {bind: parentModel.current.nested.onChange},
+        ),
+      )
+
+      act(() => {
+        nestedModel.current.$change({id: "asd"})
+        expect(parentModel.current.$errors()).toEqual({
+          errorValue: "error",
+          nested: "error",
         })
-
-        it("uses custom validator when present instead of validating nested models", () => {
-            const {result: parentModel} = renderHook(() =>
-                useModel(() => ({
-                    errorValue: {
-                        validate: () => "error",
-                    },
-                    nested: {
-                        value: {},
-                        validate: () => "custom_error",
-                    },
-                }))
-            )
-            const {result: nestedModel} = renderHook(() =>
-                useModel(
-                    () => ({
-                        id: {
-                            value: "test",
-                            validate: () => "error",
-                        },
-                    }),
-                    {bind: parentModel.current.nested.onChange}
-                )
-            )
-            act(() => {
-                nestedModel.current.$change({id: "asd"})
-                expect(parentModel.current.$errors()).toEqual({
-                    errorValue: "error",
-                    nested: "custom_error",
-                })
-            })
-        })
-
-        it("resets nested models when resetting", () => {
-            const initialData = {id: "", name: ""}
-            const {result: parentModel} = renderHook(() =>
-                useModel(() => ({
-                    nested: {
-                        value: {},
-                        validate: () => "custom_error",
-                    },
-                }))
-            )
-            const {result: nestedModel} = renderHook(() =>
-                useModel(
-                    () => ({
-                        id: "",
-                        name: "",
-                    }),
-                    {bind: parentModel.current.nested.onChange}
-                )
-            )
-
-            const changeData = {id: 1, name: "test"}
-            act(() => nestedModel.current.$change(changeData))
-            expect(parentModel.current.nested.value.$data()).toEqual(changeData)
-
-            act(() => parentModel.current.$reset())
-            expect(parentModel.current.nested.value.$data()).toEqual(
-                initialData
-            )
-        })
-
-        it("serializes nested models using their model.$data method", () => {
-            const {result: parentModel} = renderHook(() =>
-                useModel<{nested: object}>(() => ({
-                    nested: {
-                        value: {},
-                        validate: () => "custom_error",
-                    },
-                }))
-            )
-            const {result: nestedModel} = renderHook(() =>
-                useModel(
-                    () => ({
-                        id: "",
-                        name: "",
-                    }),
-                    {bind: parentModel.current.nested.onChange}
-                )
-            )
-
-            const changeData = {id: 1, name: "test"}
-            act(() => nestedModel.current.$change(changeData))
-            expect(parentModel.current.$data().nested).toEqual(changeData)
-        })
+      })
     })
+
+    it("uses custom validator when present instead of validating nested models", () => {
+      const {result: parentModel} = renderHook(() =>
+        useModel(() => ({
+          errorValue: {
+            validate: () => "error",
+          },
+          nested: {
+            value: {},
+            validate: () => "custom_error",
+          },
+        })),
+      )
+      const {result: nestedModel} = renderHook(() =>
+        useModel(
+          () => ({
+            id: {
+              value: "test",
+              validate: () => "error",
+            },
+          }),
+          {bind: parentModel.current.nested.onChange},
+        ),
+      )
+      act(() => {
+        nestedModel.current.$change({id: "asd"})
+        expect(parentModel.current.$errors()).toEqual({
+          errorValue: "error",
+          nested: "custom_error",
+        })
+      })
+    })
+
+    it("resets nested models when resetting", () => {
+      const initialData = {id: "", name: ""}
+      const {result: parentModel} = renderHook(() =>
+        useModel(() => ({
+          nested: {
+            value: {},
+            validate: () => "custom_error",
+          },
+        })),
+      )
+      const {result: nestedModel} = renderHook(() =>
+        useModel(
+          () => ({
+            id: "",
+            name: "",
+          }),
+          {bind: parentModel.current.nested.onChange},
+        ),
+      )
+
+      const changeData = {id: 1, name: "test"}
+      act(() => nestedModel.current.$change(changeData))
+      expect(parentModel.current.nested.value.$data()).toEqual(changeData)
+
+      act(() => parentModel.current.$reset())
+      expect(parentModel.current.nested.value.$data()).toEqual(initialData)
+    })
+
+    it("serializes nested models using their model.$data method", () => {
+      const {result: parentModel} = renderHook(() =>
+        useModel<{nested: object}>(() => ({
+          nested: {
+            value: {},
+            validate: () => "custom_error",
+          },
+        })),
+      )
+      const {result: nestedModel} = renderHook(() =>
+        useModel(
+          () => ({
+            id: "",
+            name: "",
+          }),
+          {bind: parentModel.current.nested.onChange},
+        ),
+      )
+
+      const changeData = {id: 1, name: "test"}
+      act(() => nestedModel.current.$change(changeData))
+      expect(parentModel.current.$data().nested).toEqual(changeData)
+    })
+  })
 })

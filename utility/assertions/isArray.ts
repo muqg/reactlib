@@ -3,5 +3,5 @@
  * @param value The value to be checked.
  */
 export function isArray(value: any): value is Array<any> {
-    return Array.isArray(value)
+  return Array.isArray(value)
 }

@@ -3,5 +3,5 @@
  * @param value The value to be checked.
  */
 export function isUndefined(value: any): value is undefined {
-    return value === undefined
+  return value === undefined
 }

@@ -3,5 +3,5 @@
  * @param num The number to be checked.
  */
 export function isEven(num: number) {
-    return num % 2 === 0
+  return num % 2 === 0
 }

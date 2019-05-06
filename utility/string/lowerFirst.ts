@@ -12,18 +12,18 @@ function lowerFirst(str: string): string
 function lowerFirst(str: string, separator: string): string
 
 function lowerFirst(str: string, separator?: string) {
-    let res: string
-    if (separator)
-        res = str
-            .split(separator)
-            .map(word => lcfirst(word))
-            .join(separator)
-    else res = lcfirst(str)
-    return res
+  let res: string
+  if (separator)
+    res = str
+      .split(separator)
+      .map(word => lcfirst(word))
+      .join(separator)
+  else res = lcfirst(str)
+  return res
 }
 
 function lcfirst(str: string) {
-    return str.charAt(0).toLowerCase() + str.slice(1)
+  return str.charAt(0).toLowerCase() + str.slice(1)
 }
 
 export {lowerFirst}

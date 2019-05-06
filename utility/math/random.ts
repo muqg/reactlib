@@ -12,8 +12,8 @@ function random(max: number): number
 function random(min: number, max: number): number
 
 function random(min: number, max: number = 0) {
-    if (min > max) [max, min] = [min, max]
-    return Math.floor(Math.random() * (max - min + 1) + min)
+  if (min > max) [max, min] = [min, max]
+  return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 export {random}

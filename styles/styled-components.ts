@@ -4,26 +4,26 @@ import {ThemedStyledComponentsModule} from "styled-components"
 import {ThemeInterface} from "./theme"
 
 const {
-    default: styled,
-    css,
-    createGlobalStyle,
-    keyframes,
-    ThemeContext,
-    ThemeProvider,
+  default: styled,
+  css,
+  createGlobalStyle,
+  keyframes,
+  ThemeContext,
+  ThemeProvider,
 } = (styledComponents as ThemedStyledComponentsModule<
-    any
+  any
 >) as ThemedStyledComponentsModule<ThemeInterface>
 
 function useTheme() {
-    return useContext(ThemeContext)
+  return useContext(ThemeContext)
 }
 
 export {
-    styled,
-    css,
-    createGlobalStyle,
-    keyframes,
-    ThemeContext,
-    ThemeProvider,
-    useTheme,
+  styled,
+  css,
+  createGlobalStyle,
+  keyframes,
+  ThemeContext,
+  ThemeProvider,
+  useTheme,
 }

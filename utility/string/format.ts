@@ -21,8 +21,8 @@ function format(str: string, ...args: FormatArgument[]): string
 function format(str: string, args: Dict<FormatArgument>): string
 
 function format(str: string, ...args: any[]): string {
-    const values = isObject(args[0]) ? args[0] : args
-    return str.replace(FORMAT_PATTERN, (match, val) => values[val] || match)
+  const values = isObject(args[0]) ? args[0] : args
+  return str.replace(FORMAT_PATTERN, (match, val) => values[val] || match)
 }
 
 export {format}

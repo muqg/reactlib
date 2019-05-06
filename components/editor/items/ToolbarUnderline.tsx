@@ -5,11 +5,11 @@ import {Editor} from "../../../utility/dom"
 interface Props {}
 
 const ToolbarUnderline = (_props: Props) => {
-    return (
-        <ToolbarItem onClick={Editor.underline} title="Underline">
-            <u>U</u>
-        </ToolbarItem>
-    )
+  return (
+    <ToolbarItem onClick={Editor.underline} title="Underline">
+      <u>U</u>
+    </ToolbarItem>
+  )
 }
 
 export {ToolbarUnderline}

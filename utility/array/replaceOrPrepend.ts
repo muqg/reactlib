@@ -10,17 +10,17 @@ import {_replaceValue} from "./_replaceValue"
  */
 
 function replaceOrPrepend<T>(
-    arr: Array<T>,
-    search: (el: T) => boolean,
-    value: T
+  arr: Array<T>,
+  search: (el: T) => boolean,
+  value: T,
 ): Array<T> {
-    arr = [...arr]
+  arr = [...arr]
 
-    if (!_replaceValue(arr, search, value)) {
-        arr.unshift(value)
-    }
+  if (!_replaceValue(arr, search, value)) {
+    arr.unshift(value)
+  }
 
-    return arr
+  return arr
 }
 
 export {replaceOrPrepend}

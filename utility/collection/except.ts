@@ -6,17 +6,17 @@ import {Omit} from "../type"
  * @param keys Keys for the entries to not include in the new collection.
  */
 function except<T extends object, K extends keyof T>(
-    col: T,
-    ...keys: K[]
+  col: T,
+  ...keys: K[]
 ): Omit<T, K> {
-    const collection = col as any
-    const res = {} as any
+  const collection = col as any
+  const res = {} as any
 
-    for (let key in collection) {
-        if (keys.indexOf(key as K) === -1) res[key] = collection[key]
-    }
+  for (let key in collection) {
+    if (keys.indexOf(key as K) === -1) res[key] = collection[key]
+  }
 
-    return res
+  return res
 }
 
 export {except}

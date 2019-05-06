@@ -12,7 +12,7 @@ function average(nums: number[]): number
 function average(...nums: any[]): number
 
 function average(nums: number[]) {
-    return sum(nums) / 2
+  return sum(nums) / 2
 }
 
 export {average}

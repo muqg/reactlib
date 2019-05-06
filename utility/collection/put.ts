@@ -23,27 +23,27 @@ function put(key: string, item: any): object
 function put<T extends object = object>(key: string, item: any, pool: object): T
 
 function put(key: string, item: any, pool: object = {}) {
-    const splitKey = key.split(".").filter(k => k)
+  const splitKey = key.split(".").filter(k => k)
 
-    let result: any = item
-    for (let i = splitKey.length - 1; i >= 0; i--) {
-        const currentKey = splitKey[i]
-        const poolItem = pull(pool, splitKey.join(".")) || {}
+  let result: any = item
+  for (let i = splitKey.length - 1; i >= 0; i--) {
+    const currentKey = splitKey[i]
+    const poolItem = pull(pool, splitKey.join(".")) || {}
 
-        // If both items are objects then combine them. Otherwise result overwrites the poolItem.
-        if (
-            isObject(result) &&
-            !isArray(result) &&
-            (isObject(poolItem) && !isArray(poolItem))
-        )
-            result = {...poolItem, ...result}
+    // If both items are objects then combine them. Otherwise result overwrites the poolItem.
+    if (
+      isObject(result) &&
+      !isArray(result) &&
+      (isObject(poolItem) && !isArray(poolItem))
+    )
+      result = {...poolItem, ...result}
 
-        result = {
-            [currentKey]: result,
-        }
-        splitKey.pop()
+    result = {
+      [currentKey]: result,
     }
-    return isObject(pool) && !isArray(pool) ? {...pool, ...result} : {...result}
+    splitKey.pop()
+  }
+  return isObject(pool) && !isArray(pool) ? {...pool, ...result} : {...result}
 }
 
 export {put}

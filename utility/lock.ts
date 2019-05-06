@@ -5,19 +5,19 @@
  * @param func The function to be locked.
  */
 function lock<A extends any[], R>(
-    func: (...args: A) => R
+  func: (...args: A) => R,
 ): (...args: A) => Promise<R | void> {
-    let locked = false
+  let locked = false
 
-    return async (...args: A) => {
-        if (!locked) {
-            locked = true
-            const res = await func(...args)
-            locked = false
+  return async (...args: A) => {
+    if (!locked) {
+      locked = true
+      const res = await func(...args)
+      locked = false
 
-            return res
-        }
+      return res
     }
+  }
 }
 
 export {lock}

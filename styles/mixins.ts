@@ -1,31 +1,31 @@
 import {
-    AlignItemsProperty,
-    FlexDirectionProperty,
-    FlexWrapProperty,
-    JustifyContentProperty,
-    PositionProperty,
+  AlignItemsProperty,
+  FlexDirectionProperty,
+  FlexWrapProperty,
+  JustifyContentProperty,
+  PositionProperty,
 } from "csstype"
 import {css} from "."
 
 export function truncate(width?: string) {
-    return css`
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        ${width &&
-            css`
-                width: ${width};
-            `}
-    `
+  return css`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    ${width &&
+      css`
+        width: ${width};
+      `}
+  `
 }
 
 export function flex(
-    horizontal?: JustifyContentProperty | null,
-    vertical?: AlignItemsProperty | null,
-    direction?: FlexDirectionProperty | null,
-    wrap?: FlexWrapProperty | null
+  horizontal?: JustifyContentProperty | null,
+  vertical?: AlignItemsProperty | null,
+  direction?: FlexDirectionProperty | null,
+  wrap?: FlexWrapProperty | null,
 ) {
-    return css`
+  return css`
         ${vertical && `align-items: ${vertical};`}
         display: flex;
         ${direction && `flex-direction: ${direction};`}
@@ -35,13 +35,13 @@ export function flex(
 }
 
 export function position(
-    pos: PositionProperty,
-    top?: string,
-    right?: string,
-    bottom?: string,
-    left?: string
+  pos: PositionProperty,
+  top?: string,
+  right?: string,
+  bottom?: string,
+  left?: string,
 ) {
-    return css`
+  return css`
         position: ${pos};
         ${top && `top: ${top};`}
         ${right && `right: ${right};`}

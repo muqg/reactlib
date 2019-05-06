@@ -10,7 +10,7 @@ function sum(nums: number[]): number
 function sum(...nums: any[]): number
 
 function sum(nums: number[]) {
-    return nums.reduce((a, b) => a + b, 0)
+  return nums.reduce((a, b) => a + b, 0)
 }
 
 export {sum}

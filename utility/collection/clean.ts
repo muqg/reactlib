@@ -5,13 +5,13 @@ import {isUndefined} from "../assertions"
  * @param col The collection to clean.
  */
 function clean<T extends object>(col: object): T {
-    const res: any = {}
+  const res: any = {}
 
-    Object.entries(col).forEach(([key, value]) => {
-        if (!isUndefined(value)) res[key] = value
-    })
+  Object.entries(col).forEach(([key, value]) => {
+    if (!isUndefined(value)) res[key] = value
+  })
 
-    return res
+  return res
 }
 
 export {clean}

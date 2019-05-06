@@ -10,15 +10,15 @@ import {_replaceValue} from "./_replaceValue"
  */
 
 function replaceOrPush<T>(
-    arr: Array<T>,
-    search: (el: T) => boolean,
-    value: T
+  arr: Array<T>,
+  search: (el: T) => boolean,
+  value: T,
 ): Array<T> {
-    arr = [...arr]
+  arr = [...arr]
 
-    if (!_replaceValue(arr, search, value)) arr.push(value)
+  if (!_replaceValue(arr, search, value)) arr.push(value)
 
-    return arr
+  return arr
 }
 
 export {replaceOrPush}

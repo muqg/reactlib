@@ -9,33 +9,33 @@ import {isObject, isType, isUndefined} from "../assertions"
  * @param allowInsideInputs Whether to allow keypress inside input elements.
  */
 function isKeyPressed(
-    hotkey: Hotkey,
-    event: KeyboardEvent | React.KeyboardEvent,
-    allowInsideInputs = false
+  hotkey: Hotkey,
+  event: KeyboardEvent | React.KeyboardEvent,
+  allowInsideInputs = false,
 ): boolean {
-    const target = event.target
-    if (!allowInsideInputs && isObject(target, Element)) {
-        const nodeName = target.nodeName.toLowerCase()
-        if (
-            nodeName === "input" ||
-            nodeName === "textarea" ||
-            target.hasAttribute("contenteditable")
-        )
-            return false
-    }
-
-    if (isType<React.KeyboardEvent>(event, e => e.nativeEvent))
-        event = event.nativeEvent
-
-    return (
-        (hotkey.code === event.code ||
-            hotkey.eventKey === event.key ||
-            hotkey.keyCode === event.keyCode) &&
-        (isUndefined(hotkey.alt) || hotkey.alt === event.altKey) &&
-        (isUndefined(hotkey.ctrl) || hotkey.ctrl === event.ctrlKey) &&
-        (isUndefined(hotkey.meta) || hotkey.meta === event.metaKey) &&
-        (isUndefined(hotkey.shift) || hotkey.shift === event.shiftKey)
+  const target = event.target
+  if (!allowInsideInputs && isObject(target, Element)) {
+    const nodeName = target.nodeName.toLowerCase()
+    if (
+      nodeName === "input" ||
+      nodeName === "textarea" ||
+      target.hasAttribute("contenteditable")
     )
+      return false
+  }
+
+  if (isType<React.KeyboardEvent>(event, e => e.nativeEvent))
+    event = event.nativeEvent
+
+  return (
+    (hotkey.code === event.code ||
+      hotkey.eventKey === event.key ||
+      hotkey.keyCode === event.keyCode) &&
+    (isUndefined(hotkey.alt) || hotkey.alt === event.altKey) &&
+    (isUndefined(hotkey.ctrl) || hotkey.ctrl === event.ctrlKey) &&
+    (isUndefined(hotkey.meta) || hotkey.meta === event.metaKey) &&
+    (isUndefined(hotkey.shift) || hotkey.shift === event.shiftKey)
+  )
 }
 
 export {isKeyPressed}

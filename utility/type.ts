@@ -2,29 +2,29 @@
  * Represents a RGBA color.
  */
 export interface Color {
-    /**
-     * Color's transparency value (alpha channel).
-     */
-    alpha: number
-    /**
-     * Red color value.
-     */
-    red: number
-    /**
-     * Green color value.
-     */
-    green: number
-    /**
-     * Blue color value.
-     */
-    blue: number
+  /**
+   * Color's transparency value (alpha channel).
+   */
+  alpha: number
+  /**
+   * Red color value.
+   */
+  red: number
+  /**
+   * Green color value.
+   */
+  green: number
+  /**
+   * Blue color value.
+   */
+  blue: number
 }
 
 /**
  * A simple dictionary with string keys and values of generic type.
  */
 export interface Dict<T> {
-    [key: string]: T
+  [key: string]: T
 }
 
 /**
@@ -33,25 +33,25 @@ export interface Dict<T> {
  * cases.
  */
 export interface UDict<T> {
-    [key: string]: T | undefined
+  [key: string]: T | undefined
 }
 
 /**
  * Represents a pointer value.
  */
 export interface Pointer<T> {
-    /**
-     * Current pointer value.
-     */
-    value: T
+  /**
+   * Current pointer value.
+   */
+  value: T
 }
 
 /**
  * A basic object with a name and a key.
  */
 export interface NamedKey<T = string> {
-    id: T
-    name: string
+  id: T
+  name: string
 }
 
 /**
@@ -63,12 +63,12 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
  * Represents all valid JSON-serializable values.
  */
 export type Serializable =
-    | string
-    | number
-    | object
-    | Array<any>
-    | boolean
-    | null
+  | string
+  | number
+  | object
+  | Array<any>
+  | boolean
+  | null
 
 /**
  * Represents a basic dictionary type.
@@ -79,9 +79,9 @@ export type Dictionary<K extends object, V = K[keyof K]> = {[key in keyof K]: V}
  * Represents a basic list type. Currently it is an alternative to Dict.
  */
 export interface List<V> {
-    [key: string]: V
+  [key: string]: V
 }
 
 export interface ResourceObject<T extends string | number = number> {
-    id: T
+  id: T
 }

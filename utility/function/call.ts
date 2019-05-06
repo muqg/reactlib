@@ -5,9 +5,9 @@
  * @param args Arguments to pass to the function.
  */
 function call<A extends any[], R = any>(func?: (...args: A) => R, ...args: A) {
-    if (func) {
-        return func(...args)
-    }
+  if (func) {
+    return func(...args)
+  }
 }
 
 export {call}

@@ -6,7 +6,7 @@ import {isEmpty} from "./isEmpty"
  * @param col The object or array to be tested.
  */
 function isNullOrEmpty(col: object | null | undefined): boolean {
-    return isNullOrUndefined(col) || isEmpty(col)
+  return isNullOrUndefined(col) || isEmpty(col)
 }
 
 export {isNullOrEmpty}

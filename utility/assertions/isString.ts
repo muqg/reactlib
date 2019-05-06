@@ -5,5 +5,5 @@ import {isNullOrUndefined} from "./isNullOrUndefined"
  * @param value The value to be checked.
  */
 export function isString(value: any): value is string {
-    return !isNullOrUndefined(value) && value.constructor === String
+  return !isNullOrUndefined(value) && value.constructor === String
 }

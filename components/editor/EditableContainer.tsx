@@ -6,56 +6,56 @@ import {call} from "../../utility/function"
 import {TextInput} from "../inputs"
 
 const Container = styled(TextInput)`
-    height: 4em;
-    overflow: auto;
+  height: 4em;
+  overflow: auto;
 `
 
 interface Props {
-    className?: string
-    content?: string
-    contentChange?: (content: string) => void
-    preventNewline?: boolean
+  className?: string
+  content?: string
+  contentChange?: (content: string) => void
+  preventNewline?: boolean
 }
 
 const EditableContainer = (props: Props) => {
-    // Keep content as state variable in order to
-    // only initially set it based on props.
-    const [content] = useState(props.content)
-    const containerRef = useRef<any>(null)
+  // Keep content as state variable in order to
+  // only initially set it based on props.
+  const [content] = useState(props.content)
+  const containerRef = useRef<any>(null)
 
-    function handleChange() {
-        Editor.saveSelection()
+  function handleChange() {
+    Editor.saveSelection()
 
-        const container = containerRef.current
-        if (container) call(props.contentChange, container.innerHTML)
-    }
+    const container = containerRef.current
+    if (container) call(props.contentChange, container.innerHTML)
+  }
 
-    function handlePaste(event: React.ClipboardEvent<HTMLDivElement>) {
-        event.preventDefault()
+  function handlePaste(event: React.ClipboardEvent<HTMLDivElement>) {
+    event.preventDefault()
 
-        const text = event.clipboardData.getData("text/plain")
-        Editor.insertHTML(text)
-    }
+    const text = event.clipboardData.getData("text/plain")
+    Editor.insertHTML(text)
+  }
 
-    function preventNewline(event: React.KeyboardEvent) {
-        if (isKeyPressed({keyCode: CHAR_CODE_ENTER}, event, true))
-            event.preventDefault()
-    }
+  function preventNewline(event: React.KeyboardEvent) {
+    if (isKeyPressed({keyCode: CHAR_CODE_ENTER}, event, true))
+      event.preventDefault()
+  }
 
-    return (
-        <Container
-            as="div"
-            className={props.className}
-            contentEditable
-            onBlur={handleChange}
-            onKeyPress={props.preventNewline ? preventNewline : undefined}
-            onInput={handleChange}
-            onPaste={handlePaste}
-            ref={containerRef}
-            spellCheck={false}
-            dangerouslySetInnerHTML={{__html: content || ""}}
-        />
-    )
+  return (
+    <Container
+      as="div"
+      className={props.className}
+      contentEditable
+      onBlur={handleChange}
+      onKeyPress={props.preventNewline ? preventNewline : undefined}
+      onInput={handleChange}
+      onPaste={handlePaste}
+      ref={containerRef}
+      spellCheck={false}
+      dangerouslySetInnerHTML={{__html: content || ""}}
+    />
+  )
 }
 
 export {EditableContainer}

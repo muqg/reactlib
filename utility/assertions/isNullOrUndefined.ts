@@ -5,7 +5,7 @@ import {isNull, isUndefined} from "."
  * @param value The value to be checked.
  */
 function isNullOrUndefined(val: any): val is null | undefined {
-    return isNull(val) || isUndefined(val)
+  return isNull(val) || isUndefined(val)
 }
 
 export {isNullOrUndefined}

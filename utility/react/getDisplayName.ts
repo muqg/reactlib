@@ -3,12 +3,12 @@
  * @param component The component being improved.
  */
 function getDisplayName(
-    wrapperName: string,
-    wrappedComponent: React.ComponentType<any>
+  wrapperName: string,
+  wrappedComponent: React.ComponentType<any>,
 ) {
-    return `${wrapperName}(${wrappedComponent.displayName ||
-        wrappedComponent.name ||
-        "component"})`
+  return `${wrapperName}(${wrappedComponent.displayName ||
+    wrappedComponent.name ||
+    "component"})`
 }
 
 export {getDisplayName}

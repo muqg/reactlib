@@ -4,7 +4,7 @@ import {Size} from "../utility"
 const SIZE_FACTOR = 12
 
 interface StyleProps {
-    size?: Size
+  size?: Size
 }
 
 const Divider = styled.div`
@@ -17,7 +17,7 @@ const Divider = styled.div`
     width: 100%;
 `
 Divider.defaultProps = {
-    size: Size.Slim,
+  size: Size.Slim,
 }
 Divider.displayName = "Divider"
 

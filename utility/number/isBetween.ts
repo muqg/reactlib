@@ -5,17 +5,17 @@
  * @param max Second number range.
  */
 export function isBetween(val: number, min: number, max: number) {
-    if (__DEV__) {
-        if (min > max) {
-            console.error(
-                "The `min` argument given for the function `isBetween` is greater" +
-                    "than the given `max` argument"
-            )
-        }
-    }
-
+  if (__DEV__) {
     if (min > max) {
-        ;[max, min] = [min, max]
+      console.error(
+        "The `min` argument given for the function `isBetween` is greater" +
+          "than the given `max` argument",
+      )
     }
-    return val > min && val < max
+  }
+
+  if (min > max) {
+    ;[max, min] = [min, max]
+  }
+  return val > min && val < max
 }

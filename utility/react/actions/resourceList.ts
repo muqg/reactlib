@@ -9,20 +9,20 @@ import {createAction} from "../createAction"
  * in the list. Default mode is `append`.
  */
 export function resourceListSaveAction(
-    res: ResourceObject,
-    mode?: "append" | "prepend"
+  res: ResourceObject,
+  mode?: "append" | "prepend",
 ) {
-    mode = mode ? mode : "append"
-    return createAction("save", res, {mode})
+  mode = mode ? mode : "append"
+  return createAction("save", res, {mode})
 }
 
 /**
  * Action to update an existing element in the resource list.
  */
 export function resourceListUpdateAction(
-    res: Partial<ResourceObject> & Pick<ResourceObject, "id">
+  res: Partial<ResourceObject> & Pick<ResourceObject, "id">,
 ) {
-    return createAction("update", res)
+  return createAction("update", res)
 }
 
 /**
@@ -30,7 +30,7 @@ export function resourceListUpdateAction(
  * @param id Id of the element to remove.
  */
 export function resourceListRemoveAction(id: ResourceObject["id"]) {
-    return createAction("remove", id)
+  return createAction("remove", id)
 }
 
 /**
@@ -38,5 +38,5 @@ export function resourceListRemoveAction(id: ResourceObject["id"]) {
  * @param list The new list.
  */
 export function resourceListSetAction(list: ResourceObject[]) {
-    return createAction("set", list)
+  return createAction("set", list)
 }

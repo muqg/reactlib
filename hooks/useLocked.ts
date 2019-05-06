@@ -8,19 +8,19 @@
  * @param func The callback function to be locked.
  */
 function useLocked<A extends any[], R>(
-    func: (...args: A) => R
+  func: (...args: A) => R,
 ): (...args: A) => Promise<R | void> {
-    const locked = useRef(false)
+  const locked = useRef(false)
 
-    return async (...args: A) => {
-        if (locked.current) return
+  return async (...args: A) => {
+    if (locked.current) return
 
-        locked.current = true
-        const res = await func(...args)
-        locked.current = false
+    locked.current = true
+    const res = await func(...args)
+    locked.current = false
 
-        return res
-    }
+    return res
+  }
 }
 
 export {useLocked}

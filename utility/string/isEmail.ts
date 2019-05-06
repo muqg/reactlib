@@ -8,5 +8,5 @@ export const EMAIL_PATTERN = /(?:(?:\r\n)?[ \t])*(?:(?:(?:[^()<>@,;:\\".\[\] \00
  * @param input The input string to be tested.
  */
 export function isEmail(input: string) {
-    return EMAIL_PATTERN.test(input)
+  return EMAIL_PATTERN.test(input)
 }

@@ -5,19 +5,19 @@ import {ToolbarItem} from "../ToolbarItem"
 import {styled} from "../../../styles"
 
 const StyledToolbarItem = styled(ToolbarItem)`
-    background-position-x: -24px;
+  background-position-x: -24px;
 `
 
 interface Props {}
 
 const ToolbarAlignCenter = (_props: Props) => {
-    return (
-        <StyledToolbarItem
-            onClick={() => Editor.align("center")}
-            title={"Align center"}
-            backgroundImage={TOOLBAR_SPRITESHEET}
-        />
-    )
+  return (
+    <StyledToolbarItem
+      onClick={() => Editor.align("center")}
+      title={"Align center"}
+      backgroundImage={TOOLBAR_SPRITESHEET}
+    />
+  )
 }
 
 export {ToolbarAlignCenter}

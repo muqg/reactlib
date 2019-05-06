@@ -7,5 +7,5 @@ export const ALPHABETIC_PATTERN = /^([a-zа-я\s])+$/i
  * @param input The input string to be tested.
  */
 export function isAlphabetic(input: string) {
-    return ALPHABETIC_PATTERN.test(input)
+  return ALPHABETIC_PATTERN.test(input)
 }

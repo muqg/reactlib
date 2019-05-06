@@ -13,19 +13,19 @@ function inViewport(element: Element): boolean
 function inViewport(element: Element, offset: number): boolean
 
 function inViewport(element: Element, offset = 0) {
-    const rect = element.getBoundingClientRect()
-    const viewport = {
-        top: rect.top - window.innerHeight - offset,
-        bottom: rect.bottom + offset,
-        left: rect.left - window.innerWidth - offset,
-        right: rect.right + offset,
-    }
+  const rect = element.getBoundingClientRect()
+  const viewport = {
+    top: rect.top - window.innerHeight - offset,
+    bottom: rect.bottom + offset,
+    left: rect.left - window.innerWidth - offset,
+    right: rect.right + offset,
+  }
 
-    return (
-        viewport.top <= 0 &&
-        viewport.bottom >= 0 &&
-        (viewport.left <= 0 && viewport.right >= 0)
-    )
+  return (
+    viewport.top <= 0 &&
+    viewport.bottom >= 0 &&
+    (viewport.left <= 0 && viewport.right >= 0)
+  )
 }
 
 export {inViewport}

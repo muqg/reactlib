@@ -3,22 +3,22 @@ import {wait} from "../../utility"
 import {useLocked} from "../useLocked"
 
 describe("Locked hook", () => {
-    it("does not allow function to be called again while the first call is still running", async () => {
-        const fn = jest.fn()
-        const {result: locked} = renderHook(() =>
-            useLocked(async () => {
-                // Wait long enough to allow a second call to happen
-                await wait(100)
-                fn()
-            })
-        )
+  it("does not allow function to be called again while the first call is still running", async () => {
+    const fn = jest.fn()
+    const {result: locked} = renderHook(() =>
+      useLocked(async () => {
+        // Wait long enough to allow a second call to happen
+        await wait(100)
+        fn()
+      }),
+    )
 
-        const firstCall = locked.current()
-        const secondCall = locked.current()
+    const firstCall = locked.current()
+    const secondCall = locked.current()
 
-        await firstCall
-        await secondCall
+    await firstCall
+    await secondCall
 
-        expect(fn).toHaveBeenCalledTimes(1)
-    })
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
 })

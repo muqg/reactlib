@@ -30,26 +30,26 @@ function localize(key: string, ...args: FormatArgument[]): string
 function localize(key: string, args: Dict<FormatArgument>): string
 
 function localize(key: any, ...args: any[]): any {
-    if (__DEV__) {
-        console.warn(
-            "`localize` is deprecated. Consider using translation hook instead."
-        )
-    }
+  if (__DEV__) {
+    console.warn(
+      "`localize` is deprecated. Consider using translation hook instead.",
+    )
+  }
 
-    key = key ? `${LOCALIZATION_STATE_KEY}.${key}` : LOCALIZATION_STATE_KEY
-    let result = initialState(key)
+  key = key ? `${LOCALIZATION_STATE_KEY}.${key}` : LOCALIZATION_STATE_KEY
+  let result = initialState(key)
 
-    if (isString(result)) {
-        const firstArg = args[0]
-        let pluralCount = -1
-        if (isString(firstArg) && firstArg.startsWith("|"))
-            pluralCount = asInt(args.shift().substring(1))
+  if (isString(result)) {
+    const firstArg = args[0]
+    let pluralCount = -1
+    if (isString(firstArg) && firstArg.startsWith("|"))
+      pluralCount = asInt(args.shift().substring(1))
 
-        result = format(result, ...args)
-        if (pluralCount >= 0) result = plural(result, pluralCount)
-    }
+    result = format(result, ...args)
+    if (pluralCount >= 0) result = plural(result, pluralCount)
+  }
 
-    return result
+  return result
 }
 
 export {localize}

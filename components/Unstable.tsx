@@ -1,15 +1,15 @@
 import * as React from "react"
 
 interface Props {
-    children: React.ReactNode
+  children: React.ReactNode
 }
 
 function Unstable({children}: Props) {
-    if (__DEV__) {
-        return <>{children}</>
-    }
+  if (__DEV__) {
+    return <>{children}</>
+  }
 
-    return null
+  return null
 }
 
 export {Unstable}

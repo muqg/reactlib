@@ -14,18 +14,18 @@ function capitalize(str: string): string
 function capitalize(str: string, separator?: string): string
 
 function capitalize(str: string, separator?: string) {
-    let res: string
-    if (separator)
-        res = str
-            .split(separator)
-            .map(word => cap(word))
-            .join(separator)
-    else res = cap(str)
-    return res
+  let res: string
+  if (separator)
+    res = str
+      .split(separator)
+      .map(word => cap(word))
+      .join(separator)
+  else res = cap(str)
+  return res
 }
 
 function cap(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }
 
 export {capitalize}

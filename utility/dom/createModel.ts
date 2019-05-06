@@ -4,11 +4,11 @@ import {ParseableInput} from "./parseInputValue"
 import {parseElement} from "./parseElement"
 
 export interface CreateModelOptions {
-    /**
-     * Whether to cast modelled value to its
-     * respective primitive or leave it as is.
-     */
-    cast?: boolean
+  /**
+   * Whether to cast modelled value to its
+   * respective primitive or leave it as is.
+   */
+  cast?: boolean
 }
 
 /**
@@ -19,28 +19,28 @@ export interface CreateModelOptions {
  * @param options Model options.
  */
 function createModel(
-    component: React.Component,
-    key = "",
-    options: CreateModelOptions = {}
+  component: React.Component,
+  key = "",
+  options: CreateModelOptions = {},
 ) {
-    options = {
-        cast: true,
-        ...options,
+  options = {
+    cast: true,
+    ...options,
+  }
+
+  return (change: ParseableInput | string, changeVal?: string) => {
+    const parsed = parseElement(change, changeVal)
+
+    const name = parsed.name
+    const value = options.cast ? cast(parsed.value) : parsed.value
+
+    component.setState(prevState => put(key, {[name]: value}, prevState))
+
+    return {
+      name,
+      value,
     }
-
-    return (change: ParseableInput | string, changeVal?: string) => {
-        const parsed = parseElement(change, changeVal)
-
-        const name = parsed.name
-        const value = options.cast ? cast(parsed.value) : parsed.value
-
-        component.setState(prevState => put(key, {[name]: value}, prevState))
-
-        return {
-            name,
-            value,
-        }
-    }
+  }
 }
 
 export {createModel}

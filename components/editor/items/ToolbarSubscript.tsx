@@ -5,13 +5,13 @@ import {ToolbarItem} from "../ToolbarItem"
 interface Props {}
 
 const ToolbarSubscript = (_props: Props) => {
-    return (
-        <ToolbarItem onClick={Editor.subscript} title="Subscript">
-            <p>
-                x<sub>2</sub>
-            </p>
-        </ToolbarItem>
-    )
+  return (
+    <ToolbarItem onClick={Editor.subscript} title="Subscript">
+      <p>
+        x<sub>2</sub>
+      </p>
+    </ToolbarItem>
+  )
 }
 
 export {ToolbarSubscript}

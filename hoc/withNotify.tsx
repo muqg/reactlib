@@ -5,23 +5,23 @@ import {Omit} from "../utility"
 import {getDisplayName} from "../utility/react"
 
 export interface NotificationComponentProps {
-    notify: Notify
+  notify: Notify
 }
 
 function withNotify<P extends NotificationComponentProps>(
-    Component: React.ComponentType<P>
+  Component: React.ComponentType<P>,
 ) {
-    const wrapper: React.FunctionComponent<
-        Omit<P, keyof NotificationComponentProps>
-    > = props => {
-        const notify = useNotify()
-        // @ts-ignore Correct but not compatible with expected return type.
-        return <Component {...props} notify={notify} />
-    }
+  const wrapper: React.FunctionComponent<
+    Omit<P, keyof NotificationComponentProps>
+  > = props => {
+    const notify = useNotify()
+    // @ts-ignore Correct but not compatible with expected return type.
+    return <Component {...props} notify={notify} />
+  }
 
-    wrapper.displayName = getDisplayName("withNotify", Component)
+  wrapper.displayName = getDisplayName("withNotify", Component)
 
-    return wrapper
+  return wrapper
 }
 
 export {withNotify}

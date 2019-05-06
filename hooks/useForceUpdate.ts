@@ -5,7 +5,7 @@ import {useReducer} from "react"
  * __To be used with caution!__
  */
 function useForceUpdate() {
-    return useReducer(x => x + 1, 0)[1] as () => void
+  return useReducer(x => x + 1, 0)[1] as () => void
 }
 
 export {useForceUpdate}

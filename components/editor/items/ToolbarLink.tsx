@@ -8,49 +8,49 @@ import {TOOLBAR_SPRITESHEET} from "../Toolbar"
 import {ToolbarItem} from "../ToolbarItem"
 
 const StyledToolbarItem = styled(ToolbarItem)`
-    background-position-x: -144px;
+  background-position-x: -144px;
 `
 
 /**
  * TODO: Lib | Allow link to be removed with right click.
  */
 function ToolbarLink() {
-    const [dialog, setDialog] = useState(false)
-    // Does not work with useModel hook for some reason.
-    const inputElement = useRef<HTMLInputElement>()
+  const [dialog, setDialog] = useState(false)
+  // Does not work with useModel hook for some reason.
+  const inputElement = useRef<HTMLInputElement>()
 
-    const accept = () => {
-        const input = inputElement.current
-        if (!input || !input.value) {
-            return false
-        }
-
-        Editor.createLink(input.value)
+  const accept = () => {
+    const input = inputElement.current
+    if (!input || !input.value) {
+      return false
     }
 
-    return (
-        <StyledToolbarItem
-            className="link tb_img"
-            title="Hyperlink"
-            onClick={() => setDialog(true)}
-            backgroundImage={TOOLBAR_SPRITESHEET}
+    Editor.createLink(input.value)
+  }
+
+  return (
+    <StyledToolbarItem
+      className="link tb_img"
+      title="Hyperlink"
+      onClick={() => setDialog(true)}
+      backgroundImage={TOOLBAR_SPRITESHEET}
+    >
+      {dialog && (
+        <ConfirmationDialog
+          className="tb_link"
+          onAccept={accept}
+          onClose={() => setDialog(false)}
+          title="Въведи адрес:"
         >
-            {dialog && (
-                <ConfirmationDialog
-                    className="tb_link"
-                    onAccept={accept}
-                    onClose={() => setDialog(false)}
-                    title="Въведи адрес:"
-                >
-                    <TextInput
-                        placeholder="https://example.com"
-                        ref={inputElement as any}
-                        wide
-                    />
-                </ConfirmationDialog>
-            )}
-        </StyledToolbarItem>
-    )
+          <TextInput
+            placeholder="https://example.com"
+            ref={inputElement as any}
+            wide
+          />
+        </ConfirmationDialog>
+      )}
+    </StyledToolbarItem>
+  )
 }
 
 export {ToolbarLink}

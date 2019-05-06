@@ -12,18 +12,18 @@ function upperFirst(str: string): string
 function upperFirst(str: string, separator: string): string
 
 function upperFirst(str: string, separator?: string) {
-    let res: string
-    if (separator)
-        res = str
-            .split(separator)
-            .map(word => ucfirst(word))
-            .join(separator)
-    else res = ucfirst(str)
-    return res
+  let res: string
+  if (separator)
+    res = str
+      .split(separator)
+      .map(word => ucfirst(word))
+      .join(separator)
+  else res = ucfirst(str)
+  return res
 }
 
 function ucfirst(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1)
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 export {upperFirst}

@@ -17,21 +17,21 @@ function replace<T>(arr: Array<T>, search: T, value: T): Array<T>
  * @param search Condition to replace on.
  */
 function replace<T>(
-    arr: Array<T>,
-    search: (el: T) => boolean,
-    value: T
+  arr: Array<T>,
+  search: (el: T) => boolean,
+  value: T,
 ): Array<T>
 
 function replace<T>(
-    arr: Array<T>,
-    search: ((el: T) => boolean) | T,
-    value: T
+  arr: Array<T>,
+  search: ((el: T) => boolean) | T,
+  value: T,
 ): Array<T> {
-    arr = [...arr]
+  arr = [...arr]
 
-    _replaceValue(arr, search, value)
+  _replaceValue(arr, search, value)
 
-    return arr
+  return arr
 }
 
 export {replace}

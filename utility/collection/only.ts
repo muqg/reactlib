@@ -4,15 +4,15 @@
  * @param keys Keys for the entries to include in the new collection.
  */
 function only<T extends object, K extends keyof T>(
-    col: T,
-    ...keys: K[]
+  col: T,
+  ...keys: K[]
 ): Pick<T, K> {
-    const collection = col as any
-    const res = {} as any
+  const collection = col as any
+  const res = {} as any
 
-    for (let key of keys) res[key] = collection[key]
+  for (let key of keys) res[key] = collection[key]
 
-    return res
+  return res
 }
 
 export {only}

@@ -7,29 +7,27 @@ import {isEmpty} from "./isEmpty"
  * @param objB The second object to compare.
  */
 function deepCompare(objA: object, objB: object): boolean {
-    for (let a in objA) {
-        for (let b in objB) {
-            // @ts-ignore
-            const itemA = objA[a]
-            // @ts-ignore
-            const itemB = objB[b]
+  for (let a in objA) {
+    for (let b in objB) {
+      // @ts-ignore
+      const itemA = objA[a]
+      // @ts-ignore
+      const itemB = objB[b]
 
-            if (isNullOrUndefined(itemA) || isNullOrUndefined(itemB))
-                return itemA === itemB
+      if (isNullOrUndefined(itemA) || isNullOrUndefined(itemB))
+        return itemA === itemB
 
-            if (itemA.constructor !== itemB.constructor) return false
+      if (itemA.constructor !== itemB.constructor) return false
 
-            if (itemA === itemB || itemA.valueOf() === itemB.valueOf())
-                return true
+      if (itemA === itemB || itemA.valueOf() === itemB.valueOf()) return true
 
-            if (isObject(itemA) && isObject(itemB))
-                return deepCompare(itemA, itemB)
+      if (isObject(itemA) && isObject(itemB)) return deepCompare(itemA, itemB)
 
-            return itemA.toString() === itemB.toString()
-        }
+      return itemA.toString() === itemB.toString()
     }
+  }
 
-    return !isEmpty(objA) && !isEmpty(objB)
+  return !isEmpty(objA) && !isEmpty(objB)
 }
 
 export {deepCompare}

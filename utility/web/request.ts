@@ -21,35 +21,35 @@ export type RequestOptions = Omit<RequestInit, "body" | "method">
  * @returns Returns JSON if the response is in valid format or text otherwise.
  */
 function request<T = any>(
-    method: RequestMethod,
-    url: string,
-    data = {},
-    options: RequestOptions = {}
+  method: RequestMethod,
+  url: string,
+  data = {},
+  options: RequestOptions = {},
 ): Promise<T> {
-    const headers = (options.headers || {}) as Dict<string>
-    const requestInit: RequestInit = options
+  const headers = (options.headers || {}) as Dict<string>
+  const requestInit: RequestInit = options
 
-    // GET, HEAD and OPTIONS methods are not allowed to have a request body.
-    if (
-        method === RequestMethod.GET ||
-        method === RequestMethod.HEAD ||
-        method === RequestMethod.OPTIONS
-    ) {
-        if (!isEmpty(data)) {
-            const index = url.indexOf("?")
-            const cleanURL = index >= 0 ? url.substring(0, index) : url
-            url = cleanURL + "?" + createQuery(data)
-        }
-    } else {
-        headers["Content-Type"] = "application/json"
-        requestInit.body = JSON.stringify(data)
+  // GET, HEAD and OPTIONS methods are not allowed to have a request body.
+  if (
+    method === RequestMethod.GET ||
+    method === RequestMethod.HEAD ||
+    method === RequestMethod.OPTIONS
+  ) {
+    if (!isEmpty(data)) {
+      const index = url.indexOf("?")
+      const cleanURL = index >= 0 ? url.substring(0, index) : url
+      url = cleanURL + "?" + createQuery(data)
     }
+  } else {
+    headers["Content-Type"] = "application/json"
+    requestInit.body = JSON.stringify(data)
+  }
 
-    requestInit.headers = headers
-    return baseRequest(url, {
-        ...requestInit,
-        method,
-    })
+  requestInit.headers = headers
+  return baseRequest(url, {
+    ...requestInit,
+    method,
+  })
 }
 
 export {request}

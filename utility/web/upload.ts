@@ -17,20 +17,20 @@ export type UploadOptions = Omit<RequestInit, "body" | "method">
  * @returns Returns JSON if the response is in valid format or text otherwise.
  */
 function upload<T = any>(
-    url: string,
-    file: File,
-    body: Dict<string> = {},
-    options: UploadOptions = {}
+  url: string,
+  file: File,
+  body: Dict<string> = {},
+  options: UploadOptions = {},
 ): Promise<T> {
-    const fd = new FormData()
-    Object.entries<string>(body).map(([key, value]) => fd.append(key, value))
-    fd.append("file", file)
+  const fd = new FormData()
+  Object.entries<string>(body).map(([key, value]) => fd.append(key, value))
+  fd.append("file", file)
 
-    return baseRequest(url, {
-        ...options,
-        body: fd,
-        method: RequestMethod.POST,
-    })
+  return baseRequest(url, {
+    ...options,
+    body: fd,
+    method: RequestMethod.POST,
+  })
 }
 
 export {upload}

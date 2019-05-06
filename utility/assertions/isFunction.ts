@@ -10,7 +10,7 @@ function isFunction<T extends () => any>(value: any): value is T
 function isFunction<T extends (...values: any[]) => any>(value: any): value is T
 
 function isFunction(value: any) {
-    return typeof value === "function"
+  return typeof value === "function"
 }
 
 export {isFunction}
