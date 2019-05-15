@@ -85,3 +85,16 @@ export interface List<V> {
 export interface ResourceObject<T extends string | number = number> {
   id: T
 }
+
+export interface Action<T extends string = string, V = any> {
+  type: T
+  value: V
+}
+
+export interface ActionWithOptions<
+  T extends string = string,
+  V = any,
+  O extends object = object
+> extends Action<T, V> {
+  options: O
+}

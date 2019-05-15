@@ -1,9 +1,16 @@
 import {useRef} from "react"
-import {Dictionary, List, Omit, Serializable, ValidationError} from "../utility"
+import {
+  Action,
+  Dictionary,
+  List,
+  Omit,
+  Serializable,
+  ValidationError,
+} from "../utility"
 import {isObject, isType} from "../utility/assertions"
 import {except, isEmpty, len} from "../utility/collection"
 import {ParseableInput, parseInputValue} from "../utility/dom"
-import {Action, createAction, isSyntheticEvent} from "../utility/react"
+import {isSyntheticEvent} from "../utility/react"
 import {cast} from "../utility/string"
 import {useForceUpdate} from "./useForceUpdate"
 
@@ -23,9 +30,7 @@ interface ModelState {
   utils: List<Omit<ModelElement<any>, "value">>
 }
 
-type ModelAction =
-  | Action<ModelValueList<any>, "change">
-  | Action<undefined, "validate">
+type ModelAction = Action<"change", ModelValueList<any>> | Action<"validate">
 
 export interface ModelElement<T extends object = object> {
   /**
@@ -376,16 +381,18 @@ function reducer(state: ModelState, action: ModelAction): ModelState {
   }
 }
 
-function modelChangeAction(values: ModelValueList<any>) {
+function modelChangeAction(
+  values: ModelValueList<any>,
+): Action<"change", ModelValueList<any>> {
   // This aims to prevent issues when dispatch is called asynchronously, after
   // an input event has been cleaned up, by persisting any input synthetic events.
   Object.values(values).forEach(v => isSyntheticEvent(v) && v.persist())
 
-  return createAction("change", values)
+  return {type: "change", value: values}
 }
 
-function modelValidateAction() {
-  return createAction("validate", undefined)
+function modelValidateAction(): Action<"validate"> {
+  return {type: "validate", value: null}
 }
 
 function isModelObject<T extends object = object>(val: any): val is Model<T> {
