@@ -89,7 +89,7 @@ const DialogBox: React.ComponentType<Props> = ({
             fixedHeight={fixedHeight}
             size={size}
           >
-            <Header align="center">
+            <Header verticalAlign="center">
               <Title>{title}</Title>
               {/* Close button becomes deformed due to flex parent without this wrapper. */}
               <div>

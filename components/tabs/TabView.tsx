@@ -41,7 +41,7 @@ function TabView({children, className}: Props) {
   return (
     <View className={className}>
       {titles.length > 1 && (
-        <TitleContainer justify="center">
+        <TitleContainer horizontalAlign="center">
           {titles.map((text, i) => (
             <TabTitleButton
               active={tabIndex === i}
