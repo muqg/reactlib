@@ -1,5 +1,6 @@
 import {css, styled, fadedColor, COLOR_DARK} from "../styles"
 import {Size} from "../utility"
+import {View} from "./View"
 
 const FONT_SIZE_FACTOR = 0.5
 
@@ -9,21 +10,17 @@ interface StyleProps {
   underline?: boolean
 }
 
-const Heading = styled.h1`
-  ${(_: StyleProps) => ""}
-
-  display: block;
-  font-size: ${p => 0.5 + p.size! * FONT_SIZE_FACTOR}em;
-  margin-bottom: ${p => 15 + p.size!}px;
+const Heading = styled(View.withComponent("h1"))`
+  font-size: ${(p: StyleProps) => 0.5 + p.size! * FONT_SIZE_FACTOR}em;
+  margin: 0 0 ${(p: StyleProps) => 15 + p.size!}px;
   padding-bottom: 6px;
-  width: 100%;
 
   ${p =>
     p.center &&
     css`
-        margin-left: auto;
-        margin-right: auto
-        text-align: center;
+      margin-left: auto;
+      margin-right: auto
+      text-align: center;
     `}
   ${p =>
     p.underline &&

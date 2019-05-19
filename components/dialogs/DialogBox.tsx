@@ -5,6 +5,8 @@ import {Size} from "../../utility"
 import {isFunction} from "../../utility/assertions"
 import {CloseButton} from "../buttons"
 import {DocumentTitle} from "../DocumentTitle"
+import {Grid} from "../Grid"
+import {View} from "../View"
 import {Dialog, DialogProps} from "./Dialog"
 
 const SIZE_FACTOR = 320
@@ -19,8 +21,7 @@ const Back = styled.div`
   top: 0;
   z-index: -1;
 `
-const Header = styled.div`
-  align-items: center;
+const Header = styled(Grid)`
   border-bottom: 1px solid;
   border-image: linear-gradient(
       to right,
@@ -29,34 +30,24 @@ const Header = styled.div`
       transparent
     )
     1;
-  display: flex;
   padding: 3px 12px;
 `
 const Title = styled.p`
   font-size: 1.1rem;
   ${truncate("100%")}
 `
-const Container = styled.div`
-    ${(_p: ContainerStyleProps) => ""}
+const Container = styled(Grid)`
+  background: ${p => p.theme.background || COLOR_BACKGROUND};
+  max-width: ${p => p.size * SIZE_FACTOR}px;
 
-    background: ${p => p.theme.background || COLOR_BACKGROUND};
-    display: flex;
-    flex-direction: column;
-    max-width: ${p => p.size * SIZE_FACTOR}px;
-    width: 100%;
-
-    ${p =>
-      p.fixedHeight
-        ? css`
-            height: 90vh;
-          `
-        : css`
-            max-height: 90vh;
-          `}
-`
-const Content = styled.div`
-  height: 100%;
-  overflow: auto;
+  ${(p: ContainerStyleProps) =>
+    p.fixedHeight
+      ? css`
+          height: 90vh;
+        `
+      : css`
+          max-height: 90vh;
+        `}
 `
 
 interface ContainerStyleProps {
@@ -94,21 +85,22 @@ const DialogBox: React.ComponentType<Props> = ({
           <Back onClick={close} />
           <Container
             className={className}
+            direction="column"
             fixedHeight={fixedHeight}
             size={size}
           >
-            <Header>
+            <Header align="center">
               <Title>{title}</Title>
               {/* Close button becomes deformed due to flex parent without this wrapper. */}
               <div>
                 <CloseButton onClick={close} />
               </div>
             </Header>
-            <Content>
+            <View fullHeight>
               {isFunction<Dialog["children"]>(children)
                 ? children(close)
                 : children}
-            </Content>
+            </View>
           </Container>
         </>
       )}

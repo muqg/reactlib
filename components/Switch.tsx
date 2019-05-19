@@ -1,5 +1,6 @@
 import * as React from "react"
 import {COLOR_BACKGROUND, COLOR_SUCCESS, css, styled} from "../styles"
+import {View} from "./View"
 
 const Container = styled.label`
   display: inline-block;
@@ -10,14 +11,12 @@ const Container = styled.label`
     display: none;
   }
 `
-const Background = styled.span`
+const Background = styled(View)`
   background: #aaa;
   border-radius: 10px;
   display: inline-block;
-  height: 100%;
-  position: relative;
+  overflow: visible;
   transition: all 0.2s;
-  width: 100%;
 
   &:after {
     background: ${p => p.theme.background || COLOR_BACKGROUND};
@@ -72,7 +71,7 @@ const Switch = (props: Props) => {
   return (
     <Container className={props.className}>
       <input {...props} type="checkbox" />
-      <Background />
+      <Background fullHeight />
     </Container>
   )
 }

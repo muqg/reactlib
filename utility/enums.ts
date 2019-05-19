@@ -15,6 +15,7 @@ export enum RequestMethod {
  * Style size modifiers.
  */
 export const enum Size {
+  Null = 0,
   Small = 1,
   Slim = 1.5,
   Medium = 2,

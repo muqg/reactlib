@@ -6,11 +6,9 @@ import {DialogProps} from "./dialogs/Dialog"
 
 const Back = styled.div`
   background: black;
-  height: 100%;
   opacity: 0.75;
-  width: 100%;
   z-index: -1;
-  ${position("absolute", "0", "", "", "0")}
+  ${position("absolute", "0", "0", "0", "0")}
 `
 
 interface Props {

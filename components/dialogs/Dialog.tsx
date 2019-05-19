@@ -4,6 +4,7 @@ import {createPortal} from "react-dom"
 import {createGlobalStyle, styled} from "../../styles"
 import {CHAR_CODE_ESCAPE, Hotkey, isKeyPressed} from "../../utility/dom"
 import {call} from "../../utility/function"
+import {Center} from "../Center"
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
@@ -12,17 +13,11 @@ const DisabledBodyScroll = createGlobalStyle`
         overflow: hidden !important;
     }
 `
-const Container = styled.div`
-  align-items: center;
+const Container = styled(Center)`
   background: transparent;
-  bottom: 0;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
   left: 0;
   overflow: hidden;
   position: fixed;
-  right: 0;
   top: 0;
   z-index: 200;
 `
@@ -82,6 +77,7 @@ function Dialog({onClose, onKeyDown, onShow, ...props}: Dialog) {
   return createPortal(
     <Container
       className={props.className}
+      fullHeight
       ref={dialogRef}
       onKeyDown={keyDown}
       onKeyPress={stopEvent}

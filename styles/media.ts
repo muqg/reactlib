@@ -1,7 +1,7 @@
 import {Dict} from "../utility"
 import {css} from "./styled-components"
 
-interface Media extends Dict<any> {
+interface Media {
   /**
    * Width of no more than 1281px.
    */
@@ -40,7 +40,7 @@ const widths: Dict<number> = {
 const media = {} as Media
 
 Object.entries(widths).forEach(([key, value]) => {
-  media[key] = (...args: any[]) => {
+  ;(media as Dict<any>)[key] = (...args: any[]) => {
     const [first, ...rest] = args
     return css`
       @media (max-width: ${value / 16}em) {

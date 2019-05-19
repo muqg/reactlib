@@ -1,18 +1,15 @@
 import * as React from "react"
-import {useState, useEffect} from "react"
+import {useEffect, useState} from "react"
 import {styled} from "../../styles"
 import {isFunction} from "../../utility/assertions"
+import {isComponentType} from "../../utility/react"
+import {Grid} from "../Grid"
+import {View} from "../View"
 import {Tab} from "./Tab"
 import {TabTitleButton} from "./TabTitleButton"
-import {isComponentType} from "../../utility/react"
 
-const Container = styled.div`
-  width: 100%;
-`
-const TitleContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 36px;
+const TitleContainer = styled(Grid)`
+  margin-bottom: 32px;
 `
 
 interface Props {
@@ -42,9 +39,9 @@ function TabView({children, className}: Props) {
     .filter(c => c)
 
   return (
-    <Container className={className}>
+    <View className={className}>
       {titles.length > 1 && (
-        <TitleContainer>
+        <TitleContainer justify="center">
           {titles.map((text, i) => (
             <TabTitleButton
               active={tabIndex === i}
@@ -59,7 +56,7 @@ function TabView({children, className}: Props) {
       )}
 
       {children[tabIndex]}
-    </Container>
+    </View>
   )
 }
 
