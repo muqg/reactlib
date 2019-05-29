@@ -16,7 +16,7 @@ function localizeLevel(levelKey: string): typeof localize {
   if (levelKey.endsWith("."))
     levelKey = levelKey.substring(0, levelKey.length - 1)
 
-  return (key: any, defaultValue = key, ...args: any[]): any => {
+  return (key: any, defaultValue: any = key, ...args: any[]): any => {
     key = levelKey ? `${levelKey}.${key}` : key
     return localize(key, defaultValue, ...args)
   }

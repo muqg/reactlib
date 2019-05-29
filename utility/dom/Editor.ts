@@ -92,14 +92,15 @@ class Editor {
    * Returns selected window text.
    */
   getSelectedText() {
-    return window.getSelection().toString()
+    return window.getSelection()!.toString()
   }
 
   /**
    * Returns the node that contains the current selection.
    */
   getSelectedNode() {
-    return window.getSelection().getRangeAt(0).startContainer.parentNode as Node
+    return window.getSelection()!.getRangeAt(0).startContainer
+      .parentNode as Node
   }
 
   /**
@@ -108,7 +109,7 @@ class Editor {
    */
   saveSelection(): void {
     const selection = window.getSelection()
-    this.lastSelectionRange = selection.getRangeAt(0)
+    this.lastSelectionRange = selection!.getRangeAt(0)
   }
 
   /**
@@ -119,8 +120,8 @@ class Editor {
     if (!this.lastSelectionRange) return
 
     const selection = window.getSelection()
-    selection.removeAllRanges()
-    selection.addRange(this.lastSelectionRange)
+    selection!.removeAllRanges()
+    selection!.addRange(this.lastSelectionRange)
     this.lastSelectionRange = null
   }
 
