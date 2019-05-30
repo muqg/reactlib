@@ -154,7 +154,7 @@ export function useModel<T extends object>(
       state.current = nextState
       if (options.bind) {
         // Skip update and let the binder do all the hard work.
-        options.bind(state.current.model)
+        options.bind(state.current.model as Model<T>)
       } else {
         forceUpdate()
       }
@@ -205,7 +205,7 @@ export function useModel<T extends object>(
           } else {
             // @ts-ignore Element implicitly has an 'any' type... (7017)
             const current = elements[name]
-            let value = isObject<ModelElement>(current)
+            const value = isObject<ModelElement>(current)
               ? current.value
               : current
 
@@ -289,7 +289,7 @@ export function useModel<T extends object>(
     }
   }
 
-  return state.current.model
+  return state.current.model as Model<T>
 }
 
 function reducer(state: ModelState, action: ModelAction): ModelState {
