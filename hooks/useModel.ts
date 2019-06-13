@@ -214,7 +214,6 @@ export function useModel<T extends object>(
         }
 
         dispatch(modelChangeAction(initialValues))
-        dispatch(modelValidateAction())
       },
     } as Model<any>
     // @ts-ignore Sneak in the model object symbol tag past the typings.
