@@ -1,8 +1,10 @@
 import {Dict} from ".."
 
-const requestIdleCallback: ((cb: () => void) => void) | undefined =
-  // @ts-ignore Ignore undefined function on window object
-  window.requestIdleCallback
+// @ts-ignore Missing experimental requestIdleCallback global definition
+let {requestIdleCallback}: (cb: () => void) => void = window
+if (!requestIdleCallback) {
+  requestIdleCallback = setTimeout
+}
 
 export interface Fetcher<T, A extends any[] = any> {
   /**
@@ -53,7 +55,7 @@ interface Resource<T = any> {
 export function createFetcher<T = any, A extends any[] = any>(
   fetch: (...input: A) => Promise<T>,
 ): Fetcher<T, A> {
-  let storage: Dict<Resource | undefined> = {}
+  const storage: Dict<Resource | undefined> = {}
 
   function read(...input: A) {
     const resource = accessResource(...input)
@@ -84,14 +86,16 @@ export function createFetcher<T = any, A extends any[] = any>(
     const resource = storage[key]
     if (resource) {
       return resource
-    } else {
-      const request = fetch(...input)
-      const newResource: Resource = {
-        status: Status.Pending,
-        value: request,
-      }
-      storage[key] = newResource
+    }
 
+    const request = fetch(...input)
+    const newResource: Resource = {
+      status: Status.Pending,
+      value: request,
+    }
+    storage[key] = newResource
+
+    if (request instanceof Promise) {
       request.then(
         value => {
           if (newResource.status === Status.Pending) {
@@ -106,9 +110,11 @@ export function createFetcher<T = any, A extends any[] = any>(
           }
         },
       )
-
-      return newResource
+    } else {
+      newResource.status = Status.Resolved
     }
+
+    return newResource
   }
 
   function write(value: T, ...input: A) {
@@ -119,7 +125,7 @@ export function createFetcher<T = any, A extends any[] = any>(
     } else {
       resource = {
         status: Status.Resolved,
-        value: value,
+        value,
       }
     }
   }
