@@ -11,7 +11,6 @@ import {isObject, isType} from "../utility/assertions"
 import {except, isEmpty, len} from "../utility/collection"
 import {ParseableInput, parseInputValue} from "../utility/dom"
 import {isSyntheticEvent} from "../utility/react"
-import {cast} from "../utility/string"
 import {useForceUpdate} from "./useForceUpdate"
 
 const MODEL_OBJECT_SYMBOL_TAG =
@@ -316,7 +315,7 @@ function reducer(state: ModelState, action: ModelAction): ModelState {
             v => isSyntheticEvent(v) || v instanceof Element,
           )
         ) {
-          value = cast(parseInputValue(value))
+          value = parseInputValue(value)
         }
 
         entry.value = value
