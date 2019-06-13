@@ -63,10 +63,6 @@ export interface ModelEntry {
    */
   name: string
   /**
-   * Performs validation of model's data.
-   */
-  onBlur: () => void
-  /**
    * Changes a model entry's value.
    */
   onChange: (input: ModelInput) => void
@@ -108,6 +104,12 @@ export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
    * If no names are given then all model values are reset.
    */
   $reset(...names: Array<keyof T>): void
+  /**
+   * Performs validation of model's data and updates errors for all entries.
+   * It will not do anything if the model has not changed, and will therefore
+   * not cause a render.
+   */
+  $validate(): void
 }
 
 export interface ModelOptions<T extends object = object> {
@@ -177,7 +179,7 @@ export function useModel<T extends object>(
         return values
       },
       $errors() {
-        dispatch(modelValidateAction())
+        this.$validate()
 
         const errors: any = {}
         for (const name in utils) {
@@ -213,6 +215,9 @@ export function useModel<T extends object>(
         }
 
         dispatch(modelChangeAction(initialValues))
+      },
+      $validate() {
+        dispatch({type: "validate", value: null})
       },
     } as Model<any>
     // @ts-ignore Sneak in the model object symbol tag past the typings.
@@ -272,7 +277,6 @@ export function useModel<T extends object>(
       utils[name] = util
       model[name] = {
         name,
-        onBlur: () => dispatch(modelValidateAction()),
         onChange: v => dispatch(modelChangeAction({[name]: v})),
         // Allowing undefined values plays badly with the way that React
         // determines whether an input is controlled or uncontrolled.
@@ -387,10 +391,6 @@ function modelChangeAction(
   Object.values(values).forEach(v => isSyntheticEvent(v) && v.persist())
 
   return {type: "change", value: values}
-}
-
-function modelValidateAction(): Action<"validate"> {
-  return {type: "validate", value: null}
 }
 
 function isModelObject<T extends object = object>(val: any): val is Model<T> {

@@ -7,7 +7,7 @@ import {Model, useModel, ModelOptions} from "../useModel"
  * Names of model methods that should force an update on owner component
  * or pass data to binder and let it update instead.
  */
-const modelUpdateMethods = ["onChange", "onBlur", "$change", "$reset"]
+const modelUpdateMethods = ["onChange", "$change", "$reset", "$validate"]
 
 const modelHook = () => {
   return useModel(() => ({
@@ -38,9 +38,9 @@ const MockModelComponent = ({
   return (
     <>
       <button onClick={() => model.test.onChange("asd")}>onChange</button>
-      <button onClick={model.test.onBlur}>onBlur</button>
       <button onClick={() => model.$change({test: 2})}>$change</button>
       <button onClick={() => model.$reset()}>$reset</button>
+      <button onClick={() => model.$validate()}>$validate</button>
     </>
   )
 }
@@ -99,19 +99,10 @@ describe("Model hook", () => {
     expect(model.current.validated.error).toBe("error")
   })
 
-  it("validates values on element blur", () => {
-    const {getByTestId} = render(
-      <input {...model.current.validated} data-testid="input" />,
-    )
-    fireEvent.blur(getByTestId("input"))
-
-    expect(model.current.validated.error).toBe("error")
-  })
-
-  it("bails out of validation update if model values have not changed since last validation", () => {
+  it("bails out of validation update, if model values have not changed since last validation", () => {
     const counter = jest.fn()
     const dom = render(<MockModelComponent updateCounter={counter} />)
-    const button = dom.getByText("onBlur")
+    const button = dom.getByText("$validate")
 
     fireEvent.click(button)
     fireEvent.click(button)
@@ -128,7 +119,7 @@ describe("Model hook", () => {
 
   it("does not mutate its entries when validating", () => {
     const entryBeforeValidation = model.current.validated
-    act(() => model.current.validated.onBlur())
+    act(() => model.current.$validate())
 
     expect(entryBeforeValidation).not.toBe(model.current.validated)
   })
