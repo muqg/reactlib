@@ -16,6 +16,14 @@ import {useForceUpdate} from "./useForceUpdate"
 const MODEL_OBJECT_SYMBOL_TAG =
   typeof Symbol === "function" ? Symbol("model") : "$$model"
 
+const binderOnChangeNoopFunction = () => {
+  if (__DEV__) {
+    console.error(
+      "Called onChange on model entry with model instance bound ot its value",
+    )
+  }
+}
+
 export type ModelInput = ParseableInput | Serializable | Model<object>
 export type ModelValueList<T extends object = object> = Dictionary<
   T,
@@ -95,15 +103,15 @@ export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
   /**
    * Returns the first error from the model's error list.
    *
-   * It calls the model.$errors() method internally.
+   * It calls the `model.$errors()` method internally.
    * Refer to it for more information.
    */
   $firstError(): ValidationError
   /**
-   * Resets the values for the given names to their initial values.
-   * If no names are given then all model values are reset.
+   * Destroys the existing model instance and creates a new
+   * one, as if the model hook is called for the first time.
    */
-  $reset(...names: Array<keyof T>): void
+  $reset(): void
   /**
    * Performs validation of model's data and updates errors for all entries.
    * It will not do anything if the model has not changed, and will therefore
@@ -112,34 +120,28 @@ export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
   $validate(): void
 }
 
-export interface ModelOptions<T extends object = object> {
+export interface ModelSettings {
   /**
-   * A binder function which is called whenever the model should update. If it
-   * is present, then the model will not update its owner component, and instead
-   * pass the model instance to the binder and let it decide when and how to update.
+   * A model entry to bind the current model instance to.
    *
-   * This is useful when model model instances from children have
-   * to be mirrored (chained) to a value of a parent model.
+   * The model is bound by mutating the binder's value, therefore not
+   * causing a render on higher level than necessary. Method calls on the
+   * binder's model such as `$reset`, `$validate`, etc. will also be called
+   * on any bound model and thus making them act as a single, big model.
    */
-  bind?: (model: Model<T>) => void
+  binder?: ModelEntry
 }
 
 /**
  * A model instance maps form and other values to a predefined object structure.
- * @param initialElements Initial model structure.
- * @param binder A binder function which is called whenever the model should
- * update. If it is present then the model will not update its owner component
- * and instead pass the model instance to the binder and let it decide when and
- * how to update.
- *
- * This is useful when model model instances from children have
- * to be mirrored (chained) to a value of a parent model.
+ * @param initialStructure Initial model structure.
+ * @param settings Model settings.
  */
 export function useModel<T extends object>(
-  initialElements: () => Partial<
+  initialStructure: () => Partial<
     Dictionary<T, string | boolean | number | null | ModelElement<T>>
   >,
-  options: ModelOptions<T> = {} as ModelOptions<T>,
+  settings = {} as ModelSettings,
 ): Model<T> {
   const forceUpdate = useForceUpdate()
   const state = useRef({} as ModelState)
@@ -153,15 +155,10 @@ export function useModel<T extends object>(
       }
 
       state.current = nextState
-      if (options.bind) {
-        // Skip update and let the binder do all the hard work.
-        options.bind(state.current.model as Model<T>)
-      } else {
-        forceUpdate()
-      }
+      forceUpdate()
     }
 
-    const elements = initialElements()
+    const modelSchema = initialStructure()
     const utils: ModelState["utils"] = {}
     const model = {
       $change(values: ModelValueList<any>) {
@@ -195,26 +192,15 @@ export function useModel<T extends object>(
       $firstError() {
         return Object.values(this.$errors())[0]
       },
-      $reset(...names: string[]) {
-        const resetNames = len(names) ? names : Object.keys(elements)
-        const initialValues: any = {}
-
-        for (const name of resetNames) {
-          // Reset bound model instead of resetting to the initial value.
+      $reset() {
+        for (const name in modelSchema) {
           if (isModelObject(this[name].value)) {
             this[name].value.$reset()
-          } else {
-            // @ts-ignore Element implicitly has an 'any' type... (7017)
-            const current = elements[name]
-            const value = isObject<ModelElement>(current)
-              ? current.value
-              : current
-
-            initialValues[name] = value === undefined ? "" : value
           }
         }
 
-        dispatch(modelChangeAction(initialValues))
+        state.current = {} as ModelState
+        forceUpdate()
       },
       $validate() {
         dispatch({type: "validate", value: null})
@@ -223,8 +209,8 @@ export function useModel<T extends object>(
     // @ts-ignore Sneak in the model object symbol tag past the typings.
     model[MODEL_OBJECT_SYMBOL_TAG] = MODEL_OBJECT_SYMBOL_TAG
 
-    for (const name in elements) {
-      const currentElement = elements[name]
+    for (const name in modelSchema) {
+      const currentElement = modelSchema[name]
       let initialValue: any = currentElement
       let util = {}
 
@@ -291,6 +277,11 @@ export function useModel<T extends object>(
     }
   }
 
+  if (settings.binder) {
+    settings.binder.value = state.current.model
+    // Should not allow direct change to binder's value.
+    settings.binder.onChange = binderOnChangeNoopFunction
+  }
   return state.current.model as Model<T>
 }
 

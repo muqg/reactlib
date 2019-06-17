@@ -1,7 +1,7 @@
 import * as React from "react"
-import {renderHook} from "react-hooks-testing-library"
+import {cleanup as hooksCleanup, renderHook} from "react-hooks-testing-library"
 import {act, cleanup, fireEvent, render} from "react-testing-library"
-import {Model, useModel, ModelOptions} from "../useModel"
+import {ModelEntry, useModel, Model} from "../useModel"
 
 /**
  * Names of model methods that should force an update on owner component
@@ -27,12 +27,12 @@ const modelHook = () => {
 
 const MockModelComponent = ({
   updateCounter,
-  bind,
+  binder,
 }: {
   updateCounter: jest.Mock
-  bind?: ModelOptions<any>["bind"]
+  binder?: ModelEntry
 }) => {
-  const model = useModel(() => ({test: ""}), {bind})
+  const model = useModel(() => ({test: ""}), {binder})
   updateCounter()
 
   return (
@@ -49,6 +49,7 @@ describe("Model hook", () => {
   let model = renderHook(modelHook).result
 
   beforeEach(() => {
+    hooksCleanup()
     cleanup()
     model = renderHook(modelHook).result
   })
@@ -84,6 +85,22 @@ describe("Model hook", () => {
     })
 
     expect(model.current.parsed.value).toBe(10)
+  })
+
+  it("creates a new model instance from current structure on reset", () => {
+    const count = {current: 0}
+    const {result: model} = renderHook(() =>
+      useModel(() => ({
+        test: count.current,
+      })),
+    )
+
+    expect(model.current.test.value).toBe(0)
+
+    count.current += 1
+    act(() => model.current.$reset())
+
+    expect(model.current.test.value).toBe(1)
   })
 
   it("does not validate values on initialization", () => {
@@ -124,24 +141,6 @@ describe("Model hook", () => {
     expect(entryBeforeValidation).not.toBe(model.current.validated)
   })
 
-  it("provides the most recent model values to the binder", () => {
-    const structure = {test: 10}
-    const {result: model} = renderHook(() =>
-      useModel<typeof structure>(
-        () => ({
-          test: 10,
-        }),
-        {bind},
-      ),
-    )
-
-    act(() => model.current.test.onChange("asd"))
-
-    function bind(model: Model<typeof structure>) {
-      expect(model.test.value).toBe("asd")
-    }
-  })
-
   it.each(modelUpdateMethods)(
     "updates owner component when %s is called",
     method => {
@@ -156,40 +155,49 @@ describe("Model hook", () => {
     },
   )
 
-  it.each(modelUpdateMethods)(
-    "skips update on owner component when binder is present and %s is called",
-    method => {
-      const childCounter = jest.fn()
-      const parentCounter = jest.fn()
-      const Parent = () => {
-        const model = useModel(() => ({
-          childData: {
-            value: {},
-          },
-        }))
-
-        parentCounter()
-
-        return (
-          <MockModelComponent
-            updateCounter={childCounter}
-            bind={model.childData.onChange}
-          />
-        )
-      }
-      const dom = render(<Parent />)
-
-      act(() => {
-        fireEvent.click(dom.getByText(method))
-      })
-
-      expect(parentCounter).toHaveBeenCalledTimes(2)
-      expect(childCounter).toHaveBeenCalledTimes(2)
-    },
-  )
-
   describe("Nested modelling", () => {
-    it("validates nested models when validating", () => {
+    it("sets binder value on each render", () => {
+      const {result: parentModel} = renderHook(() =>
+        useModel(() => ({
+          binder: {},
+          test: 1,
+        })),
+      )
+      const {result: childModel} = renderHook(() =>
+        useModel(
+          () => ({
+            test: 1,
+          }),
+          {binder: parentModel.current.binder},
+        ),
+      )
+
+      expect(parentModel.current.binder.value).toBe(childModel.current)
+
+      act(() => childModel.current.test.onChange(42))
+      expect(parentModel.current.binder.value).toBe(childModel.current)
+    })
+
+    it("does not allow binding to be broken by calling binder entry's onChange", () => {
+      const {result: parentModel} = renderHook(() =>
+        useModel(() => ({
+          binder: {},
+        })),
+      )
+      const {result: childModel} = renderHook(() =>
+        useModel(
+          () => ({
+            test: 10,
+          }),
+          {binder: parentModel.current.binder},
+        ),
+      )
+
+      act(() => parentModel.current.binder.onChange(10))
+      expect(parentModel.current.binder.value).toBe(childModel.current)
+    })
+
+    it("validates nested models", () => {
       const {result: parentModel} = renderHook(() =>
         useModel(() => ({
           errorValue: {
@@ -206,7 +214,7 @@ describe("Model hook", () => {
               validate: () => "error",
             },
           }),
-          {bind: parentModel.current.nested.onChange},
+          {binder: parentModel.current.nested},
         ),
       )
 
@@ -239,7 +247,7 @@ describe("Model hook", () => {
               validate: () => "error",
             },
           }),
-          {bind: parentModel.current.nested.onChange},
+          {binder: parentModel.current.nested},
         ),
       )
       act(() => {
@@ -251,32 +259,30 @@ describe("Model hook", () => {
       })
     })
 
-    it("resets nested models when resetting", () => {
-      const initialData = {id: "", name: ""}
-      const {result: parentModel} = renderHook(() =>
-        useModel(() => ({
-          nested: {
-            value: {},
-            validate: () => "custom_error",
-          },
-        })),
-      )
-      const {result: nestedModel} = renderHook(() =>
-        useModel(
-          () => ({
-            id: "",
-            name: "",
-          }),
-          {bind: parentModel.current.nested.onChange},
-        ),
-      )
-
+    it("resets nested models", () => {
+      const initialData = {id: 0, name: ""}
       const changeData = {id: 1, name: "test"}
-      act(() => nestedModel.current.$change(changeData))
-      expect(parentModel.current.nested.value.$data()).toEqual(changeData)
 
-      act(() => parentModel.current.$reset())
-      expect(parentModel.current.nested.value.$data()).toEqual(initialData)
+      let parentModel = {} as Model<{nested: Model<typeof initialData>}>
+      let childModel: Model<typeof initialData>
+      const Child = ({binder}: {binder: ModelEntry}) => {
+        childModel = useModel(() => initialData, {binder}) as any
+        return null
+      }
+      const Parent = () => {
+        parentModel = useModel(() => ({
+          nested: {},
+        })) as any
+
+        return <Child binder={parentModel.nested} />
+      }
+      render(<Parent />)
+
+      act(() => childModel.$change(changeData))
+      expect(parentModel.nested.value.$data()).toEqual(changeData)
+
+      act(() => parentModel.$reset())
+      expect(parentModel.nested.value.$data()).toEqual(initialData)
     })
 
     it("serializes nested models using their model.$data method", () => {
@@ -294,7 +300,7 @@ describe("Model hook", () => {
             id: "",
             name: "",
           }),
-          {bind: parentModel.current.nested.onChange},
+          {binder: parentModel.current.nested},
         ),
       )
 
