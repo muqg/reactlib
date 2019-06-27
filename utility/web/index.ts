@@ -1,6 +1,5 @@
 export {createEndpoint, Endpoint} from "./createEndpoint"
 export {createQuery} from "./createQuery"
+export * from "./FetchRequests"
 export {getLocalStorageSize} from "./getLocalStorageSize"
 export {parseQuery} from "./parseQuery"
-export {request, RequestOptions} from "./request"
-export {upload, UploadOptions} from "./upload"
