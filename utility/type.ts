@@ -75,12 +75,10 @@ export type Serializable =
  */
 export type Dictionary<K extends object, V = K[keyof K]> = {[key in keyof K]: V}
 
-/**
- * Represents a basic list type. Currently it is an alternative to Dict.
- */
-export interface List<V> {
-  [key: string]: V
-}
+export type List<
+  V,
+  K extends string | number | symbol = string | number | symbol
+> = {[key in K]: V}
 
 export interface ResourceObject<T extends string | number = number> {
   id: T

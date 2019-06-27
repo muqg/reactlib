@@ -1,14 +1,22 @@
-/**
- * HTTP request method verbs.
- */
-export enum RequestMethod {
-  GET = "GET",
-  HEAD = "HEAD",
-  POST = "POST",
-  PUT = "PUT",
-  DELETE = "DELETE",
-  OPTIONS = "OPTIONS",
-  PATCH = "PATCH",
+import {List} from "./type"
+
+export type RequestMethod =
+  | "GET"
+  | "HEAD"
+  | "POST"
+  | "PUT"
+  | "DELETE"
+  | "OPTIONS"
+  | "PATCH"
+
+export const RequestMethod: List<RequestMethod, RequestMethod> = {
+  GET: "GET",
+  HEAD: "HEAD",
+  POST: "POST",
+  PUT: "PUT",
+  DELETE: "DELETE",
+  OPTIONS: "OPTIONS",
+  PATCH: "PATCH",
 }
 
 /**
