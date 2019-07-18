@@ -1,7 +1,6 @@
 import * as React from "react"
 import {Notify} from "../components/notificaton"
 import {useNotify} from "../hooks"
-import {Omit} from "../utility"
 import {getDisplayName} from "../utility/react"
 
 export interface NotificationComponentProps {

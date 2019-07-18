@@ -1,6 +1,5 @@
 import * as React from "react"
 import {Fetcher, FetcherProps} from "../components"
-import {Omit} from "../utility"
 
 export interface FetcherComponentProps<T extends object> {
   /**

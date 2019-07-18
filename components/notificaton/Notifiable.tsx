@@ -1,6 +1,5 @@
 import * as React from "react"
 import {useCallback, useState} from "react"
-import {Omit} from "../../utility"
 import {Notification, NotificationProps} from "./Notification"
 
 export const NotificationContext = React.createContext<Notify>(() => {

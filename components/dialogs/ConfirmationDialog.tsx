@@ -1,7 +1,6 @@
 import * as React from "react"
 import {Button, DialogProps} from ".."
 import {styled} from "../../styles"
-import {Omit} from "../../utility"
 import {isUndefined} from "../../utility/assertions"
 import {CHAR_CODE_ENTER} from "../../utility/dom"
 import {call} from "../../utility/function"

@@ -3,7 +3,6 @@ import {
   Action,
   Dictionary,
   List,
-  Omit,
   Serializable,
   ValidationError,
 } from "../utility"

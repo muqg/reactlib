@@ -1,6 +1,6 @@
 import * as React from "react"
 import {COLOR_ERROR, useTheme} from "../../styles"
-import {Omit, Size} from "../../utility"
+import {Size} from "../../utility"
 import {IconButton} from "./IconButton"
 
 type Props = Omit<React.ComponentProps<typeof IconButton>, "children">

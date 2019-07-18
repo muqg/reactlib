@@ -55,11 +55,6 @@ export interface NamedKey<T = string> {
 }
 
 /**
- * From T omit a set of properties K.
- */
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-
-/**
  * Represents all valid JSON-serializable values.
  */
 export type Serializable =

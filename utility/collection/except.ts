@@ -1,5 +1,3 @@
-import {Omit} from "../type"
-
 /**
  * Creates a new collection which does not contain the given keys.
  * @param col The subject collection.
