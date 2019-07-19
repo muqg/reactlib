@@ -2,6 +2,7 @@ import {isEmpty} from "../collection"
 import {RequestMethod} from "../enums"
 import {Dict} from "../type"
 import {createQuery} from "./createQuery"
+import console = require("console")
 
 export type RequestOptions = Omit<RequestInit, "body" | "method">
 
@@ -30,10 +31,10 @@ async function baseRequest<T = any>(
   url: string,
   options: RequestInit,
 ): Promise<T> {
-  const headers = (options.headers || {}) as Dict<string>
-  headers["X-CSRF-TOKEN"] = X_CSRF_TOKEN
-  headers["X-Requested-With"] = "XMLHttpRequest"
-  headers["Accept"] = "application/json; charset=utf-8"
+  const headers = new Headers(options.headers)
+  headers.append("X-CSRF-TOKEN", X_CSRF_TOKEN)
+  headers.append("X-Requested-With", "XMLHttpRequest")
+  headers.append("Accept", "application/json; charset=utf-8")
 
   const requestInit: RequestInit = {
     ...defaultOptions,
