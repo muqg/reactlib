@@ -2,7 +2,6 @@ import {isEmpty} from "../collection"
 import {RequestMethod} from "../enums"
 import {Dict} from "../type"
 import {createQuery} from "./createQuery"
-import console = require("console")
 
 export type RequestOptions = Omit<RequestInit, "body" | "method">
 
@@ -32,9 +31,9 @@ async function baseRequest<T = any>(
   options: RequestInit,
 ): Promise<T> {
   const headers = new Headers(options.headers)
-  headers.append("X-CSRF-TOKEN", X_CSRF_TOKEN)
-  headers.append("X-Requested-With", "XMLHttpRequest")
-  headers.append("Accept", "application/json; charset=utf-8")
+  headers.set("X-CSRF-TOKEN", X_CSRF_TOKEN)
+  headers.set("X-Requested-With", "XMLHttpRequest")
+  headers.set("Accept", "application/json; charset=utf-8")
 
   const requestInit: RequestInit = {
     ...defaultOptions,
@@ -80,7 +79,7 @@ export function request<T = any>(
   data = {},
   options: RequestOptions = {},
 ): Promise<T> {
-  const headers = (options.headers || {}) as Dict<string>
+  const headers = new Headers(options.headers)
   const requestInit: RequestInit = options
 
   // GET, HEAD and OPTIONS methods are not allowed to have a request body.
@@ -95,7 +94,7 @@ export function request<T = any>(
       url = cleanURL + "?" + createQuery(data)
     }
   } else {
-    headers["Content-Type"] = "application/json"
+    headers.set("Content-Type", "application/json")
     requestInit.body = JSON.stringify(data)
   }
 
