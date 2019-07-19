@@ -1,7 +1,7 @@
+import {act, cleanup, fireEvent, render} from "@testing-library/react"
+import {renderHook} from "@testing-library/react-hooks"
 import * as React from "react"
-import {cleanup as hooksCleanup, renderHook} from "react-hooks-testing-library"
-import {act, cleanup, fireEvent, render} from "react-testing-library"
-import {ModelEntry, useModel, Model} from "../useModel"
+import {Model, ModelEntry, useModel} from "../useModel"
 
 /**
  * Names of model methods that should force an update on owner component
@@ -49,7 +49,6 @@ describe("Model hook", () => {
   let model = renderHook(modelHook).result
 
   beforeEach(() => {
-    hooksCleanup()
     cleanup()
     model = renderHook(modelHook).result
   })

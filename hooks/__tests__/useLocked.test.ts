@@ -1,4 +1,4 @@
-import {renderHook} from "react-hooks-testing-library"
+import {renderHook} from "@testing-library/react-hooks"
 import {wait} from "../../utility"
 import {useLocked} from "../useLocked"
 

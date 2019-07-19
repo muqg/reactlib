@@ -1,5 +1,5 @@
+import {cleanup, fireEvent, render} from "@testing-library/react"
 import * as React from "react"
-import {cleanup, fireEvent, render} from "react-testing-library"
 import {CHAR_CODE_ESCAPE} from "../../../utility/dom"
 import {Dialog} from "../Dialog"
 
