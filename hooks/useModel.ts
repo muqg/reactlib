@@ -9,7 +9,6 @@ import {
 import {isObject, isType} from "../utility/assertions"
 import {except, isEmpty, len} from "../utility/collection"
 import {ParseableInput, parseInputValue} from "../utility/dom"
-import {isSyntheticEvent} from "../utility/react"
 import {useForceUpdate} from "./useForceUpdate"
 
 const MODEL_OBJECT_SYMBOL_TAG =
@@ -303,12 +302,7 @@ function reducer(state: ModelState, action: ModelAction): ModelState {
         let value = values[name]
         if (parse) {
           value = parse(value, entry.value)
-        } else if (
-          isType<ParseableInput>(
-            value,
-            v => isSyntheticEvent(v) || v instanceof Element,
-          )
-        ) {
+        } else if (isParseableInput(value)) {
           value = parseInputValue(value)
         }
 
@@ -376,9 +370,17 @@ function reducer(state: ModelState, action: ModelAction): ModelState {
 function modelChangeAction(
   values: ModelValueList<any>,
 ): Action<"change", ModelValueList<any>> {
-  // This aims to prevent issues when dispatch is called asynchronously, after
-  // an input event has been cleaned up, by persisting any input synthetic events.
-  Object.values(values).forEach(v => isSyntheticEvent(v) && v.persist())
+  // Replace SyntheticEvents with their native representations. On one hand this
+  // is due to the fact that the default parser works best with native events,
+  // while on the other hand SyntheticEvents have to be persisted anyway since
+  // that the update can be delayed at any time and the SyntheticEvent object
+  // could be cleaned up and reused.
+  for (const name of Object.keys(values)) {
+    const current = values[name]
+    if (typeof current.nativeEvent === "object") {
+      values[name] = current.nativeEvent
+    }
+  }
 
   return {type: "change", value: values}
 }
@@ -389,5 +391,12 @@ function isModelObject<T extends object = object>(val: any): val is Model<T> {
     MODEL_OBJECT_SYMBOL_TAG in val &&
     // Works perfectly fine without typings in javascript.
     val[MODEL_OBJECT_SYMBOL_TAG] === MODEL_OBJECT_SYMBOL_TAG
+  )
+}
+
+function isParseableInput(input: any): input is ParseableInput {
+  return isType<ParseableInput>(
+    input,
+    v => v instanceof Event || v instanceof Element,
   )
 }
