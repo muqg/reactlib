@@ -1,28 +1,26 @@
-type FactoryFunction<T extends object, A extends any[]> = (
-  id: number,
-  ...args: A
-) => T
+type FactoryFunction<T extends object> = (id: number) => T
 
-export class Factory<T extends object, A extends any[] = any[]> {
+export class Factory<T extends object> {
   count = 1
-  private makeObject: FactoryFunction<T, A>
+  private makeObject: FactoryFunction<T>
 
-  constructor(factoryFn: FactoryFunction<T, A>) {
+  constructor(factoryFn: FactoryFunction<T>) {
     this.makeObject = factoryFn
   }
 
-  make(...args: A) {
+  make(args?: Partial<T>) {
     const id = this.count
     this.count += 1
 
-    return this.makeObject(id, ...args)
+    const obj = this.makeObject(id)
+    return {...obj, ...args}
   }
 
-  makeMany(quantity: number, ...args: A[]) {
+  makeMany(quantity: number, ...args: Partial<T>[]) {
     const items = []
     for (let i = 0; i < quantity; i += 1) {
       const currentArgs = args[i] || []
-      items.push(this.make(...currentArgs))
+      items.push(this.make(currentArgs))
     }
     return items
   }
