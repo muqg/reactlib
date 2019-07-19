@@ -4,10 +4,11 @@ import {truncate} from "../../styles/mixins"
 import {Size} from "../../utility"
 import {isFunction} from "../../utility/assertions"
 import {CloseButton} from "../buttons"
+import {DialogBoxProps, DialogProps} from "../component-types"
 import {DocumentTitle} from "../DocumentTitle"
 import {Grid} from "../Grid"
 import {View} from "../View"
-import {Dialog, DialogProps} from "./Dialog"
+import {Dialog} from "./Dialog"
 
 const SIZE_FACTOR = 320
 
@@ -57,14 +58,6 @@ interface ContainerStyleProps {
    */
   fixedHeight?: boolean
   size: Size
-}
-
-export interface DialogBoxProps extends Partial<ContainerStyleProps> {
-  children: React.ReactNode | Dialog["children"]
-  /**
-   * Dialog's title.
-   */
-  title?: string
 }
 
 type Props = DialogBoxProps & DialogProps

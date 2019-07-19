@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Notify} from "../components/notificaton"
+import {Notify} from "../components/component-types"
 import {useNotify} from "../hooks"
 import {getDisplayName} from "../utility/react"
 

@@ -47,6 +47,9 @@ export const defaultColorTheme = {
   warning: COLOR_WARNING,
 }
 
+export type ColorTheme = typeof defaultColorTheme
+export type ThemeInterface = ColorTheme
+
 /**
  * Creates a complete color theme based on the provided colors.
  *
@@ -55,7 +58,3 @@ export const defaultColorTheme = {
 export function createColorTheme(colorTheme: Partial<ColorTheme>): ColorTheme {
   return {...defaultColorTheme, ...colorTheme}
 }
-
-type colorThemeType = typeof defaultColorTheme
-export interface ColorTheme extends colorThemeType {}
-export type ThemeInterface = ColorTheme

@@ -1,4 +1,4 @@
-export {createEndpoint, Endpoint} from "./createEndpoint"
+export {createEndpoint} from "./createEndpoint"
 export {createQuery} from "./createQuery"
 export * from "./FetchRequests"
 export {getLocalStorageSize} from "./getLocalStorageSize"

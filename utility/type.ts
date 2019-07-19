@@ -91,3 +91,11 @@ export interface ActionWithOptions<
 > extends Action<T, V> {
   options: O
 }
+
+export type Endpoint<T extends object = object> = {
+  all: () => Promise<T[]>
+  create: (data: T) => Promise<T>
+  delete: (id: number | string) => Promise<void>
+  get: (id: number | string) => Promise<T>
+  save: (id: number | string, data: Partial<T>) => Promise<T>
+}

@@ -5,6 +5,7 @@ import {createGlobalStyle, styled} from "../../styles"
 import {CHAR_CODE_ESCAPE, Hotkey, isKeyPressed} from "../../utility/dom"
 import {call} from "../../utility/function"
 import {Center} from "../Center"
+import {DialogProps} from "../component-types"
 
 const ESCAPE_HOTKEY = new Hotkey({keyCode: CHAR_CODE_ESCAPE})
 
@@ -21,28 +22,6 @@ const Container = styled(Center)`
   top: 0;
   z-index: 200;
 `
-
-export interface DialogProps {
-  /**
-   * Used for styling the outermost div container for the
-   * dialog. Do NOT use to stlye any children elements.
-   */
-  className?: string
-  /**
-   * Called when dialog is closed.
-   */
-  onClose: () => void
-  /**
-   * Called any time a key is pressed down.
-   *
-   * - Escape key is bound by default to close the dialog.
-   */
-  onKeyDown?: (e: React.KeyboardEvent) => void
-  /**
-   * Called when dialog is shown.
-   */
-  onShow?: () => void
-}
 
 interface Dialog extends DialogProps {
   children: (close: () => void) => React.ReactNode

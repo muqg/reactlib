@@ -1,5 +1,6 @@
 import * as React from "react"
 import {useCallback, useState} from "react"
+import {Notify} from "../component-types"
 import {Notification, NotificationProps} from "./Notification"
 
 export const NotificationContext = React.createContext<Notify>(() => {
@@ -13,12 +14,7 @@ interface Props {
   children?: React.ReactNode
 }
 
-export type Notify = (
-  content: Required<NotificationProps>["content"],
-  options?: Omit<NotificationProps, "content">,
-) => void
-
-function Notifiable(props: Props) {
+export function Notifiable(props: Props) {
   const [notification, setNotification] = useState<NotificationProps>({})
   const setNotificationData: Notify = useCallback(
     (content, options = {}) => {
@@ -34,5 +30,3 @@ function Notifiable(props: Props) {
     </NotificationContext.Provider>
   )
 }
-
-export {Notifiable}

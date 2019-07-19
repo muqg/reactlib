@@ -1,10 +1,10 @@
 import * as React from "react"
-import {Button, DialogProps} from ".."
+import {Button, DialogBoxProps, DialogProps} from ".."
 import {styled} from "../../styles"
 import {isUndefined} from "../../utility/assertions"
 import {CHAR_CODE_ENTER} from "../../utility/dom"
 import {call} from "../../utility/function"
-import {DialogBox, DialogBoxProps} from "./DialogBox"
+import {DialogBox} from "./DialogBox"
 
 const StyledDialogBox = styled(DialogBox)`
   /* 100 more than Dialog */
