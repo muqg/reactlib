@@ -6,7 +6,7 @@ import {
   Serializable,
   ValidationError,
 } from "../utility"
-import {isObject, isType} from "../utility/assertions"
+import {isObject} from "../utility/assertions"
 import {except, isEmpty, len} from "../utility/collection"
 import {ParseableInput, parseInputValue} from "../utility/dom"
 import {useForceUpdate} from "./useForceUpdate"
@@ -395,8 +395,9 @@ function isModelObject<T extends object = object>(val: any): val is Model<T> {
 }
 
 function isParseableInput(input: any): input is ParseableInput {
-  return isType<ParseableInput>(
-    input,
-    v => v instanceof Event || v instanceof Element,
-  )
+  if (!isObject<any>(input)) {
+    return false
+  }
+
+  return input instanceof Element || input.target instanceof Element
 }
