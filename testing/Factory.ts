@@ -8,15 +8,15 @@ export class Factory<T extends object> {
     this.makeObject = factoryFn
   }
 
-  make(args?: Partial<T>) {
+  make(args?: Partial<T>): T {
     const id = this.count
     this.count += 1
 
     const obj = this.makeObject(id)
-    return {...obj, ...args}
+    return {...obj, ...args} as T
   }
 
-  makeMany(quantity: number, ...args: Partial<T>[]) {
+  makeMany(quantity: number, ...args: Partial<T>[]): T[] {
     const items = []
     for (let i = 0; i < quantity; i += 1) {
       const currentArgs = args[i] || []
