@@ -1,6 +1,5 @@
 import {isEmpty} from "../collection"
 import {RequestMethod} from "../enums"
-import {Dict} from "../type"
 import {createQuery} from "./createQuery"
 
 export type RequestOptions = Omit<RequestInit, "body" | "method">
@@ -120,7 +119,7 @@ export function request<T = any>(
 export function upload<T = any>(
   url: string,
   file: File,
-  body: Dict<string> = {},
+  body = {},
   options: RequestOptions = {},
 ): Promise<T> {
   const fd = new FormData()
