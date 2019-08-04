@@ -20,7 +20,7 @@ interface Task<R = any, A extends any[] = any> {
   run: (...args: A) => Promise<R> | null
 }
 
-type TaskFunction<R, A extends any[]> = (
+export type TaskFunction<R = any, A extends any[] = any[]> = (
   ...args: A
 ) => Promise<R | void> | IterableIterator<R> | AsyncIterableIterator<R>
 
