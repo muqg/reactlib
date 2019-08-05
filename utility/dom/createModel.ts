@@ -1,6 +1,6 @@
 import {put} from "../collection"
 import {cast} from "../string"
-import {ParseableInput} from "./parseInputValue"
+import {ParseableInput} from "./input-parsers"
 import {parseElement} from "./parseElement"
 
 export interface CreateModelOptions {

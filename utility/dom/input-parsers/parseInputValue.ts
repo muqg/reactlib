@@ -1,5 +1,5 @@
-import {findParentWithClass} from "."
-import {isObject, isType} from "../assertions"
+import {findParentWithClass} from ".."
+import {isObject, isType} from "../../assertions"
 
 export type ParseableElement =
   | HTMLInputElement

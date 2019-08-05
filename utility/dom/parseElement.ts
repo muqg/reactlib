@@ -1,6 +1,6 @@
 import {findParentWithClass} from "."
 import {isObject, isString, isType} from "../assertions"
-import {ParseableElement, ParseableInput} from "./parseInputValue"
+import {ParseableElement, ParseableInput} from "./input-parsers"
 
 /**
  * Parses a valid change event's element.
