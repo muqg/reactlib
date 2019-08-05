@@ -13,8 +13,8 @@ const modelHook = () => {
   return useModel(() => ({
     undef: undefined,
     parsed: {
-      value: 0,
-      parse: (input: number) => (input || 1) * 10,
+      value: 1,
+      parse: (input: number) => input * 10,
     },
     validated: {
       value: true,

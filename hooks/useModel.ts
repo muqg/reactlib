@@ -39,9 +39,9 @@ type ModelAction = Action<"change", ModelValueList<any>> | Action<"validate">
 
 export interface ModelElement<T extends object = object> {
   /**
-   * A custom parser for when value changes.
-   * @param input Current input value. Note that parser is called initially
-   * with input value as undefined.
+   * A custom parser for when value changes. It is called on initialization with
+   * both input and previous value equal to the initial value of the element.
+   * @param input Current input value.
    * @param prev The previous value.
    */
   parse?(input: any | undefined, prev: any): Serializable
@@ -219,15 +219,14 @@ export function useModel<T extends object>(
         // Run custom parser initially in order to
         // allow it to initialize the value.
         if (currentElement.parse) {
-          initialValue = currentElement.parse(undefined, initialValue)
+          initialValue = currentElement.parse(initialValue, initialValue)
 
           if (__DEV__) {
             if (initialValue === undefined) {
               console.error(
                 `The initial call to a model parser with name [${name}] ` +
                   "returned undefined. You have probably forgot to " +
-                  "check for the initial undefined input value or " +
-                  "returned nothing.",
+                  "return a value.",
               )
             }
           }
