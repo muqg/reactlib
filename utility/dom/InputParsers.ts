@@ -1,5 +1,5 @@
-import {findParentWithClass} from ".."
-import {isObject, isType} from "../../assertions"
+import {findParentWithClass} from "."
+import {isObject, isType} from "../assertions"
 
 export type ParseableElement =
   | HTMLInputElement
@@ -14,7 +14,7 @@ export type ParseableInput =
  * Parses an input value.
  * @param input The input change event or target element to parse the value of.
  */
-function parseInputValue(input: ParseableInput): string {
+export function parseInputValue(input: ParseableInput): string {
   const element = isObject(input, Element) ? input : input.target
   let value = element.value
 
@@ -55,4 +55,32 @@ function parseInputValue(input: ParseableInput): string {
   return value
 }
 
-export {parseInputValue}
+/**
+ * Returns the input string or string value of ChangeEvent/HTMLElement with
+ * newlines removed. Useful for TextAreas or other multiline input elements,
+ * such as contenteditables, where only the vertical visual space is needed and
+ * newlines are undesired.
+ *
+ * @param input A valid string, ChangeEvent (including React synthetic), or
+ * HTML Select, Input or TextArea element.
+ */
+export function parseNoNewlineString(input: any) {
+  if (typeof input === "object") {
+    if (typeof input.target === "object") {
+      input = input.target
+    }
+    if (typeof input.value === "string") {
+      input = input.value
+    }
+  }
+
+  // if input is not a string at this point, then it is not a valid string or
+  // ParseableInput object.
+  if (typeof input !== "string") {
+    throw new TypeError(
+      "Parser expected a valid ParseableInput object or string.",
+    )
+  }
+
+  return input.replace(/\n+/g, "")
+}
