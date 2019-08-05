@@ -40,46 +40,47 @@ function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
   )
 
   function run(...args: A) {
-    if (!task) {
-      setTask(
-        (async () => {
-          try {
-            cancelled.current = false
+    let runningTask = task
+    if (!runningTask) {
+      runningTask = (async () => {
+        try {
+          cancelled.current = false
 
-            const currentTask = func(...args) as any
-            if (
-              isFunction(currentTask[Symbol.iterator]) ||
-              isFunction(currentTask[Symbol.asyncIterator])
-            ) {
-              const generator = currentTask as IterableIterator<R>
-              while (true) {
-                const {done, value} = await generator.next()
-                if (cancelled.current || done) {
-                  call(generator.return)
-                  cancel()
+          const currentTask = func(...args) as any
+          if (
+            isFunction(currentTask[Symbol.iterator]) ||
+            isFunction(currentTask[Symbol.asyncIterator])
+          ) {
+            const generator = currentTask as IterableIterator<R>
+            while (true) {
+              const {done, value} = await generator.next()
+              if (cancelled.current || done) {
+                call(generator.return)
+                cancel()
 
-                  // Should return null instead of yielded value
-                  // when cancelled and only ever return the real
-                  // return value when the generator is done.
-                  return done ? value : null
-                }
+                // Should return null instead of yielded value
+                // when cancelled and only ever return the real
+                // return value when the generator is done.
+                return done ? value : null
               }
-            } else {
-              // Don't forget to let current async task
-              // function complete before running cancellation.
-              await currentTask
-              cancel()
-              return currentTask
             }
-          } catch (ex) {
+          } else {
+            // Don't forget to let current async task
+            // function complete before running cancellation.
+            await currentTask
             cancel()
-            throw ex
+            return currentTask
           }
-        })(),
-      )
+        } catch (ex) {
+          cancel()
+          throw ex
+        }
+      })()
+
+      setTask(runningTask)
     }
 
-    return task
+    return runningTask
   }
 
   function cancel() {
