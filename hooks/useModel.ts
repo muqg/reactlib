@@ -216,10 +216,12 @@ export function useModel<T extends object>(
         initialValue = currentElement.value
         util = except(currentElement, "value")
 
-        // Run custom parser initially in order to
-        // allow it to initialize the value.
+        // Run custom parser initially in order to allow
+        // it to perform initialization on the value.
         if (currentElement.parse) {
-          initialValue = currentElement.parse(initialValue, initialValue)
+          // Parsers should not be called with undefined values.
+          const value = initialValue === undefined ? "" : initialValue
+          initialValue = currentElement.parse(value, value)
 
           if (__DEV__) {
             if (initialValue === undefined) {
