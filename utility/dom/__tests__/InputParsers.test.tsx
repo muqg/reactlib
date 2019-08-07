@@ -40,8 +40,4 @@ describe("parseNoNewlineString() parser", () => {
       expect(parseNoNewlineString(input)).toBe("test")
     },
   )
-
-  it.each([{target: 10}, true])("throws on invalid input type", input => {
-    expect(() => parseNoNewlineString(input)).toThrow(TypeError)
-  })
 })
