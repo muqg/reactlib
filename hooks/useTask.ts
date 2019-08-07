@@ -1,36 +1,113 @@
-import {useEffect, useRef, useState} from "react"
-import {isFunction} from "../utility/assertions"
-import {call} from "../utility/function"
+import {useCallback, useEffect, useReducer, useRef} from "react"
+import {Action} from "../utility"
 
-interface Task<R = any, A extends any[] = any> {
+export type TaskFunction<R = any, A extends any[] = any[]> = (
+  ...args: A
+) => Promise<R> | IterableIterator<R> | AsyncIterableIterator<R>
+
+export type TaskStatus = "done" | "error" | "running" | null
+export type RunningTask<R = any> = Promise<R | undefined>
+export type TaskMiddleware<R = any> = (task: RunningTask<R>) => RunningTask<R>
+
+type Task<R = any, A extends any[] = any> = {
   /**
-   * Attempts to cancel the currently running task function.
-   * - Only works for generator task functions and which may
-   * allow cancellation by yielding their execution.
-   * - Task will automatically cancel and clean itself up on unmount.
+   * Clears the internal state of the task runner. Note that this does not
+   * attempt to cancel a currently running task, but resetting the internal
+   * state would allow for a new task to be run.
    */
-  cancel: () => void
+  clear: () => void
   /**
    * Whether the task function is currently running.
    */
   isRunning: boolean
   /**
-   * Runs the task function.
+   * Runs the task function. Only one task function can be running at a time,
+   * and if one is already running its Promise result will be returned.
+   *
+   * Generator task functions can optionaly yield execution to the task runner
+   * in order to provide it with the possibility to cancel the running task if
+   * the component has unmounted, while async code was running inside the task.
    */
   run: (...args: A) => Promise<R> | null
+  /**
+   * Current task status.
+   */
+  status: TaskStatus
 }
 
-export type TaskFunction<R = any, A extends any[] = any[]> = (
-  ...args: A
-) => Promise<R | void> | IterableIterator<R> | AsyncIterableIterator<R>
+type Options<R = any> = {
+  middleware: TaskMiddleware<R>[]
+}
 
-/**
- * A task function runs asynchronously and exposes additional functionality,
- * such as running status and cancellation.
- */
-function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
-  const [task, setTask] = useState<ReturnType<Task["run"]>>(null)
+type State = {
+  task: RunningTask | null
+  status: TaskStatus
+}
 
+type Actions =
+  | Action<"clear">
+  | Action<"run", State["task"]>
+  | Action<"status", TaskStatus>
+
+const DoneStatus: TaskStatus = "done"
+const ErrorStatus: TaskStatus = "error"
+const RunningStatus: TaskStatus = "running"
+
+const defaultOptions = {
+  middleware: [],
+}
+
+function reducer(state: State, action: Actions): State {
+  const {type} = action
+  switch (action.type) {
+    case "clear": {
+      return {
+        task: null,
+        status: null,
+      }
+    }
+    case "run": {
+      return {
+        task: action.value,
+        status: RunningStatus,
+      }
+    }
+    case "status": {
+      return {
+        ...state,
+        status: action.value,
+      }
+    }
+    default: {
+      if (__DEV__) {
+        throw new TypeError(`Dispatched invalid task action of type ${type}`)
+      }
+      return state
+    }
+  }
+}
+
+export function useTask<T extends ReturnType<TaskFunction>, A extends any[]>(
+  func: (...args: A) => T,
+  options?: Partial<Options>,
+): Task<
+  T extends Promise<infer R>
+    ? R
+    : T extends IterableIterator<infer R> | AsyncIterableIterator<infer R>
+    ? R | undefined
+    : never,
+  A
+> {
+  const {middleware} = {...defaultOptions, ...options}
+
+  const [{task, status}, dispatch] = useReducer(reducer, {
+    task: null,
+    status: null,
+  })
+
+  // Task cancellation is used to provide the possibility for a generator task
+  // to yield its execution and be cancelled when component is unmounted, and
+  // thus prevent memory leaks by updating unmounted components.
   const cancelled = useRef(false)
   useEffect(
     () => () => {
@@ -39,63 +116,112 @@ function useTask<R, A extends any[]>(func: TaskFunction<R, A>): Task<R, A> {
     [],
   )
 
-  function run(...args: A) {
+  const dispatchIfNotCancelled: typeof dispatch = (value: Actions) => {
+    if (!cancelled.current) {
+      dispatch(value)
+    }
+  }
+
+  function run(...args: A): RunningTask | null {
+    if (cancelled.current) {
+      return null
+    }
+
     let runningTask = task
-    if (!runningTask) {
+    if (status !== RunningStatus) {
       runningTask = (async () => {
         try {
-          cancelled.current = false
+          let result: Promise<any>
+          const currentTask = func(...args)
 
-          const currentTask = func(...args) as any
-          if (
-            isFunction(currentTask[Symbol.iterator]) ||
-            isFunction(currentTask[Symbol.asyncIterator])
-          ) {
-            const generator = currentTask as IterableIterator<R>
-            while (true) {
-              const {done, value} = await generator.next()
-              if (cancelled.current || done) {
-                call(generator.return)
-                cancel()
+          if (isIterableIterator(currentTask)) {
+            const unfoldGenerator = async () => {
+              const generator = currentTask
+              while (!cancelled.current) {
+                const {done, value} = await generator.next()
+                if (done) {
+                  return value
+                }
+              }
 
-                // Should return null instead of yielded value
-                // when cancelled and only ever return the real
-                // return value when the generator is done.
-                return done ? value : null
+              // This should only be reachable when task is cancelled.
+              if (typeof generator.return === "function") {
+                generator.return()
               }
             }
+
+            result = unfoldGenerator()
           } else {
-            // Don't forget to let current async task
-            // function complete before running cancellation.
-            await currentTask
-            cancel()
-            return currentTask
+            result = currentTask as Promise<any>
           }
+
+          result = applyMiddleware(middleware, result)
+
+          // Don't forget to await for the resulting task to resolve,
+          // before dispatching a status update.
+          await result
+
+          dispatchIfNotCancelled({type: "status", value: DoneStatus})
+          return result
         } catch (ex) {
-          cancel()
+          dispatchIfNotCancelled({type: "status", value: ErrorStatus})
           throw ex
         }
       })()
 
-      setTask(runningTask)
+      dispatchIfNotCancelled({type: "run", value: runningTask})
     }
 
     return runningTask
   }
 
-  function cancel() {
-    if (cancelled.current) {
-      return
-    }
-    setTask(null)
-    cancelled.current = true
-  }
+  const clear = useCallback(() => {
+    // Dispatch is the only dependency of dispatchIfNotCancelled and can thus
+    // be specified in a dependency array in place of the latter, which on its
+    // own is not memoized due to the fact pointed out here.
+    dispatchIfNotCancelled({type: "clear", value: null})
+  }, [dispatch])
 
   return {
-    cancel,
-    isRunning: !!task,
+    clear,
     run,
+    status,
+
+    // Kept for backwards compatibility and ease of use.
+    isRunning: status === RunningStatus,
   }
 }
 
-export {useTask}
+function isIterableIterator<T = any>(
+  value: any,
+): value is IterableIterator<T> | AsyncIterableIterator<T> {
+  return (
+    typeof value[Symbol.iterator] === "function" ||
+    typeof value[Symbol.asyncIterator] === "function"
+  )
+}
+
+function applyMiddleware(
+  middleware: TaskMiddleware[],
+  task: RunningTask,
+): RunningTask {
+  for (let i = 0; i < middleware.length; i++) {
+    task = middleware[i](task)
+
+    if (__DEV__) {
+      // Don't block execution by synchronously awaiting for the task Promise
+      // with applied middleware to resolve.
+      setTimeout(async () => {
+        const result = await task
+        if (result === undefined) {
+          throw new Error(
+            `Task middleware at index ${i} resolved to undefined. ` +
+              "You probably forgot to return the task in your middleware function.",
+          )
+        }
+      })
+    }
+  }
+
+  return task
+}
