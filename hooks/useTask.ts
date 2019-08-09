@@ -207,20 +207,6 @@ function applyMiddleware(
 ): RunningTask {
   for (let i = 0; i < middleware.length; i++) {
     task = middleware[i](task)
-
-    if (__DEV__) {
-      // Don't block execution by synchronously awaiting for the task Promise
-      // with applied middleware to resolve.
-      setTimeout(async () => {
-        const result = await task
-        if (result === undefined) {
-          throw new Error(
-            `Task middleware at index ${i} resolved to undefined. ` +
-              "You probably forgot to return the task in your middleware function.",
-          )
-        }
-      })
-    }
   }
 
   return task
