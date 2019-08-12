@@ -1,13 +1,7 @@
-import {useRef} from "react"
-import {
-  Action,
-  Dictionary,
-  List,
-  Serializable,
-  ValidationError,
-} from "../utility"
+import {useRef, useState} from "react"
+import {Action, Dictionary, Serializable, ValidationError} from "../utility"
 import {isObject} from "../utility/assertions"
-import {except, isEmpty, len} from "../utility/collection"
+import {isEmpty, len} from "../utility/collection"
 import {ParseableInput, parseInputValue} from "../utility/dom"
 import {useForceUpdate} from "./useForceUpdate"
 
@@ -27,13 +21,6 @@ export type ModelValueList<T extends object = object> = Dictionary<
   T,
   T[keyof T]
 >
-
-interface ModelState {
-  // Attempts to prevent unnecessary validation.
-  hasChanged: boolean
-  model: Model<any>
-  utils: List<Omit<ModelElement<any>, "value">>
-}
 
 type ModelAction = Action<"change", ModelValueList<any>> | Action<"validate">
 
@@ -78,8 +65,11 @@ export interface ModelEntry {
   value: any
 }
 
-// Note that all special model props should start with a dollar sign.
-export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
+type InternalModelEntry = ModelEntry & {
+  _utils: Pick<ModelElement, "parse" | "validate">
+}
+
+type ModelBase<T extends object> = {
   /**
    * Changes the values of multiple model entries at once.
    * @param values A list of the model names to update and their new values as
@@ -91,11 +81,12 @@ export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
    */
   $data(): T
   /**
-   * Returns a list of model errors.
+   * Returns a list of model errors. While it does not cause a render, it
+   * revalidates all model entries on each call and may sometimes lead to
+   * performance issues, if called too frequently on large models.
    *
-   * It re-validates the model, if a value has changed, and thus forces a
-   * re-render. Only returns a list of the errors, if no value has changed
-   * since the last validation.
+   * If you would like to obtain the error list and re-render the component,
+   * refer to `model.$validate()` method.
    */
   $errors(): Dictionary<T, ValidationError>
   /**
@@ -111,12 +102,21 @@ export type Model<T extends object> = Required<Dictionary<T, ModelEntry>> & {
    */
   $reset(): void
   /**
-   * Performs validation of model's data and updates errors for all entries.
-   * It will not do anything if the model has not changed, and will therefore
-   * not cause a render.
+   * Performs validation of model's data and updates errors for all entries,
+   * causing a re-render.
+   *
+   * If you would like to obtain the error list, without re-rendering then
+   * refer to `model.$errors()` method.
    */
-  $validate(): void
+  $validate(): Dictionary<T, ValidationError>
 }
+
+// Note that all special model props should start with a dollar sign.
+export type Model<T extends object> = ModelBase<T> &
+  Required<Dictionary<T, ModelEntry>>
+
+type InternalModel<T extends object = object> = ModelBase<T> &
+  Required<Dictionary<T, InternalModelEntry>> & {_validated: boolean}
 
 export interface ModelSettings {
   /**
@@ -142,29 +142,28 @@ export function useModel<T extends object>(
   settings = {} as ModelSettings,
 ): Model<T> {
   const forceUpdate = useForceUpdate()
-  const state = useRef({} as ModelState)
+  const model = useRef({} as InternalModel)
 
-  if (isEmpty(state.current)) {
+  if (isEmpty(model.current)) {
     const dispatch = (action: ModelAction) => {
-      const nextState = reducer(state.current, action)
+      const nextState = reducer(model.current, action)
       // Bail out similarly to how useReducer would do it.
-      if (nextState === state.current) {
+      if (nextState === model.current) {
         return
       }
 
-      state.current = nextState
+      model.current = nextState
       forceUpdate()
     }
 
     const modelSchema = initialStructure()
-    const utils: ModelState["utils"] = {}
-    const model = {
+    const newModel = {
       $change(values: ModelValueList<any>) {
         dispatch(modelChangeAction(values))
       },
       $data() {
         const values: any = {}
-        for (const name in utils) {
+        for (const name in modelSchema) {
           const currentValue = this[name].value
           // Retrieve data of nested models instead of the model itself.
           values[name] = isModelObject(currentValue)
@@ -174,13 +173,10 @@ export function useModel<T extends object>(
         return values
       },
       $errors() {
-        this.$validate()
-
+        const validatedModel = reducer(this, {type: "validate", value: null})
         const errors: any = {}
-        for (const name in utils) {
-          // Access the newly updated errors from state since `this`
-          // instance may lo longer be the most recent one.
-          const currentError = state.current.model[name].error
+        for (const name in modelSchema) {
+          const currentError = validatedModel[name as any].error
           if (currentError) {
             errors[name] = currentError
           }
@@ -197,24 +193,27 @@ export function useModel<T extends object>(
           }
         }
 
-        state.current = {} as ModelState
+        model.current = {} as InternalModel
         forceUpdate()
       },
       $validate() {
         dispatch({type: "validate", value: null})
+        return this.$errors()
       },
-    } as Model<any>
+    } as InternalModel<any>
     // @ts-ignore Sneak in the model object symbol tag past the typings.
-    model[MODEL_OBJECT_SYMBOL_TAG] = MODEL_OBJECT_SYMBOL_TAG
+    newModel[MODEL_OBJECT_SYMBOL_TAG] = MODEL_OBJECT_SYMBOL_TAG
 
     for (const name in modelSchema) {
+      const utils: InternalModelEntry["_utils"] = {}
       const currentElement = modelSchema[name]
       let initialValue: any = currentElement
-      let util = {}
 
       if (isObject<ModelElement>(currentElement)) {
         initialValue = currentElement.value
-        util = except(currentElement, "value")
+
+        utils.parse = currentElement.parse
+        utils.validate = currentElement.validate
 
         // Run custom parser initially in order to allow
         // it to perform initialization on the value.
@@ -259,46 +258,40 @@ export function useModel<T extends object>(
         }
       }
 
-      utils[name] = util
-      model[name] = {
+      newModel[name] = {
         name,
         onChange: v => dispatch(modelChangeAction({[name]: v})),
         // Allowing undefined values plays badly with the way that React
         // determines whether an input is controlled or uncontrolled.
         value: initialValue === undefined ? "" : initialValue,
-      } as ModelEntry
+        _utils: utils,
+      } as InternalModelEntry
     }
 
-    state.current = {
-      model,
-      utils,
-      hasChanged: true,
-    }
+    model.current = newModel
   }
 
   if (settings.binder) {
-    settings.binder.value = state.current.model
+    settings.binder.value = model.current
     // Should not allow direct change to binder's value.
     settings.binder.onChange = binderOnChangeNoopFunction
   }
-  return state.current.model as Model<T>
+  return model.current as Model<T>
 }
 
-function reducer(state: ModelState, action: ModelAction): ModelState {
-  const {utils} = state
-
+function reducer(model: InternalModel, action: ModelAction): InternalModel {
   switch (action.type) {
     case "change": {
       const values = action.value
       // Bail out of rendering if there are no values to update.
       if (!len(values)) {
-        return state
+        return model
       }
 
-      const model = {...state.model}
+      const nextModel = {...model}
       for (const name in values) {
-        const entry = {...model[name]}
-        const {parse} = utils[name]
+        const entry = {...nextModel[name]} as InternalModelEntry
+        const {parse, validate} = entry._utils
 
         let value = values[name]
         if (parse) {
@@ -306,12 +299,26 @@ function reducer(state: ModelState, action: ModelAction): ModelState {
         } else if (isParseableInput(value)) {
           value = parseInputValue(value)
         }
-
         entry.value = value
-        model[name] = entry
+
+        // Attempt to perform simple validation in place. Complex validation
+        // that requires other model properties can only be performed via the
+        // special validation methods.
+        if (validate) {
+          try {
+            entry.error = validate(entry.value, {})
+          } catch (err) {
+            if (__DEV__) {
+              console.error(err)
+            }
+            entry.error = ""
+          }
+        }
+
+        nextModel[name] = entry
 
         if (__DEV__) {
-          if (!(name in model)) {
+          if (!(name in nextModel)) {
             console.error(
               "Attempting to update a model value for name which was " +
                 "not part of the initial structure. There is a typo in " +
@@ -322,48 +329,42 @@ function reducer(state: ModelState, action: ModelAction): ModelState {
         }
       }
 
-      return {
-        ...state,
-        model,
-        hasChanged: true,
-      }
+      nextModel._validated = false
+      return nextModel
     }
     case "validate": {
-      if (!state.hasChanged) {
-        return state
+      if (model._validated) {
+        return model
       }
 
-      const model = {...state.model}
-      const data = model.$data()
+      const nextModel = {...model}
+      const data = nextModel.$data()
 
-      for (const name in utils) {
-        const entry: ModelEntry = {
-          ...model[name],
+      for (const name in data) {
+        const entry: InternalModelEntry = {
+          ...nextModel[name],
           error: null,
         }
 
-        const {validate} = utils[name]
-        const {value} = model[name]
+        const {validate} = entry._utils
+        const {value} = nextModel[name]
         if (validate) {
           entry.error = validate(value, data)
         } else if (isModelObject(value)) {
           entry.error = value.$firstError()
         }
 
-        model[name] = entry
+        nextModel[name] = entry
       }
 
-      return {
-        ...state,
-        model,
-        hasChanged: false,
-      }
+      nextModel._validated = true
+      return nextModel
     }
     default: {
       if (__DEV__) {
         throw "Dispatched invalid model action"
       }
-      return state
+      return model
     }
   }
 }
@@ -377,13 +378,17 @@ function modelChangeAction(
   // that the update can be delayed at any time and the SyntheticEvent object
   // could be cleaned up and reused.
   for (const name of Object.keys(values)) {
-    const current = values[name]
-    if (typeof current.nativeEvent === "object") {
-      values[name] = current.nativeEvent
-    }
+    values[name] = extractNativeEvent(values[name])
   }
 
   return {type: "change", value: values}
+}
+
+function extractNativeEvent(input: any) {
+  if (input && typeof input.nativeEvent === "object") {
+    return input.nativeEvent
+  }
+  return input
 }
 
 function isModelObject<T extends object = object>(val: any): val is Model<T> {
@@ -401,4 +406,93 @@ function isParseableInput(input: any): input is ParseableInput {
   }
 
   return input instanceof Element || input.target instanceof Element
+}
+
+// =============================================================================
+
+type InputValueInit = ParseableInput | Serializable
+
+/**
+ * Model for a single input value.
+ *
+ * Can be linked to an entry of useModel. If so then it will passively update
+ * the entry's value, without causing it to rerender and thus limiting updates
+ * to the current component and below. Changes on the model entry are also
+ * reflected on the input value, meaning that the binding is two-way.
+ *
+ * @param data A valid model entry or the initial modelling structure.
+ */
+export function useInputValue<T extends InputValueInit | ModelEntry>(
+  init: T,
+): T extends ModelEntry
+  ? ModelEntry
+  : {onChange: ModelEntry["onChange"]; value: T} {
+  const data = init as InputValueInit | InternalModelEntry
+  const prevModelEntry = useRef<InternalModelEntry | null>(null)
+
+  const [state, setState] = useState<InternalModelEntry>(() => {
+    if (isObject(data) && "_utils" in data) {
+      return data
+    }
+
+    return {
+      _utils: {},
+      name: "",
+      onChange: () => {},
+      value: data === undefined ? "" : data,
+    }
+  })
+
+  // Map from model to current state and from current state to model,
+  // based on which changed since last render.
+  if (isObject(data) && "_utils" in data) {
+    // Model entries are memoized, unless some of their data has changed, and
+    // then a new object will have been created and passed here.
+    if (data !== prevModelEntry.current) {
+      prevModelEntry.current = data
+      setState(data)
+    } else {
+      data.value = state.value
+      data.error = state.error
+    }
+  }
+
+  // It is redundant to memoize this since the idea of this hook is to be used
+  // in leaf components and map to a Model above. This means that this hook
+  // itself is intended to be used from within memoized components.
+  state.onChange = (input: any) => {
+    input = extractNativeEvent(input)
+
+    setState(current => {
+      let value = input
+      const next = {...current}
+
+      const {parse, validate} = current._utils
+      if (parse) {
+        value = parse(input, value || input)
+      } else if (isParseableInput(input)) {
+        value = parseInputValue(input)
+      }
+
+      // This is a workaround that will work in most scenarios, but will probably
+      // fail for complex cases, where validation depends on other model values
+      // (the second argument).
+      if (validate) {
+        try {
+          next.error = validate(value, {})
+        } catch (err) {
+          if (__DEV__) {
+            console.error(err)
+          }
+          next.error = ""
+        }
+      }
+
+      next.value = value
+
+      return next
+    })
+  }
+
+  return state as any
 }

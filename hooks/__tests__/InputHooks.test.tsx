@@ -1,7 +1,7 @@
 import {act, cleanup, fireEvent, render} from "@testing-library/react"
 import {renderHook} from "@testing-library/react-hooks"
 import * as React from "react"
-import {Model, ModelEntry, useModel} from "../useModel"
+import {Model, ModelEntry, useModel} from "../InputHooks"
 
 /**
  * Names of model methods that should force an update on owner component
@@ -106,12 +106,11 @@ describe("Model hook", () => {
     expect(model.current.validated.error).toBeUndefined()
   })
 
-  it("validates values when accessing the error list and a value has been changed", () => {
+  it("validation causes a re-render", () => {
     act(() => {
-      model.current.$errors()
+      model.current.$validate()
     })
 
-    expect(model.current.$errors().validated).toBe("error")
     expect(model.current.validated.error).toBe("error")
   })
 
