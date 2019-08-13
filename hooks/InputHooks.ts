@@ -238,10 +238,10 @@ export function useModel<T extends object>(
           for (const key in currentElement) {
             if (!supportedProps.includes(key)) {
               console.error(
-                "Model received an object or array which contains " +
-                  `an unsupported property ${key}. If you are trying ` +
-                  "to model an object or array value then pass it " +
-                  "as a value property of a ModelElement.",
+                `Model received an object or array at key '${name}' which ` +
+                  `contains an unsupported property ${key}. If you are ` +
+                  "trying to model an object or array value, then pass it " +
+                  "as the value property of a ModelElement object.",
               )
             }
           }
