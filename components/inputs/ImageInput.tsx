@@ -7,10 +7,10 @@ import {
   ConfirmationDialog,
   ImageView,
   RemoveButton,
-} from "../../../lub/components"
-import {styled} from "../../../lub/styles"
-import {isString} from "../../../lub/utility/assertions"
+} from "../"
+import {styled} from "../../styles"
 import {Size} from "../../utility"
+import {isString} from "../../utility/assertions"
 import {call} from "../../utility/function"
 
 const PreviewContainer = styled.div`
