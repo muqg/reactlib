@@ -3,7 +3,19 @@ global.__DEV__ = false
 process.env.NODE_ENV = "production"
 
 if (typeof document !== undefined) {
-  document.execCommand = () => {}
+  global.document.execCommand = () => {}
+
+  // Fixes some material-ui testing issues where document.createRange is
+  // undefined. For more information:
+  // https://github.com/mui-org/material-ui/issues/15726#issuecomment-493124813
+  global.document.createRange = () => ({
+    setStart: () => {},
+    setEnd: () => {},
+    commonAncestorContainer: {
+      nodeName: "BODY",
+      ownerDocument: document,
+    },
+  })
 }
 
 if (typeof window !== undefined) {
