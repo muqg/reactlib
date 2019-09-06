@@ -25,6 +25,11 @@ export type Fetcher<T, A extends any[] = any> = {
    */
   read: (...input: A) => T
   /**
+   * Resets the fetcher object to its initial state after creation. This is
+   * especially useful in testing when it is desired to clear the internal cache.
+   */
+  reset: () => void
+  /**
    * Writes a value to cache, overwriting the existing entry's value. It will
    * create a new entry, if there is none for this key at the time of writing.
    */
@@ -131,6 +136,10 @@ export function createFetcher<T = any, A extends any[] = any>(
     storage.delete(key)
   }
 
+  function reset() {
+    storage.clear()
+  }
+
   function getCacheKey(...input: A) {
     return JSON.stringify(input)
   }
@@ -140,6 +149,7 @@ export function createFetcher<T = any, A extends any[] = any>(
     prefetch,
     preload,
     read,
+    reset,
     write,
   }
 }
