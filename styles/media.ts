@@ -1,5 +1,5 @@
 import {Dict} from "../utility"
-import {css} from "./styled-components"
+import {css} from "styled-components"
 
 interface Media {
   /**
