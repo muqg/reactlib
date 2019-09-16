@@ -1,5 +1,5 @@
 import {useRef, useState} from "react"
-import {Action, Dictionary, Serializable, ValidationError} from "../utility"
+import {Action, Serializable, ValidationError} from "../utility"
 import {isObject} from "../utility/assertions"
 import {isEmpty, len} from "../utility/collection"
 import {ParseableInput, parseInputValue} from "../utility/dom"
@@ -17,34 +17,34 @@ const binderOnChangeNoopFunction = () => {
 }
 
 export type ModelInput = ParseableInput | Serializable | Model<object>
-export type ModelValueList<T extends object = object> = Dictionary<
-  T,
-  T[keyof T]
->
+type ModelValueList<T = any> = {[P in keyof T]: T[P]}
 
-type ModelAction = Action<"change", ModelValueList<any>> | Action<"validate">
+type ModelAction = Action<"change", ModelValueList> | Action<"validate">
 
-export interface ModelElement<T extends object = object> {
+export interface ModelElement<
+  T extends object = object,
+  K extends keyof T = any
+> {
   /**
    * A custom parser for when value changes. It is called on initialization with
    * both input and previous value equal to the initial value of the element.
    * @param input Current input value.
    * @param prev The previous value.
    */
-  parse?(input: any | undefined, prev: any): Serializable
+  parse?(input: any, prev: T[K]): T[K]
   /**
    * Undefined values are transformed into empty strings.
    */
-  value?: T[keyof T]
+  value?: T[K]
   /**
    * Validates a model entry's value.
    * @param value Current value.
    * @param modelValues List of model's most recent values.
    */
-  validate?(value: any, modelValues: ModelValueList<T>): ValidationError
+  validate?(value: T[K], modelValues: ModelValueList<T>): ValidationError
 }
 
-export interface ModelEntry {
+export interface ModelEntry<T = any> {
   /**
    * Errors should not be accessed directly for vlidation via this property,
    * since it may not be in sync with the current value. Use the model's special
@@ -62,7 +62,7 @@ export interface ModelEntry {
   /**
    * Model entry's current value.
    */
-  value: any
+  value: T
 }
 
 type InternalModelEntry = ModelEntry & {
@@ -88,7 +88,7 @@ type ModelBase<T extends object> = {
    * If you would like to obtain the error list and re-render the component,
    * refer to `model.$validate()` method.
    */
-  $errors(): Dictionary<T, ValidationError>
+  $errors(): Record<keyof T, ValidationError>
   /**
    * Returns the first error from the model's error list.
    *
@@ -108,15 +108,21 @@ type ModelBase<T extends object> = {
    * If you would like to obtain the error list, without re-rendering then
    * refer to `model.$errors()` method.
    */
-  $validate(): Dictionary<T, ValidationError>
+  $validate(): Record<keyof T, ValidationError>
 }
 
 // Note that all special model props should start with a dollar sign.
 export type Model<T extends object> = ModelBase<T> &
-  Required<Dictionary<T, ModelEntry>>
+  Required<
+    {
+      [P in keyof T]: ModelEntry<
+        T[P] extends ModelElement<any> ? T[P]["value"] : T[P]
+      >
+    }
+  >
 
 type InternalModel<T extends object = object> = ModelBase<T> &
-  Required<Dictionary<T, InternalModelEntry>> & {_validated: boolean}
+  Required<Record<keyof T, InternalModelEntry>> & {_validated: boolean}
 
 export interface ModelSettings {
   /**
@@ -137,7 +143,7 @@ export interface ModelSettings {
  */
 export function useModel<T extends object>(
   initialStructure: () => Partial<
-    Dictionary<T, string | boolean | number | null | ModelElement<T>>
+    {[P in keyof T]: string | boolean | number | null | ModelElement<T, P>}
   >,
   settings = {} as ModelSettings,
 ): Model<T> {
@@ -158,7 +164,7 @@ export function useModel<T extends object>(
 
     const modelSchema = initialStructure()
     const newModel = {
-      $change(values: ModelValueList<any>) {
+      $change(values: ModelValueList) {
         dispatch(modelChangeAction(values))
       },
       $data() {
@@ -276,7 +282,7 @@ export function useModel<T extends object>(
     // Should not allow direct change to binder's value.
     settings.binder.onChange = binderOnChangeNoopFunction
   }
-  return model.current as Model<T>
+  return model.current as any
 }
 
 function reducer(model: InternalModel, action: ModelAction): InternalModel {
@@ -370,8 +376,8 @@ function reducer(model: InternalModel, action: ModelAction): InternalModel {
 }
 
 function modelChangeAction(
-  values: ModelValueList<any>,
-): Action<"change", ModelValueList<any>> {
+  values: ModelValueList,
+): Action<"change", ModelValueList> {
   // Replace SyntheticEvents with their native representations. On one hand this
   // is due to the fact that the default parser works best with native events,
   // while on the other hand SyntheticEvents have to be persisted anyway since
