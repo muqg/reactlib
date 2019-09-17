@@ -22,6 +22,8 @@ export interface Color {
 
 /**
  * A simple dictionary with string keys and values of generic type.
+ *
+ * @deprecated Use built-in Record type instead as `Record<string, T>`
  */
 export interface Dict<T> {
   [key: string]: T
@@ -31,6 +33,8 @@ export interface Dict<T> {
  * A simple dictionary that is the same as Dict except that its values are also
  * explicitly typed as possibly undefined which makes it safer to use in many
  * cases.
+ *
+ * @deprecated Use built-in Record typ instead as `Record<string, T | undefined>`
  */
 export interface UDict<T> {
   [key: string]: T | undefined
@@ -48,6 +52,8 @@ export interface Pointer<T> {
 
 /**
  * A basic object with a name and a key.
+ *
+ * @deprecated Will be removed in future update.
  */
 export interface NamedKey<T = string> {
   id: T
@@ -67,9 +73,16 @@ export type Serializable =
 
 /**
  * Represents a basic dictionary type.
+ *
+ * @deprecated Use built-in Record type instead where
+ * `Dictionary<T, T[keyof T]> === Record<keyof T, T[keyof T]>`
  */
 export type Dictionary<K extends object, V = K[keyof K]> = {[key in keyof K]: V}
 
+/**
+ * @deprecated Use built-in Record type instead where
+ * `List<string, keyof T> === Record<keyof T, string>`
+ */
 export type List<
   V,
   K extends string | number | symbol = string | number | symbol
@@ -92,6 +105,9 @@ export interface ActionWithOptions<
   options: O
 }
 
+/**
+ * @deprecated Will be removed or changed dramatically in future update.
+ */
 export type Endpoint<T extends object = object> = {
   all: () => Promise<T[]>
   create: (data: T) => Promise<T>
@@ -99,3 +115,10 @@ export type Endpoint<T extends object = object> = {
   get: (id: number | string) => Promise<T>
   save: (id: number | string, data: Partial<T>) => Promise<T>
 }
+
+/**
+ * A simple type to add index access to an object, without modifying its typing
+ * in any way. Its intended to be used with tsconfig
+ * `suppressImplicitAnyIndexErrors: false`
+ */
+export type Indexed<T extends object> = {[P in keyof T]: T[P]}
