@@ -130,7 +130,7 @@ export type ModelInit<T extends object> = () => {
   [K in keyof T]?: T[K] | ModelElement<T, K>
 }
 
-export interface ModelSettings<T = any> {
+export interface ModelSettings {
   /**
    * A model entry to bind the current model instance to.
    *
@@ -139,7 +139,7 @@ export interface ModelSettings<T = any> {
    * binder's model such as `$reset`, `$validate`, etc. will also be called
    * on any bound model and thus making them act as a single, big model.
    */
-  binder?: ModelEntry<T>
+  binder?: ModelEntry
 }
 
 /**
@@ -149,7 +149,7 @@ export interface ModelSettings<T = any> {
  */
 export function useModel<T extends object>(
   initialStructure: ModelInit<T>,
-  settings = {} as ModelSettings<T>,
+  settings = {} as ModelSettings,
 ): Model<T> {
   const forceUpdate = useForceUpdate()
   const model = useRef({} as InternalModel)
