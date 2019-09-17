@@ -52,3 +52,18 @@ export function parseInputValue(input: ParseableValue): string {
 export function parseNoNewlineString(input: ParseableValue) {
   return parseInputValue(input).replace(/\n+/g, "")
 }
+
+/**
+ * Returns the result of a valid React.SetStateAction (BasicStateReducer).
+ * More information at:
+ * https://github.com/facebook/react/blob/3af05de1aaed309f8146bc53f9a4b4d785abdd3f/packages/react-reconciler/src/ReactFiberHooks.js#L631
+ *
+ * @param input A valid React.SetStateAction
+ * @param current The current state value.
+ */
+export function parseSetStateAction<T>(
+  input: React.SetStateAction<T>,
+  current: T,
+): T {
+  return input instanceof Function ? input(current) : input
+}
