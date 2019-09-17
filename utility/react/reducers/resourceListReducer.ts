@@ -24,7 +24,7 @@ export type ResourceListReducer<T extends ResourceObject = ResourceObject> = (
 function resourceListReducer<T extends ResourceObject = ResourceObject>(
   list: T[],
   action?: ResourceListReducerActions,
-) {
+): T[] {
   if (!action) {
     return list
   }
@@ -32,7 +32,7 @@ function resourceListReducer<T extends ResourceObject = ResourceObject>(
   const actionType = action.type
   switch (action.type) {
     case "save": {
-      const resource = action.value
+      const resource = action.value as T
       if (action.options.mode === "prepend") {
         return replaceOrPrepend(list, e => e.id === resource.id, resource)
       } else {
@@ -48,7 +48,7 @@ function resourceListReducer<T extends ResourceObject = ResourceObject>(
         return list
       }
 
-      const replacement: ResourceObject = {
+      const replacement: T = {
         ...current,
         ...action.value,
       }
@@ -58,7 +58,7 @@ function resourceListReducer<T extends ResourceObject = ResourceObject>(
       return list.filter(e => e.id !== action.value)
     }
     case "set": {
-      return action.value
+      return action.value as T[]
     }
     default: {
       if (__DEV__) {
