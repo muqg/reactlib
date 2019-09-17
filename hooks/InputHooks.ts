@@ -17,9 +17,8 @@ const binderOnChangeNoopFunction = () => {
 }
 
 export type ModelInput = ParseableInput | Serializable | Model<object>
-type ModelValueList<T = any> = {[P in keyof T]: T[P]}
 
-type ModelAction = Action<"change", ModelValueList> | Action<"validate">
+type ModelAction = Action<"change", object> | Action<"validate">
 
 export interface ModelElement<
   T extends object = object,
@@ -41,7 +40,7 @@ export interface ModelElement<
    * @param value Current value.
    * @param modelValues List of model's most recent values.
    */
-  validate?(value: T[K], modelValues: ModelValueList<T>): ValidationError
+  validate?(value: T[K], modelValues: T): ValidationError
 }
 
 export interface ModelEntry<T = any> {
@@ -124,7 +123,7 @@ export type Model<T extends object> = ModelBase<T> &
 type InternalModel<T extends object = object> = ModelBase<T> &
   Required<Record<keyof T, InternalModelEntry>> & {_validated: boolean}
 
-export interface ModelSettings {
+export interface ModelSettings<T = any> {
   /**
    * A model entry to bind the current model instance to.
    *
@@ -133,7 +132,7 @@ export interface ModelSettings {
    * binder's model such as `$reset`, `$validate`, etc. will also be called
    * on any bound model and thus making them act as a single, big model.
    */
-  binder?: ModelEntry
+  binder?: ModelEntry<T>
 }
 
 /**
@@ -145,7 +144,7 @@ export function useModel<T extends object>(
   initialStructure: () => Partial<
     {[P in keyof T]: string | boolean | number | null | ModelElement<T, P>}
   >,
-  settings = {} as ModelSettings,
+  settings = {} as ModelSettings<T>,
 ): Model<T> {
   const forceUpdate = useForceUpdate()
   const model = useRef({} as InternalModel)
@@ -164,40 +163,43 @@ export function useModel<T extends object>(
 
     const modelSchema = initialStructure()
     const newModel = {
-      $change(values: ModelValueList) {
+      $change(values: T) {
         dispatch(modelChangeAction(values))
       },
       $data() {
         const values: any = {}
-        for (const name in modelSchema) {
+        Object.keys(modelSchema).forEach(name => {
           const currentValue = this[name].value
           // Retrieve data of nested models instead of the model itself.
           values[name] = isModelObject(currentValue)
             ? currentValue.$data()
             : currentValue
-        }
+        })
+
         return values
       },
       $errors() {
-        const validatedModel = reducer(this, {type: "validate", value: null})
+        const validated = reducer(this, {type: "validate", value: null})
+
         const errors: any = {}
-        for (const name in modelSchema) {
-          const currentError = validatedModel[name as any].error
+        Object.keys(modelSchema).forEach(name => {
+          const currentError = validated[name as any].error
           if (currentError) {
             errors[name] = currentError
           }
-        }
+        })
+
         return errors
       },
       $firstError() {
         return Object.values(this.$errors())[0]
       },
       $reset() {
-        for (const name in modelSchema) {
+        Object.keys(modelSchema).forEach(name => {
           if (isModelObject(this[name].value)) {
             this[name].value.$reset()
           }
-        }
+        })
 
         model.current = {} as InternalModel
         forceUpdate()
@@ -278,7 +280,7 @@ export function useModel<T extends object>(
   }
 
   if (settings.binder) {
-    settings.binder.value = model.current
+    settings.binder.value = model.current as any
     // Should not allow direct change to binder's value.
     settings.binder.onChange = binderOnChangeNoopFunction
   }
@@ -375,17 +377,15 @@ function reducer(model: InternalModel, action: ModelAction): InternalModel {
   }
 }
 
-function modelChangeAction(
-  values: ModelValueList,
-): Action<"change", ModelValueList> {
+function modelChangeAction(values: object): Action<"change", object> {
   // Replace SyntheticEvents with their native representations. On one hand this
   // is due to the fact that the default parser works best with native events,
   // while on the other hand SyntheticEvents have to be persisted anyway since
   // that the update can be delayed at any time and the SyntheticEvent object
   // could be cleaned up and reused.
-  for (const name of Object.keys(values)) {
-    values[name] = extractNativeEvent(values[name])
-  }
+  Object.keys(values).forEach(
+    name => (values[name] = extractNativeEvent(values[name])),
+  )
 
   return {type: "change", value: values}
 }
