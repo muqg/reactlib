@@ -126,8 +126,14 @@ export type Model<T extends object> = ModelBase<T> &
 type InternalModel<T extends object = object> = ModelBase<T> &
   Required<Record<keyof T, InternalModelEntry>> & {_validated: boolean}
 
-export type ModelInit<T extends object> = () => {
-  [K in keyof T]?: T[K] | ModelElement<T, K>
+type ModelPrimitive = string | boolean | number | null
+type ModelStructureValue<
+  T extends object = any,
+  K extends keyof T = any
+> = T[K] extends ModelPrimitive ? T[K] | ModelElement<T, K> : ModelElement<T, K>
+
+export type ModelStructure<T extends object = any> = () => {
+  [K in keyof T]?: ModelStructureValue<T, K>
 }
 
 export interface ModelSettings {
@@ -142,13 +148,80 @@ export interface ModelSettings {
   binder?: ModelEntry
 }
 
+function createModelEntry(
+  name: string,
+  element: ModelStructureValue,
+  dispatch: (action: ModelAction) => void,
+) {
+  const utils: InternalModelEntry["_utils"] = {}
+  let initialValue: any = element
+
+  if (isObject<ModelElement>(element)) {
+    initialValue = element.value
+
+    utils.parse = element.parse
+    utils.validate = element.validate
+
+    // Run custom parser initially in order to allow
+    // it to perform initialization on the value.
+    if (element.parse) {
+      // Parsers should not be called with undefined values.
+      const value = initialValue === undefined ? "" : initialValue
+      initialValue = element.parse(value, value)
+
+      if (__DEV__) {
+        if (initialValue === undefined) {
+          console.error(
+            `The initial call to a model parser with name [${name}] ` +
+              "returned undefined. You have probably forgot to " +
+              "return a value.",
+          )
+        }
+      }
+    }
+
+    if (__DEV__) {
+      const supportedProps = ["parse", "validate", "value"]
+      for (const key in element) {
+        if (!supportedProps.includes(key)) {
+          console.error(
+            `Model received an object or array at key '${name}' which ` +
+              `contains an unsupported property ${key}. If you are ` +
+              "trying to model an object or array value, then pass it " +
+              "as the value property of a ModelElement object.",
+          )
+        }
+      }
+    }
+  }
+
+  if (__DEV__) {
+    if (name.startsWith("$")) {
+      console.warn(
+        "The model should not contain entries with names starting with " +
+          "a dollar sign $, which is used to designate special model " +
+          "properties and may therefore lead to unexpected behaviour.",
+      )
+    }
+  }
+
+  return {
+    name,
+    onChange: v => dispatch(modelChangeAction({[name]: v})),
+    // Allowing undefined values plays badly with the way that React
+    // determines whether an input is controlled or uncontrolled.
+    value: initialValue === undefined ? "" : initialValue,
+    _utils: utils,
+  } as InternalModelEntry
+}
+
 /**
  * A model instance maps form and other values to a predefined object structure.
  * @param initialStructure Initial model structure.
  * @param settings Model settings.
  */
 export function useModel<T extends object>(
-  initialStructure: ModelInit<T>,
+  initialStructure: ModelStructure<T>,
   settings = {} as ModelSettings,
 ): Model<T> {
   const forceUpdate = useForceUpdate()
@@ -184,7 +257,7 @@ export function useModel<T extends object>(
         return values
       },
       $errors() {
-        const validated = reducer(this, {type: "validate", value: null})
+        const validated = validateModel(this)
 
         const errors: any = {}
         Object.keys(modelSchema).forEach(name => {
@@ -217,69 +290,9 @@ export function useModel<T extends object>(
     // @ts-ignore Sneak in the model object symbol tag past the typings.
     newModel[MODEL_OBJECT_SYMBOL_TAG] = MODEL_OBJECT_SYMBOL_TAG
 
-    for (const name in modelSchema) {
-      const utils: InternalModelEntry["_utils"] = {}
-      const currentElement = modelSchema[name]
-      let initialValue: any = currentElement
-
-      if (isObject<ModelElement>(currentElement)) {
-        initialValue = currentElement.value
-
-        utils.parse = currentElement.parse
-        utils.validate = currentElement.validate
-
-        // Run custom parser initially in order to allow
-        // it to perform initialization on the value.
-        if (currentElement.parse) {
-          // Parsers should not be called with undefined values.
-          const value = initialValue === undefined ? "" : initialValue
-          initialValue = currentElement.parse(value, value)
-
-          if (__DEV__) {
-            if (initialValue === undefined) {
-              console.error(
-                `The initial call to a model parser with name [${name}] ` +
-                  "returned undefined. You have probably forgot to " +
-                  "return a value.",
-              )
-            }
-          }
-        }
-
-        if (__DEV__) {
-          const supportedProps = ["parse", "validate", "value"]
-          for (const key in currentElement) {
-            if (!supportedProps.includes(key)) {
-              console.error(
-                `Model received an object or array at key '${name}' which ` +
-                  `contains an unsupported property ${key}. If you are ` +
-                  "trying to model an object or array value, then pass it " +
-                  "as the value property of a ModelElement object.",
-              )
-            }
-          }
-        }
-      }
-
-      if (__DEV__) {
-        if (name.startsWith("$")) {
-          console.warn(
-            "The model should not contain entries with names starting with " +
-              "a dollar sign $, which is used to designate special model " +
-              "properties and may therefore lead to unexpected behaviour.",
-          )
-        }
-      }
-
-      newModel[name] = {
-        name,
-        onChange: v => dispatch(modelChangeAction({[name]: v})),
-        // Allowing undefined values plays badly with the way that React
-        // determines whether an input is controlled or uncontrolled.
-        value: initialValue === undefined ? "" : initialValue,
-        _utils: utils,
-      } as InternalModelEntry
-    }
+    Object.keys(modelSchema).forEach(name => {
+      newModel[name] = createModelEntry(name, modelSchema[name], dispatch)
+    })
 
     model.current = newModel
   }
@@ -295,83 +308,10 @@ export function useModel<T extends object>(
 function reducer(model: InternalModel, action: ModelAction): InternalModel {
   switch (action.type) {
     case "change": {
-      const values = action.value
-      // Bail out of rendering if there are no values to update.
-      if (!len(values)) {
-        return model
-      }
-
-      const nextModel = {...model}
-      for (const name in values) {
-        const entry = {...nextModel[name]} as InternalModelEntry
-        const {parse, validate} = entry._utils
-
-        let value = values[name]
-        if (parse) {
-          value = parse(value, entry.value)
-        } else if (isParseableInput(value)) {
-          value = parseInputValue(value)
-        }
-        entry.value = value
-
-        // Attempt to perform simple validation in place. Complex validation
-        // that requires other model properties can only be performed via the
-        // special validation methods.
-        if (validate) {
-          try {
-            entry.error = validate(entry.value, {})
-          } catch (err) {
-            if (__DEV__) {
-              console.error(err)
-            }
-            entry.error = ""
-          }
-        }
-
-        nextModel[name] = entry
-
-        if (__DEV__) {
-          if (!(name in nextModel)) {
-            console.error(
-              "Attempting to update a model value for name which was " +
-                "not part of the initial structure. There is a typo in " +
-                "your code or you forgot to include a model entry with " +
-                `name ${name}.`,
-            )
-          }
-        }
-      }
-
-      nextModel._validated = false
-      return nextModel
+      return changeModelValues(model, action.value)
     }
     case "validate": {
-      if (model._validated) {
-        return model
-      }
-
-      const nextModel = {...model}
-      const data = nextModel.$data()
-
-      for (const name in data) {
-        const entry: InternalModelEntry = {
-          ...nextModel[name],
-          error: null,
-        }
-
-        const {validate} = entry._utils
-        const {value} = nextModel[name]
-        if (validate) {
-          entry.error = validate(value, data)
-        } else if (isModelObject(value)) {
-          entry.error = value.$firstError()
-        }
-
-        nextModel[name] = entry
-      }
-
-      nextModel._validated = true
-      return nextModel
+      return validateModel(model)
     }
     default: {
       if (__DEV__) {
@@ -380,6 +320,87 @@ function reducer(model: InternalModel, action: ModelAction): InternalModel {
       return model
     }
   }
+}
+
+function changeModelValues(model: InternalModel, values: Record<any, any>) {
+  // Bail out of rendering if there are no values to update.
+  if (!len(values)) {
+    return model
+  }
+
+  const nextModel = {...model}
+  Object.keys(values).forEach(name => {
+    const entry = {...nextModel[name]} as InternalModelEntry
+    const {parse, validate} = entry._utils
+
+    let value = values[name]
+    if (parse) {
+      value = parse(value, entry.value)
+    } else if (isParseableInput(value)) {
+      value = parseInputValue(value)
+    }
+    entry.value = value
+
+    // Attempt to perform simple validation in place. Complex validation
+    // that requires other model properties can only be performed via the
+    // special validation methods.
+    if (validate) {
+      try {
+        entry.error = validate(entry.value, {})
+      } catch (err) {
+        if (__DEV__) {
+          console.error(err)
+        }
+        entry.error = ""
+      }
+    }
+
+    nextModel[name] = entry
+
+    if (__DEV__) {
+      if (!(name in nextModel)) {
+        console.error(
+          "Attempting to update a model value for name which was " +
+            "not part of the initial structure. There is a typo in " +
+            "your code or you forgot to include a model entry with " +
+            `name ${name}.`,
+        )
+      }
+    }
+  })
+
+  nextModel._validated = false
+
+  return nextModel
+}
+
+function validateModel(model: InternalModel) {
+  if (model._validated) {
+    return model
+  }
+
+  const nextModel = {...model}
+  const data = nextModel.$data()
+
+  Object.keys(data).forEach(name => {
+    const entry: InternalModelEntry = {
+      ...nextModel[name],
+      error: null,
+    }
+
+    const {validate} = entry._utils
+    const {value} = nextModel[name]
+    if (validate) {
+      entry.error = validate(value, data)
+    } else if (isModelObject(value)) {
+      entry.error = value.$firstError()
+    }
+
+    nextModel[name] = entry
+  })
+
+  nextModel._validated = true
+  return nextModel
 }
 
 function modelChangeAction(values: object): Action<"change", object> {
