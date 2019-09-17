@@ -22,7 +22,8 @@ type ModelAction = Action<"change", object> | Action<"validate">
 
 export interface ModelElement<
   T extends object = object,
-  K extends keyof T = any
+  K extends keyof T = any,
+  I = any
 > {
   /**
    * A custom parser for when value changes. It is called on initialization with
@@ -30,11 +31,11 @@ export interface ModelElement<
    * @param input Current input value.
    * @param prev The previous value.
    */
-  parse?(input: any, prev: T[K]): T[K]
+  parse?(input: I, prev: T[K]): T[K]
   /**
    * Undefined values are transformed into empty strings.
    */
-  value?: T[K]
+  value: T[K] extends string ? string | undefined : T[K]
   /**
    * Validates a model entry's value.
    * @param value Current value.
@@ -43,7 +44,7 @@ export interface ModelElement<
   validate?(value: T[K], modelValues: T): ValidationError
 }
 
-export interface ModelEntry<T = any> {
+export type ModelEntry<T = any, I = any> = {
   /**
    * Errors should not be accessed directly for vlidation via this property,
    * since it may not be in sync with the current value. Use the model's special
@@ -57,7 +58,7 @@ export interface ModelEntry<T = any> {
   /**
    * Changes a model entry's value.
    */
-  onChange: (input: ModelInput) => void
+  onChange: (input: I) => void
   /**
    * Model entry's current value.
    */
@@ -110,18 +111,24 @@ type ModelBase<T extends object> = {
   $validate(): Record<keyof T, ValidationError>
 }
 
-// Note that all special model props should start with a dollar sign.
 export type Model<T extends object> = ModelBase<T> &
   Required<
     {
-      [P in keyof T]: ModelEntry<
-        T[P] extends ModelElement<any> ? T[P]["value"] : T[P]
+      readonly [K in keyof T]: Readonly<
+        ModelEntry<
+          T[K] extends ModelElement<infer U> ? U : T[K],
+          T[K] extends ModelElement<any, any, infer U> ? U : any
+        >
       >
     }
   >
 
 type InternalModel<T extends object = object> = ModelBase<T> &
   Required<Record<keyof T, InternalModelEntry>> & {_validated: boolean}
+
+export type ModelInit<T extends object> = () => {
+  [K in keyof T]?: T[K] | ModelElement<T, K>
+}
 
 export interface ModelSettings<T = any> {
   /**
@@ -141,9 +148,7 @@ export interface ModelSettings<T = any> {
  * @param settings Model settings.
  */
 export function useModel<T extends object>(
-  initialStructure: () => Partial<
-    {[P in keyof T]: string | boolean | number | null | ModelElement<T, P>}
-  >,
+  initialStructure: ModelInit<T>,
   settings = {} as ModelSettings<T>,
 ): Model<T> {
   const forceUpdate = useForceUpdate()
