@@ -1,24 +1,13 @@
 import {useRef, useState} from "react"
-import {Action, Serializable, ValidationError} from "../utility"
+import {Serializable, ValidationError} from "../utility"
 import {isObject} from "../utility/assertions"
-import {isEmpty, len} from "../utility/collection"
 import {ParseableInput, parseInputValue} from "../utility/dom"
 import {useForceUpdate} from "./useForceUpdate"
 
 const MODEL_OBJECT_SYMBOL_TAG =
   typeof Symbol === "function" ? Symbol("model") : "$$model"
 
-const binderOnChangeNoopFunction = () => {
-  if (__DEV__) {
-    console.error(
-      "Called onChange on model entry with model instance bound ot its value",
-    )
-  }
-}
-
 export type ModelInput = ParseableInput | Serializable | Model<object>
-
-type ModelAction = Action<"change", object> | Action<"validate">
 
 export interface ModelElement<
   T extends object = object,
@@ -32,6 +21,14 @@ export interface ModelElement<
    * @param prev The previous value.
    */
   parse?(input: I, prev: T[K]): T[K]
+  /**
+   * Whether changes to the value will happen passively, without causing the
+   * owner component to render. Should be set to `true` for uncontrolled inputs.
+   *
+   * _Using this option improperly could possibly lead to modelled and rendered
+   * value mismatch._
+   */
+  passive?: boolean
   /**
    * Undefined values are transformed into empty strings.
    */
@@ -66,7 +63,7 @@ export type ModelEntry<T = any, I = any> = {
 }
 
 type InternalModelEntry = ModelEntry & {
-  _utils: Pick<ModelElement, "parse" | "validate">
+  _utils: Pick<ModelElement, "parse" | "passive" | "validate">
 }
 
 type ModelBase<T extends object> = {
@@ -81,11 +78,10 @@ type ModelBase<T extends object> = {
    */
   $data(): T
   /**
-   * Returns a list of model errors. While it does not cause a render, it
-   * revalidates all model entries on each call and may sometimes lead to
-   * performance issues, if called too frequently on large models.
+   * Performs validation and returns a list of model errors without forcing a
+   * component render.
    *
-   * If you would like to obtain the error list and re-render the component,
+   * If you would like to obtain the error list and render the component,
    * refer to `model.$validate()` method.
    */
   $errors(): Record<keyof T, ValidationError>
@@ -102,10 +98,11 @@ type ModelBase<T extends object> = {
    */
   $reset(): void
   /**
-   * Performs validation of model's data and updates errors for all entries,
-   * causing a re-render.
+   * Performs validation and returns a list of model errors while also forcing
+   * a component to render. This render will be forced regardless of the
+   * `passive` setting.
    *
-   * If you would like to obtain the error list, without re-rendering then
+   * If you would like to obtain the error list, without rendering then
    * refer to `model.$errors()` method.
    */
   $validate(): Record<keyof T, ValidationError>
@@ -124,7 +121,9 @@ export type Model<T extends object> = ModelBase<T> &
   >
 
 type InternalModel<T extends object = object> = ModelBase<T> &
-  Required<Record<keyof T, InternalModelEntry>> & {_validated: boolean}
+  Required<Record<keyof T, InternalModelEntry>> & {
+    _errors: Record<keyof T, ValidationError> | null
+  }
 
 type ModelPrimitive = string | boolean | number | null
 type ModelStructureValue<
@@ -138,20 +137,177 @@ export type ModelStructure<T extends object = any> = () => {
 
 export interface ModelSettings {
   /**
-   * A model entry to bind the current model instance to.
+   * Passive models don't cause renders when changed and can be used to model
+   * uncontrolled inputs. This setting can be overriden for each model entry
+   * individually in the initial structure.
    *
-   * The model is bound by mutating the binder's value, therefore not
-   * causing a render on higher level than necessary. Method calls on the
-   * binder's model such as `$reset`, `$validate`, etc. will also be called
-   * on any bound model and thus making them act as a single, big model.
+   * _This setting should be used with caution for it may lead to modelled and
+   * rendered data mismatch, if used improperly._
    */
-  binder?: ModelEntry
+  passive?: boolean
+}
+
+/**
+ * A model instance maps form and other values to a predefined object structure.
+ * @param initialStructure Initial model structure.
+ * @param settings Model settings.
+ */
+export function useModel<T extends object>(
+  initialStructure: ModelStructure<T>,
+  settings = {} as ModelSettings,
+): Model<T> {
+  const forceUpdate = useForceUpdate()
+  const latest = useRef<InternalModel<any>>(null as any)
+
+  if (!latest.current) {
+    const commit = () => {
+      latest.current = {...latest.current}
+      forceUpdate()
+    }
+
+    const modelSchema = initialStructure()
+    const newModel = {
+      _errors: null,
+
+      $change(values: object) {
+        const originalPassiveSetting = settings.passive
+        settings.passive = true
+
+        Object.keys(values).forEach(name => {
+          latest.current[name].onChange(values[name])
+
+          if (__DEV__) {
+            if (!(name in modelSchema)) {
+              console.error(
+                "Attempting to update a model value for name which was " +
+                  "not part of the initial structure. There is a typo in " +
+                  "your code or you forgot to include a model entry with " +
+                  `name ${name}.`,
+              )
+            }
+          }
+        })
+
+        settings.passive = originalPassiveSetting
+
+        if (!settings.passive) {
+          commit()
+        }
+      },
+      $data() {
+        const values: any = {}
+        Object.keys(modelSchema).forEach(name => {
+          values[name] = latest.current[name].value
+        })
+
+        return values
+      },
+      $errors() {
+        const cached = latest.current._errors
+        if (cached) {
+          return cached
+        }
+
+        const errors: Record<any, string> = {}
+        const data = latest.current.$data()
+
+        Object.keys(modelSchema).forEach(name => {
+          const entry: InternalModelEntry = {
+            ...latest.current[name],
+            error: null,
+          }
+
+          const {validate} = entry._utils
+          if (validate) {
+            const error = validate(entry.value, data)
+            entry.error = error
+
+            if (error) {
+              errors[name] = error
+            }
+          }
+
+          latest.current[name] = entry
+        })
+
+        latest.current._errors = errors
+
+        return errors
+      },
+      $firstError() {
+        return Object.values(this.$errors())[0]
+      },
+      $reset() {
+        latest.current = null as any
+        forceUpdate()
+      },
+      $validate() {
+        const errors = this.$errors()
+        commit()
+        return errors
+      },
+    } as InternalModel
+
+    // @ts-ignore Sneak in the model object symbol tag past the typings.
+    newModel[MODEL_OBJECT_SYMBOL_TAG] = MODEL_OBJECT_SYMBOL_TAG
+
+    Object.keys(modelSchema).forEach(name => {
+      newModel[name] = createModelEntry(
+        name,
+        modelSchema[name],
+        (input: any) => {
+          const entry = {...latest.current[name]} as InternalModelEntry
+          const {parse, passive, validate} = entry._utils
+
+          let value = input
+          if (parse) {
+            value = parse(value, entry.value)
+          } else if (isParseableInput(value)) {
+            value = parseInputValue(value)
+          }
+
+          if (entry.value !== value) {
+            entry.value = value
+
+            // Attempt to perform simple validation in place. Complex validation
+            // that requires other model properties can only be performed via the
+            // special validation methods.
+            if (validate) {
+              try {
+                entry.error = validate(entry.value, {})
+              } catch (err) {
+                if (__DEV__) {
+                  console.error(err)
+                }
+                entry.error = ""
+              }
+            }
+
+            latest.current[name] = entry
+            latest.current._errors = null
+
+            if (passive === undefined) {
+              if (!settings.passive) {
+                commit()
+              }
+            } else if (!passive) {
+              commit()
+            }
+          }
+        },
+      )
+    })
+
+    latest.current = newModel
+  }
+
+  return latest.current as any
 }
 
 function createModelEntry(
   name: string,
   element: ModelStructureValue,
-  dispatch: (action: ModelAction) => void,
+  onChange: (input: any) => void,
 ) {
   const utils: InternalModelEntry["_utils"] = {}
   let initialValue: any = element
@@ -159,15 +315,17 @@ function createModelEntry(
   if (isObject<ModelElement>(element)) {
     initialValue = element.value
 
-    utils.parse = element.parse
-    utils.validate = element.validate
+    const {parse, passive, validate} = element
+    utils.parse = parse
+    utils.validate = validate
+    utils.passive = passive
 
     // Run custom parser initially in order to allow
     // it to perform initialization on the value.
-    if (element.parse) {
+    if (parse) {
       // Parsers should not be called with undefined values.
       const value = initialValue === undefined ? "" : initialValue
-      initialValue = element.parse(value, value)
+      initialValue = parse(value, value)
 
       if (__DEV__) {
         if (initialValue === undefined) {
@@ -207,7 +365,7 @@ function createModelEntry(
 
   return {
     name,
-    onChange: v => dispatch(modelChangeAction({[name]: v})),
+    onChange,
     // Allowing undefined values plays badly with the way that React
     // determines whether an input is controlled or uncontrolled.
     value: initialValue === undefined ? "" : initialValue,
@@ -215,221 +373,11 @@ function createModelEntry(
   } as InternalModelEntry
 }
 
-/**
- * A model instance maps form and other values to a predefined object structure.
- * @param initialStructure Initial model structure.
- * @param settings Model settings.
- */
-export function useModel<T extends object>(
-  initialStructure: ModelStructure<T>,
-  settings = {} as ModelSettings,
-): Model<T> {
-  const forceUpdate = useForceUpdate()
-  const model = useRef({} as InternalModel)
-
-  if (isEmpty(model.current)) {
-    const dispatch = (action: ModelAction) => {
-      const nextState = reducer(model.current, action)
-      // Bail out similarly to how useReducer would do it.
-      if (nextState === model.current) {
-        return
-      }
-
-      model.current = nextState
-      forceUpdate()
-    }
-
-    const modelSchema = initialStructure()
-    const newModel = {
-      $change(values: T) {
-        dispatch(modelChangeAction(values))
-      },
-      $data() {
-        const values: any = {}
-        Object.keys(modelSchema).forEach(name => {
-          const currentValue = this[name].value
-          // Retrieve data of nested models instead of the model itself.
-          values[name] = isModelObject(currentValue)
-            ? currentValue.$data()
-            : currentValue
-        })
-
-        return values
-      },
-      $errors() {
-        const validated = validateModel(this)
-
-        const errors: any = {}
-        Object.keys(modelSchema).forEach(name => {
-          const currentError = validated[name as any].error
-          if (currentError) {
-            errors[name] = currentError
-          }
-        })
-
-        return errors
-      },
-      $firstError() {
-        return Object.values(this.$errors())[0]
-      },
-      $reset() {
-        Object.keys(modelSchema).forEach(name => {
-          if (isModelObject(this[name].value)) {
-            this[name].value.$reset()
-          }
-        })
-
-        model.current = {} as InternalModel
-        forceUpdate()
-      },
-      $validate() {
-        dispatch({type: "validate", value: null})
-        return this.$errors()
-      },
-    } as InternalModel<any>
-    // @ts-ignore Sneak in the model object symbol tag past the typings.
-    newModel[MODEL_OBJECT_SYMBOL_TAG] = MODEL_OBJECT_SYMBOL_TAG
-
-    Object.keys(modelSchema).forEach(name => {
-      newModel[name] = createModelEntry(name, modelSchema[name], dispatch)
-    })
-
-    model.current = newModel
-  }
-
-  if (settings.binder) {
-    settings.binder.value = model.current as any
-    // Should not allow direct change to binder's value.
-    settings.binder.onChange = binderOnChangeNoopFunction
-  }
-  return model.current as any
-}
-
-function reducer(model: InternalModel, action: ModelAction): InternalModel {
-  switch (action.type) {
-    case "change": {
-      return changeModelValues(model, action.value)
-    }
-    case "validate": {
-      return validateModel(model)
-    }
-    default: {
-      if (__DEV__) {
-        throw "Dispatched invalid model action"
-      }
-      return model
-    }
-  }
-}
-
-function changeModelValues(model: InternalModel, values: Record<any, any>) {
-  // Bail out of rendering if there are no values to update.
-  if (!len(values)) {
-    return model
-  }
-
-  const nextModel = {...model}
-  Object.keys(values).forEach(name => {
-    const entry = {...nextModel[name]} as InternalModelEntry
-    const {parse, validate} = entry._utils
-
-    let value = values[name]
-    if (parse) {
-      value = parse(value, entry.value)
-    } else if (isParseableInput(value)) {
-      value = parseInputValue(value)
-    }
-    entry.value = value
-
-    // Attempt to perform simple validation in place. Complex validation
-    // that requires other model properties can only be performed via the
-    // special validation methods.
-    if (validate) {
-      try {
-        entry.error = validate(entry.value, {})
-      } catch (err) {
-        if (__DEV__) {
-          console.error(err)
-        }
-        entry.error = ""
-      }
-    }
-
-    nextModel[name] = entry
-
-    if (__DEV__) {
-      if (!(name in nextModel)) {
-        console.error(
-          "Attempting to update a model value for name which was " +
-            "not part of the initial structure. There is a typo in " +
-            "your code or you forgot to include a model entry with " +
-            `name ${name}.`,
-        )
-      }
-    }
-  })
-
-  nextModel._validated = false
-
-  return nextModel
-}
-
-function validateModel(model: InternalModel) {
-  if (model._validated) {
-    return model
-  }
-
-  const nextModel = {...model}
-  const data = nextModel.$data()
-
-  Object.keys(data).forEach(name => {
-    const entry: InternalModelEntry = {
-      ...nextModel[name],
-      error: null,
-    }
-
-    const {validate} = entry._utils
-    const {value} = nextModel[name]
-    if (validate) {
-      entry.error = validate(value, data)
-    } else if (isModelObject(value)) {
-      entry.error = value.$firstError()
-    }
-
-    nextModel[name] = entry
-  })
-
-  nextModel._validated = true
-  return nextModel
-}
-
-function modelChangeAction(values: object): Action<"change", object> {
-  // Replace SyntheticEvents with their native representations. On one hand this
-  // is due to the fact that the default parser works best with native events,
-  // while on the other hand SyntheticEvents have to be persisted anyway since
-  // that the update can be delayed at any time and the SyntheticEvent object
-  // could be cleaned up and reused.
-  Object.keys(values).forEach(
-    name => (values[name] = extractNativeEvent(values[name])),
-  )
-
-  return {type: "change", value: values}
-}
-
 function extractNativeEvent(input: any) {
   if (input && typeof input.nativeEvent === "object") {
     return input.nativeEvent
   }
   return input
-}
-
-function isModelObject<T extends object = object>(val: any): val is Model<T> {
-  return (
-    isObject<any>(val) &&
-    MODEL_OBJECT_SYMBOL_TAG in val &&
-    // Works perfectly fine without typings in javascript.
-    val[MODEL_OBJECT_SYMBOL_TAG] === MODEL_OBJECT_SYMBOL_TAG
-  )
 }
 
 function isParseableInput(input: any): input is ParseableInput {
@@ -440,11 +388,23 @@ function isParseableInput(input: any): input is ParseableInput {
   return input instanceof Element || input.target instanceof Element
 }
 
+export function isModelObject<T extends object = object>(
+  val: any,
+): val is Model<T> {
+  return (
+    isObject<any>(val) &&
+    MODEL_OBJECT_SYMBOL_TAG in val &&
+    // Works perfectly fine without typings in javascript.
+    val[MODEL_OBJECT_SYMBOL_TAG] === MODEL_OBJECT_SYMBOL_TAG
+  )
+}
+
 // =============================================================================
 
 type InputValueInit = ParseableInput | Serializable
 
 /**
+ * THIS HOOK MAY BE UNSTABLE FOR PRODUCTION USE.
  * Model for a single input value.
  *
  * Can be linked to an entry of useModel. If so then it will passively update
