@@ -48,10 +48,6 @@ describe("Model hook", () => {
     it("converts undefined values to empty string", () => {
       expect(model.test3.value).toBe("")
     })
-
-    it("calls custom parsers on initialization", () => {
-      expect(model.test4.value).toBe(42)
-    })
   })
 
   describe("Passive settings", () => {

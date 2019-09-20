@@ -320,24 +320,6 @@ function createModelEntry(
     utils.validate = validate
     utils.passive = passive
 
-    // Run custom parser initially in order to allow
-    // it to perform initialization on the value.
-    if (parse) {
-      // Parsers should not be called with undefined values.
-      const value = initialValue === undefined ? "" : initialValue
-      initialValue = parse(value, value)
-
-      if (__DEV__) {
-        if (initialValue === undefined) {
-          console.error(
-            `The initial call to a model parser with name [${name}] ` +
-              "returned undefined. You have probably forgot to " +
-              "return a value.",
-          )
-        }
-      }
-    }
-
     if (__DEV__) {
       const supportedProps = ["parse", "validate", "value"]
       for (const key in element) {
