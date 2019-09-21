@@ -120,9 +120,10 @@ export type Model<T extends object> = ModelBase<T> &
     }
   >
 
-type InternalModel<T extends object = object> = ModelBase<T> &
-  Required<Record<keyof T, InternalModelEntry>> & {
-    _errors: Record<keyof T, ValidationError> | null
+type InternalModel = ModelBase<any> &
+  Required<Record<any, InternalModelEntry>> & {
+    _data: object | null
+    _errors: Record<any, ValidationError> | null
   }
 
 type ModelPrimitive = string | boolean | number | null
@@ -157,7 +158,7 @@ export function useModel<T extends object>(
   settings = {} as ModelSettings,
 ): Model<T> {
   const forceUpdate = useForceUpdate()
-  const latest = useRef<InternalModel<any>>(null as any)
+  const latest = useRef<InternalModel>(null as any)
 
   if (!latest.current) {
     const commit = () => {
@@ -167,14 +168,16 @@ export function useModel<T extends object>(
 
     const modelSchema = initialStructure()
     const newModel = {
+      _data: null,
       _errors: null,
 
       $change(values: object) {
+        const model = latest.current
         const originalPassiveSetting = settings.passive
         settings.passive = true
 
         Object.keys(values).forEach(name => {
-          latest.current[name].onChange(values[name])
+          model[name].onChange(values[name])
 
           if (__DEV__) {
             if (!(name in modelSchema)) {
@@ -195,25 +198,33 @@ export function useModel<T extends object>(
         }
       },
       $data() {
-        const values: any = {}
-        Object.keys(modelSchema).forEach(name => {
-          values[name] = latest.current[name].value
-        })
-
-        return values
-      },
-      $errors() {
-        const cached = latest.current._errors
+        const model = latest.current
+        const cached = model._data
         if (cached) {
           return cached
         }
 
-        const errors: Record<any, string> = {}
-        const data = latest.current.$data()
+        const values = {}
+        Object.keys(modelSchema).forEach(name => {
+          values[name] = model[name].value
+        })
+
+        model._data = values
+        return values
+      },
+      $errors() {
+        const model = latest.current
+        const cached = model._errors
+        if (cached) {
+          return cached
+        }
+
+        const errors = {}
+        const data = model.$data()
 
         Object.keys(modelSchema).forEach(name => {
           const entry: InternalModelEntry = {
-            ...latest.current[name],
+            ...model[name],
             error: null,
           }
 
@@ -227,11 +238,10 @@ export function useModel<T extends object>(
             }
           }
 
-          latest.current[name] = entry
+          model[name] = entry
         })
 
-        latest.current._errors = errors
-
+        model._errors = errors
         return errors
       },
       $firstError() {
@@ -256,7 +266,8 @@ export function useModel<T extends object>(
         name,
         modelSchema[name],
         (input: any) => {
-          const entry = {...latest.current[name]} as InternalModelEntry
+          const model = latest.current
+          const entry = {...model[name]} as InternalModelEntry
           const {parse, passive, validate} = entry._utils
 
           let value = input
@@ -283,8 +294,9 @@ export function useModel<T extends object>(
               }
             }
 
-            latest.current[name] = entry
-            latest.current._errors = null
+            model[name] = entry
+            model._errors = null
+            model._data = null
 
             if (passive === undefined) {
               if (!settings.passive) {
@@ -310,7 +322,7 @@ function createModelEntry(
   onChange: (input: any) => void,
 ) {
   const utils: InternalModelEntry["_utils"] = {}
-  let initialValue: any = element
+  let initialValue = element
 
   if (isObject<ModelElement>(element)) {
     initialValue = element.value

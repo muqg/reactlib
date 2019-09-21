@@ -168,24 +168,6 @@ describe("Model hook", () => {
       })
     })
 
-    it.each(["$errors", "$validate"])(
-      "returns cached errors when %s() is called more than once",
-      method => {
-        const model = renderHook(() =>
-          useModel<{test: number}>(() => ({
-            test: {
-              value: 12,
-              validate: () => "error",
-            },
-          })),
-        )
-
-        const errors = model.result.current[method]()
-
-        expect(model.result.current[method]()).toBe(errors)
-      },
-    )
-
     it("error list only includes names of invalid values", () => {
       const model = renderHook(() =>
         useModel<{test: string; test2: number}>(() => ({
@@ -333,14 +315,6 @@ describe("Model hook", () => {
       expect(model.validated.error).toBe("error")
     })
 
-    it("clears error cache on value change", () => {
-      model.$errors()
-      model.simple.onChange(123)
-
-      // @ts-ignore _errors is only available for InternalModel type.
-      expect(model._errors).toBe(null)
-    })
-
     it("does not mutate entries on value change", () => {
       const entryBeforeChange = model.simple
       model.simple.onChange(123)
@@ -448,5 +422,57 @@ describe("Model hook", () => {
 
       expect(model.result.current.$data()).toEqual({test: 2})
     })
+  })
+
+  describe("Caching", () => {
+    let model: RenderHookResult<any, Model<{test: number}>>
+
+    beforeEach(() => {
+      model = renderHook(() =>
+        useModel(() => ({
+          test: 12,
+        })),
+      )
+    })
+
+    it.each(["$errors", "$validate"])(
+      "returns cached errors when %s() is called more than once",
+      method => {
+        const errors = model.result.current[method]()
+        expect(model.result.current[method]()).toBe(errors)
+      },
+    )
+
+    it("returns cached data when serialized more than once", () => {
+      const data = model.result.current.$data()
+      expect(model.result.current.$data()).toBe(data)
+    })
+
+    it("clears error cache on value change", () => {
+      const errorsBeforeChange = model.result.current.$errors()
+      model.result.current.test.onChange(123)
+
+      const errors = model.result.current.$errors()
+      expect(errors).not.toBe(errorsBeforeChange)
+    })
+
+    it("clears data cache on value change", () => {
+      const dataBeforeChange = model.result.current.$data()
+      model.result.current.test.onChange(123)
+
+      const data = model.result.current.$data()
+      expect(data).not.toBe(dataBeforeChange)
+    })
+
+    it.each([["error", "$errors"], ["data", "$data"]])(
+      "clears %s cache on $change() method call",
+      (_, method) => {
+        const errorsBeforeChange = model.result.current[method]()
+        model.result.current.$change({test: 123})
+
+        const errors = model.result.current[method]()
+        expect(errors).not.toBe(errorsBeforeChange)
+      },
+    )
   })
 })
