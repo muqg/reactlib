@@ -8,9 +8,9 @@ import {createFetcher} from "./createFetcher"
  */
 export const imageResource = createFetcher(
   (src: string) =>
-    new Promise((resolve, reject) => {
+    new Promise<string>((resolve, reject) => {
       const image = new Image()
-      image.onload = resolve
+      image.onload = () => resolve(src)
       image.onerror = reject
       image.src = src
     }),
