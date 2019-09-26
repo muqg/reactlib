@@ -10,7 +10,7 @@ describe("DialogBox component", () => {
     cleanup()
 
     closeFn = jest.fn()
-    dialog = render(<DialogBox children={null} onClose={closeFn} />).baseElement
+    dialog = render(<DialogBox onClose={closeFn}>{null}</DialogBox>).baseElement
       .children[1]
   })
 

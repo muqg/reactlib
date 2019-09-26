@@ -1,3 +1,9 @@
+/* eslint-disable */
+/**
+ * eslint fires way too many errors due to unnecessary escapes in the regular
+ * expression pattern.
+ */
+
 /**
  * Regular expression pattern to match a valid phone number.
  *

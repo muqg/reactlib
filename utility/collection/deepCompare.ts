@@ -7,8 +7,8 @@ import {isEmpty} from "./isEmpty"
  * @param objB The second object to compare.
  */
 function deepCompare(objA: object, objB: object): boolean {
-  for (let a in objA) {
-    for (let b in objB) {
+  for (const a in objA) {
+    for (const b in objB) {
       // @ts-ignore
       const itemA = objA[a]
       // @ts-ignore

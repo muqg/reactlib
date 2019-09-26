@@ -155,7 +155,7 @@ function useResource<T extends object>({
 
       console.error(ex)
       setTimeout(async () => {
-        let message = (await call(catchCb, ex, resource)) || "Error"
+        const message = (await call(catchCb, ex, resource)) || "Error"
         notify(message)
       })
     }
@@ -163,9 +163,9 @@ function useResource<T extends object>({
 
   return {
     model,
+    save,
 
     isWorking: workerTask.isRunning,
-    save: save,
     data: model.$data(),
     delete: del,
   }

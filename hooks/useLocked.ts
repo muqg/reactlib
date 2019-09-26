@@ -1,4 +1,10 @@
-﻿import {useRef} from "react"
+﻿/* eslint-disable require-atomic-updates */
+/**
+ * A race condition is impossible to occur due to the fact that the function
+ * cannot be called once it is already running.
+ */
+
+import {useRef} from "react"
 
 /**
  * Locks a function by allowing it to only be called once at a time. Once called

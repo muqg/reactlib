@@ -10,7 +10,7 @@ function only<T extends object, K extends keyof T>(
   const collection = col as any
   const res = {} as any
 
-  for (let key of keys) res[key] = collection[key]
+  for (const key of keys) res[key] = collection[key]
 
   return res
 }

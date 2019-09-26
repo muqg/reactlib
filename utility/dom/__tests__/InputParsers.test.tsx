@@ -11,7 +11,7 @@ describe("parseNoNewlineString() parser", () => {
       done()
     }
 
-    let element = React.createRef<HTMLInputElement>()
+    const element = React.createRef<HTMLInputElement>()
     render(<input ref={element} onClick={onClick} value="test" />)
 
     fireEvent.click(element.current!)

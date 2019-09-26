@@ -12,7 +12,7 @@ function pull<T = any>(col: object, key: string): T {
   const split = key.split(".")
 
   let result: any = col || null
-  for (let k of split) {
+  for (const k of split) {
     if (isObject<Dict<any>>(result)) result = result[k] || null
   }
 

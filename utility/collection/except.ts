@@ -10,7 +10,7 @@ function except<T extends object, K extends keyof T>(
   const collection = col as any
   const res = {} as any
 
-  for (let key in collection) {
+  for (const key in collection) {
     if (keys.indexOf(key as K) === -1) res[key] = collection[key]
   }
 

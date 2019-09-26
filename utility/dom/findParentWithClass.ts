@@ -3,17 +3,16 @@
  * @param element The root element to start searching from.
  * @param className The classname to match.
  */
-function findParentWithClass<T extends HTMLElement = HTMLElement>(
+export function findParentWithClass<T extends HTMLElement = HTMLElement>(
   element: HTMLElement,
   className: string,
 ): T | null {
   const parent = element.parentElement
   if (parent && parent.nodeName !== "HTML") {
-    if (parent.classList && parent.classList.contains(className))
+    if (parent.classList && parent.classList.contains(className)) {
       return parent as T
-    else return findParentWithClass(parent, className) as T
+    }
+    return findParentWithClass(parent, className) as T
   }
   return null
 }
-
-export {findParentWithClass}

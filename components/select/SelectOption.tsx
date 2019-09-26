@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import * as React from "react"
 import {findDOMNode} from "react-dom"
 import {COLOR_MAIN, css, styled} from "../../styles"

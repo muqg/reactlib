@@ -2,7 +2,7 @@
 global.__DEV__ = false
 process.env.NODE_ENV = "production"
 
-if (typeof document !== undefined) {
+if (typeof document !== "undefined") {
   global.document.execCommand = () => {}
 
   // Fixes some material-ui testing issues where document.createRange is
@@ -18,7 +18,7 @@ if (typeof document !== undefined) {
   })
 }
 
-if (typeof window !== undefined) {
+if (typeof window !== "undefined") {
   global.requestAnimationFrame = callback => {
     setTimeout(callback)
   }

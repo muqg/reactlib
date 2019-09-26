@@ -11,7 +11,7 @@ export function shuffle<T extends any[]>(arr: T): T {
     const randomIndex = Math.floor(Math.random() * currentIndex)
     currentIndex -= 1
 
-    let temporaryValue = newArray[currentIndex]
+    const temporaryValue = newArray[currentIndex]
     newArray[currentIndex] = newArray[randomIndex]
     newArray[randomIndex] = temporaryValue
   }

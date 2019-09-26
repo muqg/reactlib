@@ -11,7 +11,7 @@ describe("Dialog component", () => {
     cleanup()
 
     closeFn = jest.fn()
-    dialog = render(<Dialog children={() => null} onClose={closeFn} />)
+    dialog = render(<Dialog onClose={closeFn}>{null as any}</Dialog>)
       .baseElement.children[1]
   })
 

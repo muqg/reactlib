@@ -85,32 +85,30 @@ interface Props {
   onClick?: () => void
 }
 
-class MultipleSelectOption extends React.PureComponent<Props & StyleProps> {
-  render() {
-    return (
-      <Container
-        active={this.props.active}
-        height={this.props.height}
-        multiple={this.props.multiple}
+function MultipleSelectOption(props: Props & StyleProps) {
+  return (
+    <Container
+      active={props.active}
+      height={props.height}
+      multiple={props.multiple}
+    >
+      <input
+        checked={props.selected}
+        type={props.type}
+        name={props.name}
+        value={props.value}
+        onClick={props.onClick}
+      />
+      <Content
+        active={props.active}
+        className={props.className}
+        height={props.height}
+        multiple={props.multiple}
       >
-        <input
-          checked={this.props.selected}
-          type={this.props.type}
-          name={this.props.name}
-          value={this.props.value}
-          onClick={this.props.onClick}
-        />
-        <Content
-          active={this.props.active}
-          className={this.props.className}
-          height={this.props.height}
-          multiple={this.props.multiple}
-        >
-          {this.props.children || this.props.value}
-        </Content>
-      </Container>
-    )
-  }
+        {props.children || props.value}
+      </Content>
+    </Container>
+  )
 }
 
 export default MultipleSelectOption

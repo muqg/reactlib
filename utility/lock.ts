@@ -1,3 +1,9 @@
+/* eslint-disable require-atomic-updates */
+/**
+ * A race condition is impossible to occur due to the fact that the function
+ * cannot be called once it is already running.
+ */
+
 /**
  * Decorates a function, allowing it be called once and then
  * disregard any following calls until the first one returns.

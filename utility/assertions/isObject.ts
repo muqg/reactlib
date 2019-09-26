@@ -22,8 +22,10 @@ function isObject<T extends object>(
 ): value is T
 
 function isObject(value: any, constructor?: new () => {}) {
-  if (constructor) return value instanceof constructor
-  else return typeof value === "object" && !isNull(value)
+  if (constructor) {
+    return value instanceof constructor
+  }
+  return typeof value === "object" && !isNull(value)
 }
 
 export {isObject}
