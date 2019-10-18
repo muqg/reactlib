@@ -1,7 +1,6 @@
 import * as React from "react"
 import {Button, DialogBoxProps, DialogProps} from ".."
 import {styled} from "../../styles"
-import {isUndefined} from "../../utility/assertions"
 import {CHAR_CODE_ENTER} from "../../utility/dom"
 import {call} from "../../utility/function"
 import {DialogBox} from "./DialogBox"
@@ -51,7 +50,7 @@ const ConfirmationDialog = ({
 }: Props) => {
   const accept = () => {
     const res = call(props.onAccept)
-    const success = !isUndefined(res) ? res : true
+    const success = res !== undefined ? res : true
 
     if (success) {
       call(props.onClose)

@@ -1,5 +1,3 @@
-import {isNull} from "."
-
 /**
  * Checks whether a value is an object.
  * @param value The value to be checked.
@@ -25,7 +23,7 @@ function isObject(value: any, constructor?: new () => {}) {
   if (constructor) {
     return value instanceof constructor
   }
-  return typeof value === "object" && !isNull(value)
+  return typeof value === "object" && value !== null
 }
 
 export {isObject}

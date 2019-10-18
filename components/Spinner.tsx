@@ -2,7 +2,6 @@ import * as React from "react"
 import spinnerImage from "../img/tail-spinner.svg"
 import {styled} from "../styles"
 import {Size} from "../utility"
-import {isUndefined} from "../utility/assertions"
 
 const SIZE_FACTOR = 24
 
@@ -14,7 +13,7 @@ const StyledImage = styled.img`
   margin: auto;
   width: ${p => p.size! * SIZE_FACTOR}px;
 
-  ${p => !isUndefined(p.visible) && !p.visible && `visibility: hidden;`}
+  ${p => p.visible !== undefined && !p.visible && `visibility: hidden;`}
 `
 StyledImage.defaultProps = {
   size: Size.Large,
@@ -29,8 +28,6 @@ interface Props extends StyleProps {
   className?: string
 }
 
-const Spinner = (props: Props) => {
+export const Spinner = (props: Props) => {
   return <StyledImage {...props} src={spinnerImage} />
 }
-
-export {Spinner}

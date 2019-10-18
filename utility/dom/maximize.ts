@@ -1,5 +1,3 @@
-import {isUndefined} from "../assertions"
-
 /**
  * Sets an element to its maximum height or removes the inline styling for its height.
  * @param element The target element.
@@ -19,7 +17,7 @@ function maximize(element: HTMLElement, height: boolean, width?: boolean) {
   requestAnimationFrame(() => {
     element.style.height = height ? element.scrollHeight + "px" : ""
 
-    if (!isUndefined(width))
+    if (width !== undefined)
       element.style.width = width ? element.scrollWidth + "px" : ""
   })
 }

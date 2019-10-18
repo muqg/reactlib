@@ -1,5 +1,5 @@
 import {Hotkey} from "."
-import {isObject, isType, isUndefined} from "../assertions"
+import {isObject, isType} from "../assertions"
 
 /**
  * Determines whether a keyboard event corresponds to a key being pressed.
@@ -8,7 +8,7 @@ import {isObject, isType, isUndefined} from "../assertions"
  * @param event The keyboard event.
  * @param allowInsideInputs Whether to allow keypress inside input elements.
  */
-function isKeyPressed(
+export function isKeyPressed(
   hotkey: Hotkey,
   event: KeyboardEvent | React.KeyboardEvent,
   allowInsideInputs = false,
@@ -31,11 +31,9 @@ function isKeyPressed(
     (hotkey.code === event.code ||
       hotkey.eventKey === event.key ||
       hotkey.keyCode === event.keyCode) &&
-    (isUndefined(hotkey.alt) || hotkey.alt === event.altKey) &&
-    (isUndefined(hotkey.ctrl) || hotkey.ctrl === event.ctrlKey) &&
-    (isUndefined(hotkey.meta) || hotkey.meta === event.metaKey) &&
-    (isUndefined(hotkey.shift) || hotkey.shift === event.shiftKey)
+    (hotkey.alt === undefined || hotkey.alt === event.altKey) &&
+    (hotkey.ctrl === undefined || hotkey.ctrl === event.ctrlKey) &&
+    (hotkey.meta === undefined || hotkey.meta === event.metaKey) &&
+    (hotkey.shift === undefined || hotkey.shift === event.shiftKey)
   )
 }
-
-export {isKeyPressed}

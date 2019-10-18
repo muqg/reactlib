@@ -1,5 +1,5 @@
 import {Dict} from "../utility"
-import {isArray, isString, isUndefined} from "../utility/assertions"
+import {isArray, isString} from "../utility/assertions"
 import {pull} from "../utility/collection"
 import {format, FormatArgument, plural} from "../utility/string"
 
@@ -38,7 +38,7 @@ function translate<T extends any = string>(
       }
     }
 
-    if (!isUndefined(options.count)) {
+    if (options.count !== undefined) {
       result = plural(result, options.count)
     }
   }
