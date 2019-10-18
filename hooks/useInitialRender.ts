@@ -1,15 +1,15 @@
-﻿import {useRef} from "react"
+﻿import {useLayoutEffect, useRef} from "react"
 
 /**
- * Returns a boolean indicating whether it is the initial render of the component.
+ * Returns a boolean indicating whether it is the initial render
+ * of the component.
  */
-function useInitialRender() {
-  const ref = useRef(true)
-  const initialRender = ref.current
+export function useInitialRender() {
+  const initial = useRef(true)
 
-  ref.current = false
+  useLayoutEffect(() => {
+    initial.current = false
+  }, [])
 
-  return initialRender
+  return initial.current
 }
-
-export {useInitialRender}
