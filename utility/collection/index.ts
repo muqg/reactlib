@@ -1,5 +1,4 @@
 export {clean} from "./clean"
-export {deepCompare} from "./deepCompare"
 export {except} from "./except"
 export {isEmpty} from "./isEmpty"
 export {isNullOrEmpty} from "./isNullOrEmpty"
