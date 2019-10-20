@@ -1,6 +1,6 @@
 import {isEmpty} from "../collection"
 import {RequestMethod} from "../enums"
-import {createQuery} from "./createQuery"
+import {buildUrlQuery} from "./buildUrlQuery"
 
 export type RequestOptions = Omit<RequestInit, "body" | "method">
 
@@ -90,7 +90,7 @@ export function request<T = any>(
     if (!isEmpty(data)) {
       const index = url.indexOf("?")
       const cleanURL = index >= 0 ? url.substring(0, index) : url
-      url = cleanURL + "?" + createQuery(data)
+      url = cleanURL + "?" + buildUrlQuery(data)
     }
   } else {
     headers.set("Content-Type", "application/json")

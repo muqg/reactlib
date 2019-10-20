@@ -1,5 +1,7 @@
 /**
- * Parses a valid query string into object of parameters.
+ * Parses a valid query string into object of parameters. Meant to be used as
+ * a counterpart to `createQuery()`.
+ *
  * @param query The query string to be parsed.
  */
 export function parseQuery(query: string): object {

@@ -1,3 +1,4 @@
+export {buildUrlQuery} from "./buildUrlQuery"
 export {createEndpoint} from "./createEndpoint"
 export {createQuery} from "./createQuery"
 export * from "./FetchRequests"
