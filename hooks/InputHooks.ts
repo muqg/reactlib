@@ -155,7 +155,7 @@ export interface ModelSettings {
  */
 export function useModel<T extends object>(
   initialStructure: ModelStructure<T>,
-  settings = {} as ModelSettings,
+  settings = {} as ModelSettings
 ): Model<T> {
   const forceUpdate = useForceUpdate()
   const latest = useRef<InternalModel>(null as any)
@@ -185,7 +185,7 @@ export function useModel<T extends object>(
                 "Attempting to update a model value for name which was " +
                   "not part of the initial structure. There is a typo in " +
                   "your code or you forgot to include a model entry with " +
-                  `name ${name}.`,
+                  `name ${name}.`
               )
             }
           }
@@ -270,7 +270,7 @@ export function useModel<T extends object>(
           const entry = {...model[name]} as InternalModelEntry
           const {parse, passive, validate} = entry._utils
 
-          let value = input
+          let value = extractNativeEvent(input)
           if (parse) {
             value = parse(value, entry.value)
           } else if (isParseableInput(value)) {
@@ -306,7 +306,7 @@ export function useModel<T extends object>(
               commit()
             }
           }
-        },
+        }
       )
     })
 
@@ -319,7 +319,7 @@ export function useModel<T extends object>(
 function createModelEntry(
   name: string,
   element: ModelStructureValue,
-  onChange: (input: any) => void,
+  onChange: (input: any) => void
 ) {
   const utils: InternalModelEntry["_utils"] = {}
   let initialValue = element
@@ -333,14 +333,14 @@ function createModelEntry(
     utils.passive = passive
 
     if (__DEV__) {
-      const supportedProps = ["parse", "validate", "value"]
+      const supportedProps = ["parse", "passive", "validate", "value"]
       for (const key in element) {
         if (!supportedProps.includes(key)) {
           console.error(
             `Model received an object or array at key '${name}' which ` +
               `contains an unsupported property ${key}. If you are ` +
               "trying to model an object or array value, then pass it " +
-              "as the value property of a ModelElement object.",
+              "as the value property of a ModelElement object."
           )
         }
       }
@@ -352,7 +352,7 @@ function createModelEntry(
       console.warn(
         "The model should not contain entries with names starting with " +
           "a dollar sign $, which is used to designate special model " +
-          "properties and may therefore lead to unexpected behaviour.",
+          "properties and may therefore lead to unexpected behaviour."
       )
     }
   }
@@ -383,7 +383,7 @@ function isParseableInput(input: any): input is ParseableInput {
 }
 
 export function isModelObject<T extends object = object>(
-  val: any,
+  val: any
 ): val is Model<T> {
   return (
     isObject<any>(val) &&
@@ -409,7 +409,7 @@ type InputValueInit = ParseableInput | Serializable
  * @param data A valid model entry or the initial modelling structure.
  */
 export function useInputValue<T extends InputValueInit | ModelEntry>(
-  init: T,
+  init: T
 ): T extends ModelEntry
   ? ModelEntry
   : {onChange: ModelEntry["onChange"]; value: T} {
