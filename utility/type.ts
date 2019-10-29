@@ -92,11 +92,18 @@ export interface ResourceObject<T extends string | number = number> {
   id: T
 }
 
-export interface Action<T extends string = string, V = any> {
+export type Action<
+  T extends string = string,
+  V = any,
+  U extends object = object
+> = {
   type: T
   value: V
-}
+} & {[K in keyof U]: U[K]}
 
+/**
+ * @deprecated Use Action instead.
+ */
 export interface ActionWithOptions<
   T extends string = string,
   V = any,
