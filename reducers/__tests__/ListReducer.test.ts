@@ -14,6 +14,13 @@ describe("listReducer()", () => {
     expect(callWithInvalidActionType).toThrow()
   })
 
+  it("does not crash when accidentally called with undefined list value", () => {
+    const callWithUndefindListValue = () =>
+      listReducer(undefined as any, {type: "append", value: {}})
+
+    expect(callWithUndefindListValue).not.toThrow()
+  })
+
   describe("append action", () => {
     it("appends an element", () => {
       const item = {id: 227, text: ""}

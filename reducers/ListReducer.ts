@@ -34,7 +34,7 @@ export type ListReducer<T extends object = any> = (
 ) => T[]
 
 export function listReducer<T extends object = any>(
-  list: T[],
+  list: T[] = [],
   action: ListReducerAction<T>
 ) {
   switch (action.type) {
