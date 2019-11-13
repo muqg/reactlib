@@ -74,7 +74,12 @@ interface OwnProps {
 
 type Props = OwnProps & StyleProps
 
-function SandwichButton({active = false, color, size = 30, ...props}: Props) {
+export function SandwichButton({
+  active = false,
+  color,
+  size = 30,
+  ...props
+}: Props) {
   const theme = useTheme()
   color = color || theme.main || COLOR_DARK
 
@@ -98,10 +103,9 @@ function SandwichButton({active = false, color, size = 30, ...props}: Props) {
       color={color}
       onClick={handleClick}
       size={size}
+      title="Menu"
     >
-      <span />
+      <span role="presentation" />
     </StyledButton>
   )
 }
-
-export {SandwichButton}
