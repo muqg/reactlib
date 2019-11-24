@@ -37,7 +37,7 @@ interface Props {
    * the url to the uploaded file that will be used as src when adding the image
    * element to the editor.
    */
-  imageHandler?: (file: File) => string
+  imageHandler?: (file: File) => Promise<string>
 }
 
 const DefaultToolbar = ({children, fonts, imageHandler, ...props}: Props) => {
