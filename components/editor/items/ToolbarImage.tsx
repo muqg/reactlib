@@ -1,21 +1,21 @@
-import * as React from "react"
-import {ToolbarItem} from "../ToolbarItem"
+import React from "react"
 import {Editor} from "../../../utility/dom"
-import {TOOLBAR_SPRITESHEET} from "../Toolbar"
+import {ToolbarItem} from "../ToolbarItem"
 
 interface Props {
   /**
    * Callback to handle the added image file.
    */
-  handler: (file: File) => string
+  handler: (file: File) => Promise<string>
 }
 
-const ToolbarImage = (props: Props) => {
+export const ToolbarImage = (props: Props) => {
   return (
-    <ToolbarItem title="Insert image" backgroundImage={TOOLBAR_SPRITESHEET}>
+    <ToolbarItem title="Insert image">
       <label>
-        {/* TODO: Lib | Implement datatype. */}
         <input
+          accept=".jpg,.jpeg,.png"
+          hidden={true}
           type="file"
           datatype="*.*"
           onChange={e => onChange(e, props.handler)}
@@ -26,16 +26,14 @@ const ToolbarImage = (props: Props) => {
   )
 }
 
-function onChange(
+async function onChange(
   event: React.ChangeEvent<HTMLInputElement>,
-  handleImage: Props["handler"],
+  handleImage: Props["handler"]
 ) {
   const target = event.target as HTMLInputElement
   if (target.files) {
     const file = target.files[0]
 
-    Editor.insertImage(handleImage(file))
+    Editor.insertImage(await handleImage(file))
   }
 }
-
-export {ToolbarImage}
