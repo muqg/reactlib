@@ -1,4 +1,4 @@
-import {cleanup, fireEvent, render} from "@testing-library/react"
+import {fireEvent, render} from "@testing-library/react"
 import * as React from "react"
 import {DialogBox} from "../DialogBox"
 
@@ -7,8 +7,6 @@ describe("DialogBox component", () => {
   let dialog: Element
 
   beforeEach(() => {
-    cleanup()
-
     closeFn = jest.fn()
     dialog = render(<DialogBox onClose={closeFn}>{null}</DialogBox>).baseElement
       .children[1]

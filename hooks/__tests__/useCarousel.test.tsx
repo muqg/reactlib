@@ -1,6 +1,5 @@
-import {RenderHookResult, renderHook} from "@testing-library/react-hooks"
-import {cleanup} from "@testing-library/react"
-import {useCarousel, Carousel} from "../useCarousel"
+import {renderHook, RenderHookResult} from "@testing-library/react-hooks"
+import {Carousel, useCarousel} from "../useCarousel"
 
 type DataElement = {name: string}
 
@@ -19,10 +18,6 @@ describe("Carousel hook", () => {
     carousel = renderHook(({data}) => useCarousel({data}), {
       initialProps: {data: Items},
     })
-  })
-
-  afterEach(() => {
-    cleanup()
   })
 
   it("starts at 0 by default", () => {
@@ -73,7 +68,7 @@ describe("Carousel hook", () => {
         useCarousel({
           data: Items,
           start: 3,
-        }),
+        })
       )
 
       expect(carousel.result.current.index).toBe(3)
@@ -84,7 +79,7 @@ describe("Carousel hook", () => {
         useCarousel({
           data: Items,
           start: Items.length,
-        }),
+        })
       )
 
       expect(carousel.result.current.index).toBe(Items.length - 1)

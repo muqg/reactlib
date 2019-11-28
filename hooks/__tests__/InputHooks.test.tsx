@@ -1,10 +1,9 @@
-import {cleanup, fireEvent, render, RenderResult} from "@testing-library/react"
+import {fireEvent, render, RenderResult} from "@testing-library/react"
 import {renderHook, RenderHookResult} from "@testing-library/react-hooks"
 import React from "react"
 import {Model, useModel} from "../InputHooks"
 
 afterEach(() => {
-  cleanup()
   jest.clearAllMocks()
 })
 
@@ -31,7 +30,7 @@ describe("Model hook", () => {
             value: 1,
             parse: value => value * 42,
           },
-        })),
+        }))
       ).result.current
     })
 
@@ -59,7 +58,7 @@ describe("Model hook", () => {
           () => ({
             test: "",
           }),
-          {passive: true},
+          {passive: true}
         )
 
         mock()
@@ -106,7 +105,7 @@ describe("Model hook", () => {
               passive: true,
             },
           }),
-          {passive: false},
+          {passive: false}
         )
 
         mock()
@@ -143,7 +142,7 @@ describe("Model hook", () => {
           model[method]()
 
           expect(mock).toHaveBeenCalledTimes(1)
-        },
+        }
       )
 
       it("renders when $validate is called", () => {
@@ -176,7 +175,7 @@ describe("Model hook", () => {
             validate: () => "error",
           },
           test2: 11,
-        })),
+        }))
       ).result.current
 
       expect(model.$errors()).toEqual({test: "error"})
@@ -189,7 +188,7 @@ describe("Model hook", () => {
             value: "",
             validate: () => "error",
           },
-        })),
+        }))
       )
 
       const entryBeforeValidation = model.result.current.test
@@ -207,8 +206,8 @@ describe("Model hook", () => {
               validate: () => "error",
             },
           }),
-          {passive: true},
-        ),
+          {passive: true}
+        )
       )
 
       model.result.current.test.onChange("test")
@@ -224,7 +223,7 @@ describe("Model hook", () => {
           useModel(() => ({
             test: initialValue,
           })),
-        {initialProps: {initialValue: 1}},
+        {initialProps: {initialValue: 1}}
       )
 
       model.rerender({initialValue: 2})
@@ -365,7 +364,7 @@ describe("Model hook", () => {
             value: 1,
             passive: true,
           },
-        })),
+        }))
       )
     })
 
@@ -402,7 +401,7 @@ describe("Model hook", () => {
             value: [1, 2],
           },
           asd: "fgh",
-        })),
+        }))
       )
 
       expect(model.result.current.$data()).toEqual({test: [1, 2], asd: "fgh"})
@@ -415,7 +414,7 @@ describe("Model hook", () => {
             value: 1,
             passive: true,
           },
-        })),
+        }))
       )
 
       model.result.current.test.onChange(2)
@@ -431,7 +430,7 @@ describe("Model hook", () => {
       model = renderHook(() =>
         useModel(() => ({
           test: 12,
-        })),
+        }))
       )
     })
 
@@ -440,7 +439,7 @@ describe("Model hook", () => {
       method => {
         const errors = model.result.current[method]()
         expect(model.result.current[method]()).toBe(errors)
-      },
+      }
     )
 
     it("returns cached data when serialized more than once", () => {
@@ -464,15 +463,15 @@ describe("Model hook", () => {
       expect(data).not.toBe(dataBeforeChange)
     })
 
-    it.each([["error", "$errors"], ["data", "$data"]])(
-      "clears %s cache on $change() method call",
-      (_, method) => {
-        const errorsBeforeChange = model.result.current[method]()
-        model.result.current.$change({test: 123})
+    it.each([
+      ["error", "$errors"],
+      ["data", "$data"],
+    ])("clears %s cache on $change() method call", (_, method) => {
+      const errorsBeforeChange = model.result.current[method]()
+      model.result.current.$change({test: 123})
 
-        const errors = model.result.current[method]()
-        expect(errors).not.toBe(errorsBeforeChange)
-      },
-    )
+      const errors = model.result.current[method]()
+      expect(errors).not.toBe(errorsBeforeChange)
+    })
   })
 })

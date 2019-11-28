@@ -1,4 +1,4 @@
-import {cleanup, fireEvent, render, RenderResult} from "@testing-library/react"
+import {fireEvent, render, RenderResult} from "@testing-library/react"
 import * as React from "react"
 import {CHAR_CODE_ENTER} from "../../../utility/dom"
 import ConfirmationDialog from "../ConfirmationDialog"
@@ -9,14 +9,12 @@ describe("ConfirmationDialog component", () => {
   let canAccept: boolean
 
   beforeEach(() => {
-    cleanup()
-
     closeFn = jest.fn()
     canAccept = true
     getByText = render(
       <ConfirmationDialog onClose={closeFn} onAccept={() => canAccept}>
         <span>inner_element</span>
-      </ConfirmationDialog>,
+      </ConfirmationDialog>
     ).getByText
   })
 
