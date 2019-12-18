@@ -30,6 +30,13 @@ export interface ModelElement<
    */
   passive?: boolean
   /**
+   * This callback allows for custom modifications to the value when retrieving
+   * the model's `$data()`, e.g. casting to another type, transforming objects
+   * to JSON, etc. This is useful when the expected final value requires an
+   * expensive or otherwise unnecessary transformation before submission.
+   */
+  serialize?: (value: T) => any
+  /**
    * Undefined values are transformed into empty strings.
    */
   value: T[K] extends string ? string | undefined : T[K]
@@ -63,7 +70,7 @@ export type ModelEntry<T = any, I = any> = {
 }
 
 type InternalModelEntry = ModelEntry & {
-  _utils: Pick<ModelElement, "parse" | "passive" | "validate">
+  _utils: Pick<ModelElement, "parse" | "passive" | "serialize" | "validate">
 }
 
 type ModelBase<T extends object> = {
@@ -74,7 +81,8 @@ type ModelBase<T extends object> = {
    */
   $change(values: Partial<T>): void
   /**
-   * Returns the modeled data as a list of key/value pairs.
+   * Returns the modeled data as a list of key/value pairs. Each value is passed
+   * through its serialization callback, if available.
    */
   $data(): T
   /**
@@ -97,6 +105,27 @@ type ModelBase<T extends object> = {
    * one, as if the model hook is called for the first time.
    */
   $reset(): void
+  /**
+   * Performs model validation via the own `$validate()` method, and then calls
+   * the provided submission callback. The latter will not be called, if there
+   * are any errors after the validation, and instead the optional error handler
+   * callback will be called.
+   *
+   * Whenever this method is called, any subsequent calls will be discared,
+   * until the first one finishes (including waiting for an asynchronous submit
+   * callback).
+   *
+   * @see `this.$validate()` for more information about the validation performed
+   * by this method.
+   *
+   * @param submit A callback to perform submission of the model's data.
+   * @param handleError An optional callback to be invoked when there is a model
+   * data validation error.
+   */
+  $submit<R = void>(
+    submit: (data: T) => R | Promise<R>,
+    handleError?: (errors: Record<keyof T, ValidationError>) => any
+  ): R | Promise<R> | undefined
   /**
    * Performs validation and returns a list of model errors while also forcing
    * a component to render. This render will be forced regardless of the
@@ -159,6 +188,9 @@ export function useModel<T extends object>(
 ): Model<T> {
   const forceUpdate = useForceUpdate()
   const latest = useRef<InternalModel>(null as any)
+  // TODO: Consider using React's upcoming Suspense/Transition API
+  // in place of this reference, whenever it is released.
+  const submitting = useRef(false)
 
   if (!latest.current) {
     const commit = () => {
@@ -206,7 +238,11 @@ export function useModel<T extends object>(
 
         const values = {}
         Object.keys(modelSchema).forEach(name => {
-          values[name] = model[name].value
+          const {
+            _utils: {serialize},
+            value,
+          } = model[name]
+          values[name] = serialize ? serialize(value) : value
         })
 
         model._data = values
@@ -250,6 +286,48 @@ export function useModel<T extends object>(
       $reset() {
         latest.current = null as any
         forceUpdate()
+      },
+      async $submit(submit, handleError) {
+        if (submitting.current) {
+          return
+        }
+
+        try {
+          submitting.current = true
+
+          const errors = this.$validate()
+          const hasError = Object.keys(errors).length > 0
+
+          if (hasError) {
+            handleError?.(errors)
+
+            if (__DEV__) {
+              if (!handleError) {
+                console.warn(
+                  "Model submission cancelled due to validation errors",
+                  errors
+                )
+              }
+            }
+          } else {
+            const data = this.$data()
+            const result = submit(data)
+
+            if (result instanceof Promise) {
+              // The submission result is awaited for in order
+              // to discard duplicate calls to this method for
+              // the entire duration of the submission.
+              await result
+            }
+
+            return result
+          }
+        } finally {
+          // Method cannot be called a second time until the first call is
+          // finished, and therefore no race condition can occur.
+          // eslint-disable-next-line require-atomic-updates
+          submitting.current = false
+        }
       },
       $validate() {
         const errors = this.$errors()
@@ -327,13 +405,20 @@ function createModelEntry(
   if (isObject<ModelElement>(element)) {
     initialValue = element.value
 
-    const {parse, passive, validate} = element
+    const {parse, passive, serialize, validate} = element
     utils.parse = parse
-    utils.validate = validate
     utils.passive = passive
+    utils.serialize = serialize
+    utils.validate = validate
 
     if (__DEV__) {
-      const supportedProps = ["parse", "passive", "validate", "value"]
+      const supportedProps = [
+        "parse",
+        "passive",
+        "serialize",
+        "validate",
+        "value",
+      ]
       for (const key in element) {
         if (!supportedProps.includes(key)) {
           console.error(

@@ -1,6 +1,7 @@
 import {fireEvent, render, RenderResult} from "@testing-library/react"
 import {renderHook, RenderHookResult} from "@testing-library/react-hooks"
 import React from "react"
+import {wait} from "../../utility"
 import {Model, useModel} from "../InputHooks"
 
 afterEach(() => {
@@ -420,6 +421,112 @@ describe("Model hook", () => {
       model.result.current.test.onChange(2)
 
       expect(model.result.current.$data()).toEqual({test: 2})
+    })
+
+    it("performs custom value serialization", () => {
+      const num = 10
+      const model = renderHook(() =>
+        useModel<{test: number}>(() => ({
+          test: {value: num, serialize: val => `serialized-${val}`},
+        }))
+      ).result.current
+
+      expect(model.$data().test).toBe(`serialized-${num}`)
+    })
+  })
+
+  describe("Submission", () => {
+    it("performs validation", () => {
+      const model = renderHook(() => useModel(() => ({}))).result.current
+      const $validate = jest.spyOn(model, "$validate")
+
+      model.$submit(() => {})
+
+      expect($validate).toHaveBeenCalled()
+    })
+
+    it("on error calls the handleError callback with model's errors", () => {
+      const model = renderHook(() =>
+        useModel(() => ({
+          test: {
+            value: 1,
+            validate: _n => "error",
+          },
+        }))
+      ).result.current
+
+      const handleError = jest.fn()
+      model.$submit(() => {}, handleError)
+
+      expect(handleError).toHaveBeenCalledWith(
+        expect.objectContaining({test: "error"})
+      )
+    })
+
+    it("does not call submit callback when there are validation errors", () => {
+      const model = renderHook(() =>
+        useModel(() => ({
+          test: {
+            value: 1,
+            validate: _n => "error",
+          },
+        }))
+      ).result.current
+
+      const submit = jest.fn()
+      model.$submit(submit)
+
+      expect(submit).not.toHaveBeenCalled()
+    })
+
+    it("calls submit callback with model's data", () => {
+      const model = renderHook(() => useModel(() => ({test: 1}))).result.current
+      const submit = jest.fn()
+
+      model.$submit(submit)
+
+      expect(submit).toHaveBeenCalledWith(expect.objectContaining({test: 1}))
+    })
+
+    it("cannot be called again while submitting", () => {
+      const model = renderHook(() => useModel(() => ({test: 1}))).result.current
+      const submit = jest.fn(() => wait(100))
+
+      model.$submit(submit)
+      model.$submit(submit)
+      model.$submit(submit)
+
+      jest.runAllTimers()
+
+      expect(submit).toHaveBeenCalledTimes(1)
+    })
+
+    it("can be called again after the previous submission is finished", async () => {
+      const model = renderHook(() => useModel(() => ({test: 1}))).result.current
+      const submit = jest.fn(() => wait(100))
+
+      model.$submit(submit)
+      model.$submit(submit)
+      model.$submit(submit)
+
+      jest.runAllTimers()
+      // model.$submit() is awaiting the previous wait() timeout, which schedules
+      // a JavaScript microtask, which in turn should be allowed to execute in
+      // order for the submission call to finish.
+      await Promise.resolve()
+
+      model.$submit(submit)
+
+      jest.runAllTimers()
+
+      expect(submit).toHaveBeenCalledTimes(2)
+    })
+
+    it("returns the submission callback's result", () => {
+      const model = renderHook(() => useModel(() => ({}))).result.current
+
+      expect(model.$submit(() => 10)).resolves.toBe(10)
+      expect(model.$submit(() => Promise.resolve(42))).resolves.toBe(42)
     })
   })
 
