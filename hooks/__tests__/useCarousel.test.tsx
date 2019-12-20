@@ -62,6 +62,30 @@ describe("Carousel hook", () => {
     expect(carousel.result.current.index).toBe(0)
   })
 
+  it("calls onChange callback anytime the index changes", () => {
+    const changeHandler = jest.fn()
+    const carousel = renderHook(() =>
+      useCarousel({data: [1, 2, 3, 4, 5], onChange: changeHandler})
+    ).result.current
+
+    carousel.next()
+    carousel.prev()
+    carousel.set(3)
+
+    expect(changeHandler).toHaveBeenCalledTimes(3)
+  })
+
+  it("does not call onChange callback when the index is set to the current one", () => {
+    const changeHandler = jest.fn()
+    const carousel = renderHook(() =>
+      useCarousel({data: [1, 2, 3, 4, 5], onChange: changeHandler})
+    ).result.current
+
+    carousel.set(carousel.index)
+
+    expect(changeHandler).not.toHaveBeenCalled()
+  })
+
   describe("With `start` argument", () => {
     it("starts at index provided by `start` argument", () => {
       carousel = renderHook(() =>
