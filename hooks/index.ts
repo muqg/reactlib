@@ -1,4 +1,5 @@
 export * from "./InputHooks"
+export * from "./useCarousel"
 export {useDebounced} from "./useDebounced"
 export {useForceUpdate} from "./useForceUpdate"
 export {useGlobalHotkey} from "./useGlobalHotkey"
