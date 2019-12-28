@@ -122,10 +122,10 @@ type ModelBase<T extends object> = {
    * @param handleError An optional callback to be invoked when there is a model
    * data validation error.
    */
-  $submit<R = void>(
-    submit: (data: T) => R | Promise<R>,
+  $submit<R = any>(
+    submit: (data: T) => R,
     handleError?: (errors: Record<keyof T, ValidationError>) => any
-  ): R | Promise<R> | undefined
+  ): R | undefined
   /**
    * Performs validation and returns a list of model errors while also forcing
    * a component to render. This render will be forced regardless of the
