@@ -501,32 +501,61 @@ describe("Model hook", () => {
       expect(submit).toHaveBeenCalledTimes(1)
     })
 
-    it("can be called again after the previous submission is finished", async () => {
-      const model = renderHook(() => useModel(() => ({test: 1}))).result.current
-      const submit = jest.fn(() => wait(100))
+    it("cannot be called twice for an unchanged model object after a success", () => {
+      const model = renderHook(() => useModel(() => ({}))).result.current
+      const submit = jest.fn()
 
       model.$submit(submit)
       model.$submit(submit)
+
+      expect(submit).toHaveBeenCalledTimes(1)
+    })
+
+    it("can be called again after a model change", () => {
+      const model = renderHook(() => useModel(() => ({test: ""}))).result
+        .current
+      const submit = jest.fn()
+
       model.$submit(submit)
-
-      jest.runAllTimers()
-      // model.$submit() is awaiting the previous wait() timeout, which schedules
-      // a JavaScript microtask, which in turn should be allowed to execute in
-      // order for the submission call to finish.
-      await Promise.resolve()
-
+      model.test.onChange("changed")
       model.$submit(submit)
-
-      jest.runAllTimers()
 
       expect(submit).toHaveBeenCalledTimes(2)
     })
 
-    it("returns the submission callback's result", () => {
-      const model = renderHook(() => useModel(() => ({}))).result.current
+    it("can be called again immediately when there was an exception", async () => {
+      const model = renderHook(() => useModel(() => ({test: ""}))).result
+        .current
+      const submit = jest.fn(() => {
+        throw "error"
+      })
 
-      expect(model.$submit(() => 10)).resolves.toBe(10)
-      expect(model.$submit(() => Promise.resolve(42))).resolves.toBe(42)
+      await expect(model.$submit(submit)).rejects.toBe("error")
+      await expect(model.$submit(submit)).rejects.toBe("error")
+
+      expect(submit).toHaveBeenCalledTimes(2)
+    })
+
+    it("does not validate the same model object twice when there was an error", async () => {
+      const model = renderHook(() =>
+        useModel(() => ({
+          test: {
+            value: 1 as any,
+            validate: () => "invalid",
+          },
+        }))
+      ).result.current
+      const handleError = jest.fn(() => {})
+
+      model.$submit(() => {}, handleError)
+      model.$submit(() => {}, handleError)
+
+      expect(handleError).toHaveBeenCalledTimes(1)
+    })
+
+    it("returns the submission callback's result", async () => {
+      const model = renderHook(() => useModel(() => ({}))).result.current
+      await expect(model.$submit(() => 10)).resolves.toBe(10)
     })
   })
 

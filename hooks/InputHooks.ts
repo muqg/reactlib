@@ -190,7 +190,7 @@ export function useModel<T extends object>(
   const latest = useRef<InternalModel>(null as any)
   // TODO: Consider using React's upcoming Suspense/Transition API
   // in place of this reference, whenever it is released.
-  const submitting = useRef(false)
+  const submitted = useRef(false)
 
   if (!latest.current) {
     const commit = () => {
@@ -288,12 +288,15 @@ export function useModel<T extends object>(
         forceUpdate()
       },
       async $submit(submit, handleError) {
-        if (submitting.current) {
+        // Should not be allowed to be called more than once, unless there was
+        // a model change, in which case this variable should have been reset
+        // to `false`.
+        if (submitted.current) {
           return
         }
 
         try {
-          submitting.current = true
+          submitted.current = true
 
           const errors = this.$validate()
           const hasError = Object.keys(errors).length > 0
@@ -322,11 +325,13 @@ export function useModel<T extends object>(
 
             return result
           }
-        } finally {
+        } catch (err) {
           // Method cannot be called a second time until the first call is
           // finished, and therefore no race condition can occur.
           // eslint-disable-next-line require-atomic-updates
-          submitting.current = false
+          submitted.current = false
+
+          throw err
         }
       },
       $validate() {
@@ -373,8 +378,10 @@ export function useModel<T extends object>(
             }
 
             model[name] = entry
+
             model._errors = null
             model._data = null
+            submitted.current = false
 
             if (passive === undefined) {
               if (!settings.passive) {
