@@ -149,11 +149,19 @@ export type Model<T extends object> = ModelBase<T> &
     }
   >
 
-type InternalModel = ModelBase<any> &
-  Required<Record<any, InternalModelEntry>> & {
-    _data: object | null
-    _errors: Record<any, ValidationError> | null
-  }
+type ModelState = {
+  /**
+   * The latest model object.
+   */
+  latest: Model<{}>
+  cache: Partial<{
+    data: object | null
+    errors: Record<any, ValidationError> | null
+    // TODO: Consider using React's upcoming Suspense/Transition API
+    // in place of this reference, whenever it is released.
+    submitted: boolean
+  }>
+}
 
 type ModelPrimitive = string | boolean | number | null
 type ModelStructureValue<
@@ -187,14 +195,18 @@ export function useModel<T extends object>(
   settings = {} as ModelSettings
 ): Model<T> {
   const forceUpdate = useForceUpdate()
-  const latest = useRef<InternalModel>(null as any)
-  // TODO: Consider using React's upcoming Suspense/Transition API
-  // in place of this reference, whenever it is released.
-  const submitted = useRef(false)
+  const state = useRef<ModelState>({
+    latest: null as any,
+    cache: {},
+  }).current
 
-  if (!latest.current) {
+  if (!state.latest) {
     const commit = () => {
-      latest.current = {...latest.current}
+      // This aims to refresh the model object's reference, and thus pretend
+      // that the object was not previously mutated. This allows for it to
+      // benefit from the best of both worlds when necessary -- for example
+      // 'passive' updates mutate the object, without rendering.
+      state.latest = {...state.latest}
       forceUpdate()
     }
 
@@ -204,7 +216,7 @@ export function useModel<T extends object>(
       _errors: null,
 
       $change(values: object) {
-        const model = latest.current
+        const model = state.latest
         const originalPassiveSetting = settings.passive
         settings.passive = true
 
@@ -230,8 +242,8 @@ export function useModel<T extends object>(
         }
       },
       $data() {
-        const model = latest.current
-        const cached = model._data
+        const model = state.latest
+        const cached = state.cache.data
         if (cached) {
           return cached
         }
@@ -245,12 +257,12 @@ export function useModel<T extends object>(
           values[name] = serialize ? serialize(value) : value
         })
 
-        model._data = values
+        state.cache.data = values
         return values
       },
       $errors() {
-        const model = latest.current
-        const cached = model._errors
+        const model = state.latest
+        const cached = state.cache.errors
         if (cached) {
           return cached
         }
@@ -277,26 +289,26 @@ export function useModel<T extends object>(
           model[name] = entry
         })
 
-        model._errors = errors
+        state.cache.errors = errors
         return errors
       },
       $firstError() {
         return Object.values(this.$errors())[0]
       },
       $reset() {
-        latest.current = null as any
+        state.latest = null as any
         forceUpdate()
       },
       async $submit(submit, handleError) {
         // Should not be allowed to be called more than once, unless there was
         // a model change, in which case this variable should have been reset
         // to `false`.
-        if (submitted.current) {
+        if (state.cache.submitted) {
           return
         }
 
         try {
-          submitted.current = true
+          state.cache.submitted = true
 
           const errors = this.$validate()
           const hasError = Object.keys(errors).length > 0
@@ -329,7 +341,7 @@ export function useModel<T extends object>(
           // Method cannot be called a second time until the first call is
           // finished, and therefore no race condition can occur.
           // eslint-disable-next-line require-atomic-updates
-          submitted.current = false
+          state.cache.submitted = false
 
           throw err
         }
@@ -339,7 +351,7 @@ export function useModel<T extends object>(
         commit()
         return errors
       },
-    } as InternalModel
+    } as Model<{}>
 
     // @ts-ignore Sneak in the model object symbol tag past the typings.
     newModel[MODEL_OBJECT_SYMBOL_TAG] = MODEL_OBJECT_SYMBOL_TAG
@@ -349,7 +361,7 @@ export function useModel<T extends object>(
         name,
         modelSchema[name],
         (input: any) => {
-          const model = latest.current
+          const model = state.latest
           const entry = {...model[name]} as InternalModelEntry
           const {parse, passive, validate} = entry._utils
 
@@ -378,10 +390,9 @@ export function useModel<T extends object>(
             }
 
             model[name] = entry
-
-            model._errors = null
-            model._data = null
-            submitted.current = false
+            // Model's cache should be cleared on each value change in order
+            // to allow its methods to operate properly on the newest data.
+            state.cache = {}
 
             if (passive === undefined) {
               if (!settings.passive) {
@@ -395,10 +406,10 @@ export function useModel<T extends object>(
       )
     })
 
-    latest.current = newModel
+    state.latest = newModel
   }
 
-  return latest.current as any
+  return state.latest as Model<T>
 }
 
 function createModelEntry(
