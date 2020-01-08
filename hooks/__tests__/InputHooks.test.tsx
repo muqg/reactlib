@@ -536,7 +536,7 @@ describe("Model hook", () => {
       expect(submit).toHaveBeenCalledTimes(2)
     })
 
-    it("does not validate the same model object twice when there was an error", async () => {
+    it("does not validate the same model object twice when there was an error", () => {
       const model = renderHook(() =>
         useModel(() => ({
           test: {
