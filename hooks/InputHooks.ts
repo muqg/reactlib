@@ -50,9 +50,9 @@ export interface ModelElement<
 
 export type ModelEntry<T = any, I = any> = {
   /**
-   * Errors should not be accessed directly for vlidation via this property,
-   * since it may not be in sync with the current value. Use the model's special
-   * $errors method instead.
+   * This property represents the last error, but not necessarily the latest
+   * error. The latter can be obtained via the model's special `$validate()`
+   * or `$errors()` methods.
    */
   error?: ValidationError
   /**
@@ -372,12 +372,24 @@ export function useModel<T extends object>(
             value = parseInputValue(value)
           }
 
-          if (entry.value !== value) {
-            entry.value = value
+          // Nothing has changed, bail out early and
+          // skip any other change related actions.
+          if (entry.value === value) {
+            return
+          }
 
-            // Attempt to perform simple validation in place. Complex validation
-            // that requires other model properties can only be performed via the
-            // special validation methods.
+          entry.value = value
+          model[name] = entry
+          // Model's cache should be cleared on each value change in order
+          // to allow its methods to operate properly on the newest data.
+          state.cache = {}
+
+          const isPassiveChange =
+            passive === undefined ? settings.passive : passive
+          if (!isPassiveChange) {
+            // Attempt to perform simple validation in place. Complex
+            // validation that requires other model properties can only be
+            // performed via the special validation methods.
             if (validate) {
               try {
                 entry.error = validate(entry.value, {})
@@ -389,18 +401,7 @@ export function useModel<T extends object>(
               }
             }
 
-            model[name] = entry
-            // Model's cache should be cleared on each value change in order
-            // to allow its methods to operate properly on the newest data.
-            state.cache = {}
-
-            if (passive === undefined) {
-              if (!settings.passive) {
-                commit()
-              }
-            } else if (!passive) {
-              commit()
-            }
+            commit()
           }
         }
       )

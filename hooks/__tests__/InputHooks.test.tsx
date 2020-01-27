@@ -97,8 +97,8 @@ describe("Model hook", () => {
 
     it("takes priority for entry's passive status over the model's passive setting", () => {
       let model: Model<{test: string}> = null as any
-      const mock = jest.fn()
-      const Component = () => {
+
+      const ComponentWithPassiveModel: React.ComponentType = jest.fn(() => {
         model = useModel<{test: string}>(
           () => ({
             test: {
@@ -109,15 +109,32 @@ describe("Model hook", () => {
           {passive: false}
         )
 
-        mock()
+        return null
+      })
+
+      render(<ComponentWithPassiveModel />)
+      model.test.onChange("test-with-passive-model")
+
+      expect(ComponentWithPassiveModel).toHaveBeenCalledTimes(1)
+
+      const ComponentWithPassiveEntry: React.ComponentType = jest.fn(() => {
+        model = useModel<{test: string}>(
+          () => ({
+            test: {
+              value: "",
+              passive: false,
+            },
+          }),
+          {passive: true}
+        )
 
         return null
-      }
+      })
 
-      render(<Component />)
-      model.test.onChange("test")
+      render(<ComponentWithPassiveEntry />)
+      model.test.onChange("test-with-passive-entry")
 
-      expect(mock).toHaveBeenCalledTimes(1)
+      expect(ComponentWithPassiveEntry).toHaveBeenCalledTimes(2)
     })
   })
 
@@ -214,6 +231,24 @@ describe("Model hook", () => {
       model.result.current.test.onChange("test")
 
       expect(model.result.current.$errors()).toEqual({test: "error"})
+    })
+
+    it("does not perform simple validation for passive changes", () => {
+      const model = renderHook(() =>
+        useModel<{test: string}>(
+          () => ({
+            test: {
+              value: "",
+              validate: () => "error",
+            },
+          }),
+          {passive: true}
+        )
+      )
+
+      model.result.current.test.onChange("test123")
+
+      expect(model.result.current.test.error).toBe(undefined)
     })
   })
 
