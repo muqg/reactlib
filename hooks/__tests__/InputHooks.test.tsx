@@ -233,7 +233,7 @@ describe("Model hook", () => {
       expect(model.result.current.$errors()).toEqual({test: "error"})
     })
 
-    it("does not perform simple validation for passive changes", () => {
+    it("does not perform validation for passive changes", () => {
       const model = renderHook(() =>
         useModel<{test: string}>(
           () => ({
@@ -248,7 +248,7 @@ describe("Model hook", () => {
 
       model.result.current.test.onChange("test123")
 
-      expect(model.result.current.test.error).toBe(undefined)
+      expect(model.result.current.test.error).toBe("")
     })
   })
 

@@ -45,7 +45,10 @@ export interface ModelElement<
    * @param value Current value.
    * @param modelValues List of model's most recent values.
    */
-  validate?(value: T[K], modelValues: T): ValidationError
+  validate?(
+    value: T[K],
+    model: Omit<Model<T>, "$change" | "$reset" | "$submit" | "$validate">
+  ): ValidationError
 }
 
 export type ModelEntry<T = any, I = any> = {
@@ -54,7 +57,7 @@ export type ModelEntry<T = any, I = any> = {
    * error. The latter can be obtained via the model's special `$validate()`
    * or `$errors()` methods.
    */
-  error?: ValidationError
+  error: string
   /**
    * Model entry's name.
    */
@@ -268,22 +271,14 @@ export function useModel<T extends object>(
         }
 
         const errors = {}
-        const data = model.$data()
-
         Object.keys(modelSchema).forEach(name => {
-          const entry: InternalModelEntry = {
-            ...model[name],
-            error: null,
-          }
-
+          const entry: InternalModelEntry = {...model[name]}
           const {validate} = entry._utils
-          if (validate) {
-            const error = validate(entry.value, data)
-            entry.error = error
+          const error = validate?.(entry.value, this) || ""
 
-            if (error) {
-              errors[name] = error
-            }
+          entry.error = error
+          if (error) {
+            errors[name] = error
           }
 
           model[name] = entry
@@ -387,19 +382,10 @@ export function useModel<T extends object>(
           const isPassiveChange =
             passive === undefined ? settings.passive : passive
           if (!isPassiveChange) {
-            // Attempt to perform simple validation in place. Complex
-            // validation that requires other model properties can only be
-            // performed via the special validation methods.
-            if (validate) {
-              try {
-                entry.error = validate(entry.value, {})
-              } catch (err) {
-                if (__DEV__) {
-                  console.error(err)
-                }
-                entry.error = ""
-              }
-            }
+            // This is just a 'quick' validation, and may not be a hundred per
+            // cent accurate in rare cases. Full validation is expected to be
+            // performed via the model's validation methods.
+            entry.error = validate?.(entry.value, model) || ""
 
             commit()
           }
@@ -417,7 +403,7 @@ function createModelEntry(
   name: string,
   element: ModelStructureValue,
   onChange: (input: any) => void
-) {
+): InternalModelEntry {
   const utils: InternalModelEntry["_utils"] = {}
   let initialValue = element
 
@@ -464,11 +450,12 @@ function createModelEntry(
   return {
     name,
     onChange,
+    error: "",
     // Allowing undefined values plays badly with the way that React
     // determines whether an input is controlled or uncontrolled.
     value: initialValue === undefined ? "" : initialValue,
     _utils: utils,
-  } as InternalModelEntry
+  }
 }
 
 function extractNativeEvent(input: any) {
@@ -527,6 +514,7 @@ export function useInputValue<T extends InputValueInit | ModelEntry>(
 
     return {
       _utils: {},
+      error: "",
       name: "",
       onChange: () => {},
       value: data === undefined ? "" : data,
@@ -564,21 +552,12 @@ export function useInputValue<T extends InputValueInit | ModelEntry>(
         value = parseInputValue(input)
       }
 
+      next.value = value
+
       // This is a workaround that will work in most scenarios, but will probably
       // fail for complex cases, where validation depends on other model values
       // (the second argument).
-      if (validate) {
-        try {
-          next.error = validate(value, {})
-        } catch (err) {
-          if (__DEV__) {
-            console.error(err)
-          }
-          next.error = ""
-        }
-      }
-
-      next.value = value
+      next.error = validate?.(value, {} as any) || ""
 
       return next
     })
