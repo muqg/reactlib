@@ -1,7 +1,7 @@
 import {call} from "./function"
 import {Dictionary} from "./type"
 
-export type ValidationError = string | undefined | void | null
+export type ValidationError = string | undefined | null
 
 /**
  * Validates an object of values.
@@ -10,9 +10,7 @@ export type ValidationError = string | undefined | void | null
  */
 function validate<T extends object>(
   values: T,
-  validators: Partial<
-    Dictionary<T, (value: any, values: T) => ValidationError>
-  >,
+  validators: Partial<Dictionary<T, (value: any, values: T) => ValidationError>>
 ): Partial<Dictionary<T, ValidationError>> {
   const errors: Partial<Dictionary<T, ValidationError>> = {}
   for (const name in values) {
