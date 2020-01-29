@@ -15,7 +15,7 @@ export type ResourceListReducerActions =
 
 export type ResourceListReducer<T extends ResourceObject = ResourceObject> = (
   list: T[],
-  action?: ResourceListReducerActions,
+  action: ResourceListReducerActions
 ) => T[]
 
 /**
@@ -23,7 +23,7 @@ export type ResourceListReducer<T extends ResourceObject = ResourceObject> = (
  */
 function resourceListReducer<T extends ResourceObject = ResourceObject>(
   list: T[],
-  action?: ResourceListReducerActions,
+  action: ResourceListReducerActions
 ): T[] {
   if (!action) {
     return list
