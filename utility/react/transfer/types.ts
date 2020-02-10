@@ -7,6 +7,13 @@ export type Fetcher<T, A extends any[] = any> = {
    */
   clear: (...args: A) => void
   /**
+   * Clears resource from cache if there are no active subscribers, otherwise
+   * pulls fresh resource data from the endpoint and notifies all subscribers.
+   *
+   * @param args Arguments to be passed to the endpoint.
+   */
+  invalidate: (...args: A) => Promise<void>
+  /**
    * Perform a resource mutation.
    *
    * @param mutator A callback to perform the mutation.
@@ -28,12 +35,6 @@ export type Fetcher<T, A extends any[] = any> = {
    */
   read: (...args: A) => T
   /**
-   * Pulls fresh resource data from the endpoint and notifies subscribers.
-   *
-   * @param args Arguments to be passed to the endpoint.
-   */
-  refresh: (...args: A) => Promise<void>
-  /**
    * Resets the fetcher object to its initial state after creation. This is
    * especially useful in testing when it is desired to clear the internal cache.
    */
@@ -52,9 +53,9 @@ export type Fetcher<T, A extends any[] = any> = {
 
 export type ResourceCacheOptions = {
   /**
-   * Other caches to be refreshed.
+   * Other caches to be invalidated.
    */
-  refreshes?: Fetcher<any, any>[]
+  invalidates?: Fetcher<any, any>[]
 }
 
 export type ResourceChangeSubscriber<T = any> = (value: T | null) => any

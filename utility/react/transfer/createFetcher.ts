@@ -36,32 +36,15 @@ export function createFetcher<T = any, A extends any[] = any>(
   function accessResource(...args: A): Resource {
     const key = getCacheKey(...args)
     const resource = storage.get(key)
+
     if (resource && resource.data !== null) {
       return resource
     }
 
-    const request = endpoint(...args)
-    const newResource = new Resource(request, ResourceStatus.Pending)
-    storage.set(key, newResource)
+    const newResource = new Resource()
 
-    if (request instanceof Promise) {
-      request.then(
-        value => {
-          if (newResource.status === ResourceStatus.Pending) {
-            newResource.status = ResourceStatus.Resolved
-            newResource.data = value
-          }
-        },
-        error => {
-          if (newResource.status === ResourceStatus.Pending) {
-            newResource.status = ResourceStatus.Rejected
-            newResource.data = error
-          }
-        }
-      )
-    } else {
-      newResource.status = ResourceStatus.Resolved
-    }
+    hydrate(newResource, ...args)
+    storage.set(key, newResource)
 
     return newResource
   }
@@ -77,33 +60,80 @@ export function createFetcher<T = any, A extends any[] = any>(
     }
   }
 
-  function clear(...args: A) {
-    const key = getCacheKey(...args)
-    const resource = storage.get(key)
-    resource?.clear()
-  }
-
   async function mutate(mutator: ResourceMutator<A>, ...args: A) {
     const mutation = mutator(...args)
     if (mutation instanceof Promise) {
       await mutation
     }
 
-    await refresh(...args)
-    if (options.refreshes) {
-      await Promise.all(options.refreshes.map(cache => cache.refresh()))
+    const ownInvalidation = invalidate(...args)
+    if (options.invalidates) {
+      await Promise.all(options.invalidates.map(cache => cache.invalidate()))
+    }
+    // Awaiting own invalidation at the end allows for
+    // other caches to be invalidated concurrently.
+    await ownInvalidation
+  }
+
+  async function invalidate(...args: A) {
+    const key = getCacheKey(...args)
+    const resource = storage.get(key)
+
+    if (!resource) {
+      return
+    }
+
+    // Pull fresh resource data from the endpoint in order to update
+    // subscribed components and keep the UI consitent with the latest data.
+    if (resource._subs.size > 0) {
+      const hydration = hydrate(resource, ...args)
+      if (hydration instanceof Promise) {
+        await hydration
+      }
+    }
+    // There are no components expecting to be notified of changes immediately.
+    // Therefore resource can be safely evicted from cache, and a fresh piece
+    // of data will be pulled from the endpoint whenever it is needed.
+    else {
+      storage.delete(key)
     }
   }
 
-  async function refresh(...args: A) {
-    const resource = accessResource(...args)
+  /**
+   * Fill the resource with fresh data from the endpoint.
+   */
+  async function hydrate(resource: Resource, ...args: A) {
+    const request = endpoint(...args)
 
-    // If the resource is Pending, then accessing will be enough to fetch it
-    // from the endpoint, and is unnecessary to fetch a second time.
-    if (resource.status !== ResourceStatus.Pending) {
-      const result = endpoint(...args)
-      resource.data = result instanceof Promise ? await result : result
+    resource.status = ResourceStatus.Pending
+    resource._data = request
+
+    if (request instanceof Promise) {
+      request.then(
+        value => {
+          if (resource.status === ResourceStatus.Pending) {
+            resource.status = ResourceStatus.Resolved
+            resource.data = value
+          }
+        },
+        error => {
+          if (resource.status === ResourceStatus.Pending) {
+            resource.status = ResourceStatus.Rejected
+            resource.data = error
+          }
+        }
+      )
+    } else {
+      resource.status = ResourceStatus.Resolved
     }
+
+    return request
+  }
+
+  function clear(...args: A) {
+    const key = getCacheKey(...args)
+    const resource = storage.get(key)
+    resource?.clear()
   }
 
   function reset() {
@@ -120,7 +150,7 @@ export function createFetcher<T = any, A extends any[] = any>(
     mutate,
     preload,
     read,
-    refresh,
+    invalidate,
     reset,
     write,
   }
