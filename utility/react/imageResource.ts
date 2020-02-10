@@ -1,4 +1,4 @@
-import {createFetcher} from "./createFetcher"
+import {createFetcher} from "./transfer"
 
 /**
  * A createFetcher wrapper for suspended image loading. For example when the
@@ -13,5 +13,5 @@ export const imageResource = createFetcher(
       image.onload = () => resolve(src)
       image.onerror = reject
       image.src = src
-    }),
+    })
 )

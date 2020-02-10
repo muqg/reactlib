@@ -1,5 +1,5 @@
 export * from "./actions"
-export * from "./createFetcher"
+export * from "./transfer"
 export {createModelComponent} from "./createModelComponent"
 export {getDisplayName} from "./getDisplayName"
 export {imageResource} from "./imageResource"
