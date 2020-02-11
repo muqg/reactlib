@@ -102,7 +102,7 @@ export function createFetcher<T = any, A extends any[] = any>(
   /**
    * Fill the resource with fresh data from the endpoint.
    */
-  async function hydrate(resource: Resource, ...args: A) {
+  function hydrate(resource: Resource, ...args: A) {
     const request = endpoint(...args)
 
     resource.status = ResourceStatus.Pending
