@@ -169,7 +169,7 @@ describe("Model hook", () => {
       })
 
       it("renders when $validate is called, regardless of passive setting", () => {
-        let model: Model<any> = null as any
+        let model: Model<object> = null as any
         const mock = jest.fn()
 
         const Component = () => {
@@ -269,7 +269,7 @@ describe("Model hook", () => {
     })
 
     it("renders on reset", () => {
-      let model: Model<any> = null as any
+      let model: Model<object> = null as any
       const mock = jest.fn()
 
       const Component = () => {
