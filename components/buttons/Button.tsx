@@ -1,6 +1,6 @@
 import {COLOR_CONTRAST, COLOR_DARK, css, fadedColor, styled} from "../../styles"
 
-export const enum ButtonVariant {
+export enum ButtonVariant {
   Normal,
   Outlined,
   Text,
@@ -18,19 +18,19 @@ export interface ButtonStyleProps {
 
 const normalStyle = css`
   background: ${(p: ButtonStyleProps) => p.color};
-  color: ${p => p.contrastColor};
-  fill: ${p => p.contrastColor};
-  stroke: ${p => p.contrastColor};
+  color: ${(p) => p.contrastColor};
+  fill: ${(p) => p.contrastColor};
+  stroke: ${(p) => p.contrastColor};
 
-  ${p =>
+  ${(p) =>
     p.hover &&
     css`
       &:hover {
         background: transparent;
         border-color: ${(p: ButtonStyleProps) => p.color};
-        color: ${p => p.color};
-        fill: ${p => p.color};
-        stroke: ${p => p.color};
+        color: ${(p) => p.color};
+        fill: ${(p) => p.color};
+        stroke: ${(p) => p.color};
       }
     `}
 `
@@ -38,18 +38,18 @@ const normalStyle = css`
 const outlinedStyle = css`
   background: transparent;
   border-color: ${(p: ButtonStyleProps) => p.color};
-  color: ${p => p.color};
-  fill: ${p => p.color};
-  stroke: ${p => p.color};
+  color: ${(p) => p.color};
+  fill: ${(p) => p.color};
+  stroke: ${(p) => p.color};
 
-  ${p =>
+  ${(p) =>
     p.hover &&
     css`
       &:hover {
         background: ${(p: ButtonStyleProps) => p.color};
-        color: ${p => p.contrastColor};
-        fill: ${p => p.contrastColor};
-        stroke: ${p => p.contrastColor};
+        color: ${(p) => p.contrastColor};
+        fill: ${(p) => p.contrastColor};
+        stroke: ${(p) => p.contrastColor};
       }
     `}
 `
@@ -57,10 +57,10 @@ const outlinedStyle = css`
 const textStyle = css`
   background: transparent;
   color: ${(p: ButtonStyleProps) => p.color};
-  fill: ${p => p.color};
-  stroke: ${p => p.color};
+  fill: ${(p) => p.color};
+  stroke: ${(p) => p.color};
 
-  ${p =>
+  ${(p) =>
     p.hover &&
     css`
       &:hover {
@@ -76,10 +76,10 @@ export const ButtonDefaultProps: ButtonStyleProps = {
 }
 
 const Button = styled("button").attrs<ButtonStyleProps, ButtonStyleProps>(
-  p => ({
+  (p) => ({
     color: p.color || p.theme.main || COLOR_DARK,
     contrastColor: p.contrastColor || p.theme.contrast || COLOR_CONTRAST,
-  }),
+  })
 )`
     border: 1px solid transparent;
     display: inline-block;
@@ -88,9 +88,9 @@ const Button = styled("button").attrs<ButtonStyleProps, ButtonStyleProps>(
     text-align: center;
     transition: all .1s;
 
-    ${p => p.variant === ButtonVariant.Normal && normalStyle}
-    ${p => p.variant === ButtonVariant.Outlined && outlinedStyle}
-    ${p => p.variant === ButtonVariant.Text && textStyle}
+    ${(p) => p.variant === ButtonVariant.Normal && normalStyle}
+    ${(p) => p.variant === ButtonVariant.Outlined && outlinedStyle}
+    ${(p) => p.variant === ButtonVariant.Text && textStyle}
 `
 Button.defaultProps = ButtonDefaultProps
 Button.displayName = "Button"

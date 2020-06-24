@@ -22,7 +22,7 @@ export const RequestMethod: List<RequestMethod, RequestMethod> = {
 /**
  * Style size modifiers.
  */
-export const enum Size {
+export enum Size {
   Null = 0,
   Small = 1,
   Slim = 1.5,

@@ -1,6 +1,6 @@
 import {ResourceChangeSubscriber} from "./types"
 
-export const enum ResourceStatus {
+export enum ResourceStatus {
   Pending,
   Rejected,
   Resolved,
@@ -44,6 +44,6 @@ export class Resource<T = any> {
   }
 
   _notifySubscribers(): void {
-    this._subs.forEach(s => s(this._data))
+    this._subs.forEach((s) => s(this._data))
   }
 }
