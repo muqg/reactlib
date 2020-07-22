@@ -1,11 +1,11 @@
-import {Point} from "framer-motion"
+import {Point2D} from "framer-motion"
 import {distance} from "../utility/math"
 import {Position} from "./DragOrdered"
 
 export type DragOrderedIndexFinder = (
   dragIndex: number,
-  dragOffset: Point,
-  positions: Position[],
+  dragOffset: Point2D,
+  positions: Position[]
 ) => number
 
 // Prevents rapid reverse swapping.
@@ -19,7 +19,7 @@ const DistanceBuffer = 5
 export const DragOrderedListIndexFinder: DragOrderedIndexFinder = (
   dragIndex,
   dragOffset,
-  positions,
+  positions
 ) => {
   let targetIndex = dragIndex
   const offsetY = dragOffset.y
@@ -69,10 +69,10 @@ function calculateCenterPoint({height, left, top, width}: Position) {
 export const DragOrderedGridIndexFinder: DragOrderedIndexFinder = (
   dragIndex,
   dragOffset,
-  positions,
+  positions
 ) => {
   const originalCenter = calculateCenterPoint(positions[dragIndex])
-  const dragCenter: Point = {
+  const dragCenter: Point2D = {
     x: originalCenter.x + dragOffset.x,
     y: originalCenter.y + dragOffset.y,
   }
@@ -90,7 +90,7 @@ export const DragOrderedGridIndexFinder: DragOrderedIndexFinder = (
     const targetCenter = calculateCenterPoint(positions[currentIndex])
     const distanceToTarget = distance(dragCenter, targetCenter)
 
-    if (distanceToTarget < closest.distance) {
+    if (distanceToTarget <= closest.distance) {
       closest.distance = distanceToTarget
       closest.index = currentIndex
 

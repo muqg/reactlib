@@ -1,6 +1,5 @@
-import {motion, Point, useMotionValue} from "framer-motion"
-import * as React from "react"
-import {useEffect, useRef, useState} from "react"
+import {motion} from "framer-motion"
+import React, {useRef} from "react"
 import styled from "styled-components"
 import {
   DragOrderedGridIndexFinder,
@@ -16,37 +15,30 @@ export type Position = {
 
 export type DragOrderedChangeHandler = (
   currentIndex: number,
-  targetIndex: number,
+  targetIndex: number
 ) => void
 
 type PositionUpdateFunction = (index: number, element: HTMLElement) => void
 type MoveItem = (currentIndex: number, offsetX: number, offsetY: number) => void
 
-type MotionElementProps = {
+type DraggableProps = {
   children: JSX.Element
-  continuous?: ContainerProps["continuous"]
   index: number
   moveItem: MoveItem
   setPosition: PositionUpdateFunction
   style?: React.CSSProperties
 }
 
-type MotionListProps = {
+type DraggableListProps = {
   children: JSX.Element[]
-  continuous?: ContainerProps["continuous"]
   elementStyle?: React.CSSProperties
   finder: DragOrderedIndexFinder
   onChange?: DragOrderedChangeHandler
 }
 
 type ContainerProps = {
-  children: MotionListProps["children"]
+  children: DraggableListProps["children"]
   className?: string
-  /**
-   * Whether children will continously update and swap places while dragging
-   * or only once the dragging ends.
-   */
-  continuous?: boolean
   /**
    * Styling for each underlying motion element wrapper.
    */
@@ -57,62 +49,25 @@ type ContainerProps = {
 
 const dragConstraints = {top: 0, bottom: 0, left: 0, right: 0}
 
-function MotionElement({
+function Draggable({
   children,
-  continuous,
   index,
   moveItem,
   setPosition,
   style,
-}: MotionElementProps) {
-  const [isDragging, setDragging] = useState(false)
-  const element = useRef<HTMLLIElement>(null)
-  const offset = useRef<Point>({x: 0, y: 0})
-  const dragOriginX = useMotionValue(0)
-  const dragOriginY = useMotionValue(0)
-
-  useEffect(() => {
-    if (element.current) {
-      setPosition(index, element.current)
-    }
-  })
-
+}: DraggableProps) {
   return (
     <motion.li
-      drag
+      drag={true}
       dragConstraints={dragConstraints}
       dragElastic={1}
-      dragOriginX={dragOriginX}
-      dragOriginY={dragOriginY}
-      onDrag={(_e, {point}) => {
-        if (continuous) {
-          moveItem(index, point.x, point.y)
-        } else {
-          offset.current = point
+      layout={true}
+      onDragEnd={(_e, {offset}) => moveItem(index, offset.x, offset.y)}
+      ref={(element) => {
+        if (element) {
+          setPosition(index, element)
         }
       }}
-      onDragStart={() => setDragging(true)}
-      onDragEnd={() => {
-        setDragging(false)
-        if (!continuous) {
-          moveItem(index, offset.current.x, offset.current.y)
-        }
-      }}
-      positionTransition={({delta}) => {
-        if (isDragging) {
-          // If we're dragging, we want to "undo" the items movement within the list
-          // by manipulating its dragOriginY. This will keep the item under the cursor,
-          // even though it's jumping around the DOM.
-          dragOriginY.set(dragOriginY.get() + delta.y)
-          dragOriginX.set(dragOriginX.get() + delta.x)
-        }
-
-        // If `positionTransition` is a function and returns `false`, it's telling
-        // Motion not to animate from its old position into its new one. If we're
-        // dragging, we don't want any animation to occur.
-        return !isDragging
-      }}
-      ref={element}
       style={{cursor: "grab", overflow: "hidden", ...style}}
       whileTap={{scale: 1.12, zIndex: 100}}
     >
@@ -121,13 +76,13 @@ function MotionElement({
   )
 }
 
-function MotionElementList({
+function DraggableList({
   children,
   elementStyle,
   finder,
   onChange,
   ...elementProps
-}: MotionListProps) {
+}: DraggableListProps) {
   const positions: Position[] = useRef([]).current
 
   const setPosition: PositionUpdateFunction = (index, element) => {
@@ -147,7 +102,7 @@ function MotionElementList({
     const targetIndex = finder(
       currentIndex,
       {x: offsetX, y: offsetY},
-      positions,
+      positions
     )
     if (targetIndex !== currentIndex) {
       onChange(currentIndex, targetIndex)
@@ -157,7 +112,7 @@ function MotionElementList({
   return (
     <>
       {children.map((child, i) => (
-        <MotionElement
+        <Draggable
           {...elementProps}
           index={i}
           key={child.key || undefined}
@@ -166,7 +121,7 @@ function MotionElementList({
           style={elementStyle}
         >
           {child}
-        </MotionElement>
+        </Draggable>
       ))}
     </>
   )
@@ -186,7 +141,7 @@ export function DragOrderedList({
 }: ContainerProps) {
   return (
     <List className={className} style={style}>
-      <MotionElementList {...listProps} finder={DragOrderedGridIndexFinder} />
+      <DraggableList {...listProps} finder={DragOrderedGridIndexFinder} />
     </List>
   )
 }
@@ -204,7 +159,7 @@ export function DragOrderedGrid({
 }: ContainerProps) {
   return (
     <Grid className={className} style={style}>
-      <MotionElementList {...listProps} finder={DragOrderedGridIndexFinder} />
+      <DraggableList {...listProps} finder={DragOrderedGridIndexFinder} />
     </Grid>
   )
 }
