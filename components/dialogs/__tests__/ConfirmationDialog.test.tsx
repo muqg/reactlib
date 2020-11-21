@@ -1,5 +1,4 @@
 import {fireEvent, render, RenderResult} from "@testing-library/react"
-import * as React from "react"
 import {CHAR_CODE_ENTER} from "../../../utility/dom"
 import ConfirmationDialog from "../ConfirmationDialog"
 

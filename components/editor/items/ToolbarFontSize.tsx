@@ -1,5 +1,5 @@
-import * as React from "react"
-import {COLOR_MAIN, COLOR_BACKGROUND, styled} from "../../../styles"
+import {MouseEvent} from "react"
+import {COLOR_BACKGROUND, COLOR_MAIN, styled} from "../../../styles"
 import {Editor} from "../../../utility/dom"
 import {asInt} from "../../../utility/string"
 import {ToolbarItem} from "../ToolbarItem"
@@ -20,7 +20,7 @@ const ToolbarFontSize = (_props: Props) => {
       <StyledSelect
         defaultValue="3"
         name="tb_font_size"
-        onChange={e => setSize(e.target)}
+        onChange={(e) => setSize(e.target)}
         onContextMenu={onRightClick}
       >
         <option value="1">1</option>
@@ -35,7 +35,7 @@ const ToolbarFontSize = (_props: Props) => {
   )
 }
 
-function onRightClick(event: React.MouseEvent<HTMLSelectElement>) {
+function onRightClick(event: MouseEvent<HTMLSelectElement>) {
   event.preventDefault()
   setSize(event.target as HTMLSelectElement)
 }

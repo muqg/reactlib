@@ -1,4 +1,3 @@
-import * as React from "react"
 import {useRef, useState} from "react"
 import {styled} from "../../../styles"
 import {Editor} from "../../../utility/dom"

@@ -1,4 +1,4 @@
-import * as React from "react"
+import {ComponentProps} from "react"
 import {styled} from "../styles"
 import {Size} from "../utility"
 
@@ -21,7 +21,7 @@ interface StyleProps {
   margin?: Size
 }
 
-type Props = React.ComponentProps<typeof Container>
+type Props = ComponentProps<typeof Container>
 
 const Block = ({children, title, ...props}: Props) => {
   return (

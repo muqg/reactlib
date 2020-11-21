@@ -1,4 +1,3 @@
-import * as React from "react"
 import {useEffect, useRef, useState} from "react"
 import {useNotify} from "../../hooks"
 import {COLOR_CONTRAST, COLOR_DARK, css, styled} from "../../styles"
@@ -22,12 +21,12 @@ const Wrapper = styled.div`
       transform: translate(-50%, 0);
     `}
 `
-const Container = styled.div.attrs<StyleProps, StyleProps>(p => ({
+const Container = styled.div.attrs<StyleProps, StyleProps>((p) => ({
   background: p.background || p.theme.main || COLOR_DARK,
   color: p.color || p.theme.contrast || COLOR_CONTRAST,
 }))`
-  background: ${p => p.background};
-  color: ${p => p.color};
+  background: ${(p) => p.background};
+  color: ${(p) => p.color};
   font-size: 0.9rem;
   letter-spacing: 0.01071em;
   min-width: 280px;
@@ -66,7 +65,7 @@ function Notification(props: NotificationProps) {
 
   useEffect(() => {
     if (props.content) {
-      setQueue(queue => [...queue, props])
+      setQueue((queue) => [...queue, props])
       /**
        * Reset the props coming from above. Since this is the only component
        * updated by this context it should not really affect performance,
@@ -89,10 +88,10 @@ function Notification(props: NotificationProps) {
          * flashing of notification's default styling.
          */
         () =>
-          setCurrent(c => {
+          setCurrent((c) => {
             return {...c, content: ""}
           }),
-        next.duration || NOTIFICATION_DURATION,
+        next.duration || NOTIFICATION_DURATION
       ) as any
     }
   })

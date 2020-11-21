@@ -1,4 +1,4 @@
-import * as React from "react"
+import {ChangeEvent} from "react"
 import {COLOR_BACKGROUND, COLOR_SUCCESS, css, styled} from "../styles"
 import {View} from "./View"
 
@@ -19,9 +19,9 @@ const Background = styled(View)`
   transition: all 0.2s;
 
   &:after {
-    background: ${p => p.theme.background || COLOR_BACKGROUND};
+    background: ${(p) => p.theme.background || COLOR_BACKGROUND};
     border-radius: 50%;
-    box-shadow: 0 0 3px ${p => p.theme.text};
+    box-shadow: 0 0 3px ${(p) => p.theme.text};
     content: "";
     height: 110%;
     left: 0;
@@ -42,7 +42,7 @@ const Background = styled(View)`
           }
 
           input:checked ~ & {
-            background: ${p => p.theme.success || COLOR_SUCCESS};
+            background: ${(p) => p.theme.success || COLOR_SUCCESS};
           }
 
           input:checked ~ &:after {
@@ -64,7 +64,7 @@ interface Props {
   className?: string
   disabled?: boolean
   name?: string
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 const Switch = (props: Props) => {

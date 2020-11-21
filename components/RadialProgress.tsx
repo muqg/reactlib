@@ -1,5 +1,4 @@
-﻿import * as React from "react"
-import {
+﻿import {
   COLOR_DARK,
   COLOR_SUCCESS,
   COLOR_TEXT,

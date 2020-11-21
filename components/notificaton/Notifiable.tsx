@@ -1,9 +1,8 @@
-import * as React from "react"
-import {useCallback, useState} from "react"
+import {createContext, ReactNode, useCallback, useState} from "react"
 import {Notify} from "../component-types"
 import {Notification, NotificationProps} from "./Notification"
 
-export const NotificationContext = React.createContext<Notify>(() => {
+export const NotificationContext = createContext<Notify>(() => {
   if (__DEV__) {
     console.log("Can only notify within a Notifiable component")
   }
@@ -11,7 +10,7 @@ export const NotificationContext = React.createContext<Notify>(() => {
 NotificationContext.displayName = "NotificationContext"
 
 interface Props {
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 export function Notifiable(props: Props) {
@@ -20,7 +19,7 @@ export function Notifiable(props: Props) {
     (content, options = {}) => {
       setNotification({content, ...options})
     },
-    [setNotification],
+    [setNotification]
   )
 
   return (

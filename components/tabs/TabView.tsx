@@ -1,5 +1,4 @@
-import * as React from "react"
-import {useEffect, useState} from "react"
+import {ReactElement, useEffect, useState} from "react"
 import {styled} from "../../styles"
 import {isFunction} from "../../utility/assertions"
 import {isComponentType} from "../../utility/react"
@@ -13,7 +12,7 @@ const TitleContainer = styled(Grid)`
 `
 
 interface Props {
-  children: React.ReactElement<Tab>[]
+  children: ReactElement<Tab>[]
   className?: string
 }
 
@@ -32,11 +31,11 @@ function TabView({children, className}: Props) {
 
   const titles = children
     .map(
-      c =>
+      (c) =>
         !c.props.hidden &&
-        (isFunction(c.props.title) ? c.props.title() : c.props.title),
+        (isFunction(c.props.title) ? c.props.title() : c.props.title)
     )
-    .filter(c => c)
+    .filter((c) => c)
 
   return (
     <View className={className}>

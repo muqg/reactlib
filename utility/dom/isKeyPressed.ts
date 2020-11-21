@@ -10,8 +10,8 @@ import {isObject, isType} from "../assertions"
  */
 export function isKeyPressed(
   hotkey: Hotkey,
-  event: KeyboardEvent | React.KeyboardEvent,
-  allowInsideInputs = false,
+  event: React.KeyboardEvent | KeyboardEvent,
+  allowInsideInputs = false
 ): boolean {
   const target = event.target
   if (!allowInsideInputs && isObject(target, Element)) {
@@ -24,7 +24,7 @@ export function isKeyPressed(
       return false
   }
 
-  if (isType<React.KeyboardEvent>(event, e => e.nativeEvent))
+  if (isType<React.KeyboardEvent>(event, (e) => e.nativeEvent))
     event = event.nativeEvent
 
   return (

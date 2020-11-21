@@ -1,5 +1,14 @@
-import * as React from "react"
-import {useEffect, useMemo, useState} from "react"
+import {
+  ChangeEvent,
+  ComponentProps,
+  ComponentType,
+  forwardRef,
+  Ref,
+  SyntheticEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import {
   AspectImage,
   Block,
@@ -29,7 +38,7 @@ const StyledRemoveButton = styled(RemoveButton)`
 `
 
 type ConfirmationComponentProps = Pick<
-  React.ComponentProps<typeof ConfirmationDialog>,
+  ComponentProps<typeof ConfirmationDialog>,
   "onAccept" | "onClose"
 >
 interface OwnProps {
@@ -38,7 +47,7 @@ interface OwnProps {
    * - It is recomended that a ConfirmationDialog is used.
    * - The component is passed `onAccept` and `onClose`.
    */
-  confirmationComponent?: React.ComponentType<ConfirmationComponentProps>
+  confirmationComponent?: ComponentType<ConfirmationComponentProps>
   /**
    * Whether image can be changed or not.
    */
@@ -52,7 +61,7 @@ interface OwnProps {
    */
   src?: string
 }
-type Props = OwnProps & {innerRef?: React.Ref<any>}
+type Props = OwnProps & {innerRef?: Ref<any>}
 
 function ImageInput(props: Props) {
   if (__DEV__) {
@@ -60,7 +69,7 @@ function ImageInput(props: Props) {
       if (!props.onRemove && props.confirmationComponent) {
         console.warn(
           "`confirmationComponent` prop serves no purpose" +
-            "without the complementary `onRemove` prop",
+            "without the complementary `onRemove` prop"
         )
       }
     }, [])
@@ -85,7 +94,7 @@ function ImageInput(props: Props) {
 
   useEffect(() => setPreview(props.src), [props.src])
 
-  function change(e: React.ChangeEvent<HTMLInputElement>) {
+  function change(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       const file = e.target.files[0]
       if (file) {
@@ -96,7 +105,7 @@ function ImageInput(props: Props) {
     }
   }
 
-  function remove(e: React.SyntheticEvent) {
+  function remove(e: SyntheticEvent) {
     e.stopPropagation()
 
     // TODO: only remove if no new file is selected.
@@ -161,7 +170,7 @@ function ImageInput(props: Props) {
   )
 }
 
-const image = React.forwardRef<HTMLInputElement, OwnProps>((props, ref) => (
+const image = forwardRef<HTMLInputElement, OwnProps>((props, ref) => (
   <ImageInput {...props} innerRef={ref} />
 ))
 export {image as ImageInput}

@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import * as React from "react"
+import {PureComponent} from "react"
 import {findDOMNode} from "react-dom"
 import {COLOR_MAIN, css, styled} from "../../styles"
 import {position, truncate} from "../../styles/mixins"
@@ -17,7 +17,7 @@ const Container = styled.label`
   ${position("relative")}
   transition: background .3s ease;
 
-  ${p =>
+  ${(p) =>
     p.active &&
     css`
       display: block;
@@ -45,9 +45,9 @@ const Content = styled.div`
   ${truncate()}
 
   input:checked ~ & {
-    ${p => !p.active && contentCommon}
+    ${(p) => !p.active && contentCommon}
 
-    ${p =>
+    ${(p) =>
       (p.active || p.multiple) &&
       css`
         background: #f7f7f7;
@@ -89,7 +89,7 @@ interface Props {
   onClick?: () => void
 }
 
-class SelectOption extends React.PureComponent<Props & StyleProps> {
+class SelectOption extends PureComponent<Props & StyleProps> {
   componentDidMount() {
     if (!this.props.selected) return
 

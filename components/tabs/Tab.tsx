@@ -1,7 +1,7 @@
-import * as React from "react"
+import {FunctionComponent, ReactNode} from "react"
 
 interface Tab {
-  children?: React.ReactNode
+  children?: ReactNode
   className?: string
   /**
    * Used by TabView to determine whether to show the tab or not.
@@ -10,10 +10,10 @@ interface Tab {
   /**
    * The text or element to be displayed inside the tab button.
    */
-  title: string | (() => React.ReactNode)
+  title: string | (() => ReactNode)
 }
 
-const Tab: React.FunctionComponent<Tab> = (props: Tab) => {
+const Tab: FunctionComponent<Tab> = (props: Tab) => {
   return <div className={props.className}>{props.children}</div>
 }
 

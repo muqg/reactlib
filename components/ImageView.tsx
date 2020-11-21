@@ -1,4 +1,3 @@
-import * as React from "react"
 import {AspectImage, CloseButton, Dialog, DialogProps} from "."
 import {styled} from "../styles"
 import {position} from "../styles/mixins"
@@ -25,10 +24,10 @@ const ImageView = (props: Props) => {
   return (
     <Dialog
       className={props.className}
-      onKeyDown={e => e.stopPropagation()}
+      onKeyDown={(e) => e.stopPropagation()}
       onClose={props.onClose}
     >
-      {close => (
+      {(close) => (
         <>
           <Back onClick={close} />
           <CloseButton absolute color="#ffffff" onClick={close} />

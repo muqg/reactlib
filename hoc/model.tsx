@@ -1,4 +1,4 @@
-import * as React from "react"
+import {Component, ComponentType, SyntheticEvent} from "react"
 import {Dict} from "../utility"
 import {isObject} from "../utility/assertions"
 import {ParseableElement, parseElement} from "../utility/dom"
@@ -50,7 +50,7 @@ type ModelDataType = string
 export type ModelData = Dict<ModelDataType>
 type Return = void
 export type ModelChangeElement = ParseableElement
-export type ModelChangeEvent = React.SyntheticEvent<ModelChangeElement>
+export type ModelChangeEvent = SyntheticEvent<ModelChangeElement>
 export type ModelChange = ModelChangeEvent | ModelChangeElement
 
 /**
@@ -58,9 +58,9 @@ export type ModelChange = ModelChangeEvent | ModelChangeElement
  * @param WrappedComponent The component to be wrapped.
  */
 function model<OP extends {}, MD extends object = ModelData>(
-  WrappedComponent: React.ComponentType<OP & ModelProps<MD>>,
-): React.ComponentType<OP> {
-  return class extends React.Component<OP, ModelData> {
+  WrappedComponent: ComponentType<OP & ModelProps<MD>>
+): ComponentType<OP> {
+  return class extends Component<OP, ModelData> {
     static displayName = getDisplayName("Model", WrappedComponent)
 
     state = {} as ModelData
@@ -72,7 +72,7 @@ function model<OP extends {}, MD extends object = ModelData>(
 
       if (__DEV__) {
         console.warn(
-          "`model` HOC is deprecated. Consider using model hook instead.",
+          "`model` HOC is deprecated. Consider using model hook instead."
         )
       }
     }
@@ -95,7 +95,7 @@ function model<OP extends {}, MD extends object = ModelData>(
     }
 
     value = (values: ModelData) => {
-      this.setState(prevState => {
+      this.setState((prevState) => {
         this._checkChange(prevState, values)
         return values
       })
@@ -104,9 +104,9 @@ function model<OP extends {}, MD extends object = ModelData>(
     reset = (data: ModelData = {}, merge: boolean = false) => {
       if (data) this.baseData = merge ? {...this.baseData, ...data} : {...data}
 
-      this.setState(prevState => {
+      this.setState((prevState) => {
         let nextState: ModelData = {}
-        Object.keys(prevState).forEach(key => {
+        Object.keys(prevState).forEach((key) => {
           nextState[key] = ""
         })
 
@@ -124,7 +124,7 @@ function model<OP extends {}, MD extends object = ModelData>(
       // Avoid checking multiple times on batch calls if already marked as changed.
       if (!this._changed)
         this._changed = !Object.keys(incoming).every(
-          k => incoming[k] === current[k],
+          (k) => incoming[k] === current[k]
         )
     }
 

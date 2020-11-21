@@ -1,4 +1,4 @@
-import * as React from "react"
+import {ReactNode} from "react"
 import {Button, DialogBoxProps, DialogProps} from ".."
 import {styled} from "../../styles"
 import {CHAR_CODE_ENTER} from "../../utility/dom"
@@ -21,7 +21,7 @@ const StyledButton = styled(Button)`
 `
 
 interface OwnProps {
-  children?: React.ReactNode
+  children?: ReactNode
   /**
    * Called when dialog resolves successfully. May optionally return a boolean
    * to indicate whether the acception was successful.
@@ -62,7 +62,7 @@ const ConfirmationDialog = ({
     call(props.onClose)
   }
 
-  const keyDown: DialogProps["onKeyDown"] = event => {
+  const keyDown: DialogProps["onKeyDown"] = (event) => {
     if (event.keyCode === CHAR_CODE_ENTER) {
       accept()
     }

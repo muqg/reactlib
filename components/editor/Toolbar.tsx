@@ -1,4 +1,3 @@
-import * as React from "react"
 import {createPortal} from "react-dom"
 import {COLOR_MAIN, styled} from "../../styles"
 import {flex, position} from "../../styles/mixins"
@@ -52,7 +51,7 @@ function Toolbar({children, className}: Props) {
       </div>
     </ToolbarWrapper>,
 
-    document.body,
+    document.body
   )
 }
 

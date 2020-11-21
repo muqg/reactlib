@@ -1,4 +1,3 @@
-import * as React from "react"
 import {Editor} from "../../../utility/dom"
 import {ToolbarItem} from "../ToolbarItem"
 

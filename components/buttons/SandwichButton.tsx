@@ -1,5 +1,4 @@
-import * as React from "react"
-import {useEffect, useState} from "react"
+import {MouseEvent, useEffect, useState} from "react"
 import {COLOR_DARK, css, styled, useTheme} from "../../styles"
 import {call} from "../../utility/function"
 
@@ -49,7 +48,7 @@ const StyledButton = styled.button`
     }
   }
 
-  ${p => p.active && activeStyle}
+  ${(p) => p.active && activeStyle}
 `
 
 interface StyleProps {
@@ -69,7 +68,7 @@ interface OwnProps {
   /**
    * Called when the button is clicked and its active state changes.
    */
-  onClick?: (isActive: boolean, e: React.MouseEvent<any>) => void
+  onClick?: (isActive: boolean, e: MouseEvent<any>) => void
 }
 
 type Props = OwnProps & StyleProps
@@ -89,7 +88,7 @@ export function SandwichButton({
     if (active !== isActive) setIsActive(active)
   }, [active])
 
-  function handleClick(event: React.MouseEvent<any>) {
+  function handleClick(event: MouseEvent<any>) {
     const nextIsActive = !isActive
     setIsActive(nextIsActive)
 

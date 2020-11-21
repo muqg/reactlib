@@ -1,4 +1,3 @@
-import * as React from "react"
 import spinnerImage from "../img/tail-spinner.svg"
 import {styled} from "../styles"
 import {Size} from "../utility"
@@ -9,11 +8,11 @@ const StyledImage = styled.img`
   ${(_p: StyleProps) => ""}
 
   display: block;
-  height: ${p => p.size! * SIZE_FACTOR}px;
+  height: ${(p) => p.size! * SIZE_FACTOR}px;
   margin: auto;
-  width: ${p => p.size! * SIZE_FACTOR}px;
+  width: ${(p) => p.size! * SIZE_FACTOR}px;
 
-  ${p => p.visible !== undefined && !p.visible && `visibility: hidden;`}
+  ${(p) => p.visible !== undefined && !p.visible && `visibility: hidden;`}
 `
 StyledImage.defaultProps = {
   size: Size.Large,

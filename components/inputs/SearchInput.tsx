@@ -1,4 +1,4 @@
-import * as React from "react"
+import {ComponentProps} from "react"
 import {COLOR_TEXT, styled, useTheme} from "../../styles"
 import {TextInput} from "./TextInput"
 
@@ -13,10 +13,7 @@ const StyledSvg = styled.svg`
   transform: translateY(-50%);
 `
 
-function SearchInput({
-  color,
-  ...props
-}: React.ComponentProps<typeof TextInput>) {
+function SearchInput({color, ...props}: ComponentProps<typeof TextInput>) {
   const theme = useTheme()
   color = color || theme.text || COLOR_TEXT
 

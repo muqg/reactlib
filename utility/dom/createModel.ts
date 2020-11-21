@@ -1,3 +1,4 @@
+import {Component} from "react"
 import {put} from "../collection"
 import {cast} from "../string"
 import {ParseableInput} from "./InputParsers"
@@ -19,9 +20,9 @@ export interface CreateModelOptions {
  * @param options Model options.
  */
 function createModel(
-  component: React.Component,
+  component: Component,
   key = "",
-  options: CreateModelOptions = {},
+  options: CreateModelOptions = {}
 ) {
   options = {
     cast: true,
@@ -34,7 +35,7 @@ function createModel(
     const name = parsed.name
     const value = options.cast ? cast(parsed.value) : parsed.value
 
-    component.setState(prevState => put(key, {[name]: value}, prevState))
+    component.setState((prevState) => put(key, {[name]: value}, prevState))
 
     return {
       name,

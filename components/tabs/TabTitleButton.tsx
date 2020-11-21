@@ -1,4 +1,4 @@
-import * as React from "react"
+import {ReactNode} from "react"
 import {styled} from "../../styles"
 import {truncate} from "../../styles/mixins"
 import {Button, ButtonVariant} from "../buttons"
@@ -10,7 +10,7 @@ const StyledButton = styled(Button)`
 
 interface Props {
   active?: boolean
-  children: React.ReactNode
+  children: ReactNode
   index: number
   onClick: (index: number) => void
 }

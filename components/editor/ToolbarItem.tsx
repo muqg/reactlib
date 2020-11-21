@@ -1,15 +1,15 @@
-import * as React from "react"
+import {MouseEvent} from "react"
 import {COLOR_DARK, COLOR_MAIN, css, styled} from "../../styles"
 
 const withImage = css`
-    background: url('${(p: Props) => p.backgroundImage}') no-repeat;
-    background-size: auto 100%;
-    filter: contrast(1);
-    transition-property: filter;
+  background: url("${(p: Props) => p.backgroundImage}") no-repeat;
+  background-size: auto 100%;
+  filter: contrast(1);
+  transition-property: filter;
 
-    &:hover {
-        filter: contrast(0);
-    }
+  &:hover {
+    filter: contrast(0);
+  }
 `
 const withHover = css`
   &:hover {
@@ -29,7 +29,7 @@ const Container = styled.div`
 
   ${(p: Props) => p.backgroundImage && withImage}
 
-  ${p => p.animateHover && !p.backgroundImage && withHover}
+  ${(p) => p.animateHover && !p.backgroundImage && withHover}
 
     &:active {
     transform: translate(1px);
@@ -44,7 +44,7 @@ interface Props {
   backgroundImage?: string
   children?: any
   className?: string
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void
+  onClick?: (event: MouseEvent<HTMLDivElement>) => void
   title?: string
 }
 

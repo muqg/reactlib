@@ -1,7 +1,7 @@
-import * as React from "react"
-import {ToolbarItem} from "../ToolbarItem"
-import {Editor} from "../../../utility/dom"
+import {MouseEvent} from "react"
 import {styled} from "../../../styles"
+import {Editor} from "../../../utility/dom"
+import {ToolbarItem} from "../ToolbarItem"
 
 const FONT_NAMES = [
   "Arial",
@@ -29,10 +29,10 @@ const ToolbarFontName = (props: Props) => {
     <ToolbarItem className="input" title="Font name" animateHover={false}>
       <StyledSelect
         name="tb_font_name"
-        onChange={e => Editor.fontName(e.target.value)}
+        onChange={(e) => Editor.fontName(e.target.value)}
         onContextMenu={onRightClick}
       >
-        {fonts.map(name => (
+        {fonts.map((name) => (
           <option value={name} style={{fontFamily: name}} key={name}>
             {name}
           </option>
@@ -42,7 +42,7 @@ const ToolbarFontName = (props: Props) => {
   )
 }
 
-function onRightClick(event: React.MouseEvent<HTMLSelectElement>) {
+function onRightClick(event: MouseEvent<HTMLSelectElement>) {
   event.preventDefault()
   Editor.fontName((event.target as HTMLSelectElement).value)
 }

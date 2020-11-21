@@ -1,4 +1,4 @@
-import * as React from "react"
+import {ComponentType} from "react"
 import {COLOR_BACKGROUND, COLOR_DARK, css, styled} from "../../styles"
 import {truncate} from "../../styles/mixins"
 import {Size} from "../../utility"
@@ -27,7 +27,7 @@ const Header = styled(Grid)`
   border-image: linear-gradient(
       to right,
       transparent,
-      ${p => p.theme.main || COLOR_DARK},
+      ${(p) => p.theme.main || COLOR_DARK},
       transparent
     )
     1;
@@ -38,8 +38,8 @@ const Title = styled.p`
   ${truncate("100%")}
 `
 const Container = styled(Grid)`
-  background: ${p => p.theme.background || COLOR_BACKGROUND};
-  max-width: ${p => p.size * SIZE_FACTOR}px;
+  background: ${(p) => p.theme.background || COLOR_BACKGROUND};
+  max-width: ${(p) => p.size * SIZE_FACTOR}px;
 
   ${(p: ContainerStyleProps) =>
     p.fixedHeight
@@ -62,7 +62,7 @@ interface ContainerStyleProps {
 
 type Props = DialogBoxProps & DialogProps
 
-const DialogBox: React.ComponentType<Props> = ({
+const DialogBox: ComponentType<Props> = ({
   children,
   className,
   fixedHeight,
@@ -72,7 +72,7 @@ const DialogBox: React.ComponentType<Props> = ({
 }) => {
   return (
     <Dialog {...props}>
-      {close => (
+      {(close) => (
         <>
           {title && <DocumentTitle title={title} />}
           <Back onClick={close} />

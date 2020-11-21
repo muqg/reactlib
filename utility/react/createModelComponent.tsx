@@ -1,24 +1,24 @@
-import * as React from "react"
+import {cloneElement, Component, FunctionComponent} from "react"
 import {isFunction} from "../assertions"
 import {pull} from "../collection"
 import {createModel} from "../dom/createModel"
 
 interface Props {
-    children: JSX.Element | ((props: InjectedModelProps) => JSX.Element)
-    /**
-     * The name of the key within the modelled state.
-     */
-    name?: string
+  children: JSX.Element | ((props: InjectedModelProps) => JSX.Element)
+  /**
+   * The name of the key within the modelled state.
+   */
+  name?: string
 }
 
 interface CreateModelComponentOptions {
-    model?: ReturnType<typeof createModel>
+  model?: ReturnType<typeof createModel>
 }
 
 interface InjectedModelProps {
-    name: string
-    onChange: ReturnType<typeof createModel>
-    value: string | number | boolean
+  name: string
+  onChange: ReturnType<typeof createModel>
+  value: string | number | boolean
 }
 
 /**
@@ -29,35 +29,29 @@ interface InjectedModelProps {
  * @param options Model options.
  */
 function createModelComponent(
-    component: React.Component,
-    key = "",
-    {model, ...options}: CreateModelComponentOptions = {}
-): React.SFC<Props> {
-    if (__DEV__) {
-        console.warn(
-            "`createModelComponent` is deprecated. Consider using useModel hook instead."
-        )
+  component: Component,
+  key = "",
+  {model, ...options}: CreateModelComponentOptions = {}
+): FunctionComponent<Props> {
+  if (__DEV__) {
+    console.warn(
+      "`createModelComponent` is deprecated. Consider using useModel hook instead."
+    )
+  }
+
+  if (!model) model = createModel(component, key, options)
+
+  return function Model({name = "", ...props}: Props) {
+    const injectedProps: InjectedModelProps = {
+      name,
+      onChange: model!,
+      value: name ? pull(component.state, key ? `${key}.${name}` : name) : "",
     }
 
-    if (!model) model = createModel(component, key, options)
-
-    return function Model({name = "", ...props}: Props) {
-        const injectedProps: InjectedModelProps = {
-            name,
-            onChange: model!,
-            value: name
-                ? pull(component.state, key ? `${key}.${name}` : name)
-                : "",
-        }
-
-        if (
-            isFunction<(props: InjectedModelProps) => JSX.Element>(
-                props.children
-            )
-        )
-            return props.children(injectedProps)
-        return React.cloneElement(props.children, injectedProps)
-    }
+    if (isFunction<(props: InjectedModelProps) => JSX.Element>(props.children))
+      return props.children(injectedProps)
+    return cloneElement(props.children, injectedProps)
+  }
 }
 
 export {createModelComponent}

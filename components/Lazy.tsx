@@ -1,12 +1,18 @@
-﻿import * as React from "react"
-import {CSSProperties, useLayoutEffect, useRef, useState} from "react"
+﻿import {
+  createElement,
+  CSSProperties,
+  ReactNode,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react"
 
 interface Props {
   /**
    * Class that will be applied to the placeholder element.
    */
   className?: string
-  children?: React.ReactNode
+  children?: ReactNode
   /**
    * Type of the placeholder element.
    *
@@ -68,13 +74,13 @@ export function Lazy({
 
     let observer: IntersectionObserver | null = new IntersectionObserver(
       onIntersect,
-      options,
+      options
     )
     observer.observe(placeholder.current)
   })
 
   if (!loaded) {
-    return React.createElement(placeholderType, {
+    return createElement(placeholderType, {
       ref: placeholder,
       ...props,
     })

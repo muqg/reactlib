@@ -1,5 +1,13 @@
-import * as React from "react"
-import {COLOR_DARK, COLOR_BACKGROUND, css, styled} from "../../styles"
+import {
+  ChangeEvent,
+  Children,
+  cloneElement,
+  Component,
+  createRef,
+  isValidElement,
+  ReactElement,
+} from "react"
+import {COLOR_BACKGROUND, COLOR_DARK, css, styled} from "../../styles"
 import {position} from "../../styles/mixins"
 import {classNames} from "../../utility/dom"
 import {OutsideAlert} from "../OutsideAlert"
@@ -15,9 +23,9 @@ const divCommon = css`
   height: 100%;
   outline: none;
   overflow: hidden;
-  position: ${p => (p.multiple ? "relative" : "absolute")};
+  position: ${(p) => (p.multiple ? "relative" : "absolute")};
   width: 100%;
-  z-index: ${p => (p.active ? 3 : 2)};
+  z-index: ${(p) => (p.active ? 3 : 2)};
 
   ${(p: StyleProps) =>
     (p.multiple || p.active) &&
@@ -63,20 +71,20 @@ interface Props {
    */
   className?: string
   children?: any
-  onChange?: (e: React.ChangeEvent<any>) => void
+  onChange?: (e: ChangeEvent<any>) => void
 }
 
 interface State {
   isActive: boolean
 }
 
-class Select extends React.Component<Props, State> {
+class Select extends Component<Props, State> {
   static optionID = 420
 
   state: State = {
     isActive: false,
   }
-  container = React.createRef<any>()
+  container = createRef<any>()
 
   toggleActive(isActive: boolean) {
     if (this.props.multiple) return
@@ -90,7 +98,7 @@ class Select extends React.Component<Props, State> {
         if (this.state.isActive) {
           const node = this.container.current as HTMLElement
           const selectedInput = node.querySelector<HTMLInputElement>(
-            "input:checked",
+            "input:checked"
           )
 
           // Should null check in case that there is no initially checked element.
@@ -101,7 +109,7 @@ class Select extends React.Component<Props, State> {
               selectedLabel.offsetTop - selectedLabel.offsetHeight
           }
         }
-      },
+      }
     )
   }
 
@@ -136,8 +144,8 @@ class Select extends React.Component<Props, State> {
     const optionType = this.props.multiple ? "checkbox" : "radio"
     Select.optionID++
 
-    return React.Children.map(this.props.children, (child, i) => {
-      if (React.isValidElement<SelectOption>(child)) {
+    return Children.map(this.props.children, (child, i) => {
+      if (isValidElement<SelectOption>(child)) {
         const props: any = {
           name: Select.optionID,
           type: optionType,
@@ -148,15 +156,12 @@ class Select extends React.Component<Props, State> {
           height: this.props.height || DEFAULT_HEIGHT,
           multiple: this.props.multiple,
         }
-        return React.cloneElement(child, {...child.props, ...props})
+        return cloneElement(child, {...child.props, ...props})
       }
     })
   }
 
-  isOptionSelected(
-    option: React.ReactElement<SelectOption>,
-    index: number,
-  ): boolean {
+  isOptionSelected(option: ReactElement<SelectOption>, index: number): boolean {
     const selectValues = (this.props.value || "").split(",")
     // @ts-ignore Strange option.props.props typings bug.
     const optionValue = option.props.value

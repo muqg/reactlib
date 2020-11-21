@@ -1,5 +1,4 @@
-import * as React from "react"
-import {useState} from "react"
+import {memo, useState} from "react"
 import {createPortal} from "react-dom"
 import {useInterval} from "../hooks"
 import {COLOR_CONTRAST, COLOR_DARK, styled} from "../styles"
@@ -9,21 +8,21 @@ import {call} from "../utility/function"
 const OneSecond = 1_000
 
 const Container = styled.div`
-  background: ${p => p.theme.main || COLOR_DARK};
+  background: ${(p) => p.theme.main || COLOR_DARK};
   border-radius: 0 0 8px 8px;
-  box-shadow: 0 2px 3px ${p => p.theme.main || COLOR_DARK};
+  box-shadow: 0 2px 3px ${(p) => p.theme.main || COLOR_DARK};
   transform: translateX(-50%);
   ${position("fixed", "0", "", "", "50%")}
   ${flex()}
 `
 const Timepiece = styled.div`
-  color: ${p => p.theme.contrast || COLOR_CONTRAST};
+  color: ${(p) => p.theme.contrast || COLOR_CONTRAST};
   font-size: 1.2em;
   line-height: 1.2em;
   padding: 6px 15px;
 
   &:first-of-type {
-    border-right: 1px solid ${p => p.theme.contrast || COLOR_CONTRAST};
+    border-right: 1px solid ${(p) => p.theme.contrast || COLOR_CONTRAST};
   }
 `
 
@@ -54,7 +53,7 @@ interface Props {
   paused?: boolean
 }
 
-const Timer = React.memo(
+const Timer = memo(
   ({everySecond, everyMinute, limit, onExpire, paused}: Props) => {
     const [time, setTime] = useState(getTime(limit))
 
@@ -93,9 +92,9 @@ const Timer = React.memo(
         <Timepiece>{seconds.padStart(2, "0")}</Timepiece>
       </Container>,
 
-      document.body,
+      document.body
     )
-  },
+  }
 )
 
 export {Timer}

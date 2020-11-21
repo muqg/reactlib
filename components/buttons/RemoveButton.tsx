@@ -1,9 +1,9 @@
-import * as React from "react"
+import {ComponentProps} from "react"
 import {COLOR_ERROR, useTheme} from "../../styles"
 import {Size} from "../../utility"
 import {IconButton} from "./IconButton"
 
-type Props = Omit<React.ComponentProps<typeof IconButton>, "children">
+type Props = Omit<ComponentProps<typeof IconButton>, "children">
 
 const RemoveButton = ({color, ...props}: Props) => {
   const theme = useTheme()

@@ -1,4 +1,4 @@
-import * as React from "react"
+import {ComponentType, FunctionComponent} from "react"
 import {Notify} from "../components/component-types"
 import {useNotify} from "../hooks"
 import {getDisplayName} from "../utility/react"
@@ -8,11 +8,12 @@ export interface NotificationComponentProps {
 }
 
 function withNotify<P extends NotificationComponentProps>(
-  Component: React.ComponentType<P>,
+  Component: ComponentType<P>
 ) {
-  const wrapper: React.FunctionComponent<
-    Omit<P, keyof NotificationComponentProps>
-  > = props => {
+  const wrapper: FunctionComponent<Omit<
+    P,
+    keyof NotificationComponentProps
+  >> = (props) => {
     const notify = useNotify()
     // @ts-ignore Correct but not compatible with expected return type.
     return <Component {...props} notify={notify} />

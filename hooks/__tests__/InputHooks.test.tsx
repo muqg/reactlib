@@ -1,6 +1,6 @@
 import {fireEvent, render, RenderResult} from "@testing-library/react"
 import {renderHook, RenderHookResult} from "@testing-library/react-hooks"
-import React from "react"
+import {ComponentType} from "react"
 import {wait} from "../../utility"
 import {Model, useModel} from "../InputHooks"
 
@@ -29,7 +29,7 @@ describe("Model hook", () => {
           test3: undefined,
           test4: {
             value: 1,
-            parse: value => value * 42,
+            parse: (value) => value * 42,
           },
         }))
       ).result.current
@@ -98,7 +98,7 @@ describe("Model hook", () => {
     it("takes priority for entry's passive status over the model's passive setting", () => {
       let model: Model<{test: string}> = null as any
 
-      const ComponentWithPassiveModel: React.ComponentType = jest.fn(() => {
+      const ComponentWithPassiveModel: ComponentType = jest.fn(() => {
         model = useModel<{test: string}>(
           () => ({
             test: {
@@ -117,7 +117,7 @@ describe("Model hook", () => {
 
       expect(ComponentWithPassiveModel).toHaveBeenCalledTimes(1)
 
-      const ComponentWithPassiveEntry: React.ComponentType = jest.fn(() => {
+      const ComponentWithPassiveEntry: ComponentType = jest.fn(() => {
         model = useModel<{test: string}>(
           () => ({
             test: {
@@ -156,7 +156,7 @@ describe("Model hook", () => {
 
       it.each(["$errors", "$firstError"])(
         "does not render when %s() is called",
-        method => {
+        (method) => {
           model[method]()
 
           expect(mock).toHaveBeenCalledTimes(1)
@@ -304,11 +304,11 @@ describe("Model hook", () => {
           simple: 12,
           parsed: {
             value: 1,
-            parse: value => value * value,
+            parse: (value) => value * value,
           },
           validated: {
             value: "asd",
-            validate: val => {
+            validate: (val) => {
               if (!val.length) {
                 return "error"
               }
@@ -462,7 +462,7 @@ describe("Model hook", () => {
       const num = 10
       const model = renderHook(() =>
         useModel<{test: number}>(() => ({
-          test: {value: num, serialize: val => `serialized-${val}`},
+          test: {value: num, serialize: (val) => `serialized-${val}`},
         }))
       ).result.current
 
@@ -485,7 +485,7 @@ describe("Model hook", () => {
         useModel(() => ({
           test: {
             value: 1,
-            validate: _n => "error",
+            validate: (_n) => "error",
           },
         }))
       ).result.current
@@ -503,7 +503,7 @@ describe("Model hook", () => {
         useModel(() => ({
           test: {
             value: 1,
-            validate: _n => "error",
+            validate: (_n) => "error",
           },
         }))
       ).result.current
@@ -607,7 +607,7 @@ describe("Model hook", () => {
 
     it.each(["$errors", "$validate"])(
       "returns cached errors when %s() is called more than once",
-      method => {
+      (method) => {
         const errors = model.result.current[method]()
         expect(model.result.current[method]()).toBe(errors)
       }

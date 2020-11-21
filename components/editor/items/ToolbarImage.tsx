@@ -1,4 +1,4 @@
-import React from "react"
+import {ChangeEvent} from "react"
 import {Editor} from "../../../utility/dom"
 import {ToolbarItem} from "../ToolbarItem"
 
@@ -18,7 +18,7 @@ export const ToolbarImage = (props: Props) => {
           hidden={true}
           type="file"
           datatype="*.*"
-          onChange={e => onChange(e, props.handler)}
+          onChange={(e) => onChange(e, props.handler)}
         />
         <p>Img</p>
       </label>
@@ -27,7 +27,7 @@ export const ToolbarImage = (props: Props) => {
 }
 
 async function onChange(
-  event: React.ChangeEvent<HTMLInputElement>,
+  event: ChangeEvent<HTMLInputElement>,
   handleImage: Props["handler"]
 ) {
   const target = event.target as HTMLInputElement

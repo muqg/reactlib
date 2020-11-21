@@ -11,7 +11,7 @@ import {Hotkey, isKeyPressed} from "../utility/dom"
 function useGlobalHotkey(
   hotkey: Hotkey,
   handle: (e: KeyboardEvent) => void,
-  allowInsideInputs?: boolean,
+  allowInsideInputs?: boolean
 ) {
   useEffect(() => {
     function handler(event: KeyboardEvent) {

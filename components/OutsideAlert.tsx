@@ -1,4 +1,4 @@
-import * as React from "react"
+import {Component, createRef} from "react"
 import {Dict} from "../utility"
 import {except, len, only} from "../utility/collection"
 
@@ -24,14 +24,14 @@ type Props = Alert
  * callback. If a container prop is not passed then children are wrapped inside
  * a <div> container.
  */
-class OutsideAlert extends React.Component<Props> {
+class OutsideAlert extends Component<Props> {
   static defaultProps: Partial<Alert> = {
     enabled: true,
   }
   static alerts: Dict<Alert> = {}
   static nextIndex = 0
 
-  container = React.createRef<HTMLDivElement>()
+  container = createRef<HTMLDivElement>()
   index = OutsideAlert.nextIndex++
 
   componentDidMount() {
@@ -61,7 +61,7 @@ class OutsideAlert extends React.Component<Props> {
 
   triggerAlerts = (event: MouseEvent) => {
     const target = event.target as HTMLElement
-    Object.values(OutsideAlert.alerts).forEach(alert => {
+    Object.values(OutsideAlert.alerts).forEach((alert) => {
       if (alert.enabled && alert.container && !alert.container.contains(target))
         alert.trigger()
     })

@@ -1,4 +1,3 @@
-import * as React from "react"
 import {useEffect, useState} from "react"
 import {useNotify, useTranslation} from "../hooks"
 import {Dict, RequestMethod} from "../utility"

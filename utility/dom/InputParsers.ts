@@ -1,3 +1,4 @@
+import {ChangeEvent, SetStateAction} from "react"
 import {isType} from "../assertions"
 
 export type ParseableElement =
@@ -5,9 +6,7 @@ export type ParseableElement =
   | HTMLSelectElement
   | HTMLTextAreaElement
   | HTMLButtonElement
-export type ParseableInput =
-  | React.ChangeEvent<ParseableElement>
-  | ParseableElement
+export type ParseableInput = ChangeEvent<ParseableElement> | ParseableElement
 
 type ParseableValue = ParseableInput | boolean | string | number
 
@@ -29,8 +28,8 @@ export function parseInputValue(input: ParseableValue): string {
     // Parse multiple selects.
     else if (element instanceof HTMLSelectElement && element.multiple) {
       value = Object.values(element.options)
-        .filter(o => o.selected)
-        .map(o => o.value)
+        .filter((o) => o.selected)
+        .map((o) => o.value)
         .join(",")
     }
   } else {
@@ -54,16 +53,16 @@ export function parseNoNewlineString(input: ParseableValue) {
 }
 
 /**
- * Returns the result of a valid React.SetStateAction (BasicStateReducer).
+ * Returns the result of a valid SetStateAction (BasicStateReducer).
  * More information at:
  * https://github.com/facebook/react/blob/3af05de1aaed309f8146bc53f9a4b4d785abdd3f/packages/react-reconciler/src/ReactFiberHooks.js#L631
  *
- * @param input A valid React.SetStateAction
+ * @param input A valid SetStateAction
  * @param current The current state value.
  */
 export function parseSetStateAction<T>(
-  input: React.SetStateAction<T>,
-  current: T,
+  input: SetStateAction<T>,
+  current: T
 ): T {
   return input instanceof Function ? input(current) : input
 }

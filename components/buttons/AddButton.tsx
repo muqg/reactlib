@@ -1,11 +1,11 @@
-import * as React from "react"
+import {ComponentProps, ComponentType} from "react"
 import {COLOR_SUCCESS, useTheme} from "../../styles"
 import {Size} from "../../utility"
 import {IconButton} from "./IconButton"
 
-type Props = Omit<React.ComponentProps<typeof IconButton>, "children">
+type Props = Omit<ComponentProps<typeof IconButton>, "children">
 
-const AddButton: React.ComponentType<Props> = ({color, ...props}) => {
+const AddButton: ComponentType<Props> = ({color, ...props}) => {
   const theme = useTheme()
   color = color || theme.success || COLOR_SUCCESS
 

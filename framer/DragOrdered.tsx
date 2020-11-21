@@ -1,5 +1,5 @@
 import {motion} from "framer-motion"
-import React, {useRef} from "react"
+import {CSSProperties, useRef} from "react"
 import styled from "styled-components"
 import {
   DragOrderedGridIndexFinder,
@@ -26,12 +26,12 @@ type DraggableProps = {
   index: number
   moveItem: MoveItem
   setPosition: PositionUpdateFunction
-  style?: React.CSSProperties
+  style?: CSSProperties
 }
 
 type DraggableListProps = {
   children: JSX.Element[]
-  elementStyle?: React.CSSProperties
+  elementStyle?: CSSProperties
   finder: DragOrderedIndexFinder
   onChange?: DragOrderedChangeHandler
 }
@@ -42,9 +42,9 @@ type ContainerProps = {
   /**
    * Styling for each underlying motion element wrapper.
    */
-  elementStyle?: React.CSSProperties
+  elementStyle?: CSSProperties
   onChange?: DragOrderedChangeHandler
-  style?: Omit<React.CSSProperties, "display" | "flexDirection" | "flexWrap">
+  style?: Omit<CSSProperties, "display" | "flexDirection" | "flexWrap">
 }
 
 const dragConstraints = {top: 0, bottom: 0, left: 0, right: 0}

@@ -1,5 +1,10 @@
-import * as React from "react"
-import {useEffect, useRef} from "react"
+import {
+  KeyboardEvent,
+  ReactNode,
+  SyntheticEvent,
+  useEffect,
+  useRef,
+} from "react"
 import {createPortal} from "react-dom"
 import {createGlobalStyle, styled} from "../../styles"
 import {CHAR_CODE_ESCAPE, Hotkey, isKeyPressed} from "../../utility/dom"
@@ -24,7 +29,7 @@ const Container = styled(Center)`
 `
 
 interface Dialog extends DialogProps {
-  children: (close: () => void) => React.ReactNode
+  children: (close: () => void) => ReactNode
 }
 
 function Dialog({onClose, onKeyDown, onShow, ...props}: Dialog) {
@@ -40,7 +45,7 @@ function Dialog({onClose, onKeyDown, onShow, ...props}: Dialog) {
     }
   }, [onClose, onShow])
 
-  function keyDown(event: React.KeyboardEvent) {
+  function keyDown(event: KeyboardEvent) {
     stopEvent(event)
 
     if (isKeyPressed(ESCAPE_HOTKEY, event)) {
@@ -49,7 +54,7 @@ function Dialog({onClose, onKeyDown, onShow, ...props}: Dialog) {
     call(onKeyDown, event)
   }
 
-  function stopEvent(e: React.SyntheticEvent) {
+  function stopEvent(e: SyntheticEvent) {
     e.stopPropagation()
   }
 
@@ -67,7 +72,7 @@ function Dialog({onClose, onKeyDown, onShow, ...props}: Dialog) {
       {props.children(onClose)}
       <DisabledBodyScroll />
     </Container>,
-    document.body,
+    document.body
   )
 }
 

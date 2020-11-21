@@ -1,3 +1,4 @@
+import {KeyboardEvent, ReactNode} from "react"
 import {Size} from "../utility"
 import {Dialog} from "./dialogs/Dialog"
 import {NotificationProps} from "./notificaton/Notification"
@@ -11,11 +12,11 @@ import {NotificationProps} from "./notificaton/Notification"
 
 export type Notify = (
   content: Required<NotificationProps>["content"],
-  options?: Omit<NotificationProps, "content">,
+  options?: Omit<NotificationProps, "content">
 ) => void
 
 export type DialogBoxProps = {
-  children: React.ReactNode | Dialog["children"]
+  children: ReactNode | Dialog["children"]
   fixedHeight?: boolean
   size?: Size
   /**
@@ -39,7 +40,7 @@ export type DialogProps = {
    *
    * - Escape key is bound by default to close the dialog.
    */
-  onKeyDown?: (e: React.KeyboardEvent) => void
+  onKeyDown?: (e: KeyboardEvent) => void
   /**
    * Called when dialog is shown.
    */

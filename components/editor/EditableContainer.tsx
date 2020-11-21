@@ -1,5 +1,4 @@
-import * as React from "react"
-import {useRef, useState} from "react"
+import {ClipboardEvent, KeyboardEvent, useRef, useState} from "react"
 import {styled} from "../../styles"
 import {CHAR_CODE_ENTER, Editor, isKeyPressed} from "../../utility/dom"
 import {call} from "../../utility/function"
@@ -30,14 +29,14 @@ const EditableContainer = (props: Props) => {
     if (container) call(props.contentChange, container.innerHTML)
   }
 
-  function handlePaste(event: React.ClipboardEvent<HTMLDivElement>) {
+  function handlePaste(event: ClipboardEvent<HTMLDivElement>) {
     event.preventDefault()
 
     const text = event.clipboardData.getData("text/plain")
     Editor.insertHTML(text)
   }
 
-  function preventNewline(event: React.KeyboardEvent) {
+  function preventNewline(event: KeyboardEvent) {
     if (isKeyPressed({keyCode: CHAR_CODE_ENTER}, event, true))
       event.preventDefault()
   }
