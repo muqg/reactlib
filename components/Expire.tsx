@@ -19,7 +19,7 @@ function Expire(props: Props) {
 
   useEffect(() => {
     const seconds = Math.max(0, props.in) * 1000
-    timer.current = setTimeout(expire, seconds)
+    timer.current = setTimeout(expire, seconds) as any
 
     setVisible(true)
 
