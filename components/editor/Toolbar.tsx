@@ -1,14 +1,15 @@
 import {createPortal} from "react-dom"
 import {COLOR_MAIN, styled} from "../../styles"
-import {flex, position} from "../../styles/mixins"
 
 export const TOOLBAR_SPRITESHEET = "/img/toolbar.png"
 
 const ToolbarWrapper = styled.div`
+  left: 0;
+  position: fixed;
+  top: 0;
   text-align: center;
   width: 100%;
   z-index: 1000;
-  ${position("fixed", "0", "", "", "0")}
 
   > div {
     background: ${COLOR_MAIN};
@@ -21,8 +22,11 @@ const ToolbarWrapper = styled.div`
 `
 
 const ToolbarContainer = styled.div`
+  display: flex;
   height: 24px;
-  ${flex("center", null, "row", "wrap")}
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
 `
 
 interface Props {

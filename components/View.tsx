@@ -1,7 +1,6 @@
 import {css, styled} from "../styles"
 import {Size} from "../utility"
 import {isNumber} from "../utility/assertions"
-import {HeightProperty} from "csstype"
 
 const VIEW_WIDTH_SIZE_MODIFIER = 320
 
@@ -20,7 +19,7 @@ interface StyleProps {
    * if `fullHeight` property is present. It also makes
    * overflow content scrollable instead of visible.
    */
-  height?: HeightProperty<string>
+  height?: string
   /**
    * Width size, based on the default standard modifier.
    * It is disregarded if `fullWidth` property is present,
@@ -30,7 +29,7 @@ interface StyleProps {
 
 export const View = styled.div`
   display: block;
-  max-width: ${p =>
+  max-width: ${(p) =>
     !p.fullWidth && isNumber(p.width)
       ? p.width * VIEW_WIDTH_SIZE_MODIFIER + "px"
       : "100%"};

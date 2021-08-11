@@ -3,7 +3,6 @@
 import {PureComponent} from "react"
 import {findDOMNode} from "react-dom"
 import {COLOR_MAIN, css, styled} from "../../styles"
-import {position, truncate} from "../../styles/mixins"
 import {isObject} from "../../utility/assertions"
 
 const Container = styled.label`
@@ -14,8 +13,8 @@ const Container = styled.label`
   line-height: ${(p: StyleProps) => p.height}px;
   margin: 0;
   padding: 0 3px;
-  ${position("relative")}
-  transition: background .3s ease;
+  position: relative;
+  transition: background 0.3s ease;
 
   ${(p) =>
     p.active &&
@@ -32,8 +31,10 @@ const Container = styled.label`
 `
 const contentCommon = css`
   display: block;
+  left: 0;
+  position: relative;
+  top: 0;
   width: 100%;
-  ${position("relative", "0", "", "", "0")}
 
   &:hover {
     background: #efefef;
@@ -42,7 +43,9 @@ const contentCommon = css`
 const Content = styled.div`
   display: ${(p: StyleProps) => (p.active || p.multiple ? "block" : "none")};
   height: 100%;
-  ${truncate()}
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   input:checked ~ & {
     ${(p) => !p.active && contentCommon}

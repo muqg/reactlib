@@ -1,11 +1,13 @@
 import {ReactNode} from "react"
 import {styled} from "../../styles"
-import {truncate} from "../../styles/mixins"
 import {Button, ButtonVariant} from "../buttons"
 
 const StyledButton = styled(Button)`
   border-radius: 0;
-  ${truncate("150px")}
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 150px;
+  white-space: nowrap;
 `
 
 interface Props {

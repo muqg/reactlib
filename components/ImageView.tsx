@@ -1,12 +1,15 @@
 import {AspectImage, CloseButton, Dialog, DialogProps} from "."
 import {styled} from "../styles"
-import {position} from "../styles/mixins"
 
 const Back = styled.div`
   background: black;
+  bottom: 0;
+  left: 0;
   opacity: 0.75;
+  position: absolute;
+  right: 0;
+  top: 0;
   z-index: -1;
-  ${position("absolute", "0", "0", "0", "0")}
 `
 
 interface Props {

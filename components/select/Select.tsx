@@ -8,7 +8,6 @@ import {
   ReactElement,
 } from "react"
 import {COLOR_BACKGROUND, COLOR_DARK, css, styled} from "../../styles"
-import {position} from "../../styles/mixins"
 import {classNames} from "../../utility/dom"
 import {OutsideAlert} from "../OutsideAlert"
 import SelectOption from "./SelectOption"
@@ -38,7 +37,7 @@ const divCommon = css`
 const Container = styled.div`
   display: inline-block;
   height: ${(p: StyleProps) => (p.active ? "auto" : p.height + "px")};
-  ${position("relative")}
+  position: relative;
   vertical-align: middle;
   width: 250px;
 

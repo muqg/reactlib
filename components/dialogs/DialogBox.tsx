@@ -1,6 +1,5 @@
 import {ComponentType} from "react"
 import {COLOR_BACKGROUND, COLOR_DARK, css, styled} from "../../styles"
-import {truncate} from "../../styles/mixins"
 import {Size} from "../../utility"
 import {isFunction} from "../../utility/assertions"
 import {CloseButton} from "../buttons"
@@ -35,7 +34,10 @@ const Header = styled(Grid)`
 `
 const Title = styled.p`
   font-size: 1.1rem;
-  ${truncate("100%")}
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap;
 `
 const Container = styled(Grid)`
   background: ${(p) => p.theme.background || COLOR_BACKGROUND};
