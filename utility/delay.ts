@@ -8,13 +8,13 @@
  */
 function delay<A extends any[]>(
   func: (...args: A) => Promise<void> | void,
-  wait = 250,
+  wait = 250
 ) {
   let timeout: number | undefined
 
   return (...args: A) => {
     clearTimeout(timeout)
-    timeout = setTimeout(func, wait, ...args)
+    timeout = setTimeout(func, wait, ...args) as any
   }
 }
 

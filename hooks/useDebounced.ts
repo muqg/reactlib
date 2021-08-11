@@ -8,13 +8,13 @@ import {useRef} from "react"
  */
 function useDebounced<A extends any[]>(
   func: (...args: A) => void | Promise<void>,
-  delay = 250,
+  delay = 250
 ) {
   const timeout = useRef(-1)
 
   return (...args: A) => {
     clearTimeout(timeout.current)
-    timeout.current = setTimeout(func, delay, ...args)
+    timeout.current = setTimeout(func, delay, ...args) as any
   }
 }
 
