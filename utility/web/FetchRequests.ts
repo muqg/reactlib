@@ -6,7 +6,7 @@ export type RequestOptions = Omit<RequestInit, "body" | "method">
 
 const X_CSRF_TOKEN = (() => {
   const element = document.querySelector<HTMLMetaElement>(
-    'meta[name="csrf-token"]',
+    'meta[name="csrf-token"]'
   )
   return element ? element.content : ""
 })()
@@ -27,7 +27,7 @@ export class ResponseError extends Error {
 
 async function baseRequest<T = any>(
   url: string,
-  options: RequestInit,
+  options: RequestInit
 ): Promise<T> {
   const headers = new Headers(options.headers)
   headers.set("X-CSRF-TOKEN", X_CSRF_TOKEN)
@@ -76,7 +76,7 @@ export function request<T = any>(
   method: RequestMethod,
   url: string,
   data = {},
-  options: RequestOptions = {},
+  options: RequestOptions = {}
 ): Promise<T> {
   const headers = new Headers(options.headers)
   const requestInit: RequestInit = options
@@ -120,7 +120,7 @@ export function upload<T = any>(
   url: string,
   file: File,
   body = {},
-  options: RequestOptions = {},
+  options: RequestOptions = {}
 ): Promise<T> {
   const fd = new FormData()
   Object.entries<string>(body).map(([key, value]) => fd.append(key, value))

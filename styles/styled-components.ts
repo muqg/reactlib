@@ -10,9 +10,7 @@ const {
   keyframes,
   ThemeContext,
   ThemeProvider,
-} = (styledComponents as ThemedStyledComponentsModule<
-  any
->) as ThemedStyledComponentsModule<ThemeInterface>
+} = styledComponents as ThemedStyledComponentsModule<any> as ThemedStyledComponentsModule<ThemeInterface>
 
 function useTheme() {
   return useContext(ThemeContext)
