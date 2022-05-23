@@ -141,16 +141,14 @@ type ModelBase<T extends object> = {
 }
 
 export type Model<T extends object> = ModelBase<T> &
-  Required<
-    {
-      readonly [K in keyof T]: Readonly<
-        ModelEntry<
-          T[K] extends ModelElement<infer U> ? U : T[K],
-          T[K] extends ModelElement<any, any, infer U> ? U : any
-        >
+  Required<{
+    readonly [K in keyof T]: Readonly<
+      ModelEntry<
+        T[K] extends ModelElement<infer U> ? U : T[K],
+        T[K] extends ModelElement<any, any, infer U> ? U : any
       >
-    }
-  >
+    >
+  }>
 
 type ModelState = {
   /**
@@ -215,15 +213,12 @@ export function useModel<T extends object>(
 
     const modelSchema = initialStructure()
     const newModel = {
-      _data: null,
-      _errors: null,
-
       $change(values: object) {
         const model = state.latest
         const originalPassiveSetting = settings.passive
         settings.passive = true
 
-        Object.keys(values).forEach(name => {
+        Object.keys(values).forEach((name) => {
           model[name].onChange(values[name])
 
           if (__DEV__) {
@@ -252,7 +247,7 @@ export function useModel<T extends object>(
         }
 
         const values = {}
-        Object.keys(modelSchema).forEach(name => {
+        Object.keys(modelSchema).forEach((name) => {
           const {
             _utils: {serialize},
             value,
@@ -271,7 +266,7 @@ export function useModel<T extends object>(
         }
 
         const errors = {}
-        Object.keys(modelSchema).forEach(name => {
+        Object.keys(modelSchema).forEach((name) => {
           const entry: InternalModelEntry = {...model[name]}
           const {validate} = entry._utils
           const error = validate?.(entry.value, this) || ""
@@ -351,7 +346,7 @@ export function useModel<T extends object>(
     // @ts-ignore Sneak in the model object symbol tag past the typings.
     newModel[MODEL_OBJECT_SYMBOL_TAG] = MODEL_OBJECT_SYMBOL_TAG
 
-    Object.keys(modelSchema).forEach(name => {
+    Object.keys(modelSchema).forEach((name) => {
       newModel[name] = createModelEntry(
         name,
         modelSchema[name],
@@ -541,7 +536,7 @@ export function useInputValue<T extends InputValueInit | ModelEntry>(
   state.onChange = (input: any) => {
     input = extractNativeEvent(input)
 
-    setState(current => {
+    setState((current) => {
       let value = input
       const next = {...current}
 
